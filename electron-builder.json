@@ -1,0 +1,35 @@
+{
+  "appId": "com.collmot.skybrush.viewer",
+  "productName": "Skybrush Viewer",
+
+  "files": [
+    {
+      "filter": [
+        "index.html",
+        "assets/**/*",
+        "build/bundle.js",
+        "build/launcher.bundle.js",
+        "build/preload.bundle.js",
+        "bulld/preload.js",
+        "!node_modules"
+      ]
+    },
+    {
+      "from": "build",
+      "filter": ["*.png", "*.ttf", "*.woff", "*.woff2"]
+    }
+  ],
+
+  "linux": {
+    "category": "Utility"
+  },
+
+  "mac": {
+    "category": "public.app-category.utilities",
+    "target": "dmg"
+  },
+
+  "win": {
+    "target": "portable"
+  }
+}

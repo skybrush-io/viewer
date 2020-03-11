@@ -19,6 +19,8 @@ import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import { createBlacklistFilter } from 'redux-persist-transform-filter';
 
 import reducer from './features';
+import { loadShow } from './features/show/async';
+import { setOverlayVisibility } from './features/three-d/slice';
 
 /**
  * Configuration of `redux-persist` to store the application state.
@@ -36,7 +38,7 @@ const persistConfig = {
   stateReconciler: autoMergeLevel2,
 
   // do not store the following slices of the state in the storage
-  blacklist: ['playback'],
+  blacklist: ['playback', 'show'],
 
   // do not save more frequently than once every second
   throttle: 1000 /* msec */,
@@ -59,7 +61,7 @@ const store = configureStore({
       immutableCheck: {
         // Checking the show specification takes a long time and it should not
         // be necessary anyway
-        ignore: ['show.data']
+        ignoredPaths: ['show.data']
       },
 
       serializableCheck: {
@@ -73,7 +75,7 @@ const store = configureStore({
 
         // Checking the action dispatched when a show was loaded successfully
         // takes a long time and it should not be necessary anyway
-        // ignoredActions: [loadingPromiseFulfilled],
+        ignoredActions: [loadShow.fulfilled.type],
 
         // Checking the show specification takes a long time and it should not
         // be necessary anyway
@@ -83,14 +85,14 @@ const store = configureStore({
     sagaMiddleware
   ],
   devTools: {
+    actionsBlacklist: [setOverlayVisibility.type],
+
     // make sure that the show object that we load is not cached / tracked by
     // the Redux devtools
-    /*
     actionSanitizer: action =>
-      action.type === loadingPromiseFulfilled.type && action.payload
+      action.type === loadShow.fulfilled.type && action.payload
         ? { ...action, payload: '<<JSON_DATA>>' }
         : action,
-    */
     stateSanitizer: state =>
       state.show && state.show.data
         ? {

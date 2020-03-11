@@ -6,7 +6,11 @@ import { useHarmonicIntervalFn, useUpdate } from 'react-use';
 import Slider from '@material-ui/core/Slider';
 
 import { setPlaybackPosition } from '~/features/playback/actions';
-import { getElapsedSeconds, isPlaying } from '~/features/playback/selectors';
+import {
+  getElapsedSecondsGetter,
+  isPlaying
+} from '~/features/playback/selectors';
+import { getShowDuration } from '~/features/show/selectors';
 import { formatPlaybackTimestamp } from '~/utils/formatters';
 
 const PlaybackSlider = ({
@@ -54,8 +58,8 @@ PlaybackSlider.defaultProps = {
 export default connect(
   // mapStateToProps
   state => ({
-    duration: 3 * 60 + 47,
-    getElapsedSeconds: () => getElapsedSeconds(state),
+    duration: getShowDuration(state),
+    getElapsedSeconds: getElapsedSecondsGetter(state),
     isPlaying: isPlaying(state)
   }),
   // mapDispatchToProps

@@ -1,4 +1,4 @@
-import { getElapsedSecondsAt, isPlaying } from './selectors';
+import { getElapsedSecondsGetter, isPlaying } from './selectors';
 import { setStartAndStopTime } from './slice';
 
 export const startPlaybackFromBeginning = () => dispatch => {
@@ -15,7 +15,7 @@ export const togglePlayback = () => (dispatch, getState) => {
   if (isPlaying(getState())) {
     dispatch(setStartAndStopTime({ stop: now }));
   } else {
-    const elapsed = getElapsedSecondsAt(getState(), now);
+    const elapsed = getElapsedSecondsGetter(getState())(now);
     dispatch(setStartAndStopTime({ start: now - elapsed * 1000, stop: null }));
   }
 };

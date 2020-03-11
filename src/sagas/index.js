@@ -4,10 +4,12 @@
 
 import { all } from 'redux-saga/effects';
 
+import loaderSaga from './loader';
+
 /**
  * The root saga of the Skybrush application.
  */
 export default function* rootSaga() {
-  const sagas = [];
+  const sagas = [loaderSaga()];
   yield all(sagas);
 }

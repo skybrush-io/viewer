@@ -54,3 +54,8 @@ jspm_packages
 
 # Show files used as examples during testing
 assets/shows/
+
+# Large icons
+assets/icons/*512.png
+assets/icons/*1024.png
+

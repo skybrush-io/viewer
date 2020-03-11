@@ -4,6 +4,7 @@ import maxBy from 'lodash-es/maxBy';
 import { createSelector } from '@reduxjs/toolkit';
 
 import { formatPlaybackTimestamp } from '~/utils/formatters';
+import { TrajectoryPlayer } from '~/utils/trajectory';
 
 /**
  * Returns whether a trajectory object "looks like" a valid trajectory.
@@ -69,6 +70,16 @@ const getTrajectoryDuration = trajectory => {
     return 0;
   }
 };
+
+/**
+ * Returns an array containing trajectory player objects for all the
+ * trajectories.
+ */
+export const getTrajectoryPlayers = createSelector(
+  getTrajectories,
+  trajectories =>
+    trajectories.map(trajectory => new TrajectoryPlayer(trajectory))
+);
 
 /**
  * Returns the total duration of the show, in seconds.

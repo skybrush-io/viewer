@@ -11,6 +11,6 @@ AFrame.registerPrimitive('a-drone-flock', {
     'drone-flock': {}
   },
   mappings: {
-    template: 'drone-flock.template'
+    size: 'drone-flock.size'
   }
 });

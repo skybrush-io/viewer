@@ -11,13 +11,21 @@ import Scenery from './Scenery';
 // eslint-disable-next-line no-unused-vars
 import AFrame from '~/aframe';
 import { objectToString } from '~/aframe/utils';
+import { getNumberOfDronesInShow } from '~/features/show/selectors';
 
 const images = {
   glow: 'assets/img/sphere-glow-hollow.png'
 };
 
 const ThreeDView = React.forwardRef((props, ref) => {
-  const { grid, navigation, scenery, showStatistics, vrEnabled } = props;
+  const {
+    grid,
+    navigation,
+    numDrones,
+    scenery,
+    showStatistics,
+    vrEnabled
+  } = props;
 
   const extraCameraProps = {
     'altitude-control': objectToString({
@@ -55,15 +63,10 @@ const ThreeDView = React.forwardRef((props, ref) => {
         id="three-d-camera"
         look-controls="reverseMouseDrag: true"
         {...extraCameraProps}
-      >
-        <a-entity
-          cursor="rayOrigin: mouse"
-          raycaster="objects: .three-d-clickable; interval: 100"
-        />
-      </a-camera>
+      />
 
       <a-entity rotation="-90 0 90">
-        <a-drone-flock />
+        <a-drone-flock size={numDrones} />
       </a-entity>
 
       <Scenery scale={10} type={scenery} grid={grid} />
@@ -73,15 +76,12 @@ const ThreeDView = React.forwardRef((props, ref) => {
 
 ThreeDView.propTypes = {
   grid: PropTypes.string,
-  isCoordinateSystemLeftHanded: PropTypes.bool,
   navigation: PropTypes.shape({
     mode: PropTypes.oneOf(['walk', 'fly']),
     parameters: PropTypes.object
   }),
+  numDrones: PropTypes.number,
   scenery: PropTypes.string,
-  showAxes: PropTypes.bool,
-  showHomePositions: PropTypes.bool,
-  showLandingPositions: PropTypes.bool,
   showStatistics: PropTypes.bool,
   vrEnabled: PropTypes.bool
 };
@@ -89,6 +89,7 @@ ThreeDView.propTypes = {
 export default connect(
   // mapStateToProps
   state => ({
+    numDrones: getNumberOfDronesInShow(state),
     ...state.threeD
   }),
   // mapDispatchToProps

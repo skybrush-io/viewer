@@ -4,55 +4,28 @@
  * instance.
  */
 
-import { createSelector } from '@reduxjs/toolkit';
 import watch from 'redux-watch';
 
 import AFrame from '../aframe';
 
-import flock from '~/flock';
+import { getElapsedSecondsGetter } from '~/features/playback/selectors';
+import { getTrajectoryPlayers } from '~/features/show/selectors';
 import store from '~/store';
-
-import { hideTooltip, showTooltip } from '~/features/three-d/slice';
-import { convertRGB565ToHex } from '~/flockwave/parsing';
-import { getFlatEarthCoordinateTransformer } from '~/selectors/map';
 
 const { THREE } = AFrame;
 
-/**
- * Returns a function that can be called with two arguments; the first argument
- * must be a object having `lon`, `lat` and `agl` properties, while the second
- * argument must be an existing `THREE.Vector3` vector. The function will update
- * the vector in-place to the coordinates in the 3D view corresponding to the
- * given GPS position.
- *
- * The returned function is designed in a way that it avoids allocating objects
- * to prevent the GC from being triggered too often while updating the
- * coordinates of the drones in the 3D view.
- */
-const updatePositionFromGPSCoordinates = createSelector(
-  getFlatEarthCoordinateTransformer,
-  transformation => (coordinate, result) => {
-    if (coordinate !== null && coordinate !== undefined) {
-      return transformation.updateVector3FromLonLatAgl(
-        result,
-        coordinate.lon,
-        coordinate.lat,
-        coordinate.agl
-      );
-    }
-  }
-);
-
 AFrame.registerSystem('drone-flock', {
   init() {
-    const getter = () => updatePositionFromGPSCoordinates(store.getState());
+    const boundGetElapsedSecodsGetter = () =>
+      getElapsedSecondsGetter(store.getState());
     store.subscribe(
-      watch(getter)(newValue => {
-        this._updatePositionFromGPSCoordinates = newValue;
+      watch(boundGetElapsedSecodsGetter)(newGetter => {
+        this._getElapsedSeconds = newGetter;
       })
     );
 
-    this._updatePositionFromGPSCoordinates = getter();
+    this.currentTime = 0;
+    this._getElapsedSeconds = boundGetElapsedSecodsGetter();
   },
 
   createNewUAVEntity() {
@@ -84,12 +57,17 @@ AFrame.registerSystem('drone-flock', {
     return el;
   },
 
-  updateEntityFromUAV(entity, uav) {
-    if (this._updatePositionFromGPSCoordinates) {
-      this._updatePositionFromGPSCoordinates(uav, entity.object3D.position);
-    }
+  createTrajectoryPlayerForIndex(index) {
+    return this._createTrajectoryPlayerForIndex(index);
+  },
 
-    const color = convertRGB565ToHex(uav.light | 0);
+  tick() {
+    this.currentTime = this._getElapsedSeconds();
+  },
+
+  updateEntityPositionAndColor(entity, position, color) {
+    entity.object3D.position.copy(position);
+
     const mesh = entity.getObject3D('mesh');
     if (mesh) {
       mesh.material.color.setHex(color);
@@ -113,108 +91,70 @@ AFrame.registerSystem('drone-flock', {
         glowMesh.material.color.setHex(color);
       }
     }
-  },
-
-  _onTransformationChanged(newValue) {
-    this._gpsToWorld = newValue;
   }
 });
 
 AFrame.registerComponent('drone-flock', {
-  schema: {},
+  schema: {
+    size: { default: 0 }
+  },
 
   init() {
-    this._onUAVsAdded = this._onUAVsAdded.bind(this);
-    this._onUAVsRemoved = this._onUAVsRemoved.bind(this);
-    this._onUAVsUpdated = this._onUAVsUpdated.bind(this);
+    this._drones = [];
+    this._vec = new THREE.Vector3();
 
-    this._uavIdToEntity = {};
+    const boundGetTrajectoryPlayers = () =>
+      getTrajectoryPlayers(store.getState());
+    store.subscribe(
+      watch(boundGetTrajectoryPlayers)(trajectoryPlayers => {
+        this._trajectoryPlayers = trajectoryPlayers;
+      })
+    );
 
-    this._signals = {
-      uavsAdded: flock.uavsAdded.add(this._onUAVsAdded),
-      uavsRemoved: flock.uavsRemoved.add(this._onUAVsRemoved),
-      uavsUpdated: flock.uavsUpdated.add(this._onUAVsUpdated)
-    };
-
-    this._pendingUAVsToAdd = flock.getAllUAVIds();
+    this._trajectoryPlayers = boundGetTrajectoryPlayers();
   },
 
-  remove() {
-    flock.uavsAdded.detach(this._signals.uavsAdded);
-    flock.uavsRemoved.detach(this._signals.uavsRemoved);
-    flock.uavsUpdated.detach(this._signals.uavsUpdated);
-  },
+  remove() {},
 
   tick() {
-    if (this._pendingUAVsToAdd) {
-      for (const uavId of this._pendingUAVsToAdd) {
-        const uav = flock.getUAVById(uavId);
-        this._ensureUAVEntityExists(uav);
+    const { currentTime, updateEntityPositionAndColor } = this.system;
+    const vec = this._vec;
+
+    for (const item of this._drones) {
+      const { entity, index } = item;
+
+      const trajectoryPlayer = this._trajectoryPlayers[index];
+
+      if (trajectoryPlayer) {
+        trajectoryPlayer.getPositionAt(currentTime, vec);
+      } else {
+        vec.setScalar(0);
       }
 
-      this._pendingUAVsToAdd = undefined;
+      updateEntityPositionAndColor(entity, vec, 0xffffff);
     }
   },
 
-  _ensureUAVEntityExists(uav) {
-    const existingEntity = this._getEntityForUAV(uav);
-    if (existingEntity) {
-      return existingEntity;
-    }
+  update(oldData) {
+    const oldSize = oldData.size;
 
-    const { id } = uav;
+    if (oldSize !== undefined) {
+      const { size } = this.data;
 
-    if (id && id.length > 0) {
-      const entity = this.system.createNewUAVEntity();
+      if (size > oldSize) {
+        // Add new drones
+        for (let i = oldSize; i < size; i++) {
+          const entity = this.system.createNewUAVEntity();
+          this.el.append(entity);
 
-      if (entity) {
-        this.el.append(entity);
-
-        entity.className = 'three-d-clickable';
-        entity.addEventListener('mouseenter', () => {
-          store.dispatch(showTooltip(id));
-        });
-        entity.addEventListener('mouseleave', () => {
-          store.dispatch(hideTooltip());
-        });
-
-        this._uavIdToEntity[id] = entity;
-        return entity;
-      }
-    }
-  },
-
-  _ensureUAVEntityDoesNotExist(uav) {
-    const existingEntity = this._getEntityForUAV(uav);
-    if (existingEntity) {
-      existingEntity.remove();
-    }
-
-    delete this._uavIdToEntity[uav.id];
-  },
-
-  _getEntityForUAV(uav) {
-    return this._uavIdToEntity[uav ? uav.id : undefined];
-  },
-
-  _onUAVsAdded(uavs) {
-    for (const uav of uavs) {
-      const entity = this._ensureUAVEntityExists(uav);
-      this.system.updateEntityFromUAV(entity, uav);
-    }
-  },
-
-  _onUAVsRemoved(uavs) {
-    for (const uav of uavs) {
-      this._ensureUAVEntityDoesNotExist(uav);
-    }
-  },
-
-  _onUAVsUpdated(uavs) {
-    for (const uav of uavs) {
-      const entity = this._getEntityForUAV(uav);
-      if (entity) {
-        this.system.updateEntityFromUAV(entity, uav);
+          this._drones.push({ index: i, entity });
+        }
+      } else {
+        // Remove unneeded drones
+        for (let i = size; i < oldSize; i++) {
+          const { entity } = this._drones.pop();
+          entity.remove();
+        }
       }
     }
   }

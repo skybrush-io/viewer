@@ -7,7 +7,7 @@ import 'aframe-meshline-component';
 import './components/altitude-control';
 import './components/better-wasd-controls';
 import './components/deallocate';
-// import './components/drone-flock';
+import './components/drone-flock';
 import './components/sprite';
 import createSyncPoseWithStoreComponent from './components/sync-pose-with-store';
 
@@ -24,9 +24,7 @@ AFrame.registerComponent(
   createSyncPoseWithStoreComponent({
     getCameraPose() {},
 
-    setCameraPose({ position, rotation }) {
-      console.log('New camera pose:', position, rotation);
-    }
+    setCameraPose() {}
   })
 );
 

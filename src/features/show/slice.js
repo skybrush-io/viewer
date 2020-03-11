@@ -12,12 +12,14 @@ const { actions, reducer } = createSlice({
 
   initialState: {
     data: null,
-    loading: false
+    loading: false,
+    error: null
   },
 
   reducers: {
     clearLoadedShow: state => {
       state.data = null;
+      state.error = null;
     }
   },
 
@@ -25,6 +27,7 @@ const { actions, reducer } = createSlice({
     [loadShow.fulfilled]: (state, action) => {
       state.data = action.payload;
       state.loading = false;
+      state.error = null;
     },
 
     [loadShow.pending]: state => {
@@ -33,6 +36,7 @@ const { actions, reducer } = createSlice({
 
     [loadShow.rejected]: state => {
       state.loading = false;
+      state.error = 'Failed to load drone show.';
     }
   }
 });

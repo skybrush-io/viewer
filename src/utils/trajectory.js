@@ -3,7 +3,7 @@
  * tell the position of the drone traversing the trajeectoty at any given
  * time instant.
  */
-export class TrajectoryPlayer {
+class TrajectoryPlayer {
   /**
    * Constructor.
    *
@@ -203,5 +203,18 @@ function createSegmentFunction(start, end, controlPoints) {
 
   return function(vec, ratio) {
     vec.set(x + ratio * dx, y + ratio * dy, z + ratio * dz);
+  };
+}
+
+/**
+ * Factory function that creates a new trajectory player object with a
+ * single `getPositionAt()` function that evaluates the trajectory at a given
+ * timestamp.
+ */
+export default function createTrajectoryPlayer(trajectory) {
+  const player = new TrajectoryPlayer(trajectory);
+
+  return {
+    getPositionAt: player.getPositionAt.bind(player)
   };
 }

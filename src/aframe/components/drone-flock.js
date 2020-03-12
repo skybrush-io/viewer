@@ -9,7 +9,10 @@ import watch from 'redux-watch';
 import AFrame from '../aframe';
 
 import { getElapsedSecondsGetter } from '~/features/playback/selectors';
-import { getTrajectoryPlayers } from '~/features/show/selectors';
+import {
+  getLightProgramPlayers,
+  getTrajectoryPlayers
+} from '~/features/show/selectors';
 import store from '~/store';
 
 const { THREE } = AFrame;
@@ -70,7 +73,7 @@ AFrame.registerSystem('drone-flock', {
 
     const mesh = entity.getObject3D('mesh');
     if (mesh) {
-      mesh.material.color.setHex(color);
+      mesh.material.color.copy(color);
     } else {
       // TODO(ntamas): sometimes it happens that we get here earlier than the
       // mesh is ready (it's an async process). In this case we should store
@@ -88,7 +91,7 @@ AFrame.registerSystem('drone-flock', {
     if (glowEntity) {
       const glowMesh = glowEntity.getObject3D('mesh');
       if (glowMesh && glowMesh.material) {
-        glowMesh.material.color.setHex(color);
+        glowMesh.material.color.copy(color);
       }
     }
   }
@@ -101,16 +104,27 @@ AFrame.registerComponent('drone-flock', {
 
   init() {
     this._drones = [];
+
+    this._color = new THREE.Color();
     this._vec = new THREE.Vector3();
 
     const boundGetTrajectoryPlayers = () =>
       getTrajectoryPlayers(store.getState());
     store.subscribe(
-      watch(boundGetTrajectoryPlayers)(trajectoryPlayers => {
-        this._trajectoryPlayers = trajectoryPlayers;
+      watch(boundGetTrajectoryPlayers)(lightProgramPlayers => {
+        this._trajectoryPlayers = lightProgramPlayers;
       })
     );
 
+    const boundGetLightProgramPlayers = () =>
+      getLightProgramPlayers(store.getState());
+    store.subscribe(
+      watch(boundGetLightProgramPlayers)(lightProgramPlayers => {
+        this._lightProgramPlayers = lightProgramPlayers;
+      })
+    );
+
+    this._lightProgramPlayers = boundGetLightProgramPlayers();
     this._trajectoryPlayers = boundGetTrajectoryPlayers();
   },
 
@@ -119,10 +133,12 @@ AFrame.registerComponent('drone-flock', {
   tick() {
     const { currentTime, updateEntityPositionAndColor } = this.system;
     const vec = this._vec;
+    const color = this._color;
 
     for (const item of this._drones) {
       const { entity, index } = item;
 
+      const lightProgramPlayer = this._lightProgramPlayers[index];
       const trajectoryPlayer = this._trajectoryPlayers[index];
 
       if (trajectoryPlayer) {
@@ -131,7 +147,13 @@ AFrame.registerComponent('drone-flock', {
         vec.setScalar(0);
       }
 
-      updateEntityPositionAndColor(entity, vec, 0xffffff);
+      if (lightProgramPlayer) {
+        lightProgramPlayer.getColorAt(currentTime, color);
+      } else {
+        color.setScalar(0.5);
+      }
+
+      updateEntityPositionAndColor(entity, vec, color);
     }
   },
 

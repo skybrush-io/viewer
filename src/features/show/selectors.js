@@ -4,7 +4,8 @@ import maxBy from 'lodash-es/maxBy';
 import { createSelector } from '@reduxjs/toolkit';
 
 import { formatPlaybackTimestamp } from '~/utils/formatters';
-import { TrajectoryPlayer } from '~/utils/trajectory';
+import createLightProgramPlayer from '~/utils/lights';
+import createTrajectoryPlayer from '~/utils/trajectory';
 
 /**
  * Returns whether a trajectory object "looks like" a valid trajectory.
@@ -14,6 +15,14 @@ export const isValidTrajectory = trajectory =>
   trajectory.version === 1 &&
   typeof trajectory.points === 'object' &&
   Array.isArray(trajectory.points);
+
+/**
+ * Returns whether a trajectory object "looks like" a valid light program.
+ */
+export const isValidLightProgram = program =>
+  typeof program === 'object' &&
+  program.version === 1 &&
+  typeof program.data === 'string';
 
 /**
  * Returns the common show settings that apply to all drones in the currently
@@ -31,6 +40,26 @@ export const getDroneSwarmSpecification = state => {
   const result = get(state, 'show.data.swarm.drones');
   return Array.isArray(result) ? result : [];
 };
+
+/**
+ * Returns an array containing all the light programs. The array will contain
+ * undefined for all the drones that have no light programs in the mission.
+ */
+const getLightPrograms = createSelector(getDroneSwarmSpecification, swarm =>
+  swarm.map(drone => {
+    const program = get(drone, 'settings.lights');
+    return isValidLightProgram(program) ? program : undefined;
+  })
+);
+
+/**
+ * Returns an array containing light program player objects for all the
+ * light programs.
+ */
+export const getLightProgramPlayers = createSelector(
+  getLightPrograms,
+  lightPrograms => lightPrograms.map(createLightProgramPlayer)
+);
 
 /**
  * Returns the number of drones in the currently loaded show.
@@ -77,8 +106,7 @@ const getTrajectoryDuration = trajectory => {
  */
 export const getTrajectoryPlayers = createSelector(
   getTrajectories,
-  trajectories =>
-    trajectories.map(trajectory => new TrajectoryPlayer(trajectory))
+  trajectories => trajectories.map(createTrajectoryPlayer)
 );
 
 /**

@@ -10,6 +10,8 @@ import TopLevelView from './components/TopLevelView';
 import store, { persistor } from './store';
 import ThemeProvider from './theme';
 
+require('~/../assets/css/aframe.less');
+
 require('react-cover-page/themes/default.css');
 require('typeface-fira-sans');
 

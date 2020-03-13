@@ -1,4 +1,10 @@
 /**
+ * Selector that returns whether there is audio associated to the currently
+ * loaded show.
+ */
+export const hasAudio = state => state.audio.url !== null;
+
+/**
  * Selector that returns whether the audio subsystem is ready to play the
  * audio.
  */

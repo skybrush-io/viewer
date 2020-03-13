@@ -3,12 +3,18 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Box from '@material-ui/core/Box';
+import IconButton from '@material-ui/core/IconButton';
 
-import { isAudioMuted, isAudioReadyToPlay } from '~/features/audio/selectors';
+import {
+  hasAudio,
+  isAudioMuted,
+  isAudioReadyToPlay
+} from '~/features/audio/selectors';
 import { toggleMuted } from '~/features/audio/slice';
 import { togglePlayback } from '~/features/playback/actions';
 import { isPlaying } from '~/features/playback/selectors';
 import { getShowDuration } from '~/features/show/selectors';
+import VirtualReality from '~/icons/VirtualReality';
 import { formatPlaybackTimestamp } from '~/utils/formatters';
 
 import PlaybackSlider from './PlaybackSlider';
@@ -18,6 +24,7 @@ import VolumeButton from './VolumeButton';
 const BottomOverlay = ({
   audioReady,
   duration,
+  hasAudio,
   muted,
   playing,
   onToggleMuted,
@@ -40,13 +47,18 @@ const BottomOverlay = ({
         playing={playing}
         onClick={onTogglePlayback}
       />
-      <VolumeButton muted={muted} onClick={onToggleMuted} />
+      {hasAudio ? <VolumeButton muted={muted} onClick={onToggleMuted} /> : null}
     </Box>
     <Box flex={1} textAlign="center">
       <PlaybackSlider />
     </Box>
-    <Box textAlign="right" px={2}>
+    <Box textAlign="right" pl={2}>
       {formatPlaybackTimestamp(duration)}
+    </Box>
+    <Box px={1}>
+      <IconButton id="vr-button">
+        <VirtualReality />
+      </IconButton>
     </Box>
   </Box>
 );
@@ -54,6 +66,7 @@ const BottomOverlay = ({
 BottomOverlay.propTypes = {
   audioReady: PropTypes.bool,
   duration: PropTypes.number,
+  hasAudio: PropTypes.bool,
   muted: PropTypes.bool,
   playing: PropTypes.bool,
   onToggleMuted: PropTypes.func,
@@ -65,6 +78,7 @@ export default connect(
   state => ({
     audioReady: isAudioReadyToPlay(state),
     duration: getShowDuration(state),
+    hasAudio: hasAudio(state),
     muted: isAudioMuted(state),
     playing: isPlaying(state)
   }),

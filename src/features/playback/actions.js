@@ -1,6 +1,8 @@
 import { getElapsedSecondsGetter, isPlaying } from './selectors';
 import { setStartAndStopTime } from './slice';
 
+export { temporarilyOverridePlaybackPosition } from './slice';
+
 export const startPlaybackFromBeginning = () => dispatch => {
   dispatch(setStartAndStopTime({ start: Date.now(), stop: null }));
 };

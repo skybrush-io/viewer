@@ -15,6 +15,7 @@ const { actions, reducer } = createSlice({
   name: 'playback',
 
   initialState: {
+    adjustedTo: null,
     startedAt: null,
     stoppedAt: null
   },
@@ -38,10 +39,25 @@ const { actions, reducer } = createSlice({
           state.stoppedAt = null;
         }
       }
+
+      state.adjustedTo = null;
+    },
+
+    temporarilyOverridePlaybackPosition(state, action) {
+      const value = Number(action.payload);
+
+      if (!isNaN(value) && value >= 0) {
+        state.adjustedTo = value;
+      } else {
+        state.adjustedTo = null;
+      }
     }
   }
 });
 
-export const { setStartAndStopTime } = actions;
+export const {
+  setStartAndStopTime,
+  temporarilyOverridePlaybackPosition
+} = actions;
 
 export default reducer;

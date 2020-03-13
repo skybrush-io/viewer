@@ -1,30 +1,36 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { useHarmonicIntervalFn, useUpdate } from 'react-use';
 
 import Slider from '@material-ui/core/Slider';
 
-import { setPlaybackPosition } from '~/features/playback/actions';
+import {
+  setPlaybackPosition,
+  temporarilyOverridePlaybackPosition
+} from '~/features/playback/actions';
 import {
   getElapsedSecondsGetter,
+  isAdjustingPlaybackPosition,
   isPlaying
 } from '~/features/playback/selectors';
 import { getShowDuration } from '~/features/show/selectors';
 import { formatPlaybackTimestamp } from '~/utils/formatters';
+import { stripEvent } from '~/utils/redux';
 
 const PlaybackSlider = ({
+  dragging,
   duration,
   getElapsedSeconds,
-  isPlaying,
   onDragged,
+  onDragging,
+  playing,
   updateInterval
 }) => {
-  const [temporaryValue, setTemporaryValue] = useState();
   const update = useUpdate();
-  useHarmonicIntervalFn(update, isPlaying ? updateInterval : null);
+  useHarmonicIntervalFn(update, playing && !dragging ? updateInterval : null);
 
-  const elapsed = temporaryValue || Math.min(getElapsedSeconds(), duration);
+  const elapsed = Math.min(getElapsedSeconds(), duration);
 
   return (
     <Slider
@@ -32,22 +38,19 @@ const PlaybackSlider = ({
       value={elapsed}
       valueLabelDisplay="auto"
       valueLabelFormat={formatPlaybackTimestamp}
-      onChange={(_, value) => {
-        setTemporaryValue(value);
-      }}
-      onChangeCommitted={(_, value) => {
-        setTemporaryValue(null);
-        onDragged(value);
-      }}
+      onChange={onDragging}
+      onChangeCommitted={onDragged}
     />
   );
 };
 
 PlaybackSlider.propTypes = {
+  dragging: PropTypes.bool,
   duration: PropTypes.number,
   getElapsedSeconds: PropTypes.func,
-  isPlaying: PropTypes.bool,
   onDragged: PropTypes.func,
+  onDragging: PropTypes.func,
+  playing: PropTypes.bool,
   updateInterval: PropTypes.number
 };
 
@@ -58,12 +61,14 @@ PlaybackSlider.defaultProps = {
 export default connect(
   // mapStateToProps
   state => ({
+    dragging: isAdjustingPlaybackPosition(state),
     duration: getShowDuration(state),
     getElapsedSeconds: getElapsedSecondsGetter(state),
-    isPlaying: isPlaying(state)
+    playing: isPlaying(state)
   }),
   // mapDispatchToProps
   {
-    onDragged: setPlaybackPosition
+    onDragged: stripEvent(setPlaybackPosition),
+    onDragging: stripEvent(temporarilyOverridePlaybackPosition)
   }
 )(PlaybackSlider);

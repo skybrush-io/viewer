@@ -35,12 +35,12 @@ const BottomOverlay = ({
   >
     <Box px={2}>
       <PlayStopButton
-        size="small"
+        edge="start"
         disabled={!playing && !audioReady}
         playing={playing}
         onClick={onTogglePlayback}
       />
-      <VolumeButton size="small" muted={muted} onClick={onToggleMuted} />
+      <VolumeButton muted={muted} onClick={onToggleMuted} />
     </Box>
     <Box flex={1} textAlign="center">
       <PlaybackSlider />

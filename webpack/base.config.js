@@ -1,14 +1,12 @@
 // Use strict mode so we can have block-scoped declarations
 'use strict';
 
-// Import the promise polyfill for ye olde Node installations
-require('es6-promise').polyfill();
-
 // Don't use let in the line below because older Node.js versions on Linux
 // will not like it
 const path = require('path');
 const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const { projectRoot } = require('./helpers');
 
@@ -83,6 +81,23 @@ module.exports = {
         test: /\.(woff|woff2|eot|ttf|svg|mp3|wav|ogg)$/,
         use: [{ loader: 'file-loader' }]
       }
+    ]
+  },
+
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        /* Extract license comments to a separate file */
+        extractComments: /^@preserve|license|CC-/i,
+
+        /* Drop console.log() calls in production */
+        terserOptions: {
+          compress: {
+            // eslint-disable-next-line camelcase
+            drop_console: true
+          }
+        }
+      })
     ]
   },
 

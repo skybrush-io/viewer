@@ -8,3 +8,7 @@ export function noPayload(func) {
     reducer: func
   };
 }
+
+export function stripEvent(func) {
+  return (event, ...args) => func(...args);
+}

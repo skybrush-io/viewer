@@ -89,6 +89,7 @@ export default connect(
   // mapStateToProps
   state => ({
     numDrones: getNumberOfDronesInShow(state),
+    ...state.settings.threeD,
     ...state.threeD
   }),
   // mapDispatchToProps

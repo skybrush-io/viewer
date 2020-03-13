@@ -19,6 +19,7 @@ import { formatPlaybackTimestamp } from '~/utils/formatters';
 
 import PlaybackSlider from './PlaybackSlider';
 import PlayStopButton from './PlayStopButton';
+import SettingsButton from './SettingsButton';
 import VolumeButton from './VolumeButton';
 
 const BottomOverlay = ({
@@ -59,6 +60,7 @@ const BottomOverlay = ({
       <IconButton id="vr-button">
         <VirtualReality />
       </IconButton>
+      <SettingsButton />
     </Box>
   </Box>
 );

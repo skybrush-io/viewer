@@ -4,6 +4,7 @@ import { Provider as StoreProvider } from 'react-redux';
 import { ToastProvider } from 'react-toast-notifications';
 import { PersistGate } from 'redux-persist/es/integration/react';
 
+import Sidebar from './components/Sidebar';
 import SplashScreen from './components/SplashScreen';
 import TopLevelView from './components/TopLevelView';
 
@@ -38,6 +39,7 @@ const Application = () => (
         <PersistGate persistor={persistor} loading={<SplashScreen />}>
           <CssBaseline />
           <TopLevelView />
+          <Sidebar />
         </PersistGate>
       </ToastProvider>
     </ThemeProvider>

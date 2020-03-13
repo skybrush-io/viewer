@@ -106,6 +106,7 @@ AFrame.registerComponent('drone-flock', {
     this._drones = [];
 
     this._color = new THREE.Color();
+    this._colorArray = [0, 0, 0];
     this._vec = new THREE.Vector3();
 
     const boundGetTrajectoryPlayers = () =>
@@ -134,6 +135,7 @@ AFrame.registerComponent('drone-flock', {
     const { currentTime, updateEntityPositionAndColor } = this.system;
     const vec = this._vec;
     const color = this._color;
+    const colorArray = this._colorArray;
 
     for (const item of this._drones) {
       const { entity, index } = item;
@@ -148,7 +150,8 @@ AFrame.registerComponent('drone-flock', {
       }
 
       if (lightProgramPlayer) {
-        lightProgramPlayer.getColorAt(currentTime, color);
+        lightProgramPlayer.evaluateColorAt(currentTime, colorArray);
+        color.fromArray(colorArray);
       } else {
         color.setScalar(0.5);
       }

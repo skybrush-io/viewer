@@ -38,7 +38,7 @@ const persistConfig = {
   stateReconciler: autoMergeLevel2,
 
   // do not store the following slices of the state in the storage
-  blacklist: ['playback', 'show'],
+  blacklist: ['audio', 'playback', 'show'],
 
   // do not save more frequently than once every second
   throttle: 1000 /* msec */,

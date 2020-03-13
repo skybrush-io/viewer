@@ -8,8 +8,9 @@ import { connect } from 'react-redux';
 
 import Box from '@material-ui/core/Box';
 
-import Overlays from './Overlays';
+import AudioController from './AudioController';
 import ErrorNotificationController from './ErrorNotificationController';
+import Overlays from './Overlays';
 import OverlayVisibilityController from './OverlayVisibilityController';
 import ThreeDView from './ThreeDView';
 
@@ -25,6 +26,7 @@ const ThreeDTopLevelView = () => {
         <Overlays />
       </Box>
 
+      <AudioController />
       <OverlayVisibilityController areaRef={ref} />
       <ErrorNotificationController />
     </Box>

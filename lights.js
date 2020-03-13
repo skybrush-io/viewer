@@ -1,6 +1,5 @@
-import Deque from 'denque';
-import { Base64 } from 'js-base64';
-import isArrayBuffer from 'lodash-es/isArrayBuffer';
+const { Base64 } = require('js-base64');
+const Deque = require('denque');
 
 /**
  * Helper function that takes a base64-encoded string or an ArrayBuffer and
@@ -10,26 +9,12 @@ import isArrayBuffer from 'lodash-es/isArrayBuffer';
  * this is the case.
  */
 function convertLightProgramToUint8Array(input) {
-  if (isArrayBuffer(input)) {
-    return new Uint8Array(input);
+  if (typeof input === 'string') {
+    return Uint8Array.from(Base64.atob(input), char => char.charCodeAt(0));
   }
 
   if (input instanceof Uint8Array) {
     return input;
-  }
-
-  if (typeof input === 'object') {
-    const { version, data } = input;
-
-    if (version !== 1) {
-      throw new Error('Only version 1 light programs are supported');
-    }
-
-    return convertLightProgramToUint8Array(data);
-  }
-
-  if (typeof input === 'string') {
-    return Uint8Array.from(Base64.atob(input), char => char.charCodeAt(0));
   }
 
   throw new Error('Unsupported input type for light program');
@@ -446,7 +431,7 @@ function createLightProgramExecutor(program, initialState = undefined) {
  * single `evaluateColorAt()` function that evaluates the color at a given
  * timestamp, specified in seconds.
  */
-export default function createLightProgramPlayer(program) {
+function createLightProgramPlayer(program) {
   const executor = createLightProgramExecutor(program);
   const slices = new Deque();
   const maxHistoryLength = 31;
@@ -577,3 +562,15 @@ export default function createLightProgramPlayer(program) {
     iterate
   };
 }
+
+function test() {
+  const data =
+    'BRoGBIAAAAUJGi0C8QMLmwQIAP8AjwwCoxEKhQgCMgcDCP//AAMCGwcECP//AAMCGwcDCP//AAQCGwcDCP//AAMCGwcECP//AAMMAgIbBwMI//8ABA0CGwcDCNXVCwME/4AAAAj/jQAbBwQI/5AAAwj/nQAbBwMI/6AABAj/rAAbBwMI/7AAAwj/vAAbBwQI/8AAAwj/zAAbBwMI/9AABAj/3AAbBwMI/98ABAj/7AAaBwQI/+8AAwj//AAbBwQI1dULAgj//wABCP/yABsHAwj/7wAECP/iABsHAwj/3wADCP/SABsHBAj/zwADCP/CABsHAwj/vwAECP+yABsHAwj/rwADCP+iABsHBAj/nwADCP+SABsHBAj/jwADCP+CABsHAwjVcAsDCP9/AAEI/3IAGwcDCP9vAAMI/2IAGwcECP9fAAMI/1MAGwcDCP9PAAQI/0MAGwcDCP8/AAMI/zMAGwcECP8vAAMI/yMAGwcDCP8gAAQI/xMAGwcDCP8QAAQI/wMAGwcDCNULCwME/wAAGwgAgIC3CBS/AhkVAAL1AQQA//8ZBACAgPQBBAD//xkEAICAgwQJGrYIAA==';
+  const player = createLightProgramPlayer(data);
+
+  for (const state of player.iterate()) {
+    console.log(state[0], state[1]);
+  }
+}
+
+test();

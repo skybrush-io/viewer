@@ -13,9 +13,7 @@ import AFrame from '~/aframe';
 import { objectToString } from '~/aframe/utils';
 import { getNumberOfDronesInShow } from '~/features/show/selectors';
 
-const images = {
-  glow: 'assets/img/sphere-glow-hollow.png'
-};
+const glow = require('~/../assets/img/sphere-glow-hollow.png').default;
 
 const ThreeDView = React.forwardRef((props, ref) => {
   const {
@@ -55,7 +53,7 @@ const ThreeDView = React.forwardRef((props, ref) => {
       {...extraSceneProps}
     >
       <a-assets>
-        <img crossOrigin="anonymous" id="glow-texture" src={images.glow} />
+        <img crossOrigin="anonymous" id="glow-texture" src={glow} />
       </a-assets>
 
       <a-camera

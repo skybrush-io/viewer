@@ -52,7 +52,7 @@ PlaybackSlider.propTypes = {
 };
 
 PlaybackSlider.defaultProps = {
-  updateInterval: 1000
+  updateInterval: 200
 };
 
 export default connect(

@@ -40,6 +40,7 @@
     "clsx": "^1.1.0",
     "date-fns": "^2.10.0",
     "delay": "^4.3.0",
+    "denque": "^1.4.1",
     "electron-better-ipc": "^0.8.0",
     "electron-store": "^5.1.1",
     "electron-unhandled": "^3.0.2",

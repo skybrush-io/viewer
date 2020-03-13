@@ -14,9 +14,14 @@ import {
   notifyAudioSeeked,
   notifyAudioSeeking
 } from '~/features/audio/slice';
-import { isPlaying } from '~/features/playback/selectors';
+import {
+  getElapsedSecondsGetter,
+  isAdjustingPlaybackPosition,
+  isPlaying
+} from '~/features/playback/selectors';
 
 const AudioController = ({
+  elapsedSecondsGetter,
   muted,
   onCanPlay,
   onLoadedMetadata,
@@ -31,15 +36,21 @@ const AudioController = ({
     addToast('Error while playing audio; playback stopped.');
   }, [addToast]);
 
+  // Effect that takes care of stopping / starting the audio and re-syncing the
+  // playback position when needed
   useEffect(() => {
     if (audioRef.current) {
       if (playing) {
+        // TODO(ntamas): there is a hardcoded delay between the audio and the
+        // visuals. I don't know why it's needed or whether it varies from
+        // machine to machine. We need to test it.
+        audioRef.current.currentTime = elapsedSecondsGetter() + 0.15;
         audioRef.current.play();
       } else {
         audioRef.current.pause();
       }
     }
-  }, [playing]);
+  }, [elapsedSecondsGetter, playing]);
 
   return url ? (
     <audio
@@ -57,6 +68,7 @@ const AudioController = ({
 };
 
 AudioController.propTypes = {
+  elapsedSecondsGetter: PropTypes.func,
   muted: PropTypes.bool,
   onCanPlay: PropTypes.func,
   onLoadedMetadata: PropTypes.func,
@@ -70,7 +82,8 @@ export default connect(
   // mapStateToProps
   state => ({
     ...state.audio,
-    playing: isPlaying(state)
+    elapsedSecondsGetter: getElapsedSecondsGetter(state),
+    playing: isPlaying(state) && !isAdjustingPlaybackPosition(state)
   }),
   // mapDispatchToProps
   {

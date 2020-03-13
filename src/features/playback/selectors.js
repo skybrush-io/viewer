@@ -36,7 +36,7 @@ export const getElapsedSecondsGetter = createSelector(
  * dragging the thumb on the playback slider.
  */
 export const isAdjustingPlaybackPosition = state =>
-  isNil(state.playback.adjustedTo);
+  !isNil(state.playback.adjustedTo);
 
 /**
  * Returns whether we are currently playing the drone show.

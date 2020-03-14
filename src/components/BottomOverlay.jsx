@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
+import { makeStyles } from '@material-ui/core/styles';
 
 import {
   hasAudio,
@@ -22,6 +23,12 @@ import PlayStopButton from './PlayStopButton';
 import SettingsButton from './SettingsButton';
 import VolumeButton from './VolumeButton';
 
+const useStyles = makeStyles({
+  root: {
+    background: 'linear-gradient(transparent, rgba(0, 0, 0, 0.6))'
+  }
+});
+
 const BottomOverlay = ({
   audioReady,
   duration,
@@ -31,39 +38,45 @@ const BottomOverlay = ({
   onToggleMuted,
   onTogglePlayback,
   ...rest
-}) => (
-  <Box
-    left={0}
-    right={0}
-    bottom={0}
-    position="absolute"
-    {...rest}
-    display="flex"
-    alignItems="center"
-  >
-    <Box px={2}>
-      <PlayStopButton
-        edge="start"
-        disabled={!playing && !audioReady}
-        playing={playing}
-        onClick={onTogglePlayback}
-      />
-      {hasAudio ? <VolumeButton muted={muted} onClick={onToggleMuted} /> : null}
+}) => {
+  const classes = useStyles();
+  return (
+    <Box
+      left={0}
+      right={0}
+      bottom={0}
+      position="absolute"
+      className={classes.root}
+      {...rest}
+      display="flex"
+      alignItems="center"
+    >
+      <Box px={2}>
+        <PlayStopButton
+          edge="start"
+          disabled={!playing && !audioReady}
+          playing={playing}
+          onClick={onTogglePlayback}
+        />
+        {hasAudio ? (
+          <VolumeButton muted={muted} onClick={onToggleMuted} />
+        ) : null}
+      </Box>
+      <Box flex={1} textAlign="center">
+        <PlaybackSlider />
+      </Box>
+      <Box textAlign="right" pl={2}>
+        {formatPlaybackTimestamp(duration)}
+      </Box>
+      <Box px={1}>
+        <IconButton id="vr-button">
+          <VirtualReality />
+        </IconButton>
+        <SettingsButton />
+      </Box>
     </Box>
-    <Box flex={1} textAlign="center">
-      <PlaybackSlider />
-    </Box>
-    <Box textAlign="right" pl={2}>
-      {formatPlaybackTimestamp(duration)}
-    </Box>
-    <Box px={1}>
-      <IconButton id="vr-button">
-        <VirtualReality />
-      </IconButton>
-      <SettingsButton />
-    </Box>
-  </Box>
-);
+  );
+};
 
 BottomOverlay.propTypes = {
   audioReady: PropTypes.bool,

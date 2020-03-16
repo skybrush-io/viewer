@@ -25,16 +25,24 @@ import VolumeButton from './VolumeButton';
 
 const useStyles = makeStyles({
   root: {
-    background: 'linear-gradient(transparent, rgba(0, 0, 0, 0.6))'
+    background: 'linear-gradient(transparent 0px, rgba(0, 0, 0, 0.6) 48px)'
   }
 });
+
+const noWrap = {
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap'
+};
 
 const BottomOverlay = ({
   audioReady,
   duration,
   hasAudio,
+  leftText,
   muted,
   playing,
+  rightText,
   onToggleMuted,
   onTogglePlayback,
   ...rest
@@ -48,32 +56,48 @@ const BottomOverlay = ({
       position="absolute"
       className={classes.root}
       {...rest}
-      display="flex"
-      alignItems="center"
     >
-      <Box px={2}>
-        <PlayStopButton
-          edge="start"
-          disabled={!playing && !audioReady}
-          playing={playing}
-          onClick={onTogglePlayback}
-        />
-        {hasAudio ? (
-          <VolumeButton muted={muted} onClick={onToggleMuted} />
-        ) : null}
+      <Box display="flex" alignItems="center">
+        <Box px={2}>
+          <PlayStopButton
+            edge="start"
+            disabled={!playing && !audioReady}
+            playing={playing}
+            onClick={onTogglePlayback}
+          />
+          {hasAudio ? (
+            <VolumeButton muted={muted} onClick={onToggleMuted} />
+          ) : null}
+        </Box>
+        <Box flex={1} textAlign="center">
+          <PlaybackSlider />
+        </Box>
+        <Box textAlign="right" pl={2}>
+          {formatPlaybackTimestamp(duration)}
+        </Box>
+        <Box px={1}>
+          <IconButton id="vr-button">
+            <VirtualReality />
+          </IconButton>
+          <SettingsButton />
+        </Box>
       </Box>
-      <Box flex={1} textAlign="center">
-        <PlaybackSlider />
-      </Box>
-      <Box textAlign="right" pl={2}>
-        {formatPlaybackTimestamp(duration)}
-      </Box>
-      <Box px={1}>
-        <IconButton id="vr-button">
-          <VirtualReality />
-        </IconButton>
-        <SettingsButton />
-      </Box>
+
+      {leftText || rightText ? (
+        <Box
+          display="flex"
+          alignItems="center"
+          maxWidth="100%"
+          minHeight={24}
+          px={2}
+        >
+          <Box style={noWrap}>{leftText}</Box>
+          <Box flex={1}> </Box>
+          <Box style={{ ...noWrap, opacity: 0.5 }} textAlign="right">
+            {rightText}
+          </Box>
+        </Box>
+      ) : null}
     </Box>
   );
 };
@@ -82,10 +106,12 @@ BottomOverlay.propTypes = {
   audioReady: PropTypes.bool,
   duration: PropTypes.number,
   hasAudio: PropTypes.bool,
+  leftText: PropTypes.string,
   muted: PropTypes.bool,
   playing: PropTypes.bool,
   onToggleMuted: PropTypes.func,
-  onTogglePlayback: PropTypes.func
+  onTogglePlayback: PropTypes.func,
+  rightText: PropTypes.string
 };
 
 export default connect(
@@ -94,8 +120,11 @@ export default connect(
     audioReady: isAudioReadyToPlay(state),
     duration: getShowDuration(state),
     hasAudio: hasAudio(state),
+    leftText:
+      'Use arrow keys to move around and E/C to change altitude. Drag the scenery to look around.',
     muted: isAudioMuted(state),
-    playing: isPlaying(state)
+    playing: isPlaying(state),
+    rightText: 'Skybrush © 2020 CollMot Robotics Ltd.'
   }),
   // mapDispatchToProps
   {

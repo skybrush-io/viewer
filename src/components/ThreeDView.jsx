@@ -11,12 +11,16 @@ import Scenery from './Scenery';
 // eslint-disable-next-line no-unused-vars
 import AFrame from '~/aframe';
 import { objectToString } from '~/aframe/utils';
-import { getNumberOfDronesInShow } from '~/features/show/selectors';
+import {
+  getInitialCameraConfigurationOfShow,
+  getNumberOfDronesInShow
+} from '~/features/show/selectors';
 
 const glow = require('~/../assets/img/sphere-glow-hollow.png').default;
 
 const ThreeDView = React.forwardRef((props, ref) => {
   const {
+    cameraConfiguration,
     grid,
     navigation,
     numDrones,
@@ -56,13 +60,18 @@ const ThreeDView = React.forwardRef((props, ref) => {
         <img crossOrigin="anonymous" id="glow-texture" src={glow} />
       </a-assets>
 
-      <a-camera
-        sync-pose-with-store=""
-        id="three-d-camera"
-        look-controls="reverseMouseDrag: true"
-        position="0 20 50"
-        {...extraCameraProps}
-      />
+      <a-entity
+        id="camera-rig"
+        position={cameraConfiguration.position.join(' ')} // "-52.9 9.93 0.22"
+        rotation={cameraConfiguration.rotation.join(' ')} // "-24.63 -114.6 0"
+      >
+        <a-camera
+          sync-pose-with-store=""
+          id="three-d-camera"
+          look-controls="reverseMouseDrag: true"
+          {...extraCameraProps}
+        />
+      </a-entity>
 
       <a-entity rotation="-90 0 90">
         <a-drone-flock size={numDrones} />
@@ -74,6 +83,10 @@ const ThreeDView = React.forwardRef((props, ref) => {
 });
 
 ThreeDView.propTypes = {
+  cameraConfiguration: PropTypes.shape({
+    position: PropTypes.arrayOf(PropTypes.number).isRequired,
+    rotation: PropTypes.arrayOf(PropTypes.number).isRequired
+  }),
   grid: PropTypes.string,
   navigation: PropTypes.shape({
     mode: PropTypes.oneOf(['walk', 'fly']),
@@ -85,9 +98,17 @@ ThreeDView.propTypes = {
   vrEnabled: PropTypes.bool
 };
 
+ThreeDView.defaultProps = {
+  cameraConfiguration: {
+    position: [0, 20, 50],
+    rotation: [0, 0, 0]
+  }
+};
+
 export default connect(
   // mapStateToProps
   state => ({
+    cameraConfiguration: getInitialCameraConfigurationOfShow(state),
     numDrones: getNumberOfDronesInShow(state),
     ...state.settings.threeD,
     ...state.threeD

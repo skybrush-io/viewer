@@ -17,6 +17,7 @@ import {
 } from '~/features/show/selectors';
 
 const glow = require('~/../assets/img/sphere-glow-hollow.png').default;
+// const flapperDrone = require('~/../assets/models/flapper-drone.obj').default;
 
 const ThreeDView = React.forwardRef((props, ref) => {
   const {
@@ -58,6 +59,7 @@ const ThreeDView = React.forwardRef((props, ref) => {
     >
       <a-assets>
         <img crossOrigin="anonymous" id="glow-texture" src={glow} />
+        {/* <a-asset-item id="flapper" src={flapperDrone} /> */}
       </a-assets>
 
       <a-entity

@@ -46,7 +46,7 @@ export const getDroneSwarmSpecification = state => {
  */
 export const getInitialCameraConfigurationOfShow = () => ({
   position: [0, 20, 50], // [-52.9, 9.93, 0.22],
-  rotation: [0, 0, 0] // [-24.63, -114.6, 0]
+  rotation: [0, 0, 0] // [0, -114.6, 0]
 });
 
 /**

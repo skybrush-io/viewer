@@ -34,6 +34,7 @@
     "@tippyjs/react": "^4.0.0-alpha.2",
     "aframe": "^1.0.4",
     "aframe-environment-component": "^2.0.0",
+    "aframe-glow": "^1.0.1",
     "aframe-look-at-component": "^0.8.0",
     "aframe-meshline-component": "^0.3.1",
     "aframe-orbit-controls": "^1.2.0",

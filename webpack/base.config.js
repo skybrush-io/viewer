@@ -83,7 +83,7 @@ module.exports = {
         include: path.join(projectRoot, 'assets')
       },
       {
-        test: /\.(woff|woff2|eot|ttf|svg|mp3|wav|ogg)$/,
+        test: /\.(woff|woff2|eot|ttf|svg|mp3|wav|ogg|gltf|obj)$/,
         use: [{ loader: 'file-loader' }]
       }
     ]

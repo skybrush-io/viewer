@@ -29,9 +29,32 @@ AFrame.registerSystem('drone-flock', {
 
     this.currentTime = 0;
     this._getElapsedSeconds = boundGetElapsedSecodsGetter();
+
+    this._entityFactories = {
+      default: this._createDefaultUAVEntity.bind(this),
+      flapper: this._createFlapperDroneEntity.bind(this)
+    };
   },
 
-  createNewUAVEntity() {
+  createNewUAVEntity(type) {
+    const factory =
+      this._entityFactories[type] || this._entityFactories.default;
+    return factory();
+  },
+
+  _createGlowEntity(scale) {
+    const glowEl = document.createElement('a-entity');
+    glowEl.setAttribute('sprite', {
+      blending: 'additive',
+      color: new THREE.Color('#ff8800'),
+      scale: `${scale * 2} ${scale * 2} 1`,
+      src: '#glow-texture',
+      transparent: true
+    });
+    return glowEl;
+  },
+
+  _createDefaultUAVEntity() {
     const el = document.createElement('a-entity');
     el.setAttribute('geometry', {
       primitive: 'sphere',
@@ -46,16 +69,35 @@ AFrame.registerSystem('drone-flock', {
     });
     el.setAttribute('position', '0 0 0');
 
-    const glowEl = document.createElement('a-entity');
-    glowEl.setAttribute('sprite', {
-      blending: 'additive',
-      color: new THREE.Color('#ff8800'),
-      scale: '2 2 1',
-      src: '#glow-texture',
-      transparent: true
-    });
+    el.append(this._createGlowEntity());
 
-    el.append(glowEl);
+    return el;
+  },
+
+  _createFlapperDroneEntity() {
+    const el = document.createElement('a-entity');
+    el.setAttribute('obj-model', {
+      obj: '#flapper'
+    });
+    el.setAttribute('material', {
+      color: new THREE.Color('#0088ff'),
+      fog: false,
+      shader: 'flat'
+    });
+    el.setAttribute('position', '0 0 0');
+    // el.setAttribute('rotation', '90 0 0');
+    // el.setAttribute('scale', '6 6 6');
+
+    setTimeout(() => {
+      el.setAttribute('glow', {
+        c: 0.6,
+        p: 6,
+        color: '#0088ff',
+        scale: 1.5,
+        side: 'back'
+      });
+    }, 1000);
+    // el.append(this._createGlowEntity(1 / 3));
 
     return el;
   },
@@ -70,6 +112,8 @@ AFrame.registerSystem('drone-flock', {
 
   updateEntityPositionAndColor(entity, position, color) {
     entity.object3D.position.copy(position);
+
+    entity.setAttribute('glow', 'color', '#' + color.getHexString());
 
     const mesh = entity.getObject3D('mesh');
     if (mesh) {
@@ -99,7 +143,8 @@ AFrame.registerSystem('drone-flock', {
 
 AFrame.registerComponent('drone-flock', {
   schema: {
-    size: { default: 0 }
+    size: { default: 0 },
+    type: { default: 'default' }
   },
 
   init() {
@@ -161,25 +206,24 @@ AFrame.registerComponent('drone-flock', {
   },
 
   update(oldData) {
-    const oldSize = oldData.size;
+    const oldSize = oldData.size || 0;
+    const { size, type } = this.data;
 
-    if (oldSize !== undefined) {
-      const { size } = this.data;
+    // TODO: support changing types on the fly
 
-      if (size > oldSize) {
-        // Add new drones
-        for (let i = oldSize; i < size; i++) {
-          const entity = this.system.createNewUAVEntity();
-          this.el.append(entity);
+    if (size > oldSize) {
+      // Add new drones
+      for (let i = oldSize; i < size; i++) {
+        const entity = this.system.createNewUAVEntity(type);
+        this.el.append(entity);
 
-          this._drones.push({ index: i, entity });
-        }
-      } else {
-        // Remove unneeded drones
-        for (let i = size; i < oldSize; i++) {
-          const { entity } = this._drones.pop();
-          entity.remove();
-        }
+        this._drones.push({ index: i, entity });
+      }
+    } else {
+      // Remove unneeded drones
+      for (let i = size; i < oldSize; i++) {
+        const { entity } = this._drones.pop();
+        entity.remove();
       }
     }
   }

@@ -43,3 +43,13 @@ export const isAdjustingPlaybackPosition = state =>
  */
 export const isPlaying = state =>
   state.playback.startedAt && !state.playback.stoppedAt;
+
+/**
+ * Returns whether the user has interacted with the playback settings at least
+ * once.
+ *
+ * Used to decide whether a play button "hint" should be shown on the loading
+ * screen when the show is loaded.
+ */
+export const userInteractedWithPlayback = state =>
+  state.playback.startedAt || state.playback.adjustedTo;

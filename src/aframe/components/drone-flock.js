@@ -42,7 +42,7 @@ AFrame.registerSystem('drone-flock', {
     return factory();
   },
 
-  _createGlowEntity(scale) {
+  _createGlowEntity(scale = 1) {
     const glowEl = document.createElement('a-entity');
     glowEl.setAttribute('sprite', {
       blending: 'additive',
@@ -112,8 +112,6 @@ AFrame.registerSystem('drone-flock', {
 
   updateEntityPositionAndColor(entity, position, color) {
     entity.object3D.position.copy(position);
-
-    entity.setAttribute('glow', 'color', '#' + color.getHexString());
 
     const mesh = entity.getObject3D('mesh');
     if (mesh) {

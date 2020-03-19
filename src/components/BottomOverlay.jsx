@@ -14,7 +14,7 @@ import {
 import { toggleMuted } from '~/features/audio/slice';
 import { togglePlayback } from '~/features/playback/actions';
 import { isPlaying } from '~/features/playback/selectors';
-import { getShowDuration } from '~/features/show/selectors';
+import { getShowDuration, hasLoadedShowFile } from '~/features/show/selectors';
 import VirtualReality from '~/icons/VirtualReality';
 import { formatPlaybackTimestamp } from '~/utils/formatters';
 
@@ -39,6 +39,7 @@ const BottomOverlay = ({
   audioReady,
   duration,
   hasAudio,
+  hasShow,
   leftText,
   muted,
   playing,
@@ -61,7 +62,7 @@ const BottomOverlay = ({
         <Box px={2}>
           <PlayStopButton
             edge="start"
-            disabled={!playing && !audioReady}
+            disabled={!playing && (!audioReady || !hasShow)}
             playing={playing}
             onClick={onTogglePlayback}
           />
@@ -106,6 +107,7 @@ BottomOverlay.propTypes = {
   audioReady: PropTypes.bool,
   duration: PropTypes.number,
   hasAudio: PropTypes.bool,
+  hasShow: PropTypes.bool,
   leftText: PropTypes.string,
   muted: PropTypes.bool,
   playing: PropTypes.bool,
@@ -120,6 +122,7 @@ export default connect(
     audioReady: isAudioReadyToPlay(state),
     duration: getShowDuration(state),
     hasAudio: hasAudio(state),
+    hasShow: hasLoadedShowFile(state),
     leftText:
       'Use arrow keys to move around and E/C to change altitude. Drag the scenery to look around.',
     muted: isAudioMuted(state),

@@ -2,6 +2,7 @@
  * Saga that loads the default hardcoded drone show when the app is started.
  */
 
+import delay from 'delay';
 import { put } from 'redux-saga/effects';
 
 import { setAudioUrl } from '~/features/audio/slice';

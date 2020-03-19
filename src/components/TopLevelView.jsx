@@ -10,6 +10,7 @@ import Box from '@material-ui/core/Box';
 
 import AudioController from './AudioController';
 import ErrorNotificationController from './ErrorNotificationController';
+import LoadingScreen from './LoadingScreen';
 import Overlays from './Overlays';
 import OverlayVisibilityController from './OverlayVisibilityController';
 import ThreeDView from './ThreeDView';
@@ -24,6 +25,7 @@ const ThreeDTopLevelView = () => {
       <Box position="relative" flex={1}>
         <ThreeDView />
         <Overlays />
+        <LoadingScreen />
       </Box>
 
       <AudioController />

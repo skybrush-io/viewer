@@ -5,12 +5,14 @@ import { connect } from 'react-redux';
 
 import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import IconButton from '@material-ui/core/IconButton';
 import Fab from '@material-ui/core/Fab';
 import Fade from '@material-ui/core/Fade';
 import { makeStyles } from '@material-ui/core/styles';
+import Close from '@material-ui/icons/Close';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 
-import { togglePlayback } from '~/features/playback/actions';
+import { rewind, togglePlayback } from '~/features/playback/actions';
 import { userInteractedWithPlayback } from '~/features/playback/selectors';
 import {
   hasLoadedShowFile,
@@ -52,11 +54,11 @@ const useStyles = makeStyles(
   }
 );
 
-const LoadingScreen = ({ canPlay, loading, onPlay, visible }) => {
+const LoadingScreen = ({ canPlay, loading, onDismiss, onPlay, visible }) => {
   const classes = useStyles();
   return (
     <Fade mountOnEnter unmountOnExit timeout={500} in={visible}>
-      <Box className={classes.root} p={2} textAlign="center">
+      <Box className={classes.root} px={2} py={6} textAlign="center">
         <Box className={classes.wrapper}>
           {loading && (
             <CircularProgress size={64} className={classes.progress} />
@@ -74,6 +76,13 @@ const LoadingScreen = ({ canPlay, loading, onPlay, visible }) => {
         <Box textAlign="center" mt={2}>
           {loading ? 'Loading show...' : 'Click to play'}
         </Box>
+        {!loading && (
+          <Box position="absolute" right={4} top={4}>
+            <IconButton disableRipple onClick={onDismiss}>
+              <Close fontSize="small" />
+            </IconButton>
+          </Box>
+        )}
       </Box>
     </Fade>
   );
@@ -82,6 +91,8 @@ const LoadingScreen = ({ canPlay, loading, onPlay, visible }) => {
 LoadingScreen.propTypes = {
   canPlay: PropTypes.bool,
   loading: PropTypes.bool,
+  onDismiss: PropTypes.func,
+  onPlay: PropTypes.func,
   visible: PropTypes.bool
 };
 
@@ -94,6 +105,7 @@ export default connect(
   }),
   // mapDispatchToProps
   {
+    onDismiss: rewind,
     onPlay: togglePlayback
   }
 )(LoadingScreen);

@@ -3,6 +3,10 @@ import { setStartAndStopTime } from './slice';
 
 export { temporarilyOverridePlaybackPosition } from './slice';
 
+export const rewind = () => dispatch => {
+  dispatch(setPlaybackPosition(0));
+};
+
 export const startPlaybackFromBeginning = () => dispatch => {
   dispatch(setStartAndStopTime({ start: Date.now(), stop: null }));
 };

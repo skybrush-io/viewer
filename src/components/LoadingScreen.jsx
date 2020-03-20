@@ -11,6 +11,7 @@ import Fade from '@material-ui/core/Fade';
 import { makeStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
 import PlayIcon from '@material-ui/icons/PlayArrow';
+import WarningIcon from '@material-ui/icons/Warning';
 
 import { rewind, togglePlayback } from '~/features/playback/actions';
 import { userInteractedWithPlayback } from '~/features/playback/selectors';
@@ -54,11 +55,18 @@ const useStyles = makeStyles(
   }
 );
 
-const LoadingScreen = ({ canPlay, loading, onDismiss, onPlay, visible }) => {
+const LoadingScreen = ({
+  canPlay,
+  error,
+  loading,
+  onDismiss,
+  onPlay,
+  visible
+}) => {
   const classes = useStyles();
   return (
     <Fade mountOnEnter unmountOnExit timeout={500} in={visible}>
-      <Box className={classes.root} px={2} py={6} textAlign="center">
+      <Box className={classes.root} px={6} py={6} textAlign="center">
         <Box className={classes.wrapper}>
           {loading && (
             <CircularProgress size={64} className={classes.progress} />
@@ -67,17 +75,20 @@ const LoadingScreen = ({ canPlay, loading, onDismiss, onPlay, visible }) => {
             aria-label="play"
             color="primary"
             className={classes.button}
-            style={{ opacity: !canPlay || loading ? 0 : 1 }}
+            style={{ opacity: !loading && (canPlay || error) ? 1 : 0 }}
             onClick={onPlay}
           >
-            <PlayIcon />
+            {error && <WarningIcon />}
+            {canPlay && !error && <PlayIcon />}
           </Fab>
         </Box>
-        <Box textAlign="center" mt={2}>
-          {loading ? 'Loading show...' : 'Click to play'}
+        <Box textAlign="center" mt={4}>
+          {loading && 'Loading show'}
+          {!loading && error ? error : null}
+          {!loading && !error && canPlay && 'Click to play'}
         </Box>
-        {!loading && (
-          <Box position="absolute" right={4} top={4}>
+        {!loading && !error && (
+          <Box position="absolute" right={4} top={4} style={{ opacity: 0.5 }}>
             <IconButton disableRipple onClick={onDismiss}>
               <Close fontSize="small" />
             </IconButton>
@@ -90,6 +101,7 @@ const LoadingScreen = ({ canPlay, loading, onDismiss, onPlay, visible }) => {
 
 LoadingScreen.propTypes = {
   canPlay: PropTypes.bool,
+  error: PropTypes.string,
   loading: PropTypes.bool,
   onDismiss: PropTypes.func,
   onPlay: PropTypes.func,
@@ -100,8 +112,12 @@ export default connect(
   // mapStateToProps
   state => ({
     canPlay: hasLoadedShowFile(state),
+    error: state.show.error,
     loading: isLoadingShowFile(state),
-    visible: isLoadingShowFile(state) || !userInteractedWithPlayback(state)
+    visible:
+      isLoadingShowFile(state) ||
+      !userInteractedWithPlayback(state) ||
+      Boolean(state.show.error)
   }),
   // mapDispatchToProps
   {

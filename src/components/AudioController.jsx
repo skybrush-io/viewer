@@ -33,7 +33,9 @@ const AudioController = ({
   const audioRef = useRef(null);
   const { addToast } = useToasts();
   const onError = useCallback(() => {
-    addToast('Error while playing audio; playback stopped.');
+    addToast('Error while playing audio; playback stopped.', {
+      appearance: 'error'
+    });
   }, [addToast]);
 
   // Effect that takes care of stopping / starting the audio and re-syncing the

@@ -6,6 +6,7 @@
   "main": "build/launcher.bundle.js",
   "scripts": {
     "bundle": "cross-env NODE_ENV=production webpack --mode=production --progress --config webpack/browser.config.js",
+    "bundle:stats": "cross-env NODE_ENV=production webpack --mode=production --progress --profile --json --config webpack/browser.config.js >webpack-stats.json",
     "dist": "node scripts/deploy.js -p",
     "doc": "esdoc -c esdoc.json",
     "lint": "xo",

@@ -35,6 +35,7 @@ doc/api/
 # Stuff packed by webpack
 build/
 dist/
+webpack-stats.json
 
 # Typescript type definitions
 typings/

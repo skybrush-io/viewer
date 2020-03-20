@@ -36,29 +36,29 @@ AFrame.registerSystem('drone-flock', {
     };
   },
 
-  createNewUAVEntity(type) {
+  createNewUAVEntity(type, droneSize) {
     const factory =
       this._entityFactories[type] || this._entityFactories.default;
-    return factory();
+    return factory(droneSize);
   },
 
-  _createGlowEntity(scale = 1) {
+  _createGlowEntity(droneSize = 1) {
     const glowEl = document.createElement('a-entity');
     glowEl.setAttribute('sprite', {
       blending: 'additive',
       color: new THREE.Color('#ff8800'),
-      scale: `${scale * 2} ${scale * 2} 1`,
+      scale: `${droneSize * 2} ${droneSize * 2} 1`,
       src: '#glow-texture',
       transparent: true
     });
     return glowEl;
   },
 
-  _createDefaultUAVEntity() {
+  _createDefaultUAVEntity(droneSize) {
     const el = document.createElement('a-entity');
     el.setAttribute('geometry', {
       primitive: 'sphere',
-      radius: 0.5,
+      radius: droneSize * 0.5,
       segmentsHeight: 9,
       segmentsWidth: 18
     });
@@ -69,7 +69,7 @@ AFrame.registerSystem('drone-flock', {
     });
     el.setAttribute('position', '0 0 0');
 
-    el.append(this._createGlowEntity());
+    el.append(this._createGlowEntity(droneSize));
 
     return el;
   },
@@ -141,6 +141,7 @@ AFrame.registerSystem('drone-flock', {
 
 AFrame.registerComponent('drone-flock', {
   schema: {
+    droneSize: { default: 1 },
     size: { default: 0 },
     type: { default: 'default' }
   },
@@ -205,14 +206,14 @@ AFrame.registerComponent('drone-flock', {
 
   update(oldData) {
     const oldSize = oldData.size || 0;
-    const { size, type } = this.data;
+    const { droneSize, size, type } = this.data;
 
-    // TODO: support changing types on the fly
+    // TODO: support changing radii or types on the fly
 
     if (size > oldSize) {
       // Add new drones
       for (let i = oldSize; i < size; i++) {
-        const entity = this.system.createNewUAVEntity(type);
+        const entity = this.system.createNewUAVEntity(type, droneSize);
         this.el.append(entity);
 
         this._drones.push({ index: i, entity });

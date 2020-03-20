@@ -76,7 +76,7 @@ const ThreeDView = React.forwardRef((props, ref) => {
       </a-entity>
 
       <a-entity rotation="-90 0 90">
-        <a-drone-flock size={numDrones} />
+        <a-drone-flock drone-size={1.5} size={numDrones} />
       </a-entity>
 
       <Scenery scale={10} type={scenery} grid={grid} />

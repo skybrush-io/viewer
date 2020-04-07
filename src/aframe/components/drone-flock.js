@@ -17,6 +17,8 @@ import store from '~/store';
 
 const { THREE } = AFrame;
 
+const toRadians = degrees => (degrees * Math.PI) / 180;
+
 AFrame.registerSystem('drone-flock', {
   init() {
     const boundGetElapsedSecodsGetter = () =>
@@ -43,53 +45,54 @@ AFrame.registerSystem('drone-flock', {
   },
 
   _createGlowEntity(droneSize = 1) {
-    const glowEl = document.createElement('a-entity');
-    glowEl.setAttribute('sprite', {
+    const glowElement = document.createElement('a-entity');
+    glowElement.setAttribute('sprite', {
       blending: 'additive',
       color: new THREE.Color('#ff8800'),
       scale: `${droneSize * 2} ${droneSize * 2} 1`,
       src: '#glow-texture',
       transparent: true
     });
-    return glowEl;
+    return glowElement;
   },
 
   _createDefaultUAVEntity(droneSize) {
-    const el = document.createElement('a-entity');
-    el.setAttribute('geometry', {
+    const element = document.createElement('a-entity');
+    element.setAttribute('geometry', {
       primitive: 'sphere',
       radius: droneSize * 0.5,
       segmentsHeight: 9,
       segmentsWidth: 18
     });
-    el.setAttribute('material', {
+    element.setAttribute('material', {
       color: new THREE.Color('#0088ff'),
       fog: false,
       shader: 'flat'
     });
-    el.setAttribute('position', '0 0 0');
+    element.setAttribute('position', '0 0 0');
 
-    el.append(this._createGlowEntity(droneSize));
+    element.append(this._createGlowEntity(droneSize));
 
-    return el;
+    return element;
   },
 
   _createFlapperDroneEntity() {
-    const el = document.createElement('a-entity');
-    el.setAttribute('obj-model', {
+    const element = document.createElement('a-entity');
+    element.setAttribute('obj-model', {
       obj: '#flapper'
     });
-    el.setAttribute('material', {
+    element.setAttribute('material', {
       color: new THREE.Color('#0088ff'),
       fog: false,
       shader: 'flat'
     });
-    el.setAttribute('position', '0 0 0');
-    // el.setAttribute('rotation', '90 0 0');
-    // el.setAttribute('scale', '6 6 6');
+    element.setAttribute('position', '0 0 0');
+    element.setAttribute('rotation', '90 0 0');
+    element.setAttribute('scale', '6 6 6');
 
+    /*
     setTimeout(() => {
-      el.setAttribute('glow', {
+      element.setAttribute('glow', {
         c: 0.6,
         p: 6,
         color: '#0088ff',
@@ -97,9 +100,10 @@ AFrame.registerSystem('drone-flock', {
         side: 'back'
       });
     }, 1000);
-    // el.append(this._createGlowEntity(1 / 3));
+    */
+    element.append(this._createGlowEntity(1 / 3));
 
-    return el;
+    return element;
   },
 
   createTrajectoryPlayerForIndex(index) {
@@ -110,8 +114,16 @@ AFrame.registerSystem('drone-flock', {
     this.currentTime = this._getElapsedSeconds();
   },
 
-  updateEntityPositionAndColor(entity, position, color) {
+  updateEntityPositionRotationAndColor(entity, position, rotation, color) {
+    const { rotation: currentRotation } = entity.object3D;
+    const alpha = 0.1;
+
     entity.object3D.position.copy(position);
+    entity.object3D.rotation.set(
+      currentRotation.x * (1 - alpha) + rotation.x * alpha,
+      currentRotation.y * (1 - alpha) + rotation.y * alpha,
+      currentRotation.z * (1 - alpha) + rotation.z * alpha
+    );
 
     const mesh = entity.getObject3D('mesh');
     if (mesh) {
@@ -151,7 +163,9 @@ AFrame.registerComponent('drone-flock', {
 
     this._color = new THREE.Color();
     this._colorArray = [0, 0, 0];
-    this._vec = new THREE.Vector3();
+    this._position = new THREE.Vector3();
+    this._velocity = new THREE.Vector3();
+    this._rotation = new THREE.Euler();
 
     const boundGetTrajectoryPlayers = () =>
       getTrajectoryPlayers(store.getState());
@@ -176,8 +190,10 @@ AFrame.registerComponent('drone-flock', {
   remove() {},
 
   tick() {
-    const { currentTime, updateEntityPositionAndColor } = this.system;
-    const vec = this._vec;
+    const { currentTime, updateEntityPositionRotationAndColor } = this.system;
+    const position = this._position;
+    const velocity = this._velocity;
+    const rotation = this._rotation;
     const color = this._color;
     const colorArray = this._colorArray;
 
@@ -188,9 +204,20 @@ AFrame.registerComponent('drone-flock', {
       const trajectoryPlayer = this._trajectoryPlayers[index];
 
       if (trajectoryPlayer) {
-        trajectoryPlayer.getPositionAt(currentTime, vec);
+        trajectoryPlayer.getPositionAt(currentTime, position);
+        trajectoryPlayer.getVelocityAt(currentTime, velocity);
+
+        // TODO(ntamas): this is flapper-specific, we don't need this for
+        // ordinary drones
+        // Pitch angle is deduced from vx, peaking at -60 degrees for 5 m/s
+        velocity.clampScalar(-5, 5);
+
+        const pitch = -12 * velocity.x;
+        const roll = -12 * velocity.y;
+        rotation.set(toRadians(90 + roll), 0, toRadians(pitch));
       } else {
-        vec.setScalar(0);
+        position.setScalar(0);
+        rotation.setScalar(0);
       }
 
       if (lightProgramPlayer) {
@@ -200,7 +227,7 @@ AFrame.registerComponent('drone-flock', {
         color.setScalar(0.5);
       }
 
-      updateEntityPositionAndColor(entity, vec, color);
+      updateEntityPositionRotationAndColor(entity, position, rotation, color);
     }
   },
 

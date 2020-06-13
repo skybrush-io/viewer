@@ -33,8 +33,8 @@ class TrajectoryPlayer {
     this._segmentFuncs.length = this._numSegments;
 
     this._specialSegmentFuncs = {
-      beforeFirst: createConstantSegmentFunctions(firstPoint),
-      afterLast: createConstantSegmentFunctions(lastPoint)
+      beforeFirst: createConstantSegmentFunction(firstPoint),
+      afterLast: createConstantSegmentFunction(lastPoint)
     };
 
     this._reset();
@@ -59,25 +59,7 @@ class TrajectoryPlayer {
       ratio = 0;
     }
 
-    this._currentSegmentFuncs.getPositionAt(result, ratio);
-  }
-
-  /**
-   * Returns the velocity of the drone at the given time instant.
-   */
-  getVelocityAt(time, result) {
-    let ratio;
-
-    this._seekTo(time);
-
-    if (this._currentSegmentLength > 0) {
-      ratio =
-        (time - this._currentSegmentStartTime) / this._currentSegmentLength;
-    } else {
-      ratio = 0;
-    }
-
-    this._currentSegmentFuncs.getVelocityAt(result, ratio);
+    this._currentSegmentFunc(result, ratio);
   }
 
   /**
@@ -137,7 +119,7 @@ class TrajectoryPlayer {
       this._currentSegmentStartTime = Number.NEGATIVE_INFINITY;
       this._currentSegmentEndTime =
         this._numSegments > 0 ? this._startTimes[0] : Number.POSITIVE_INFINITY;
-      this._currentSegmentFuncs = this._specialSegmentFuncs.beforeFirst;
+      this._currentSegmentFunc = this._specialSegmentFuncs.beforeFirst;
     } else if (index >= this._numSegments) {
       this._currentSegment = undefined;
       this._currentSegmentLength = 0;
@@ -146,7 +128,7 @@ class TrajectoryPlayer {
         this._numSegments > 0
           ? this._startTimes[this._numSegments - 1]
           : Number.NEGATIVE_INFINITY;
-      this._currentSegmentFuncs = this._specialSegmentFuncs.afterLast;
+      this._currentSegmentFunc = this._specialSegmentFuncs.afterLast;
     } else {
       this._currentSegment = this._segments[index];
       this._currentSegmentStartTime = this._startTimes[index];
@@ -162,20 +144,19 @@ class TrajectoryPlayer {
 
       if (!this._segmentFuncs[index]) {
         if (index < this._numSegments - 1) {
-          this._segmentFuncs[index] = createSegmentFunctions(
+          this._segmentFuncs[index] = createSegmentFunction(
             this._currentSegment[0],
             this._segments[index + 1][0],
-            this._currentSegment[1],
-            this._currentSegmentLength
+            this._currentSegment[1]
           );
         } else {
-          this._segmentFuncs[index] = createConstantSegmentFunctions(
+          this._segmentFuncs[index] = createConstantSegmentFunction(
             this._currentSegment[0]
           );
         }
       }
 
-      this._currentSegmentFuncs = this._segmentFuncs[index];
+      this._currentSegmentFunc = this._segmentFuncs[index];
     }
   }
 }
@@ -201,20 +182,15 @@ function bisect(items, x, lo = 0, hi = items.length) {
   return lo;
 }
 
-function createConstantSegmentFunctions(point) {
+function createConstantSegmentFunction(point) {
   const [x, y, z] = point;
 
-  return {
-    getPositionAt(position) {
-      position.set(x, y, z);
-    },
-    getVelocityAt(velocity) {
-      velocity.setScalar(0);
-    }
+  return function(vec) {
+    vec.set(x, y, z);
   };
 }
 
-function createSegmentFunctions(start, end, controlPoints, dt) {
+function createSegmentFunction(start, end, controlPoints) {
   if (controlPoints && controlPoints.length > 0) {
     // TODO(ntamas)
     throw new Error('Control points not supported yet');
@@ -224,17 +200,9 @@ function createSegmentFunctions(start, end, controlPoints, dt) {
   const dx = end[0] - x;
   const dy = end[1] - y;
   const dz = end[2] - z;
-  const vx = dt > 0 ? dx / dt : 0;
-  const vy = dt > 0 ? dy / dt : 0;
-  const vz = dt > 0 ? dz / dt : 0;
 
-  return {
-    getPositionAt(position, ratio) {
-      position.set(x + ratio * dx, y + ratio * dy, z + ratio * dz);
-    },
-    getVelocityAt(velocity) {
-      velocity.set(vx, vy, vz);
-    }
+  return function(vec, ratio) {
+    vec.set(x + ratio * dx, y + ratio * dy, z + ratio * dz);
   };
 }
 
@@ -247,7 +215,6 @@ export default function createTrajectoryPlayer(trajectory) {
   const player = new TrajectoryPlayer(trajectory);
 
   return {
-    getPositionAt: player.getPositionAt.bind(player),
-    getVelocityAt: player.getVelocityAt.bind(player)
+    getPositionAt: player.getPositionAt.bind(player)
   };
 }

@@ -1,3 +1,5 @@
+import config from 'config';
+
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -9,7 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   hasAudio,
   isAudioMuted,
-  isAudioReadyToPlay
+  isAudioReadyToPlay,
 } from '~/features/audio/selectors';
 import { toggleMuted } from '~/features/audio/slice';
 import { togglePlayback } from '~/features/playback/actions';
@@ -25,14 +27,14 @@ import VolumeButton from './VolumeButton';
 
 const useStyles = makeStyles({
   root: {
-    background: 'linear-gradient(transparent 0px, rgba(0, 0, 0, 0.6) 48px)'
-  }
+    background: 'linear-gradient(transparent 0px, rgba(0, 0, 0, 0.6) 48px)',
+  },
 });
 
 const noWrap = {
   overflow: 'hidden',
   textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap'
+  whiteSpace: 'nowrap',
 };
 
 const BottomOverlay = ({
@@ -54,14 +56,14 @@ const BottomOverlay = ({
       left={0}
       right={0}
       bottom={0}
-      position="absolute"
+      position='absolute'
       className={classes.root}
       {...rest}
     >
-      <Box display="flex" alignItems="center">
+      <Box display='flex' alignItems='center'>
         <Box px={2}>
           <PlayStopButton
-            edge="start"
+            edge='start'
             disabled={!playing && (!audioReady || !hasShow)}
             playing={playing}
             onClick={onTogglePlayback}
@@ -70,31 +72,33 @@ const BottomOverlay = ({
             <VolumeButton muted={muted} onClick={onToggleMuted} />
           ) : null}
         </Box>
-        <Box flex={1} textAlign="center">
+        <Box flex={1} textAlign='center'>
           <PlaybackSlider />
         </Box>
-        <Box textAlign="right" pl={2}>
+        <Box textAlign='right' pl={2}>
           {formatPlaybackTimestamp(duration)}
         </Box>
         <Box px={1}>
-          <IconButton id="vr-button">
-            <VirtualReality />
-          </IconButton>
+          {config.buttons.vr && (
+            <IconButton id='vr-button'>
+              <VirtualReality />
+            </IconButton>
+          )}
           <SettingsButton />
         </Box>
       </Box>
 
       {leftText || rightText ? (
         <Box
-          display="flex"
-          alignItems="center"
-          maxWidth="100%"
+          display='flex'
+          alignItems='center'
+          maxWidth='100%'
           minHeight={24}
           px={2}
         >
           <Box style={noWrap}>{leftText}</Box>
           <Box flex={1}> </Box>
-          <Box style={{ ...noWrap, opacity: 0.5 }} textAlign="right">
+          <Box style={{ ...noWrap, opacity: 0.5 }} textAlign='right'>
             {rightText}
           </Box>
         </Box>
@@ -113,12 +117,12 @@ BottomOverlay.propTypes = {
   playing: PropTypes.bool,
   onToggleMuted: PropTypes.func,
   onTogglePlayback: PropTypes.func,
-  rightText: PropTypes.string
+  rightText: PropTypes.string,
 };
 
 export default connect(
   // mapStateToProps
-  state => ({
+  (state) => ({
     audioReady: isAudioReadyToPlay(state),
     duration: getShowDuration(state),
     hasAudio: hasAudio(state),
@@ -127,11 +131,11 @@ export default connect(
       'Use arrow keys to move around and E/C to change altitude. Drag the scenery to look around.',
     muted: isAudioMuted(state),
     playing: isPlaying(state),
-    rightText: 'Skybrush © 2020 CollMot Robotics Ltd.'
+    rightText: 'Skybrush © 2020 CollMot Robotics Ltd.',
   }),
   // mapDispatchToProps
   {
     onToggleMuted: toggleMuted,
-    onTogglePlayback: togglePlayback
+    onTogglePlayback: togglePlayback,
   }
 )(BottomOverlay);

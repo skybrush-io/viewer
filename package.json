@@ -5,8 +5,8 @@
   "description": "Viewer for Skybrush drone shows",
   "main": "build/launcher.bundle.js",
   "scripts": {
-    "bundle": "cross-env NODE_ENV=production webpack --mode=production --progress --config webpack/browser.config.js",
-    "bundle:stats": "cross-env NODE_ENV=production webpack --mode=production --progress --profile --json --config webpack/browser.config.js >webpack-stats.json",
+    "bundle": "rimraf build && cross-env NODE_ENV=production webpack --mode=production --progress --config webpack/browser.config.js",
+    "bundle:stats": "rimraf build && cross-env NODE_ENV=production webpack --mode=production --progress --profile --json --config webpack/browser.config.js >webpack-stats.json",
     "dist": "node scripts/deploy.js -p",
     "doc": "esdoc -c esdoc.json",
     "lint": "xo",
@@ -101,7 +101,6 @@
     "dotenv-webpack": "^1.8.0",
     "electron": "^9.0.4",
     "electron-builder": "^22.7.0",
-    "esdoc": "^1.1.0",
     "eslint": "^7.2.0",
     "eslint-config-xo-react": "^0.23.0",
     "eslint-plugin-react": "^7.20.0",
@@ -109,10 +108,13 @@
     "execa": "^4.0.2",
     "file-loader": "^6.0.0",
     "fs-extra": "^9.0.1",
+    "git-revision-webpack-plugin": "^3.0.6",
+    "html-webpack-plugin": "^4.3.0",
     "less": "^3.11.3",
     "less-loader": "^6.1.1",
     "listr": "^0.14.3",
     "ora": "^4.0.4",
+    "prettier": "^2.0.5",
     "raw-loader": "^4.0.1",
     "style-loader": "^1.2.1",
     "terser-webpack-plugin": "^3.0.4",
@@ -125,7 +127,10 @@
     "xo": "^0.32.0"
   },
   "prettier": {
-    "bracketSpacing": true
+    "bracketSpacing": true,
+    "jsxSingleQuote": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
   },
   "xo": {
     "extends": "xo-react",
@@ -147,7 +152,8 @@
       "react/boolean-prop-naming": 0,
       "react/jsx-no-duplicate-props": 0,
       "react/require-default-props": 0,
-      "unicorn/filename-case": 0
+      "unicorn/filename-case": 0,
+      "unicorn/no-fn-reference-in-iterator": 0
     }
   }
 }

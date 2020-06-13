@@ -4,7 +4,14 @@
 
 const config = {
   buttons: {
+    playbackHint: true,
     vr: true,
+  },
+  preloadedShow: {
+    audioUrl: require('~/../assets/shows/demo.mp3').default,
+    data: import(
+      /* webpackChunkName: "show" */ '~/../assets/shows/demo.json'
+    ).then((module) => module.default),
   },
 };
 

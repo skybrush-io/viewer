@@ -4,6 +4,7 @@
 
 const config = {
   buttons: {},
+  preloadedShow: {},
 };
 
 export default config;

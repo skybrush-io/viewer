@@ -2,12 +2,17 @@
  * @file Slice of the state object that stores the settings of the viewer.
  */
 
+import config from 'config';
 import { createSlice } from '@reduxjs/toolkit';
 
 const { actions, reducer } = createSlice({
   name: 'settings',
 
   initialState: {
+    hints: {
+      playback: config.buttons.playbackHint,
+    },
+
     threeD: {
       // Scenery to use in the 3D view
       scenery: 'night',
@@ -21,14 +26,14 @@ const { actions, reducer } = createSlice({
       quality: 'medium',
 
       // Whether to show statistics about the rendering in an overlay
-      showStatistics: false
-    }
+      showStatistics: false,
+    },
   },
 
   reducers: {
     updateAppSettings: {
       prepare: (category, updates) => ({
-        payload: { category, updates }
+        payload: { category, updates },
       }),
 
       reducer: (state, action) => {
@@ -37,9 +42,9 @@ const { actions, reducer } = createSlice({
         if (state[category] !== undefined) {
           state[category] = { ...state[category], ...updates };
         }
-      }
-    }
-  }
+      },
+    },
+  },
 });
 
 export const { updateAppSettings } = actions;

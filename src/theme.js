@@ -12,7 +12,7 @@ import {
   grey,
   green,
   red,
-  yellow
+  yellow,
 } from '@material-ui/core/colors';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -34,18 +34,18 @@ export const Colors = {
   axisColors: {
     x: '#f44',
     y: '#4f4',
-    z: '#06f'
+    z: '#06f',
   },
 
   landingMarker: '#3c3',
   originMarker: '#f44',
-  takeoffMarker: '#fc0'
+  takeoffMarker: '#fc0',
 };
 
 /**
  * Helper function that returns whether the given Material UI theme is a dark theme.
  */
-export const isDark = theme => theme.palette.type === 'dark';
+export const isDark = (theme) => theme.palette.type === 'dark';
 
 /**
  * Specialized Material-UI theme provider that is aware about the user's
@@ -63,21 +63,21 @@ const DarkModeAwareThemeProvider = ({ children, type }) => {
       secondary: isThemeDark ? lightBlue : red,
 
       success: {
-        main: Colors.success
-      }
+        main: Colors.success,
+      },
     },
 
     typography: {
-      fontFamily: '"Fira Sans", "Helvetica", "Arial", sans-serif'
+      fontFamily: '"Fira Sans", "Helvetica", "Arial", sans-serif',
     },
 
     overrides: {
       MuiList: {
         root: {
-          background: isThemeDark ? '#444' : '#fff'
-        }
-      }
-    }
+          background: isThemeDark ? '#444' : '#fff',
+        },
+      },
+    },
   });
 
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
@@ -86,14 +86,14 @@ const DarkModeAwareThemeProvider = ({ children, type }) => {
 DarkModeAwareThemeProvider.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
+    PropTypes.node,
   ]),
-  type: PropTypes.oneOf(['auto', 'dark', 'light'])
+  type: PropTypes.oneOf(['auto', 'dark', 'light']),
 };
 
 export default connect(
   // mapStateToProps
   () => ({
-    type: 'dark'
+    type: 'dark',
   })
 )(DarkModeAwareThemeProvider);

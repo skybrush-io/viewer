@@ -7,9 +7,9 @@ import { createSelector } from '@reduxjs/toolkit';
  * timestamp, based on the state of the playback.
  */
 export const getElapsedSecondsGetter = createSelector(
-  state => state.playback.startedAt,
-  state => state.playback.stoppedAt,
-  state => state.playback.adjustedTo,
+  (state) => state.playback.startedAt,
+  (state) => state.playback.stoppedAt,
+  (state) => state.playback.adjustedTo,
   (startedAt, stoppedAt, adjustedTo) => (timestamp = null) => {
     if (!isNil(adjustedTo)) {
       return adjustedTo;
@@ -35,13 +35,13 @@ export const getElapsedSecondsGetter = createSelector(
  * Returns whether the user is currently adjusting the playback position by
  * dragging the thumb on the playback slider.
  */
-export const isAdjustingPlaybackPosition = state =>
+export const isAdjustingPlaybackPosition = (state) =>
   !isNil(state.playback.adjustedTo);
 
 /**
  * Returns whether we are currently playing the drone show.
  */
-export const isPlaying = state =>
+export const isPlaying = (state) =>
   state.playback.startedAt && !state.playback.stoppedAt;
 
 /**
@@ -50,6 +50,9 @@ export const isPlaying = state =>
  *
  * Used to decide whether a play button "hint" should be shown on the loading
  * screen when the show is loaded.
+ *
+ * This is set to <code>true</code> by default in the desktop variant because
+ * we don't need a hint there.
  */
-export const userInteractedWithPlayback = state =>
+export const userInteractedWithPlayback = (state) =>
   state.playback.startedAt || state.playback.adjustedTo;

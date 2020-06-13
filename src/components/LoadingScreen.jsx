@@ -17,12 +17,13 @@ import { rewind, togglePlayback } from '~/features/playback/actions';
 import { userInteractedWithPlayback } from '~/features/playback/selectors';
 import {
   hasLoadedShowFile,
-  isLoadingShowFile
+  isLoadingShowFile,
 } from '~/features/show/selectors';
+import { shouldShowPlaybackHintButton } from '~/features/settings/selectors';
 import { isDark } from '~/theme';
 
 const useStyles = makeStyles(
-  theme => ({
+  (theme) => ({
     root: {
       background: new Color(
         isDark(theme) ? theme.palette.black : theme.palette.background.default
@@ -35,23 +36,23 @@ const useStyles = makeStyles(
       position: 'absolute',
       left: '50%',
       top: '50%',
-      transform: 'translate(-50%, -50%)'
+      transform: 'translate(-50%, -50%)',
     },
 
     wrapper: {
       position: 'relative',
-      display: 'inline-block'
+      display: 'inline-block',
     },
 
     progress: {
       position: 'absolute',
       top: -4,
       left: -4,
-      zIndex: 1
-    }
+      zIndex: 1,
+    },
   }),
   {
-    name: 'LoadingScreen'
+    name: 'LoadingScreen',
   }
 );
 
@@ -61,19 +62,19 @@ const LoadingScreen = ({
   loading,
   onDismiss,
   onPlay,
-  visible
+  visible,
 }) => {
   const classes = useStyles();
   return (
-    <Fade mountOnEnter unmountOnExit timeout={500} in={visible}>
-      <Box className={classes.root} px={6} py={6} textAlign="center">
+    <Fade appear mountOnEnter unmountOnExit timeout={500} in={visible}>
+      <Box className={classes.root} px={6} py={6} textAlign='center'>
         <Box className={classes.wrapper}>
           {loading && (
             <CircularProgress size={64} className={classes.progress} />
           )}
           <Fab
-            aria-label="play"
-            color="primary"
+            aria-label='play'
+            color='primary'
             className={classes.button}
             style={{ opacity: !loading && (canPlay || error) ? 1 : 0 }}
             onClick={onPlay}
@@ -82,15 +83,15 @@ const LoadingScreen = ({
             {canPlay && !error && <PlayIcon />}
           </Fab>
         </Box>
-        <Box textAlign="center" mt={4}>
+        <Box textAlign='center' mt={4}>
           {loading && 'Loading show'}
           {!loading && error ? error : null}
           {!loading && !error && canPlay && 'Click to play'}
         </Box>
         {!loading && !error && (
-          <Box position="absolute" right={4} top={4} style={{ opacity: 0.5 }}>
+          <Box position='absolute' right={4} top={4} style={{ opacity: 0.5 }}>
             <IconButton disableRipple onClick={onDismiss}>
-              <Close fontSize="small" />
+              <Close fontSize='small' />
             </IconButton>
           </Box>
         )}
@@ -105,23 +106,24 @@ LoadingScreen.propTypes = {
   loading: PropTypes.bool,
   onDismiss: PropTypes.func,
   onPlay: PropTypes.func,
-  visible: PropTypes.bool
+  visible: PropTypes.bool,
 };
 
 export default connect(
   // mapStateToProps
-  state => ({
+  (state) => ({
     canPlay: hasLoadedShowFile(state),
     error: state.show.error,
     loading: isLoadingShowFile(state),
     visible:
       isLoadingShowFile(state) ||
-      !userInteractedWithPlayback(state) ||
-      Boolean(state.show.error)
+      (!userInteractedWithPlayback(state) &&
+        shouldShowPlaybackHintButton(state)) ||
+      Boolean(state.show.error),
   }),
   // mapDispatchToProps
   {
     onDismiss: rewind,
-    onPlay: togglePlayback
+    onPlay: togglePlayback,
   }
 )(LoadingScreen);

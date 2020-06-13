@@ -2,13 +2,14 @@
  * Saga that loads the default hardcoded drone show when the app is started.
  */
 
+import config from 'config';
 import ky from 'ky';
 import { all, call, put } from 'redux-saga/effects';
 
 import { setAudioUrl } from '~/features/audio/slice';
 import { loadShow } from '~/features/show/async';
 
-const PATHNAME_REGEX = /^\/s\/([-_a-zA-Z0-9]+)\/?$/;
+const PATHNAME_REGEX = /^\/s\/([-\w]+)\/?$/;
 
 /**
  * Saga that loads the default hardcoded drone show when the app is started,
@@ -27,11 +28,10 @@ export default function* loaderSaga() {
     audioUrl = new URL('music.mp3', url).toString();
     showDataPromise = ky.get('show.json', { prefix: url }).json();
   } else {
-    // This is outside share.skybrush.io so just load a bundled demo show
-    audioUrl = require('~/../assets/shows/demo.mp3').default;
-    showDataPromise = import(
-      /* webpackChunkName: "show" */ '~/../assets/shows/demo.json'
-    ).then(module => module.default);
+    // This is outside share.skybrush.io so just load a bundled demo show or
+    // just do nothing
+    audioUrl = config.preloadedShow.audioUrl;
+    showDataPromise = config.preloadedShow.data;
   }
 
   // Start loading the show and the audio in parallel
@@ -46,7 +46,7 @@ function* loadAudioSaga(url) {
   // even try to set the audio URL.
   const response = yield call(() =>
     ky.head(url, {
-      throwHttpErrors: false
+      throwHttpErrors: false,
     })
   );
 

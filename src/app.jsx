@@ -32,10 +32,10 @@ const rootInnerStyle = {
 };
 */
 
-const Application = () => (
+const App = () => (
   <StoreProvider store={store}>
     <ThemeProvider>
-      <ToastProvider placement="top-center">
+      <ToastProvider placement='top-center'>
         <PersistGate persistor={persistor} loading={<SplashScreen />}>
           <CssBaseline />
           <TopLevelView />
@@ -46,4 +46,4 @@ const Application = () => (
   </StoreProvider>
 );
 
-export default Application;
+export default App;

@@ -20,8 +20,8 @@ const ThreeDTopLevelView = () => {
   const ref = useRef(null);
 
   return (
-    <Box ref={ref} display="flex" flexDirection="column" height="100vh">
-      <Box position="relative" flex={1}>
+    <Box ref={ref} display='flex' flexDirection='column' height='100vh'>
+      <Box position='relative' flex={1}>
         <ThreeDView />
         <Overlays />
         <LoadingScreen />
@@ -36,19 +36,19 @@ const ThreeDTopLevelView = () => {
 ThreeDTopLevelView.propTypes = {
   navigation: PropTypes.shape({
     mode: PropTypes.string,
-    parameters: PropTypes.object
+    parameters: PropTypes.object,
   }),
   onSetNavigationMode: PropTypes.func,
-  onShowSettings: PropTypes.func
+  onShowSettings: PropTypes.func,
 };
 
 export default connect(
   // mapStateToProps
-  state => ({
-    ...state.threeD
+  (state) => ({
+    ...state.threeD,
   }),
   // mapDispatchToProps
   {
-    onSetNavigationMode: setNavigationMode
+    onSetNavigationMode: setNavigationMode,
   }
 )(ThreeDTopLevelView);

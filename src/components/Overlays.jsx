@@ -4,15 +4,14 @@ import { connect } from 'react-redux';
 
 import Fade from '@material-ui/core/Fade';
 
+import { isRunningOnMac } from '~/utils/platform';
+
 import BottomOverlay from './BottomOverlay';
+import TopOverlay from './TopOverlay';
 
 const Overlays = ({ visible }) => (
   <>
-    {/*
-    <Fade in={visible}>
-      <TopOverlay />
-    </Fade>
-    */}
+    {window.isElectron && isRunningOnMac && <TopOverlay />}
     <Fade in={visible}>
       <BottomOverlay />
     </Fade>

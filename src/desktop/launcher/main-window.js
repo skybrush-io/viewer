@@ -66,6 +66,7 @@ const createMainWindow = (app, options) => {
     title: app.name,
     show: false,
     backgroundColor: '#fff', // for nicer font antialiasing, see https://github.com/electron/electron/issues/10025
+    titleBarStyle: 'hiddenInset',
     x,
     y,
     width,
@@ -78,6 +79,12 @@ const createMainWindow = (app, options) => {
       preload: preloadScriptPath,
     },
   });
+
+  // We need to hide the menu bar. Apparently, both are needed below; the
+  // first line alone is not enough because the mrnu bar comes back after
+  // putting the app full screen and then coming back
+  mainWindow.setMenuBarVisibility(false);
+  mainWindow.setMenu(null);
   mainWindowState.manage(mainWindow);
 
   mainWindow.on('closed', () => {

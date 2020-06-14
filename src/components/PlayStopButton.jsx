@@ -12,7 +12,7 @@ const PlayStopButton = ({ playing, ...rest }) => (
 );
 
 PlayStopButton.propTypes = {
-  playing: PropTypes.bool
+  playing: PropTypes.bool,
 };
 
 export default PlayStopButton;

@@ -50,8 +50,8 @@ const createMainWindow = (app, options) => {
 
   if (!mainWindowState) {
     mainWindowState = windowStateKeeper({
-      defaultWidth: 1280,
-      defaultHeight: 800,
+      defaultWidth: 1024,
+      defaultHeight: 768,
       fullScreen: false,
     });
   }

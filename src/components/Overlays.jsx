@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import Fade from '@material-ui/core/Fade';
 
 import BottomOverlay from './BottomOverlay';
-import TopOverlay from './TopOverlay';
 
 const Overlays = ({ visible }) => (
   <>
@@ -21,17 +20,17 @@ const Overlays = ({ visible }) => (
 );
 
 Overlays.propTypes = {
-  visible: PropTypes.bool
+  visible: PropTypes.bool,
 };
 
 Overlays.defaultProps = {
-  visible: false
+  visible: false,
 };
 
 export default connect(
   // mapStateToProps
-  state => ({
-    ...state.threeD.overlays
+  (state) => ({
+    ...state.threeD.overlays,
   }),
   // mapDispatchToProps
   {}

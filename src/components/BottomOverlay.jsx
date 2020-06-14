@@ -16,10 +16,16 @@ import {
 import { toggleMuted } from '~/features/audio/slice';
 import { togglePlayback } from '~/features/playback/actions';
 import { isPlaying } from '~/features/playback/selectors';
-import { getShowDuration, hasLoadedShowFile } from '~/features/show/selectors';
+import { loadShowFromLocalFile } from '~/features/show/actions';
+import {
+  canLoadShowFromLocalFile,
+  getShowDuration,
+  hasLoadedShowFile,
+} from '~/features/show/selectors';
 import VirtualReality from '~/icons/VirtualReality';
 import { formatPlaybackTimestamp } from '~/utils/formatters';
 
+import OpenButton from './OpenButton';
 import PlaybackSlider from './PlaybackSlider';
 import PlayStopButton from './PlayStopButton';
 import SettingsButton from './SettingsButton';
@@ -39,6 +45,7 @@ const noWrap = {
 
 const BottomOverlay = ({
   audioReady,
+  canLoadShowFromLocalFile,
   duration,
   hasAudio,
   hasShow,
@@ -46,6 +53,7 @@ const BottomOverlay = ({
   muted,
   playing,
   rightText,
+  onLoadShowFromLocalFile,
   onToggleMuted,
   onTogglePlayback,
   ...rest
@@ -61,6 +69,11 @@ const BottomOverlay = ({
       {...rest}
     >
       <Box display='flex' alignItems='center'>
+        {canLoadShowFromLocalFile && (
+          <Box pl={1} mr={-1}>
+            <OpenButton disabled={playing} onClick={onLoadShowFromLocalFile} />
+          </Box>
+        )}
         <Box px={2}>
           <PlayStopButton
             edge='start'
@@ -109,12 +122,14 @@ const BottomOverlay = ({
 
 BottomOverlay.propTypes = {
   audioReady: PropTypes.bool,
+  canLoadShowFromLocalFile: PropTypes.bool,
   duration: PropTypes.number,
   hasAudio: PropTypes.bool,
   hasShow: PropTypes.bool,
   leftText: PropTypes.string,
   muted: PropTypes.bool,
   playing: PropTypes.bool,
+  onLoadShowFromLocalFile: PropTypes.func,
   onToggleMuted: PropTypes.func,
   onTogglePlayback: PropTypes.func,
   rightText: PropTypes.string,
@@ -124,6 +139,7 @@ export default connect(
   // mapStateToProps
   (state) => ({
     audioReady: isAudioReadyToPlay(state),
+    canLoadShowFromLocalFile: canLoadShowFromLocalFile(state),
     duration: getShowDuration(state),
     hasAudio: hasAudio(state),
     hasShow: hasLoadedShowFile(state),
@@ -135,6 +151,7 @@ export default connect(
   }),
   // mapDispatchToProps
   {
+    onLoadShowFromLocalFile: loadShowFromLocalFile,
     onToggleMuted: toggleMuted,
     onTogglePlayback: togglePlayback,
   }

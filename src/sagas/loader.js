@@ -35,7 +35,16 @@ export default function* loaderSaga() {
   }
 
   // Start loading the show and the audio in parallel
-  yield all([put(loadShow(showDataPromise)), loadAudioSaga(audioUrl)]);
+  const tasks = [];
+  if (showDataPromise) {
+    tasks.push(put(loadShow(showDataPromise)));
+  }
+
+  if (audioUrl) {
+    tasks.push(loadAudioSaga(audioUrl));
+  }
+
+  yield all(tasks);
 }
 
 /**

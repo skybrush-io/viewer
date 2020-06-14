@@ -1,3 +1,4 @@
+import config from 'config';
 import get from 'lodash-es/get';
 import maxBy from 'lodash-es/maxBy';
 
@@ -7,10 +8,12 @@ import { formatPlaybackTimestamp } from '~/utils/formatters';
 import createLightProgramPlayer from '~/utils/lights';
 import createTrajectoryPlayer from '~/utils/trajectory';
 
+export const canLoadShowFromLocalFile = () => config.io.localFiles;
+
 /**
  * Returns whether a trajectory object "looks like" a valid trajectory.
  */
-export const isValidTrajectory = trajectory =>
+export const isValidTrajectory = (trajectory) =>
   typeof trajectory === 'object' &&
   trajectory.version === 1 &&
   typeof trajectory.points === 'object' &&
@@ -19,7 +22,7 @@ export const isValidTrajectory = trajectory =>
 /**
  * Returns whether a trajectory object "looks like" a valid light program.
  */
-export const isValidLightProgram = program =>
+export const isValidLightProgram = (program) =>
   typeof program === 'object' &&
   program.version === 1 &&
   typeof program.data === 'string';
@@ -28,7 +31,7 @@ export const isValidLightProgram = program =>
  * Returns the common show settings that apply to all drones in the currently
  * loaded show.
  */
-export const getCommonShowSettings = state => {
+export const getCommonShowSettings = (state) => {
   const result = get(state, 'show.data.settings');
   return typeof result === 'object' ? result : {};
 };
@@ -36,7 +39,7 @@ export const getCommonShowSettings = state => {
 /**
  * Returns the specification of the drone swarm in the currently loaded show.
  */
-export const getDroneSwarmSpecification = state => {
+export const getDroneSwarmSpecification = (state) => {
   const result = get(state, 'show.data.swarm.drones');
   return Array.isArray(result) ? result : [];
 };
@@ -46,15 +49,15 @@ export const getDroneSwarmSpecification = state => {
  */
 export const getInitialCameraConfigurationOfShow = () => ({
   position: [0, 20, 50], // [-52.9, 9.93, 0.22],
-  rotation: [0, 0, 0] // [0, -114.6, 0]
+  rotation: [0, 0, 0], // [0, -114.6, 0]
 });
 
 /**
  * Returns an array containing all the light programs. The array will contain
  * undefined for all the drones that have no light programs in the mission.
  */
-const getLightPrograms = createSelector(getDroneSwarmSpecification, swarm =>
-  swarm.map(drone => {
+const getLightPrograms = createSelector(getDroneSwarmSpecification, (swarm) =>
+  swarm.map((drone) => {
     const program = get(drone, 'settings.lights');
     return isValidLightProgram(program) ? program : undefined;
   })
@@ -66,7 +69,7 @@ const getLightPrograms = createSelector(getDroneSwarmSpecification, swarm =>
  */
 export const getLightProgramPlayers = createSelector(
   getLightPrograms,
-  lightPrograms => lightPrograms.map(createLightProgramPlayer)
+  (lightPrograms) => lightPrograms.map(createLightProgramPlayer)
 );
 
 /**
@@ -74,15 +77,15 @@ export const getLightProgramPlayers = createSelector(
  */
 export const getNumberOfDronesInShow = createSelector(
   getDroneSwarmSpecification,
-  swarm => swarm.length
+  (swarm) => swarm.length
 );
 
 /**
  * Returns an array containing all the trajectories. The array will contain
  * undefined for all the drones that have no fixed trajectories in the mission.
  */
-const getTrajectories = createSelector(getDroneSwarmSpecification, swarm =>
-  swarm.map(drone => {
+const getTrajectories = createSelector(getDroneSwarmSpecification, (swarm) =>
+  swarm.map((drone) => {
     const trajectory = get(drone, 'settings.trajectory');
     return isValidTrajectory(trajectory) ? trajectory : undefined;
   })
@@ -91,7 +94,7 @@ const getTrajectories = createSelector(getDroneSwarmSpecification, swarm =>
 /**
  * Returns the duration of a single drone trajectory.
  */
-const getTrajectoryDuration = trajectory => {
+const getTrajectoryDuration = (trajectory) => {
   if (!isValidTrajectory(trajectory)) {
     return 0;
   }
@@ -114,16 +117,19 @@ const getTrajectoryDuration = trajectory => {
  */
 export const getTrajectoryPlayers = createSelector(
   getTrajectories,
-  trajectories => trajectories.map(createTrajectoryPlayer)
+  (trajectories) => trajectories.map(createTrajectoryPlayer)
 );
 
 /**
  * Returns the total duration of the show, in seconds.
  */
-export const getShowDuration = createSelector(getTrajectories, trajectories => {
-  const longest = maxBy(trajectories, getTrajectoryDuration);
-  return longest ? getTrajectoryDuration(longest) : 0;
-});
+export const getShowDuration = createSelector(
+  getTrajectories,
+  (trajectories) => {
+    const longest = maxBy(trajectories, getTrajectoryDuration);
+    return longest ? getTrajectoryDuration(longest) : 0;
+  }
+);
 
 /**
  * Returns the total duration of the show, as a human-readable string.
@@ -137,8 +143,8 @@ export const getShowDurationAsString = createSelector(
  * Returns the metadata of the show, if any.
  */
 export const getShowMetadata = createSelector(
-  state => state.show.data,
-  data => (data && typeof data.meta === 'object' ? data.meta : null) || {}
+  (state) => state.show.data,
+  (data) => (data && typeof data.meta === 'object' ? data.meta : null) || {}
 );
 
 /**
@@ -147,15 +153,15 @@ export const getShowMetadata = createSelector(
 export const getShowTitle = createSelector(
   getShowMetadata,
   getNumberOfDronesInShow,
-  (meta, numDrones) => meta.title || `Show with ${numDrones} drones`
+  (meta, numberDrones) => meta.title || `Show with ${numberDrones} drones`
 );
 
 /**
  * Returns whether there is a show file currently loaded.
  */
-export const hasLoadedShowFile = state => Boolean(state.show.data);
+export const hasLoadedShowFile = (state) => Boolean(state.show.data);
 
 /**
  * Returns whether we are currently loading a show file.
  */
-export const isLoadingShowFile = state => state.show.loading;
+export const isLoadingShowFile = (state) => state.show.loading;

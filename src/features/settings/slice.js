@@ -2,17 +2,12 @@
  * @file Slice of the state object that stores the settings of the viewer.
  */
 
-import config from 'config';
 import { createSlice } from '@reduxjs/toolkit';
 
 const { actions, reducer } = createSlice({
   name: 'settings',
 
   initialState: {
-    hints: {
-      playback: config.buttons.playbackHint,
-    },
-
     threeD: {
       // Scenery to use in the 3D view
       scenery: 'night',

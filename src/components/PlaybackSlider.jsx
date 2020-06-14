@@ -7,12 +7,12 @@ import Slider from '@material-ui/core/Slider';
 
 import {
   setPlaybackPosition,
-  temporarilyOverridePlaybackPosition
+  temporarilyOverridePlaybackPosition,
 } from '~/features/playback/actions';
 import {
   getElapsedSecondsGetter,
   isAdjustingPlaybackPosition,
-  isPlaying
+  isPlaying,
 } from '~/features/playback/selectors';
 import { getShowDuration } from '~/features/show/selectors';
 import { formatPlaybackTimestamp } from '~/utils/formatters';
@@ -25,7 +25,7 @@ const PlaybackSlider = ({
   onDragged,
   onDragging,
   playing,
-  updateInterval
+  updateInterval,
 }) => {
   const update = useUpdate();
   useHarmonicIntervalFn(update, playing && !dragging ? updateInterval : null);
@@ -36,7 +36,7 @@ const PlaybackSlider = ({
     <Slider
       max={duration}
       value={elapsed}
-      valueLabelDisplay="auto"
+      valueLabelDisplay='auto'
       valueLabelFormat={formatPlaybackTimestamp}
       onChange={onDragging}
       onChangeCommitted={onDragged}
@@ -51,24 +51,24 @@ PlaybackSlider.propTypes = {
   onDragged: PropTypes.func,
   onDragging: PropTypes.func,
   playing: PropTypes.bool,
-  updateInterval: PropTypes.number
+  updateInterval: PropTypes.number,
 };
 
 PlaybackSlider.defaultProps = {
-  updateInterval: 200
+  updateInterval: 200,
 };
 
 export default connect(
   // mapStateToProps
-  state => ({
+  (state) => ({
     dragging: isAdjustingPlaybackPosition(state),
     duration: getShowDuration(state),
     getElapsedSeconds: getElapsedSecondsGetter(state),
-    playing: isPlaying(state)
+    playing: isPlaying(state),
   }),
   // mapDispatchToProps
   {
     onDragged: stripEvent(setPlaybackPosition),
-    onDragging: stripEvent(temporarilyOverridePlaybackPosition)
+    onDragging: stripEvent(temporarilyOverridePlaybackPosition),
   }
 )(PlaybackSlider);

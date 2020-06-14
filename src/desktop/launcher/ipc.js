@@ -1,5 +1,16 @@
-// const { ipcMain: ipc } = require('electron-better-ipc');
+const { ipcMain: ipc } = require('electron-better-ipc');
+const fs = require('fs').promises;
+const dialogs = require('./dialogs');
+
+const loadShowFromFile = async (filename) => {
+  const contents = await fs.readFile(filename);
+  return JSON.parse(contents);
+};
 
 module.exports = () => {
-  /* IPC functions can be registered here with ipc.answerRenderer() */
+  ipc.answerRenderer('loadShowFromFile', loadShowFromFile);
+  ipc.answerRenderer(
+    'selectLocalShowFileForOpening',
+    dialogs.selectLocalShowFileForOpening
+  );
 };

@@ -1,5 +1,8 @@
+const { ipcRenderer: ipc } = require('electron-better-ipc');
 const unhandled = require('electron-unhandled');
 const createStorageEngine = require('redux-persist-electron-storage');
+
+const setupIpc = require('./ipc');
 
 unhandled({
   logger: (error) => console.error(error.stack),
@@ -26,4 +29,10 @@ function createStateStore() {
 
 window.bridge = {
   createStateStore,
+  loadShowFromFile: (filename) => ipc.callMain('loadShowFromFile', filename),
+  selectLocalShowFileForOpening: () =>
+    ipc.callMain('selectLocalShowFileForOpening'),
 };
+
+// Set up IPC channels that we are going to listen to
+setupIpc();

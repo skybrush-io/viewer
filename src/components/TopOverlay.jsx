@@ -11,6 +11,7 @@ const useStyles = makeStyles({
     fontFamily:
       '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
     WebkitAppRegion: 'drag',
+    WebkitUserSelect: 'none',
     left: 0,
     top: 0,
     right: 0,

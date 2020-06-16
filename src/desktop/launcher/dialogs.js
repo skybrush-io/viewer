@@ -5,7 +5,7 @@ const selectLocalShowFileForOpening = async () => {
     title: 'Open show file',
     properties: ['openFile'],
     filters: [
-      { name: 'Skybrush shows', extensions: ['json'] },
+      { name: 'Skybrush shows', extensions: ['skyc'] },
       { name: 'All files', extensions: ['*'] },
     ],
   });

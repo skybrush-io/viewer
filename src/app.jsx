@@ -1,3 +1,4 @@
+import delay from 'delay';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import React from 'react';
 import { Provider as StoreProvider } from 'react-redux';
@@ -13,33 +14,27 @@ import ThemeProvider from './theme';
 
 require('~/../assets/css/aframe.less');
 
-require('react-cover-page/themes/default.css');
+require('react-cover-page/themes/dark.css');
 require('typeface-fira-sans');
 
-/*
-const rootStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  width: '100%',
-  height: '100%'
+const waitForTopLevelView = async () => {
+  // Give some time for the 3D scene to initialize itself
+  await delay(1000);
 };
-
-const rootInnerStyle = {
-  display: 'flex',
-  flexGrow: 1,
-  width: '100%',
-  height: '100%'
-};
-*/
 
 const App = () => (
   <StoreProvider store={store}>
     <ThemeProvider>
       <ToastProvider placement='top-center'>
-        <PersistGate persistor={persistor} loading={<SplashScreen />}>
-          <CssBaseline />
-          <TopLevelView />
-          <Sidebar />
+        <PersistGate persistor={persistor} onBeforeLift={waitForTopLevelView}>
+          {(bootstrapped) => (
+            <>
+              <SplashScreen visible={!bootstrapped} />
+              <CssBaseline />
+              <TopLevelView />
+              <Sidebar />
+            </>
+          )}
         </PersistGate>
       </ToastProvider>
     </ThemeProvider>

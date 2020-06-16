@@ -65,7 +65,7 @@ const createMainWindow = (app, options) => {
   mainWindow = new BrowserWindow({
     title: app.name,
     show: false,
-    backgroundColor: '#fff', // for nicer font antialiasing, see https://github.com/electron/electron/issues/10025
+    backgroundColor: '#20242a', // same as the background color of the cover page
     titleBarStyle: 'hiddenInset',
     x,
     y,

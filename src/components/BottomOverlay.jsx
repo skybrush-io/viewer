@@ -14,7 +14,7 @@ import {
   isAudioReadyToPlay,
 } from '~/features/audio/selectors';
 import { toggleMuted } from '~/features/audio/slice';
-import { togglePlayback } from '~/features/playback/actions';
+import { rewind, togglePlayback } from '~/features/playback/actions';
 import { isPlaying } from '~/features/playback/selectors';
 import { loadShowFromLocalFile } from '~/features/show/actions';
 import {
@@ -151,7 +151,11 @@ export default connect(
   }),
   // mapDispatchToProps
   {
-    onLoadShowFromLocalFile: loadShowFromLocalFile,
+    onLoadShowFromLocalFile: () => async (dispatch) => {
+      await dispatch(loadShowFromLocalFile());
+      await dispatch(rewind());
+    },
+
     onToggleMuted: toggleMuted,
     onTogglePlayback: togglePlayback,
   }

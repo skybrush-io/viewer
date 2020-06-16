@@ -1,7 +1,8 @@
-const { app, shell } = require('electron');
+const { app, Menu, shell } = require('electron');
 const unhandled = require('electron-unhandled');
 const yargs = require('yargs/yargs');
 
+const createAppMenu = require('./app-menu');
 const setupIpc = require('./ipc');
 const { createMainWindow } = require('./main-window');
 const { willUseWebpackDevServer } = require('./utils');
@@ -24,7 +25,7 @@ function run(argv) {
 
   // Create the main window when the application is ready
   app.on('ready', () => {
-    // Menu.setApplicationMenu(createAppMenu(app));
+    Menu.setApplicationMenu(createAppMenu(app));
     createMainWindow(app, windowOptions);
   });
 

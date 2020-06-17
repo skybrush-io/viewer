@@ -14,23 +14,23 @@ const { actions, reducer } = createSlice({
     loading: false,
     seeking: false,
     muted: false,
-    volume: 1
+    volume: 1,
   },
 
   reducers: {
-    notifyAudioCanPlay: noPayload(state => {
+    notifyAudioCanPlay: noPayload((state) => {
       state.loading = false;
     }),
 
-    notifyAudioMetadataLoaded: noPayload(state => {
+    notifyAudioMetadataLoaded: noPayload((state) => {
       state.loading = true;
     }),
 
-    notifyAudioSeeked: noPayload(state => {
+    notifyAudioSeeked: noPayload((state) => {
       state.seeking = false;
     }),
 
-    notifyAudioSeeking: noPayload(state => {
+    notifyAudioSeeking: noPayload((state) => {
       state.seeking = true;
     }),
 
@@ -39,10 +39,10 @@ const { actions, reducer } = createSlice({
       state.url = typeof payload === 'string' ? payload : null;
     },
 
-    toggleMuted: noPayload(state => {
+    toggleMuted: noPayload((state) => {
       state.muted = !state.muted;
-    })
-  }
+    }),
+  },
 });
 
 export const {
@@ -51,7 +51,7 @@ export const {
   notifyAudioSeeked,
   notifyAudioSeeking,
   setAudioUrl,
-  toggleMuted
+  toggleMuted,
 } = actions;
 
 export default reducer;

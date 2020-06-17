@@ -9,9 +9,6 @@ import { isRunningOnMac } from '~/utils/platform';
 import BottomOverlay from './BottomOverlay';
 import TopOverlay from './TopOverlay';
 
-console.log(window.isElectron);
-console.log(isRunningOnMac);
-
 const Overlays = ({ visible }) => (
   <>
     {window.isElectron && isRunningOnMac && <TopOverlay />}

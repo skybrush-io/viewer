@@ -12,12 +12,12 @@ import {
   notifyAudioCanPlay,
   notifyAudioMetadataLoaded,
   notifyAudioSeeked,
-  notifyAudioSeeking
+  notifyAudioSeeking,
 } from '~/features/audio/slice';
 import {
   getElapsedSecondsGetter,
   isAdjustingPlaybackPosition,
-  isPlaying
+  isPlaying,
 } from '~/features/playback/selectors';
 
 const AudioController = ({
@@ -28,13 +28,13 @@ const AudioController = ({
   onSeeked,
   onSeeking,
   playing,
-  url
+  url,
 }) => {
   const audioRef = useRef(null);
   const { addToast } = useToasts();
   const onError = useCallback(() => {
     addToast('Error while playing audio; playback stopped.', {
-      appearance: 'error'
+      appearance: 'error',
     });
   }, [addToast]);
 
@@ -58,7 +58,7 @@ const AudioController = ({
     <audio
       ref={audioRef}
       muted={muted}
-      preload="auto"
+      preload='auto'
       src={url}
       onCanPlay={onCanPlay}
       onError={onError}
@@ -77,21 +77,21 @@ AudioController.propTypes = {
   onSeeking: PropTypes.func,
   onSeeked: PropTypes.func,
   playing: PropTypes.bool,
-  url: PropTypes.string
+  url: PropTypes.string,
 };
 
 export default connect(
   // mapStateToProps
-  state => ({
+  (state) => ({
     ...state.audio,
     elapsedSecondsGetter: getElapsedSecondsGetter(state),
-    playing: isPlaying(state) && !isAdjustingPlaybackPosition(state)
+    playing: isPlaying(state) && !isAdjustingPlaybackPosition(state),
   }),
   // mapDispatchToProps
   {
     onCanPlay: notifyAudioCanPlay,
     onLoadedMetadata: notifyAudioMetadataLoaded,
     onSeeking: notifyAudioSeeking,
-    onSeeked: notifyAudioSeeked
+    onSeeked: notifyAudioSeeked,
   }
 )(AudioController);

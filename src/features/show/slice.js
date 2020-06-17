@@ -21,6 +21,11 @@ const { actions, reducer } = createSlice({
       state.data = null;
       state.error = null;
     },
+
+    requestToLoadShow: () => {
+      /* nothing to do, the loader saga will pick this up and take care of
+       * everything */
+    },
   },
 
   extraReducers: {
@@ -41,6 +46,6 @@ const { actions, reducer } = createSlice({
   },
 });
 
-export const { clearLoadedShow } = actions;
+export const { clearLoadedShow, requestToLoadShow } = actions;
 
 export default reducer;

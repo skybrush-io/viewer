@@ -76,6 +76,7 @@
     "redux-saga": "^1.1.3",
     "redux-thunk": "^2.3.0",
     "redux-watch": "^1.1.1",
+    "tmp-promise": "^3.0.2",
     "typeface-fira-sans": "0.0.75",
     "whatwg-fetch": "^3.0.0",
     "yargs": "^15.3.1"

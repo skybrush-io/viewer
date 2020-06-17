@@ -36,7 +36,11 @@ const AudioController = ({
     addToast('Error while playing audio; playback stopped.', {
       appearance: 'error',
     });
-  }, [addToast]);
+
+    if (audioRef) {
+      console.error(audioRef.current.error);
+    }
+  }, [addToast, audioRef]);
 
   // Effect that takes care of stopping / starting the audio and re-syncing the
   // playback position when needed

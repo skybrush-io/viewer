@@ -1,4 +1,4 @@
-import { loadShow } from './async';
+import { requestToLoadShow } from './slice';
 
 export const loadShowFromLocalFile = () => async (dispatch) => {
   const { loadShowFromFile, selectLocalShowFileForOpening } =
@@ -7,7 +7,7 @@ export const loadShowFromLocalFile = () => async (dispatch) => {
   if (selectLocalShowFileForOpening && loadShowFromFile) {
     const filename = await selectLocalShowFileForOpening();
     if (filename) {
-      dispatch(loadShow(loadShowFromFile(filename)));
+      dispatch(requestToLoadShow(loadShowFromFile(filename)));
     }
   }
 };

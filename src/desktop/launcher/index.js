@@ -1,11 +1,16 @@
-const { app, Menu, shell } = require('electron');
+const { app, Menu, protocol, shell } = require('electron');
 const unhandled = require('electron-unhandled');
+const tmp = require('tmp-promise');
 const yargs = require('yargs/yargs');
 
 const createAppMenu = require('./app-menu');
 const setupIpc = require('./ipc');
 const { createMainWindow } = require('./main-window');
+const registerMediaProtocol = require('./media-protocol');
 const { willUseWebpackDevServer } = require('./utils');
+
+// Clean up temporary files even when an uncaught exception occurs
+tmp.setGracefulCleanup();
 
 // Set allowRendererProcessReuse explicitly to avoid an Electron warning
 app.allowRendererProcessReuse = true;
@@ -23,8 +28,16 @@ function run(argv) {
   // Register unhandled error handler
   unhandled({ logger: (error) => console.error(error.stack) });
 
+  // Register our soon-to-be-used media:// protocol as privileged so the
+  // fetch() API can work with it
+  protocol.registerSchemesAsPrivileged([
+    { scheme: 'media', privileges: { bypassCSP: true } },
+  ]);
+
   // Create the main window when the application is ready
   app.on('ready', () => {
+    registerMediaProtocol();
+
     Menu.setApplicationMenu(createAppMenu(app));
     createMainWindow(app, windowOptions);
   });
@@ -81,9 +94,11 @@ function run(argv) {
       }
     );
 
+    /*
     webContents.on('will-navigate', (event) => {
       event.preventDefault();
     });
+    */
 
     webContents.on('new-window', async (event, navigationUrl) => {
       event.preventDefault();

@@ -5,13 +5,12 @@
  */
 
 import watch from 'redux-watch';
-
-import AFrame from '../aframe';
+import AFrame from '@skybrush/aframe-components';
 
 import { getElapsedSecondsGetter } from '~/features/playback/selectors';
 import {
   getLightProgramPlayers,
-  getTrajectoryPlayers
+  getTrajectoryPlayers,
 } from '~/features/show/selectors';
 import store from '~/store';
 
@@ -22,7 +21,7 @@ AFrame.registerSystem('drone-flock', {
     const boundGetElapsedSecodsGetter = () =>
       getElapsedSecondsGetter(store.getState());
     store.subscribe(
-      watch(boundGetElapsedSecodsGetter)(newGetter => {
+      watch(boundGetElapsedSecodsGetter)((newGetter) => {
         this._getElapsedSeconds = newGetter;
       })
     );
@@ -32,7 +31,7 @@ AFrame.registerSystem('drone-flock', {
 
     this._entityFactories = {
       default: this._createDefaultUAVEntity.bind(this),
-      flapper: this._createFlapperDroneEntity.bind(this)
+      flapper: this._createFlapperDroneEntity.bind(this),
     };
   },
 
@@ -43,63 +42,63 @@ AFrame.registerSystem('drone-flock', {
   },
 
   _createGlowEntity(droneSize = 1) {
-    const glowEl = document.createElement('a-entity');
-    glowEl.setAttribute('sprite', {
+    const glowElement = document.createElement('a-entity');
+    glowElement.setAttribute('sprite', {
       blending: 'additive',
       color: new THREE.Color('#ff8800'),
       scale: `${droneSize * 2} ${droneSize * 2} 1`,
       src: '#glow-texture',
-      transparent: true
+      transparent: true,
     });
-    return glowEl;
+    return glowElement;
   },
 
   _createDefaultUAVEntity(droneSize) {
-    const el = document.createElement('a-entity');
-    el.setAttribute('geometry', {
+    const element = document.createElement('a-entity');
+    element.setAttribute('geometry', {
       primitive: 'sphere',
       radius: droneSize * 0.5,
       segmentsHeight: 9,
-      segmentsWidth: 18
+      segmentsWidth: 18,
     });
-    el.setAttribute('material', {
+    element.setAttribute('material', {
       color: new THREE.Color('#0088ff'),
       fog: false,
-      shader: 'flat'
+      shader: 'flat',
     });
-    el.setAttribute('position', '0 0 0');
+    element.setAttribute('position', '0 0 0');
 
-    el.append(this._createGlowEntity(droneSize));
+    element.append(this._createGlowEntity(droneSize));
 
-    return el;
+    return element;
   },
 
   _createFlapperDroneEntity() {
-    const el = document.createElement('a-entity');
-    el.setAttribute('obj-model', {
-      obj: '#flapper'
+    const element = document.createElement('a-entity');
+    element.setAttribute('obj-model', {
+      obj: '#flapper',
     });
-    el.setAttribute('material', {
+    element.setAttribute('material', {
       color: new THREE.Color('#0088ff'),
       fog: false,
-      shader: 'flat'
+      shader: 'flat',
     });
-    el.setAttribute('position', '0 0 0');
+    element.setAttribute('position', '0 0 0');
     // el.setAttribute('rotation', '90 0 0');
     // el.setAttribute('scale', '6 6 6');
 
     setTimeout(() => {
-      el.setAttribute('glow', {
+      element.setAttribute('glow', {
         c: 0.6,
         p: 6,
         color: '#0088ff',
         scale: 1.5,
-        side: 'back'
+        side: 'back',
       });
     }, 1000);
     // el.append(this._createGlowEntity(1 / 3));
 
-    return el;
+    return element;
   },
 
   createTrajectoryPlayerForIndex(index) {
@@ -136,14 +135,14 @@ AFrame.registerSystem('drone-flock', {
         glowMesh.material.color.copy(color);
       }
     }
-  }
+  },
 });
 
 AFrame.registerComponent('drone-flock', {
   schema: {
     droneSize: { default: 1 },
     size: { default: 0 },
-    type: { default: 'default' }
+    type: { default: 'default' },
   },
 
   init() {
@@ -156,7 +155,7 @@ AFrame.registerComponent('drone-flock', {
     const boundGetTrajectoryPlayers = () =>
       getTrajectoryPlayers(store.getState());
     store.subscribe(
-      watch(boundGetTrajectoryPlayers)(lightProgramPlayers => {
+      watch(boundGetTrajectoryPlayers)((lightProgramPlayers) => {
         this._trajectoryPlayers = lightProgramPlayers;
       })
     );
@@ -164,7 +163,7 @@ AFrame.registerComponent('drone-flock', {
     const boundGetLightProgramPlayers = () =>
       getLightProgramPlayers(store.getState());
     store.subscribe(
-      watch(boundGetLightProgramPlayers)(lightProgramPlayers => {
+      watch(boundGetLightProgramPlayers)((lightProgramPlayers) => {
         this._lightProgramPlayers = lightProgramPlayers;
       })
     );
@@ -225,5 +224,5 @@ AFrame.registerComponent('drone-flock', {
         entity.remove();
       }
     }
-  }
+  },
 });

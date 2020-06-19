@@ -12,7 +12,7 @@ import Scenery from './Scenery';
 
 // eslint-disable-next-line no-unused-vars
 import AFrame from '~/aframe';
-import { objectToString } from '~/aframe/utils';
+import { objectToString } from '@skybrush/aframe-components';
 import {
   getInitialCameraConfigurationOfShow,
   getNumberOfDronesInShow,

@@ -10,7 +10,7 @@ const Dotenv = require('dotenv-webpack');
 const GitRevisionPlugin = require('git-revision-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
-const { projectRoot } = require('./helpers');
+const { outputDir, projectRoot } = require('./helpers');
 
 const enableSourceMap = process.env.NODE_ENV !== 'production';
 
@@ -20,6 +20,7 @@ module.exports = {
   mode: 'development',
 
   output: {
+    path: outputDir,
     filename: '[name].bundle.js',
   },
 

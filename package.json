@@ -5,8 +5,7 @@
   "description": "Viewer for Skybrush drone shows",
   "main": "launcher.bundle.js",
   "scripts": {
-    "bundle": "rimraf build && cross-env NODE_ENV=production webpack --mode=production --progress --config webpack/browser.config.js",
-    "bundle:stats": "rimraf build && cross-env NODE_ENV=production webpack --mode=production --progress --profile --json --config webpack/browser.config.js >webpack-stats.json",
+    "bundle": "rimraf build && cross-env NODE_ENV=production webpack --mode=production --progress --config webpack/dist.config.js",
     "dist": "node scripts/deploy.js -p",
     "doc": "esdoc -c esdoc.json",
     "lint": "xo",

@@ -13,7 +13,7 @@ const loadShowFromFile = async (filename, window) => {
 
   if (showSpec) {
     const audioSpec = get(showSpec, 'media.audio');
-    const { data: audioData, mediaType } = audioSpec;
+    const { data: audioData, mediaType } = audioSpec || {};
 
     // We don't send the audio to the renderer; we save it to a file and then
     // send the path of the file to the renderer instead

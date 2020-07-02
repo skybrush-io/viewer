@@ -22,11 +22,22 @@ const PATHNAME_REGEX = /^\/s\/([-\w]+)\/?$/;
  */
 function* loadShowFromRequestChannelSaga(chan) {
   while (true) {
-    const { audio, show } = yield take(chan);
+    const { audio, missingAudioIsOkay, show } = yield take(chan);
+
+    let audioOkay = true;
+
+    if (audio && missingAudioIsOkay) {
+      try {
+        const audioResponse = yield call(ky.head, audio);
+        audioOkay = audioResponse.ok;
+      } catch {
+        audioOkay = false;
+      }
+    }
 
     const { payload: showSpec } = yield putResolve(loadShow(show));
     const audioInShowSpec = get(showSpec, 'media.audio.url');
-    yield put(setAudioUrl(audio || audioInShowSpec));
+    yield put(setAudioUrl(audioOkay ? audio || audioInShowSpec : null));
   }
 }
 
@@ -48,6 +59,7 @@ export default function* loaderSaga() {
     // file from the same folder where we are
     yield put(chan, {
       audio: new URL('music.mp3', url).toString(),
+      missingAudioIsOkay: true,
       show: ky.get('show.json', { prefix: url }).json(),
     });
   } else {

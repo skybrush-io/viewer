@@ -32,7 +32,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.40",
     "@reduxjs/toolkit": "^1.4.0",
-    "@skybrush/aframe-components": "^1.1.0",
+    "@skybrush/aframe-components": "^1.1.1",
     "@skybrush/show-format": "^1.1.1",
     "@tippyjs/react": "^4.0.5",
     "aframe": "^1.0.4",

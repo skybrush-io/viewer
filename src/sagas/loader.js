@@ -12,7 +12,7 @@ import { setAudioUrl } from '~/features/audio/slice';
 import { loadShow } from '~/features/show/async';
 import { requestToLoadShow } from '~/features/show/slice';
 
-const PATHNAME_REGEX = /^\/s\/([-\w]+)\/?$/;
+const PATHNAME_REGEX = /^\/s\/(?<id>[-\w]+)\/?$/;
 
 /**
  * Saga that watches a channel where it receives data sources to load a drone
@@ -44,7 +44,7 @@ function* loadShowFromRequestChannelSaga(chan) {
 /**
  * Derives the location of the show JSON file when we are running on
  * share.skybrush.io and the user has visited a shared show URL.
- * 
+ *
  * @param {string} href the URL that the user has visited in the browser;
  *        defaults to `window.location.href` when omitted.
  * @return {object?} an object with `audio` and `show` keys, corresponding to
@@ -59,10 +59,16 @@ function deriveShowFileUrls(href) {
   const url = new URL(href);
   const match = url.pathname.match(PATHNAME_REGEX);
   if (match) {
-    return {
-      audio: new URL('music.mp3', url).toString(),
-      show: new URL('show.json', url).toString()
-    };
+    if (match.groups.id === 'test') {
+      return {
+        show: 'https://share.skybrush.io/s/itu-2019/show.json',
+      };
+    } else {
+      return {
+        audio: new URL('music.mp3', url).toString(),
+        show: new URL('show.json', url).toString(),
+      };
+    }
   } else {
     return undefined;
   }
@@ -84,7 +90,16 @@ export default function* loaderSaga() {
     yield put(chan, {
       audio: derivedUrls.audio,
       missingAudioIsOkay: true,
-      show: ky.get(derivedUrls.show).json(),
+      show: ky
+        .get(derivedUrls.show, {
+          /* onDownloadProgress: (progress) => {
+            // TODO(ntamas): this is problematic because ky will report the
+            // uncompressed size but the Content-Length header contains the
+            // compressed size so we eventually run above 100%.
+            // console.log(`${progress.percent * 100}% - ${progress.transferredBytes} of ${progress.totalBytes} bytes`);
+          } */
+        })
+        .json(),
     });
   } else {
     // This is outside share.skybrush.io so just load a bundled demo show or

@@ -1,6 +1,7 @@
 // Webpack configuration for the output that is directly usable on
 // https://share.skybrush.io
 
+const CompressionPlugin = require('compression-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const { merge } = require('webpack-merge');
@@ -31,5 +32,8 @@ module.exports = merge(baseConfig, {
       title:
         'Skybrush Viewer | The Next-generation Drone Light Show Software Suite',
     }),
+
+    // Compress assets so we can serve them faster from Nginx
+    new CompressionPlugin(),
   ],
 });

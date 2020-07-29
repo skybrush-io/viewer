@@ -1,7 +1,7 @@
 const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const WebpackShellPlugin = require('webpack-shell-plugin');
 
 const baseConfig = require('./base.config.js');
@@ -28,7 +28,7 @@ if (process.env.NODE_ENV !== 'production' && process.env.DEPLOYMENT !== '1') {
   );
 }
 
-module.exports = merge.smart(baseConfig, {
+module.exports = merge(baseConfig, {
   // @babel/polyfill not needed here, it is loaded by the preloader script.
   // Loading it would mean that the polyfill ends up being loaded twice (once
   // by the preloader, once here)

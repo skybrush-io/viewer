@@ -6,7 +6,7 @@ const path = require('path');
 const { merge } = require('webpack-merge');
 
 const baseConfig = require('./base.config.js');
-const { htmlMetaTags, projectRoot } = require('./helpers');
+const { getHtmlMetaTags, projectRoot } = require('./helpers');
 
 module.exports = merge(baseConfig, {
   entry: {
@@ -29,7 +29,7 @@ module.exports = merge(baseConfig, {
     // Create index.html on-the-fly
     new HtmlWebpackPlugin({
       base: '/',    // to make the /s/ URLs work
-      meta: htmlMetaTags,
+      meta: getHtmlMetaTags({ disableCSP: true }),
       template: path.resolve(projectRoot, 'index.html'),
       title:
         'Skybrush Viewer | The Next-generation Drone Light Show Software Suite',

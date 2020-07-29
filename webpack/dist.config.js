@@ -6,7 +6,7 @@ const path = require('path');
 const { merge } = require('webpack-merge');
 
 const baseConfig = require('./base.config.js');
-const { htmlMetaTags, projectRoot } = require('./helpers');
+const { getHtmlMetaTags, projectRoot } = require('./helpers');
 
 module.exports = merge(baseConfig, {
   // Make sure to use a _single_ entry point here; we want a single bundle.js
@@ -26,7 +26,7 @@ module.exports = merge(baseConfig, {
   plugins: [
     // Create index.html on-the-fly
     new HtmlWebpackPlugin({
-      meta: htmlMetaTags,
+      meta: getHtmlMetaTags(),
       template: path.resolve(projectRoot, 'index.html'),
       title:
         'Skybrush Viewer | The Next-generation Drone Light Show Software Suite',

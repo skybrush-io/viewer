@@ -42,6 +42,33 @@ function* loadShowFromRequestChannelSaga(chan) {
 }
 
 /**
+ * Derives the location of the show JSON file when we are running on
+ * share.skybrush.io and the user has visited a shared show URL.
+ * 
+ * @param {string} href the URL that the user has visited in the browser;
+ *        defaults to `window.location.href` when omitted.
+ * @return {object?} an object with `audio` and `show` keys, corresponding to
+ *         the location of the audio file and the show file, or `undefined` if
+ *         the given URL does not look like the location of a shared show.
+ */
+function deriveShowFileUrls(href) {
+  if (href === undefined) {
+    href = window.location.href;
+  }
+
+  const url = new URL(href);
+  const match = url.pathname.match(PATHNAME_REGEX);
+  if (match) {
+    return {
+      audio: new URL('music.mp3', url).toString(),
+      show: new URL('show.json', url).toString()
+    };
+  } else {
+    return undefined;
+  }
+}
+
+/**
  * Main saga that simply launches a worker saga that watches a request
  * queue for shows to be loaded, and then starts feeding the worker with
  * requests to load shows.
@@ -50,17 +77,14 @@ export default function* loaderSaga() {
   const chan = yield call(channel);
 
   yield fork(loadShowFromRequestChannelSaga, chan);
-
-  const { href } = window.location;
-  const url = new URL(href);
-  const match = url.pathname.match(PATHNAME_REGEX);
-  if (match) {
+  const derivedUrls = deriveShowFileUrls();
+  if (derivedUrls) {
     // looks like we are running on share.skybrush.io so let's load the show
     // file from the same folder where we are
     yield put(chan, {
-      audio: new URL('music.mp3', url).toString(),
+      audio: derivedUrls.audio,
       missingAudioIsOkay: true,
-      show: ky.get('show.json', { prefix: url }).json(),
+      show: ky.get(derivedUrls.show).json(),
     });
   } else {
     // This is outside share.skybrush.io so just load a bundled demo show or

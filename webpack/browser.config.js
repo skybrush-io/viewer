@@ -20,9 +20,15 @@ module.exports = merge(baseConfig, {
     },
   },
 
+  devServer: {
+    // Fall back to serving index.html when the URL is not found
+    historyApiFallback: true
+  },
+
   plugins: [
     // Create index.html on-the-fly
     new HtmlWebpackPlugin({
+      base: '/',    // to make the /s/ URLs work
       meta: htmlMetaTags,
       template: path.resolve(projectRoot, 'index.html'),
       title:

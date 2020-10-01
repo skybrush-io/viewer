@@ -76,7 +76,11 @@ const createMainWindow = (app, options) => {
       // how we could inject window.bridge into the main window if the
       // two contexts are isolated
       contextIsolation: false,
+      // Lots of electron-* modules that we use still depend on 'electron.remote'
+      // so we need this
+      enableRemoteModule: true,
       preload: preloadScriptPath,
+      worldSafeExecuteJavaScript: true,
     },
   });
 

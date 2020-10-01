@@ -12,9 +12,6 @@ const { willUseWebpackDevServer } = require('./utils');
 // Clean up temporary files even when an uncaught exception occurs
 tmp.setGracefulCleanup();
 
-// Set allowRendererProcessReuse explicitly to avoid an Electron warning
-app.allowRendererProcessReuse = true;
-
 /**
  * Main entry point of the application.
  *
@@ -58,7 +55,7 @@ function run(argv) {
   // Handle certificate errors
   app.on(
     'certificate-error',
-    (event, webContents, url, error, cert, allowCallback) => {
+    (event, _webContents, url, _error, _cert, allowCallback) => {
       if (
         willUseWebpackDevServer &&
         url.match(/^(https|wss):\/\/localhost:.*\//)
@@ -76,7 +73,7 @@ function run(argv) {
 
   // Prevent the creation of additional windows or web views. Also prevent
   // navigation.
-  app.on('web-contents-created', (event, webContents) => {
+  app.on('web-contents-created', (_event, webContents) => {
     webContents.on(
       'will-attach-webview',
       (event, webPreferences, parameters) => {

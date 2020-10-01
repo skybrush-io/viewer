@@ -7,14 +7,15 @@ import IconButton from '@material-ui/core/IconButton';
 import Fade from '@material-ui/core/Fade';
 import { makeStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
-
-import { isDark } from '~/theme';
+import { isThemeDark } from '@skybrush/app-theme-material-ui';
 
 const useStyles = makeStyles(
   (theme) => ({
     root: {
       background: new Color(
-        isDark(theme) ? theme.palette.black : theme.palette.background.default
+        isThemeDark(theme)
+          ? theme.palette.black
+          : theme.palette.background.default
       )
         .alpha(0.7)
         .string(),

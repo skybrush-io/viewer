@@ -13,10 +13,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Switch from '@material-ui/core/Switch';
 import { makeStyles } from '@material-ui/core/styles';
+import { isThemeDark } from '@skybrush/app-theme-material-ui';
 
 import { closeSidebar } from '~/features/sidebar/slice';
 import { setScenery, toggleGrid } from '~/features/settings/actions';
-import { isDark } from '~/theme';
 
 import SkybrushLogo from './SkybrushLogo';
 
@@ -41,7 +41,7 @@ const useStyles = makeStyles(
     },
 
     paper: {
-      background: isDark(theme)
+      background: isThemeDark(theme)
         ? 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) 80%, black)'
         : 'rgba(255, 255, 255, 0.7)',
     },

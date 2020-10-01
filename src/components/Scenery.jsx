@@ -13,7 +13,7 @@ const grounds = {
   /* Checkerboard indoor texture */
   indoor: {
     ground: 'flat',
-    groundColor: '#444',
+    groundColor: '#333',
     groundColor2: '#666',
     groundTexture: 'checkerboard',
   },
@@ -40,8 +40,9 @@ const environments = {
     preset: 'default',
     fog: 0.2,
     gridColor: '#888',
-    skyType: 'color',
-    skyColor: '#222',
+    skyType: 'gradient',
+    skyColor: '#000',
+    horizonColor: '#222',
     ...grounds.indoor,
   },
 };

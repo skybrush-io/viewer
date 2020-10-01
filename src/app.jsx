@@ -9,7 +9,7 @@ import Sidebar from './components/Sidebar';
 import SplashScreen from './components/SplashScreen';
 import TopLevelView from './components/TopLevelView';
 
-import store, { persistor } from './store';
+import { persistor, store } from './store';
 import ThemeProvider from './theme';
 
 require('~/../assets/css/aframe.less');

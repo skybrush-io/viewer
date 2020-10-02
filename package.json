@@ -44,6 +44,7 @@
     "aframe-orbit-controls": "^1.3.0",
     "clsx": "^1.1.1",
     "color": "^3.1.2",
+    "commander": "^6.1.0",
     "delay": "^4.4.0",
     "denque": "^1.4.1",
     "electron-better-ipc": "^1.1.1",
@@ -76,8 +77,7 @@
     "redux-watch": "^1.1.1",
     "tmp-promise": "^3.0.2",
     "typeface-fira-sans": "0.0.75",
-    "whatwg-fetch": "^3.4.1",
-    "yargs": "^16.0.3"
+    "whatwg-fetch": "^3.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",

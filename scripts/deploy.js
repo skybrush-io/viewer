@@ -5,6 +5,7 @@
  * to a given remote location using rsync
  */
 
+const { program } = require('commander');
 const execa = require('execa');
 const { copy, emptyDir, ensureDir, readJson, remove } = require('fs-extra');
 const Listr = require('listr');
@@ -22,17 +23,12 @@ const buildDir = path.resolve(projectRoot, 'build');
 /** The output directory where the release will be built */
 const outputDir = path.resolve(projectRoot, 'dist');
 
-const options = require('yargs')
-  .usage('$0 [options] <target>')
-  .option('p', {
-    alias: 'production',
-    default: false,
-    describe: 'whether to build the application in production mode',
-    type: 'boolean',
-  })
-  .help('h')
-  .alias('h', 'help')
-  .version(false).argv;
+program
+  .storeOptionsAsProperties(false)
+  .option('-p, --production', 'whether to build the application in production mode')
+  .parse(process.argv);
+
+const options = program.opts();
 
 function loadAppConfig() {
   return readJson(path.resolve(projectRoot, 'package.json'));

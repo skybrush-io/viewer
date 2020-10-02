@@ -21,7 +21,13 @@ export const { store, persistor } = configureStoreAndPersistence({
     version: 1,
 
     // do not store the following slices of the state in the storage
-    blacklist: ['audio', 'playback', 'show', 'threeD.camera', 'threeD.overlays']
+    blacklist: [
+      'audio',
+      'playback',
+      'show',
+      'threeD.camera',
+      'threeD.overlays',
+    ],
   },
 
   ignoredActions: [loadShow.fulfilled],
@@ -30,8 +36,8 @@ export const { store, persistor } = configureStoreAndPersistence({
   devTools: {
     actionsBlacklist: [setOverlayVisibility],
     scrubbedActions: [loadShow.fulfilled],
-    scrubbedPaths: ['show.data']
-  }
+    scrubbedPaths: ['show.data'],
+  },
 });
 
 // Send the store dispatcher function back to the preloader

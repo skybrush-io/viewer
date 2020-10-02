@@ -33,6 +33,7 @@
     "@reduxjs/toolkit": "^1.4.0",
     "@skybrush/aframe-components": "^1.1.2",
     "@skybrush/app-theme-material-ui": "^1.0.1",
+    "@skybrush/electron-app-framework": "^1.0.1",
     "@skybrush/redux-toolkit": "^1.0.1",
     "@skybrush/show-format": "^1.1.3",
     "@tippyjs/react": "^4.2.0",

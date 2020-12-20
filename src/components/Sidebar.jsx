@@ -15,6 +15,8 @@ import Switch from '@material-ui/core/Switch';
 import { makeStyles } from '@material-ui/core/styles';
 import { isThemeDark } from '@skybrush/app-theme-material-ui';
 
+import { setPlaybackSpeed } from '~/features/playback/actions';
+import { getPlaybackSpeed } from '~/features/playback/selectors';
 import { closeSidebar } from '~/features/sidebar/slice';
 import { setScenery, toggleGrid } from '~/features/settings/actions';
 
@@ -63,10 +65,12 @@ const modalProps = {
 const SidebarDrawer = ({
   open,
   onClose,
+  onSetPlaybackSpeed,
   onSetScenery,
   onToggleGrid,
   scenery,
   showGrid,
+  speed,
 }) => {
   const classes = useStyles();
   return (
@@ -85,14 +89,34 @@ const SidebarDrawer = ({
                 Scenery
               </InputLabel>
               <Select
-                labelId='sidebar-environment-type-label'
-                id='sidebar-environment-type'
+                labelId='sidebar-scenery-label'
+                id='sidebar-scenery-label'
                 value={scenery}
                 onChange={onSetScenery}
               >
                 <MenuItem value='day'>Day</MenuItem>
                 <MenuItem value='night'>Night</MenuItem>
                 <MenuItem value='indoor'>Indoor</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box px={2}>
+            <FormControl fullWidth variant='filled'>
+              <InputLabel id='sidebar-playback-speed-label'>
+                Playback speed
+              </InputLabel>
+              <Select
+                labelId='sidebar-playback-speed-label'
+                id='sidebar-playback-speed'
+                value={speed}
+                onChange={onSetPlaybackSpeed}
+              >
+                <MenuItem value='1'>1x</MenuItem>
+                <MenuItem value='2'>2x</MenuItem>
+                <MenuItem value='3'>3x</MenuItem>
+                <MenuItem value='5'>5x</MenuItem>
+                <MenuItem value='10'>10x</MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -120,11 +144,13 @@ const SidebarDrawer = ({
 
 SidebarDrawer.propTypes = {
   onClose: PropTypes.func,
+  onSetPlaybackSpeed: PropTypes.func,
   onSetScenery: PropTypes.func,
   onToggleGrid: PropTypes.func,
   open: PropTypes.bool,
   scenery: PropTypes.oneOf(['day', 'night', 'indoor']),
   showGrid: PropTypes.bool,
+  speed: PropTypes.number,
 };
 
 export default connect(
@@ -132,12 +158,15 @@ export default connect(
   (state) => ({
     open: state.sidebar.open,
     scenery: state.settings.threeD.scenery,
+    speed: getPlaybackSpeed(state),
     showGrid: state.settings.threeD.grid !== 'none',
   }),
   // mapDispatchToProps
   {
     onClose: closeSidebar,
     onSetScenery: setScenery,
+    onSetPlaybackSpeed: (event) =>
+      setPlaybackSpeed(Number.parseFloat(event.target.value)),
     onToggleGrid: toggleGrid,
   }
 )(SidebarDrawer);

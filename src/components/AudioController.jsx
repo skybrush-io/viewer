@@ -17,7 +17,7 @@ import {
 import {
   getElapsedSecondsGetter,
   isAdjustingPlaybackPosition,
-  isPlaying,
+  isPlayingInRealTime,
 } from '~/features/playback/selectors';
 
 const AudioController = ({
@@ -89,7 +89,7 @@ export default connect(
   (state) => ({
     ...state.audio,
     elapsedSecondsGetter: getElapsedSecondsGetter(state),
-    playing: isPlaying(state) && !isAdjustingPlaybackPosition(state),
+    playing: isPlayingInRealTime(state) && !isAdjustingPlaybackPosition(state),
   }),
   // mapDispatchToProps
   {

@@ -2,6 +2,14 @@ import isNil from 'lodash-es/isNil';
 import { createSelector } from '@reduxjs/toolkit';
 
 /**
+ * Selector that returns the current playback speed multiplier.
+ */
+export const getPlaybackSpeed = (state) => {
+  const { speed } = state.playback;
+  return isNil(speed) ? 1 : speed;
+};
+
+/**
  * Selector that returns a getter function that can be invoked with a timestamp
  * and that will return the number of seconds elapsed in the show at the given
  * timestamp, based on the state of the playback.
@@ -10,7 +18,8 @@ export const getElapsedSecondsGetter = createSelector(
   (state) => state.playback.startedAt,
   (state) => state.playback.stoppedAt,
   (state) => state.playback.adjustedTo,
-  (startedAt, stoppedAt, adjustedTo) => (timestamp = null) => {
+  getPlaybackSpeed,
+  (startedAt, stoppedAt, adjustedTo, speed) => (timestamp = null) => {
     if (!isNil(adjustedTo)) {
       return adjustedTo;
     }
@@ -24,10 +33,10 @@ export const getElapsedSecondsGetter = createSelector(
     }
 
     if (stoppedAt && timestamp > stoppedAt) {
-      return (stoppedAt - startedAt) / 1000;
+      return ((stoppedAt - startedAt) * speed) / 1000;
     }
 
-    return (timestamp - startedAt) / 1000;
+    return ((timestamp - startedAt) * speed) / 1000;
   }
 );
 
@@ -43,6 +52,12 @@ export const isAdjustingPlaybackPosition = (state) =>
  */
 export const isPlaying = (state) =>
   state.playback.startedAt && !state.playback.stoppedAt;
+
+/**
+ * Returns whether we are currently playing the drone show in real time.
+ */
+export const isPlayingInRealTime = (state) =>
+  getPlaybackSpeed(state) === 1 && isPlaying(state);
 
 /**
  * Returns whether the user has interacted with the playback settings at least

@@ -6,6 +6,8 @@ import settingsReducer from './settings/slice';
 import showReducer from './show/slice';
 import sidebarReducer from './sidebar/slice';
 import threeDReducer from './three-d/slice';
+import uiReducer from './ui/slice';
+import validationReducer from './validation/slice';
 
 export default combineReducers({
   audio: audioReducer,
@@ -13,5 +15,7 @@ export default combineReducers({
   settings: settingsReducer,
   show: showReducer,
   sidebar: sidebarReducer,
-  threeD: threeDReducer
+  threeD: threeDReducer,
+  ui: uiReducer,
+  validation: validationReducer,
 });

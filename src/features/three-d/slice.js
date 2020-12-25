@@ -10,17 +10,17 @@ const { actions, reducer } = createSlice({
   initialState: {
     camera: {
       position: null,
-      rotation: null
+      rotation: null,
     },
 
     navigation: {
       mode: 'walk',
-      parameters: {}
+      parameters: {},
     },
 
     overlays: {
-      visible: false
-    }
+      visible: false,
+    },
   },
 
   reducers: {
@@ -48,14 +48,14 @@ const { actions, reducer } = createSlice({
 
     setOverlayVisibility(state, action) {
       state.overlays.visible = Boolean(action.payload);
-    }
-  }
+    },
+  },
 });
 
 export const {
   setCameraPose,
   setNavigationMode,
-  setOverlayVisibility
+  setOverlayVisibility,
 } = actions;
 
 export default reducer;

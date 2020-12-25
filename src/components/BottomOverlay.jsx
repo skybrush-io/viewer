@@ -22,14 +22,16 @@ import {
   getShowDuration,
   hasLoadedShowFile,
 } from '~/features/show/selectors';
+import ToggleValidationModeButton from '~/features/validation/ToggleValidationModeButton';
 import VirtualReality from '~/icons/VirtualReality';
 import { formatPlaybackTimestamp } from '~/utils/formatters';
 
-import OpenButton from './OpenButton';
 import PlaybackSlider from './PlaybackSlider';
-import PlayStopButton from './PlayStopButton';
-import SettingsButton from './SettingsButton';
-import VolumeButton from './VolumeButton';
+
+import OpenButton from './buttons/OpenButton';
+import PlayStopButton from './buttons/PlayStopButton';
+import SettingsButton from './buttons/SettingsButton';
+import VolumeButton from './buttons/VolumeButton';
 
 const useStyles = makeStyles({
   root: {
@@ -92,11 +94,12 @@ const BottomOverlay = ({
           {formatPlaybackTimestamp(duration)}
         </Box>
         <Box px={1}>
-          {config.buttons.vr && (
+          {config.modes.vr && (
             <IconButton id='vr-button'>
               <VirtualReality />
             </IconButton>
           )}
+          {config.modes.validation && <ToggleValidationModeButton />}
           <SettingsButton />
         </Box>
       </Box>

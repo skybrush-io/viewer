@@ -7,6 +7,10 @@ const config = {
   io: {
     localFiles: true,
   },
+  modes: {
+    player: true,
+    validation: true,
+  },
   preloadedShow: {},
   useWelcomeScreen: true,
 };

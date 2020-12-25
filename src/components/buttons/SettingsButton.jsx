@@ -17,7 +17,7 @@ const SettingsButton = ({ onClick }) => (
 );
 
 SettingsButton.propTypes = {
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
 };
 
 export default connect(
@@ -25,6 +25,6 @@ export default connect(
   null,
   // mapDispatchToProps
   {
-    onClick: toggleSidebar
+    onClick: toggleSidebar,
   }
 )(SettingsButton);

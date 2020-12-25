@@ -5,9 +5,13 @@
 const config = {
   buttons: {
     playbackHint: true,
-    vr: true,
   },
   io: {},
+  modes: {
+    player: true,
+    validation: true,
+    vr: true,
+  },
   preloadedShow: {
     audioUrl: require('~/../assets/shows/demo.mp3').default,
     data: import(

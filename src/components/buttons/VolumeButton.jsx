@@ -12,7 +12,7 @@ const VolumeButton = ({ muted, ...rest }) => (
 );
 
 VolumeButton.propTypes = {
-  muted: PropTypes.bool
+  muted: PropTypes.bool,
 };
 
 export default VolumeButton;

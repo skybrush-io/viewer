@@ -2,11 +2,14 @@ import React from 'react';
 
 import Box from '@material-ui/core/Box';
 
-const ValidationView = () => (
-  <Box flex={1} display='flex' flexDirection='row'>
-    <Box width={160}>Sidebar</Box>
+import ChartGrid from './ChartGrid';
 
-    <Box flex={1}>Main area</Box>
+const ValidationView = () => (
+  <Box flex={1} display='flex' flexDirection='row' p={2}>
+    <Box width={160}>Sidebar</Box>
+    <Box flex={1} display='flex' flexDirection='row'>
+      <ChartGrid flex={1} />
+    </Box>
   </Box>
 );
 

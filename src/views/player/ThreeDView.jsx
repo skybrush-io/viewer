@@ -18,7 +18,7 @@ import {
   getNumberOfDronesInShow,
 } from '~/features/show/selectors';
 
-const glow = require('~/../assets/img/sphere-glow-hollow.png').default;
+import glow from '~/../assets/img/sphere-glow-hollow.png';
 // const flapperDrone = require('~/../assets/models/flapper-drone.obj').default;
 
 const ThreeDView = React.forwardRef((props, ref) => {

@@ -39,12 +39,14 @@ module.exports = {
       React: 'react',
     }),
 
-    // Resolve process.env.NODE_ENV in the code
+    // Resolve process.env in the code
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: 'development',
+      DEPLOYMENT: '0'
+    }),
+
+    // Resolve the git version number and commit hash in the code
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(
-        process.env.NODE_ENV || 'development'
-      ),
-      'process.env.DEPLOYMENT': JSON.stringify(process.env.DEPLOYMENT || '0'),
       VERSION: JSON.stringify(gitRevisionPlugin.version()),
       COMMIT_HASH: JSON.stringify(gitRevisionPlugin.commithash()),
     }),
@@ -59,7 +61,7 @@ module.exports = {
     alias: {
       '~': path.resolve(projectRoot, 'src'),
       config: path.resolve(projectRoot, 'config', 'default'),
-      'layout-bmfont-text': '@collmot/layout-bmfont-text',
+      'layout-bmfont-text': '@collmot/layout-bmfont-text'
     },
     extensions: ['.webpack.js', '.web.js', '.js', '.jsx', '.json'],
   },
@@ -88,12 +90,12 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|skyc)$/,
-        use: [{ loader: 'url-loader', options: { limit: 8192 } }],
+        type: 'asset/resource',
         include: path.join(projectRoot, 'assets'),
       },
       {
         test: /\.(woff|woff2|eot|ttf|svg|mp3|wav|ogg|gltf|obj)$/,
-        use: [{ loader: 'file-loader' }],
+        type: 'asset/resource'
       },
     ],
   },

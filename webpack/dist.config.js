@@ -4,6 +4,7 @@
 const CompressionPlugin = require('compression-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 
 const baseConfig = require('./base.config.js');
@@ -25,6 +26,13 @@ module.exports = merge(baseConfig, {
   },
 
   plugins: [
+    // process and Buffer polyfills are needed for AFrame to work nicely as of
+    // 1.1.0
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+      process: 'process/browser'
+    }),
+
     // Create index.html on-the-fly
     new HtmlWebpackPlugin({
       meta: getHtmlMetaTags(),

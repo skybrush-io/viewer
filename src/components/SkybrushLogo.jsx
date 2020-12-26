@@ -1,6 +1,6 @@
 import React from 'react';
 
-const logo = require('~/../assets/img/logo.png').default;
+import logo from '~/../assets/img/logo.png';
 
 const SkybrushLogo = (props) => (
   <img src={logo} alt='Skybrush Viewer' {...props} />

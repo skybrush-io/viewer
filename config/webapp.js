@@ -2,6 +2,8 @@
  * @file Default application configuration at startup.
  */
 
+import music from '~/../assets/shows/demo.mp3';
+
 const config = {
   buttons: {
     playbackHint: true,
@@ -13,7 +15,7 @@ const config = {
     vr: true,
   },
   preloadedShow: {
-    audioUrl: require('~/../assets/shows/demo.mp3').default,
+    audioUrl: music,
     data: import(
       /* webpackChunkName: "show" */ '~/../assets/shows/demo.json'
     ).then((module) => module.default),

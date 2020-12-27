@@ -64,6 +64,10 @@ module.exports = {
       'layout-bmfont-text': '@collmot/layout-bmfont-text'
     },
     extensions: ['.webpack.js', '.web.js', '.js', '.jsx', '.json'],
+    fallback: {
+      "http": require.resolve("stream-http"),
+      "https": require.resolve("https-browserify")
+    }
   },
   module: {
     rules: [

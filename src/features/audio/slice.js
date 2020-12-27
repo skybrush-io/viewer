@@ -3,8 +3,7 @@
  */
 
 import { createSlice } from '@reduxjs/toolkit';
-
-import { noPayload } from '~/utils/redux';
+import { noPayload } from '@skybrush/redux-toolkit';
 
 const { actions, reducer } = createSlice({
   name: 'audio',

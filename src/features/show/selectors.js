@@ -4,9 +4,10 @@ import maxBy from 'lodash-es/maxBy';
 
 import { createSelector } from '@reduxjs/toolkit';
 
+import { createTrajectoryPlayer } from '@skybrush/show-format';
+
 import { formatPlaybackTimestamp } from '~/utils/formatters';
 import createLightProgramPlayer from '~/utils/lights';
-import createTrajectoryPlayer from '~/utils/trajectory';
 
 export const canLoadShowFromLocalFile = () => config.io.localFiles;
 

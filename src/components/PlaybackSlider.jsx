@@ -5,6 +5,8 @@ import { useHarmonicIntervalFn, useUpdate } from 'react-use';
 
 import Slider from '@material-ui/core/Slider';
 
+import { stripEvent } from '@skybrush/redux-toolkit';
+
 import {
   setPlaybackPosition,
   temporarilyOverridePlaybackPosition,
@@ -16,7 +18,6 @@ import {
 } from '~/features/playback/selectors';
 import { getShowDuration } from '~/features/show/selectors';
 import { formatPlaybackTimestamp } from '~/utils/formatters';
-import { stripEvent } from '~/utils/redux';
 
 const PlaybackSlider = ({
   dragging,

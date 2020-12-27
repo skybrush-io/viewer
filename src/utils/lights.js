@@ -29,7 +29,7 @@ function convertLightProgramToUint8Array(input) {
   }
 
   if (typeof input === 'string') {
-    return Uint8Array.from(Base64.atob(input), char => char.charCodeAt(0));
+    return Uint8Array.from(Base64.atob(input), (char) => char.charCodeAt(0));
   }
 
   throw new Error('Unsupported input type for light program');
@@ -252,7 +252,7 @@ class ExecutorState {
  */
 function createLightProgramExecutor(program, initialState = undefined) {
   const bytes = convertLightProgramToUint8Array(program);
-  const numBytes = bytes.length;
+  const numberBytes = bytes.length;
   const loops = [];
   let index;
   let state;
@@ -313,7 +313,7 @@ function createLightProgramExecutor(program, initialState = undefined) {
     let loopItem;
     let newTimestamp;
 
-    if (numBytes === 0) {
+    if (numberBytes === 0) {
       return;
     }
 
@@ -395,7 +395,7 @@ function createLightProgramExecutor(program, initialState = undefined) {
           iterations = getNextByte();
           loops.push([
             index,
-            iterations > 0 ? iterations : Number.POSITIVE_INFINITY
+            iterations > 0 ? iterations : Number.POSITIVE_INFINITY,
           ]);
           break;
 
@@ -437,7 +437,7 @@ function createLightProgramExecutor(program, initialState = undefined) {
 
   return {
     execute,
-    reset
+    reset,
   };
 }
 
@@ -574,6 +574,6 @@ export default function createLightProgramPlayer(program) {
 
   return {
     evaluateColorAt,
-    iterate
+    iterate,
   };
 }

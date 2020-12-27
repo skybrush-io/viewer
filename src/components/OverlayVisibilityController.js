@@ -5,7 +5,7 @@ import { useMouseHovered, useTimeout } from 'react-use';
 
 import {
   setOverlayHidden,
-  setOverlayVisible
+  setOverlayVisible,
 } from '~/features/three-d/actions';
 
 // import React from 'react';
@@ -49,7 +49,7 @@ const useMouseMovingState = (
     moving,
     onStarted,
     onStopped,
-    reset
+    reset,
   ]);
 
   return moving;
@@ -68,7 +68,7 @@ const OverlayVisibilityController = ({ areaRef, onHide, onShow, timeout }) => {
   useMouseMovingState(areaRef, {
     onStarted: onShow,
     onStopped: onHide,
-    timeout
+    timeout,
   });
 
   // TODO(ntamas): if mouse is down, make sure that the overlay stays visible
@@ -81,11 +81,11 @@ OverlayVisibilityController.propTypes = {
   areaRef: PropTypes.object,
   onHide: PropTypes.func,
   onSHow: PropTypes.func,
-  timeout: PropTypes.number
+  timeout: PropTypes.number,
 };
 
 OverlayVisibilityController.defaultProps = {
-  timeout: 3000
+  timeout: 3000,
 };
 
 export default connect(
@@ -94,6 +94,6 @@ export default connect(
   // mapDispatchToProps
   {
     onHide: setOverlayHidden,
-    onShow: setOverlayVisible
+    onShow: setOverlayVisible,
   }
 )(OverlayVisibilityController);

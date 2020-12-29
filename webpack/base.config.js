@@ -101,6 +101,10 @@ module.exports = {
         test: /\.(woff|woff2|eot|ttf|svg|mp3|wav|ogg|gltf|obj)$/,
         type: 'asset/resource'
       },
+      {
+        test: /\.worker\.js$/,
+        use: { loader: 'worker-loader' }
+      },
     ],
   },
 

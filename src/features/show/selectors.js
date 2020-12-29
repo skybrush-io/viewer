@@ -4,7 +4,10 @@ import maxBy from 'lodash-es/maxBy';
 
 import { createSelector } from '@reduxjs/toolkit';
 
-import { createTrajectoryPlayer } from '@skybrush/show-format';
+import {
+  createTrajectoryPlayer,
+  validateTrajectory,
+} from '@skybrush/show-format';
 
 import { formatPlaybackTimestamp } from '~/utils/formatters';
 import createLightProgramPlayer from '~/utils/lights';
@@ -14,11 +17,14 @@ export const canLoadShowFromLocalFile = () => config.io.localFiles;
 /**
  * Returns whether a trajectory object "looks like" a valid trajectory.
  */
-export const isValidTrajectory = (trajectory) =>
-  typeof trajectory === 'object' &&
-  trajectory.version === 1 &&
-  typeof trajectory.points === 'object' &&
-  Array.isArray(trajectory.points);
+export const isValidTrajectory = (trajectory) => {
+  try {
+    validateTrajectory(trajectory);
+    return true;
+  } catch {
+    return false;
+  }
+};
 
 /**
  * Returns whether a trajectory object "looks like" a valid light program.
@@ -71,6 +77,15 @@ const getLightPrograms = createSelector(getDroneSwarmSpecification, (swarm) =>
 export const getLightProgramPlayers = createSelector(
   getLightPrograms,
   (lightPrograms) => lightPrograms.map(createLightProgramPlayer)
+);
+
+/**
+ * Returns the names of the drones in the currently loaded show.
+ */
+export const getNamesOfDronesInShow = createSelector(
+  getDroneSwarmSpecification,
+  (swarm) =>
+    swarm.map((drone, index) => get(drone, 'name') || `Drone ${index + 1}`)
 );
 
 /**

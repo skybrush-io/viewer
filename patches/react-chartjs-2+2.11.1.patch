@@ -1,0 +1,15 @@
+diff --git a/node_modules/react-chartjs-2/es/index.js b/node_modules/react-chartjs-2/es/index.js
+index 7ca177d..a3c9be6 100644
+--- a/node_modules/react-chartjs-2/es/index.js
++++ b/node_modules/react-chartjs-2/es/index.js
+@@ -249,7 +249,9 @@ var ChartComponent = /*#__PURE__*/function (_React$Component) {
+         if (current && current.type === next.type && next.data) {
+           // Be robust to no data. Relevant for other update mechanisms as in chartjs-plugin-streaming.
+           // The data array must be edited in place. As chart.js adds listeners to it.
+-          current.data.splice(next.data.length);
++          if (current.data.length > next.data.length) {
++            current.data.splice(next.data.length);
++          }
+           next.data.forEach(function (point, pid) {
+             current.data[pid] = next.data[pid];
+           });

@@ -3,7 +3,7 @@
  * "playback timestamp" in the playback slider.
  */
 export function formatPlaybackTimestamp(seconds) {
-  if (!isFinite(seconds)) {
+  if (!Number.isFinite(seconds)) {
     return '--:--';
   }
 

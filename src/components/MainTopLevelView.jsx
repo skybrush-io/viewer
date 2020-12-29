@@ -15,7 +15,9 @@ import PlayerView from '~/views/player';
 
 import PageLoadingIndicator from './PageLoadingIndicator';
 
-const LazyValidationView = React.lazy(() => import('~/views/validation'));
+const LazyValidationView = React.lazy(() =>
+  import(/* webpackChunkName: "validation" */ '~/views/validation')
+);
 
 const MainTopLevelView = ({ mode }) => {
   const ref = useRef(null);

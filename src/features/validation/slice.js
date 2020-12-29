@@ -17,17 +17,35 @@ const { actions, reducer } = createSlice({
       byId: {},
       order: [],
     },
+
+    selection: [],
+    visiblePanels: [],
   },
 
-  reducers: {},
+  reducers: {
+    setVisiblePanels: (state, action) => {
+      const { payload } = action;
+      if (Array.isArray(payload)) {
+        state.visiblePanels = payload;
+      }
+    },
+
+    setSelection: (state, action) => {
+      const { payload } = action;
+      if (Array.isArray(payload)) {
+        state.selection = payload;
+      }
+    },
+  },
 
   extraReducers: {
     [clearLoadedShow]: (state) => {
       removeAllMessages(state);
+      state.selection = [];
     },
   },
 });
 
-// export const { clearLoadedShow, requestToLoadShow } = actions;
+export const { setSelection, setVisiblePanels } = actions;
 
 export default reducer;

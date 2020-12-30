@@ -82,7 +82,7 @@ export const getSampledAltitudesForDrones = createSelector(
   getSampledPositionsForDrones,
   (positionsByDrones) => {
     return positionsByDrones.map((positions) =>
-      positions.map((coord) => ({ x: coord.t, y: coord.z }))
+      positions.map((coord) => coord.z)
     );
   }
 );
@@ -95,10 +95,7 @@ export const getSampledHorizontalVelocitiesForDrones = createSelector(
   getSampledVelocitiesForDrones,
   (velocitiesByDrones) => {
     return velocitiesByDrones.map((velocities) =>
-      velocities.map((coord) => ({
-        x: coord.t,
-        y: Math.hypot(coord.x, coord.y),
-      }))
+      velocities.map((coord) => Math.hypot(coord.x, coord.y))
     );
   }
 );
@@ -111,7 +108,7 @@ export const getSampledVerticalVelocitiesForDrones = createSelector(
   getSampledVelocitiesForDrones,
   (velocitiesByDrones) => {
     return velocitiesByDrones.map((velocities) =>
-      velocities.map((coord) => ({ x: coord.t, y: coord.z }))
+      velocities.map((coord) => coord.z)
     );
   }
 );

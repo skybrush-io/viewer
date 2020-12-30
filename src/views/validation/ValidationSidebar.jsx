@@ -2,9 +2,10 @@ import isNil from 'lodash-es/isNil';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { FixedSizeList as List } from 'react-window';
+import useResizeObserver from 'use-resize-observer';
 
 import Box from '@material-ui/core/Box';
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
@@ -24,8 +25,9 @@ const SidebarListItemPresentation = ({
   chartIndex,
   label,
   onToggleSelection,
+  style,
 }) => (
-  <ListItem button dense onClick={onToggleSelection}>
+  <ListItem button dense style={style} onClick={onToggleSelection}>
     <DenseCheckbox
       checked={!isNil(chartIndex)}
       style={{ color: chartIndex ? CHART_COLORS[chartIndex] : undefined }}
@@ -65,13 +67,23 @@ const ShowAllDronesListItem = connect(
 )(SidebarListItemPresentation);
 
 const ValidationSidebar = ({ singleDroneItems }) => {
+  const { ref, height = 0, width = 0 } = useResizeObserver();
   return (
-    <Box width={160} overflow='auto'>
-      <List dense style={{ background: 'transparent' }}>
-        <ShowAllDronesListItem />
-        {singleDroneItems.map((item) => (
-          <SidebarListItem key={item.id} {...item} />
-        ))}
+    <Box ref={ref} width={160}>
+      <List
+        height={height}
+        width={width}
+        itemSize={36}
+        itemCount={singleDroneItems.length + 1}
+      >
+        {({ index, style }) => {
+          const item = index > 0 ? singleDroneItems[index - 1] : undefined;
+          return index === 0 ? (
+            <ShowAllDronesListItem style={style} />
+          ) : (
+            <SidebarListItem key={item.id} {...item} style={style} />
+          );
+        }}
       </List>
     </Box>
   );

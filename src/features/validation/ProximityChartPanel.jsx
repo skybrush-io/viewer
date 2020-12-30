@@ -6,8 +6,7 @@ import ChartPanel from './ChartPanel';
 import {
   getNearestNeighborDistancesForFrames,
   getSampledTimeInstants,
-} from '~/features/validation/selectors';
-
+} from './selectors';
 import { createChartPoints } from './utils';
 
 const getDataForProximityChart = createSelector(
@@ -25,6 +24,9 @@ export default connect(
   // mapStateToProps
   (state) => ({
     data: getDataForProximityChart(state),
+    threshold: 3,
+    thresholdLabel: 'Distance threshold',
+    title: 'Proximity',
     verticalUnit: ' m',
   }),
   // mapDispatchToProps

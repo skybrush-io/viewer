@@ -9,11 +9,11 @@ import ChevronRight from '@material-ui/icons/ChevronRight';
 import Settings from '@material-ui/icons/Settings';
 
 import { togglePanelVisibility } from '~/features/validation/actions';
+import { PANELS } from '~/features/validation/panels';
 import { getVisiblePanels } from '~/features/validation/selectors';
 import { setMode } from '~/features/ui/slice';
 
 import PanelToggleChip from './PanelToggleChip';
-import { PANELS } from './panels';
 
 const useStyles = makeStyles((theme) => ({
   root: {

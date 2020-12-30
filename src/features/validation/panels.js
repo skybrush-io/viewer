@@ -8,21 +8,25 @@ export const PANELS = [
     id: 'altitude',
     label: 'Altitudes',
     component: AltitudeChartPanel,
+    priority: 0,
   },
   {
     id: 'horizontalVelocity',
     label: 'Horizontal velocities',
     component: HorizontalVelocityChartPanel,
+    priority: 10,
   },
   {
     id: 'verticalVelocity',
     label: 'Vertical velocities',
     component: VerticalVelocityChartPanel,
+    priority: 20,
   },
   {
     id: 'proximity',
     label: 'Proximity',
     component: ProximityChartPanel,
+    priority: 30,
   },
 ];
 

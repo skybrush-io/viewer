@@ -14,12 +14,11 @@ import {
   toggleItemInSelection,
 } from '~/features/validation/actions';
 import { CHART_COLORS } from '~/features/validation/constants';
+import { getSidebarItemsForSingleDrones } from '~/features/validation/items';
 import {
   getSelectionToChartIndexMapping,
   isSelectionEmpty,
 } from '~/features/validation/selectors';
-
-import { getSidebarItemsForSingleDrones } from './items';
 
 const SidebarListItemPresentation = ({
   chartIndex,

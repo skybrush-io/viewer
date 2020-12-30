@@ -85,6 +85,7 @@
     "redux-thunk": "^2.3.0",
     "redux-watch": "^1.2.0",
     "stream-http": "^2.8.3",
+    "timsort": "^0.3.0",
     "tmp-promise": "^3.0.2",
     "typeface-fira-sans": "^1.1.13",
     "use-resize-observer": "^7.0.0",

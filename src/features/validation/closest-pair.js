@@ -1,5 +1,9 @@
 import minBy from 'lodash-es/minBy';
-import orderBy from 'lodash-es/orderBy';
+
+// in my measurements, timsort was slightly better than the built-in JS sort
+// and also faster than fast-sort. This may change later; it's worth re-running
+// the benchmark every now and then.
+import { sort } from 'timsort';
 
 function getDistanceSquared(pair) {
   return (
@@ -141,10 +145,22 @@ function getClosestPairOrdered(points) {
   ); // O(n)
 }
 
+function orderByX(points) {
+  const result = points.concat();
+  sort(result, (a, b) => a.x - b.x);
+  return result;
+}
+
+function orderByY(points) {
+  const result = points.concat();
+  sort(result, (a, b) => a.y - b.y);
+  return result;
+}
+
 function getClosestPair(points) {
   return getClosestPairOrdered({
-    orderedByX: orderBy(points, 'x'),
-    orderedByY: orderBy(points, 'y'), // O(n log n)
+    orderedByX: orderByX(points),
+    orderedByY: orderByY(points), // O(n log n)
   });
 }
 

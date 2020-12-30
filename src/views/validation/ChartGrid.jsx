@@ -8,9 +8,8 @@ import useResizeObserver from 'use-resize-observer';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 
+import { findPanelById } from '~/features/validation/panels';
 import { getVisiblePanels } from '~/features/validation/selectors';
-
-import { findPanelById } from './panels';
 
 const useStyles = makeStyles((theme) => ({
   root: {

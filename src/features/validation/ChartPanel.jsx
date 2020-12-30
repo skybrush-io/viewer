@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import { Scatter } from 'react-chartjs-2';
 
+import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
+import Typography from '@material-ui/core/Typography';
 import { orange } from '@material-ui/core/colors';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -14,8 +16,9 @@ import {
   isThemeDark,
 } from '@skybrush/app-theme-material-ui';
 
-import { CHART_COLORS } from '~/features/validation/constants';
 import { formatPlaybackTimestamp } from '~/utils/formatters';
+
+import { CHART_COLORS } from './constants';
 
 require('chartjs-plugin-annotation');
 require('chartjs-plugin-crosshair');
@@ -74,7 +77,7 @@ const useStyles = makeStyles(
 const createLineStyle = ({ canvas, color = 'rgb(0, 128, 255)' } = {}) => ({
   backgroundColor: createGradientBackground({
     alpha: 0.4,
-    height: 450,
+    height: 800,
     canvas,
     color,
   }),
@@ -123,6 +126,12 @@ const createOptions = ({
     legend: {
       labels: {
         usePointStyle: true,
+      },
+    },
+
+    layout: {
+      padding: {
+        top: 4,
       },
     },
 
@@ -207,6 +216,7 @@ const ChartPanel = ({
   threshold,
   thresholdIsAbsolute,
   thresholdLabel,
+  title,
   verticalUnit,
 }) => {
   const classes = useStyles();
@@ -263,6 +273,11 @@ const ChartPanel = ({
   return (
     <Card square className={classes.root} style={{ height }}>
       <Scatter data={chartData} options={options} />
+      {title && (
+        <Box left={8} top={4} position='absolute'>
+          <Typography variant='button'>{title}</Typography>
+        </Box>
+      )}
     </Card>
   );
 };
@@ -282,6 +297,7 @@ ChartPanel.propTypes = {
   threshold: PropTypes.number,
   thresholdIsAbsolute: PropTypes.bool,
   thresholdLabel: PropTypes.string,
+  title: PropTypes.string,
   verticalUnit: PropTypes.string,
 };
 

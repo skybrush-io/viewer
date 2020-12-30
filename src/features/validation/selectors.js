@@ -129,6 +129,7 @@ export const getNearestNeighborDistancesForFrames = createSelector(
     const result = new Array(numberFrames);
     const positionsInCurrentFrame = new Array(numberDrones);
 
+    console.time('Closest points');
     for (let frameIndex = 0; frameIndex < numberFrames; frameIndex++) {
       for (let droneIndex = 0; droneIndex < numberDrones; droneIndex++) {
         positionsInCurrentFrame[droneIndex] =
@@ -142,6 +143,8 @@ export const getNearestNeighborDistancesForFrames = createSelector(
         closestPair[0].z - closestPair[1].z
       );
     }
+
+    console.timeEnd('Closest points');
 
     return result;
   }

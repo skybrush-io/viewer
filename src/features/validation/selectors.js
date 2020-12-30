@@ -7,6 +7,7 @@ import {
 } from '~/features/show/selectors';
 import { formatPlaybackTimestamp } from '~/utils/formatters';
 
+import getClosestPair from './closest-pair';
 import { SAMPLES_PER_SECOND } from './constants';
 
 /**
@@ -110,6 +111,39 @@ export const getSampledVerticalVelocitiesForDrones = createSelector(
     return velocitiesByDrones.map((velocities) =>
       velocities.map((coord) => coord.z)
     );
+  }
+);
+
+/**
+ * Returns an array mapping frames to the distance of the closest drone pair in
+ * that frame.
+ */
+export const getNearestNeighborDistancesForFrames = createSelector(
+  getSampledPositionsForDrones,
+  getSampledTimeInstants,
+  (positionsByDrones, times) => {
+    // TODO(ntamas): make this async and make it run in a worker or at least in
+    // the background so we don't lock the UI
+    const numberFrames = times.length;
+    const numberDrones = positionsByDrones.length;
+    const result = new Array(numberFrames);
+    const positionsInCurrentFrame = new Array(numberDrones);
+
+    for (let frameIndex = 0; frameIndex < numberFrames; frameIndex++) {
+      for (let droneIndex = 0; droneIndex < numberDrones; droneIndex++) {
+        positionsInCurrentFrame[droneIndex] =
+          positionsByDrones[droneIndex][frameIndex];
+      }
+
+      const closestPair = getClosestPair(positionsInCurrentFrame);
+      result[frameIndex] = Math.hypot(
+        closestPair[0].x - closestPair[1].x,
+        closestPair[0].y - closestPair[1].y,
+        closestPair[0].z - closestPair[1].z
+      );
+    }
+
+    return result;
   }
 );
 

@@ -105,6 +105,7 @@ const createThresholdAnnotation = (value, label) => ({
 });
 
 const createOptions = ({
+  range,
   threshold,
   thresholdIsAbsolute,
   thresholdLabel,
@@ -118,7 +119,7 @@ const createOptions = ({
     smoothing: false,
   });
 
-  const options = {
+  let options = {
     legend: {
       labels: {
         usePointStyle: true,
@@ -185,12 +186,24 @@ const createOptions = ({
     options.annotation = { annotations };
   }
 
-  return merge(base, options);
+  merge(base, options);
+  options = base;
+
+  options.scales.xAxes[0].ticks.callback = (value) =>
+    formatPlaybackTimestamp(value);
+
+  if (range && Array.isArray(range) && range.length >= 2) {
+    options.scales.yAxes[0].ticks.suggestedMin = range[0];
+    options.scales.yAxes[0].ticks.suggestedMax = range[1];
+  }
+
+  return options;
 };
 
 const ChartPanel = ({
   data,
   height,
+  range,
   threshold,
   thresholdIsAbsolute,
   thresholdLabel,
@@ -238,12 +251,13 @@ const ChartPanel = ({
   const options = useMemo(
     () =>
       createOptions({
+        range,
         threshold,
         thresholdIsAbsolute,
         thresholdLabel,
         verticalUnit,
       }),
-    [threshold, thresholdIsAbsolute, thresholdLabel, verticalUnit]
+    [range, threshold, thresholdIsAbsolute, thresholdLabel, verticalUnit]
   );
 
   return (
@@ -264,6 +278,7 @@ ChartPanel.propTypes = {
     })
   ),
   height: PropTypes.number,
+  range: PropTypes.arrayOf(PropTypes.number),
   threshold: PropTypes.number,
   thresholdIsAbsolute: PropTypes.bool,
   thresholdLabel: PropTypes.string,

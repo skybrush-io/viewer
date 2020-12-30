@@ -1,5 +1,6 @@
 import AltitudeChartPanel from './AltitudeChartPanel';
 import HorizontalVelocityChartPanel from './HorizontalVelocityChartPanel';
+import ProximityChartPanel from './ProximityChartPanel';
 import VerticalVelocityChartPanel from './VerticalVelocityChartPanel';
 
 export const PANELS = [
@@ -21,7 +22,7 @@ export const PANELS = [
   {
     id: 'proximity',
     label: 'Proximity',
-    disabled: true,
+    component: ProximityChartPanel,
   },
 ];
 

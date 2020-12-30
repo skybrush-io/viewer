@@ -11,6 +11,8 @@ import { getIndicesOfSelectedDrones } from './items';
 
 const createChartPoint = (x, y) => ({ x, y });
 
+export const createChartPoints = (xs, ys) => zipWith(xs, ys, createChartPoint);
+
 export const createChartDataSelector = (selector) => {
   // Sub-selector that returns the chart data that should be shown if some
   // drones are selected explicitly.
@@ -22,7 +24,7 @@ export const createChartDataSelector = (selector) => {
     (data, times, names, selectedDroneIndices) => {
       return selectedDroneIndices.map((index) => ({
         label: names[index],
-        values: zipWith(times, data[index], createChartPoint),
+        values: createChartPoints(times, data[index]),
       }));
     }
   );

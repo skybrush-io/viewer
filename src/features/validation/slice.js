@@ -18,11 +18,33 @@ const { actions, reducer } = createSlice({
       order: [],
     },
 
+    // For the validation settings, "null" means "use the setting from the show
+    // file if given"
+    settings: {
+      maxAltitude: null,
+      minDistance: null,
+      maxVelocityXY: null,
+      maxVelocityZ: null,
+    },
+
+    // List of validators that are disabled
+    disabledValidators: [],
+
+    // Current selection of drones to show on charts
     selection: [],
+
+    // List of chart panels that are visible
     visiblePanels: [],
   },
 
   reducers: {
+    setDisabledValidators: (state, action) => {
+      const { payload } = action;
+      if (Array.isArray(payload)) {
+        state.disabledValidators = payload;
+      }
+    },
+
     setVisiblePanels: (state, action) => {
       const { payload } = action;
       if (Array.isArray(payload)) {
@@ -46,6 +68,10 @@ const { actions, reducer } = createSlice({
   },
 });
 
-export const { setSelection, setVisiblePanels } = actions;
+export const {
+  setDisabledValidators,
+  setSelection,
+  setVisiblePanels,
+} = actions;
 
 export default reducer;

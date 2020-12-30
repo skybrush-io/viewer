@@ -73,6 +73,7 @@
     "react-toast-notifications": "^2.4.0",
     "react-transition-group": "^4.4.1",
     "react-use": "^15.3.4",
+    "react-window": "^1.8.6",
     "redbox-react": "^1.6.0",
     "redux": "^4.0.5",
     "redux-actions": "^2.6.5",

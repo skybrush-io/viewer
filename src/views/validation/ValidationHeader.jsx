@@ -6,6 +6,7 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import ChevronRight from '@material-ui/icons/ChevronRight';
+import Settings from '@material-ui/icons/Settings';
 
 import { togglePanelVisibility } from '~/features/validation/actions';
 import { getVisiblePanels } from '~/features/validation/selectors';
@@ -43,11 +44,8 @@ const ValidationHeader = ({
         );
       })}
       <Box flex='1' />
-      <Button
-        color='primary'
-        endIcon={<ChevronRight />}
-        onClick={onReturnToViewer}
-      >
+      <Button startIcon={<Settings />}>Settings</Button>
+      <Button endIcon={<ChevronRight />} onClick={onReturnToViewer}>
         Return to viewer
       </Button>
     </Box>

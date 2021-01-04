@@ -5,9 +5,12 @@ import { connect } from 'react-redux';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import Close from '@material-ui/icons/Close';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import Settings from '@material-ui/icons/Settings';
 
+import { hasLoadedShowFile } from '~/features/show/selectors';
+import { clearLoadedShow } from '~/features/show/slice';
 import { togglePanelVisibility } from '~/features/validation/actions';
 import { PANELS } from '~/features/validation/panels';
 import { getVisiblePanels } from '~/features/validation/selectors';
@@ -26,6 +29,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ValidationHeader = ({
+  hasLoadedShowFile,
+  onClearLoadedShow,
   onReturnToViewer,
   onTogglePanel,
   visiblePanels,
@@ -45,6 +50,13 @@ const ValidationHeader = ({
         );
       })}
       <Box flex='1' />
+      <Button
+        startIcon={<Close />}
+        disabled={!hasLoadedShowFile}
+        onClick={onClearLoadedShow}
+      >
+        Close show
+      </Button>
       <Button startIcon={<Settings />}>Settings</Button>
       <Button endIcon={<ChevronRight />} onClick={onReturnToViewer}>
         Return to viewer
@@ -54,6 +66,8 @@ const ValidationHeader = ({
 };
 
 ValidationHeader.propTypes = {
+  hasLoadedShowFile: PropTypes.bool,
+  onClearLoadedShow: PropTypes.func,
   onReturnToViewer: PropTypes.func,
   onTogglePanel: PropTypes.func,
   visiblePanels: PropTypes.arrayOf(PropTypes.string),
@@ -62,10 +76,15 @@ ValidationHeader.propTypes = {
 export default connect(
   // mapStateToProps
   (state) => ({
+    hasLoadedShowFile: hasLoadedShowFile(state),
     visiblePanels: getVisiblePanels(state),
   }),
   // mapDispatchToProps
   (dispatch) => ({
+    onClearLoadedShow: () => {
+      dispatch(clearLoadedShow());
+      dispatch(setMode('player'));
+    },
     onReturnToViewer: () => dispatch(setMode('player')),
     onTogglePanel: (id) => dispatch(togglePanelVisibility(id)),
   })

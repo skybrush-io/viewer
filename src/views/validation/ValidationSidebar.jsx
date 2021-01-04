@@ -40,6 +40,7 @@ SidebarListItemPresentation.propTypes = {
   chartIndex: PropTypes.number,
   label: PropTypes.string,
   onToggleSelection: PropTypes.func,
+  style: PropTypes.any,
 };
 
 const SidebarListItem = connect(
@@ -66,10 +67,10 @@ const ShowAllDronesListItem = connect(
   }
 )(SidebarListItemPresentation);
 
-const ValidationSidebar = ({ singleDroneItems }) => {
-  const { ref, height = 0, width = 0 } = useResizeObserver();
+const ValidationSidebar = ({ singleDroneItems, width }) => {
+  const { ref, height = 0 } = useResizeObserver();
   return (
-    <Box ref={ref} width={160}>
+    <Box ref={ref} width={width}>
       <List
         height={height}
         width={width}
@@ -96,6 +97,11 @@ ValidationSidebar.propTypes = {
       label: PropTypes.string,
     })
   ),
+  width: PropTypes.number,
+};
+
+ValidationSidebar.defaultProps = {
+  width: 160,
 };
 
 export default connect(

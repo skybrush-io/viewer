@@ -29,10 +29,11 @@ const ValidationHeader = ({
   onReturnToViewer,
   onTogglePanel,
   visiblePanels,
+  ...rest
 }) => {
   const classes = useStyles();
   return (
-    <Box className={classes.root}>
+    <Box className={classes.root} {...rest}>
       {PANELS.map(({ component, id, ...rest }) => {
         return (
           <PanelToggleChip

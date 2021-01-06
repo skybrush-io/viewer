@@ -35,34 +35,36 @@ export const createChartDataSelector = (selector) => {
     (data, times) => {
       const minValues = [];
       const maxValues = [];
-      const meanValues = [];
+      // const meanValues = [];
 
       const numberDrones = data.length;
       const numberFrames = times.length;
 
       minValues.length = numberFrames;
       maxValues.length = numberFrames;
-      meanValues.length = numberFrames;
+      // meanValues.length = numberFrames;
 
       for (let frameIndex = 0; frameIndex < numberFrames; frameIndex++) {
         const time = times[frameIndex];
         let minValue = Number.POSITIVE_INFINITY;
         let maxValue = Number.NEGATIVE_INFINITY;
-        let sum = 0;
+        const sum = 0;
 
         for (let droneIndex = 0; droneIndex < numberDrones; droneIndex++) {
           const currentValue = data[droneIndex][frameIndex];
           minValue = Math.min(minValue, currentValue);
           maxValue = Math.max(maxValue, currentValue);
-          sum += currentValue;
+          // sum += currentValue;
         }
 
         minValues[frameIndex] = { x: time, y: minValue };
         maxValues[frameIndex] = { x: time, y: maxValue };
+        /*
         meanValues[frameIndex] = {
           x: time,
           y: sum / Math.max(numberDrones, 1),
         };
+        */
       }
 
       return [
@@ -76,11 +78,13 @@ export const createChartDataSelector = (selector) => {
           values: maxValues,
           role: 'maximum',
         },
+        /*
         {
           label: 'Mean',
           values: meanValues,
           role: 'mean',
         },
+        */
       ];
     }
   );

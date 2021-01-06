@@ -122,6 +122,9 @@ const createOptions = ({
     smoothing: false,
   });
 
+  // Ensure that we don't have exaggerated "spikes" on noisy velocity plots
+  base.elements.line.borderJoinStyle = 'bevel';
+
   let options = {
     legend: {
       labels: {

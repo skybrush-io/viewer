@@ -180,8 +180,14 @@ const createOptions = ({
             label += ': ';
           }
 
-          label += Math.round(item.yLabel * 100) / 100;
+          label += Math.round(item.value * 100) / 100;
           return label + verticalUnit;
+        },
+
+        title: (item) => {
+          if (item.length > 0) {
+            return formatPlaybackTimestamp(item[0].x);
+          }
         },
       },
       intersect: false,

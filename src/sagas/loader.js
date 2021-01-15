@@ -7,6 +7,7 @@ import get from 'lodash-es/get';
 import ky from 'ky';
 import { channel } from 'redux-saga';
 import { call, fork, put, putResolve, take } from 'redux-saga/effects';
+import { freeze } from '@reduxjs/toolkit';
 
 import { setAudioUrl } from '~/features/audio/slice';
 import { loadShow } from '~/features/show/async';
@@ -35,7 +36,7 @@ function* loadShowFromRequestChannelSaga(chan) {
       }
     }
 
-    const { payload: showSpec } = yield putResolve(loadShow(show));
+    const { payload: showSpec } = yield putResolve(loadShow(freeze(show)));
     const audioInShowSpec = get(showSpec, 'media.audio.url');
     yield put(setAudioUrl(audioOkay ? audio || audioInShowSpec : null));
   }

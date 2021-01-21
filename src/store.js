@@ -27,6 +27,7 @@ export const { store, persistor } = configureStoreAndPersistence({
       'show',
       'threeD.camera',
       'threeD.overlays',
+      'ui.mode',
     ],
   },
 

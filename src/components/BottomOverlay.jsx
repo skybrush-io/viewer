@@ -99,7 +99,9 @@ const BottomOverlay = ({
               <VirtualReality />
             </IconButton>
           )}
-          {config.modes.validation && <ToggleValidationModeButton />}
+          {config.modes.validation && (
+            <ToggleValidationModeButton disabled={!hasShow} />
+          )}
           <SettingsButton />
         </Box>
       </Box>

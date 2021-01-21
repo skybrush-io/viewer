@@ -9,7 +9,10 @@ import Close from '@material-ui/icons/Close';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import Settings from '@material-ui/icons/Settings';
 
-import { hasLoadedShowFile } from '~/features/show/selectors';
+import {
+  canLoadShowFromLocalFile,
+  hasLoadedShowFile,
+} from '~/features/show/selectors';
 import { clearLoadedShow } from '~/features/show/slice';
 import { togglePanelVisibility } from '~/features/validation/actions';
 import { PANELS } from '~/features/validation/panels';
@@ -29,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ValidationHeader = ({
+  canLoadShowFromLocalFile,
   hasLoadedShowFile,
   onClearLoadedShow,
   onReturnToViewer,
@@ -50,13 +54,15 @@ const ValidationHeader = ({
         );
       })}
       <Box flex='1' />
-      <Button
-        startIcon={<Close />}
-        disabled={!hasLoadedShowFile}
-        onClick={onClearLoadedShow}
-      >
-        Close show
-      </Button>
+      {canLoadShowFromLocalFile && (
+        <Button
+          startIcon={<Close />}
+          disabled={!hasLoadedShowFile}
+          onClick={onClearLoadedShow}
+        >
+          Close show
+        </Button>
+      )}
       <Button startIcon={<Settings />}>Settings</Button>
       <Button endIcon={<ChevronRight />} onClick={onReturnToViewer}>
         Return to viewer
@@ -66,6 +72,7 @@ const ValidationHeader = ({
 };
 
 ValidationHeader.propTypes = {
+  canLoadShowFromLocalFile: PropTypes.bool,
   hasLoadedShowFile: PropTypes.bool,
   onClearLoadedShow: PropTypes.func,
   onReturnToViewer: PropTypes.func,
@@ -76,6 +83,7 @@ ValidationHeader.propTypes = {
 export default connect(
   // mapStateToProps
   (state) => ({
+    canLoadShowFromLocalFile: canLoadShowFromLocalFile(),
     hasLoadedShowFile: hasLoadedShowFile(state),
     visiblePanels: getVisiblePanels(state),
   }),

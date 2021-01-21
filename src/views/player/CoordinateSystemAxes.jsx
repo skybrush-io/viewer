@@ -10,28 +10,30 @@ const AxisColors = {
 /**
  * Component that renders unit-length coordinate system axes at the origin.
  */
-const CoordinateSystemAxes = ({ leftHanded, lineWidth }) => (
+const CoordinateSystemAxes = ({ leftHanded, length, lineWidth }) => (
   <>
     <a-entity
-      meshline={`lineWidth: ${lineWidth}; path: 0 0 0, 1 0 0; color: ${AxisColors.x}`}
+      meshline={`lineWidth: ${lineWidth}; path: 0 0 0, ${length} 0 0; color: ${AxisColors.x}`}
     />
     <a-entity
       meshline={`lineWidth: ${lineWidth}; path: 0 0 0, 0 ${
-        leftHanded ? -1 : 1
+        leftHanded ? -length : length
       } 0; color: ${AxisColors.y}`}
     />
     <a-entity
-      meshline={`lineWidth: ${lineWidth}; path: 0 0 0, 0 0 1; color: ${AxisColors.z}`}
+      meshline={`lineWidth: ${lineWidth}; path: 0 0 0, 0 0 ${length}; color: ${AxisColors.z}`}
     />
   </>
 );
 
 CoordinateSystemAxes.propTypes = {
   leftHanded: PropTypes.bool,
+  length: PropTypes.number,
   lineWidth: PropTypes.number,
 };
 
 CoordinateSystemAxes.defaultProps = {
+  length: 1,
   lineWidth: 3,
 };
 

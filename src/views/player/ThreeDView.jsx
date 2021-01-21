@@ -85,7 +85,7 @@ const ThreeDView = React.forwardRef((props, ref) => {
       </a-entity>
 
       <a-entity rotation='-90 0 90'>
-        {axes && <CoordinateSystemAxes />}
+        {axes && <CoordinateSystemAxes length={10} lineWidth={10} />}
         <a-drone-flock drone-size={1.5} size={numDrones} />
       </a-entity>
 

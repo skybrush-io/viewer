@@ -11,7 +11,7 @@ const config = {
   io: {},
   modes: {
     player: true,
-    validation: true,
+    validation: false,
     vr: true,
   },
   preloadedShow: {

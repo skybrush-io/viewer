@@ -127,6 +127,9 @@ function combine(left, right, closestOnLeft, closestOnRight) {
 /**
  * Function that returns the closest pair of points and their distance, given
  * an input array of points.
+ *
+ * A precondition of using this function is that there must be at least two
+ * points in the input.
  */
 function getClosestPairOrdered(points) {
   if (points.orderedByX.length <= 3) {
@@ -158,6 +161,10 @@ function orderByY(points) {
 }
 
 function getClosestPair(points) {
+  if (points.length < 2) {
+    return undefined;
+  }
+
   return getClosestPairOrdered({
     orderedByX: orderByX(points),
     orderedByY: orderByY(points), // O(n log n)

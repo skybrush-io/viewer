@@ -116,7 +116,7 @@ export const getSampledVerticalVelocitiesForDrones = createSelector(
 
 /**
  * Returns an array mapping frames to the distance of the closest drone pair in
- * that frame.
+ * that frame, or null if the frame has at most one drone.
  */
 export const getNearestNeighborDistancesForFrames = createSelector(
   getSampledPositionsForDrones,
@@ -129,7 +129,6 @@ export const getNearestNeighborDistancesForFrames = createSelector(
     const result = new Array(numberFrames);
     const positionsInCurrentFrame = new Array(numberDrones);
 
-    console.time('Closest points');
     for (let frameIndex = 0; frameIndex < numberFrames; frameIndex++) {
       for (let droneIndex = 0; droneIndex < numberDrones; droneIndex++) {
         positionsInCurrentFrame[droneIndex] =
@@ -137,14 +136,14 @@ export const getNearestNeighborDistancesForFrames = createSelector(
       }
 
       const closestPair = getClosestPair(positionsInCurrentFrame);
-      result[frameIndex] = Math.hypot(
-        closestPair[0].x - closestPair[1].x,
-        closestPair[0].y - closestPair[1].y,
-        closestPair[0].z - closestPair[1].z
-      );
+      result[frameIndex] = closestPair
+        ? Math.hypot(
+            closestPair[0].x - closestPair[1].x,
+            closestPair[0].y - closestPair[1].y,
+            closestPair[0].z - closestPair[1].z
+          )
+        : null;
     }
-
-    console.timeEnd('Closest points');
 
     return result;
   }

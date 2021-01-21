@@ -147,6 +147,7 @@
     ],
     "rules": {
       "capitalized-comments": 0,
+      "import/extensions": 0,
       "import/no-unassigned-import": 0,
       "no-negated-condition": 0,
       "no-warning-comments": 0,

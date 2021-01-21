@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import CoordinateSystemAxes from './CoordinateSystemAxes';
 import Scenery from './Scenery';
 
 // eslint-disable-next-line no-unused-vars
@@ -23,6 +24,7 @@ import glow from '~/../assets/img/sphere-glow-hollow.png';
 
 const ThreeDView = React.forwardRef((props, ref) => {
   const {
+    axes,
     cameraConfiguration,
     grid,
     navigation,
@@ -83,6 +85,7 @@ const ThreeDView = React.forwardRef((props, ref) => {
       </a-entity>
 
       <a-entity rotation='-90 0 90'>
+        {axes && <CoordinateSystemAxes />}
         <a-drone-flock drone-size={1.5} size={numDrones} />
       </a-entity>
 
@@ -92,6 +95,7 @@ const ThreeDView = React.forwardRef((props, ref) => {
 });
 
 ThreeDView.propTypes = {
+  axes: PropTypes.bool,
   cameraConfiguration: PropTypes.shape({
     position: PropTypes.arrayOf(PropTypes.number).isRequired,
     rotation: PropTypes.arrayOf(PropTypes.number).isRequired,

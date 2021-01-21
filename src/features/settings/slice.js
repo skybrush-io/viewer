@@ -12,6 +12,9 @@ const { actions, reducer } = createSlice({
       // Scenery to use in the 3D view
       scenery: 'night',
 
+      // Whether to show the coordinate system axes in 3D view.
+      axes: false,
+
       // Whether to show grid lines on the ground in 3D view. Values correspond
       // to the 'grid' setting of aframe-environment-component; currently we
       // support 'none', '1x1' and '2x2'

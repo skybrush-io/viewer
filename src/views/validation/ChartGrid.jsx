@@ -7,7 +7,8 @@ import useResizeObserver from 'use-resize-observer';
 
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
-
+import ChartIcon from '@material-ui/icons/InsertChartOutlined';
+import BackgroundHint from '~/components/BackgroundHint';
 import { findPanelById } from '~/features/validation/panels';
 import { getVisiblePanels } from '~/features/validation/selectors';
 
@@ -72,7 +73,15 @@ const ChartGrid = ({ visiblePanels, ...rest }) => {
 
   return (
     <Box ref={ref} className={classes.root} {...rest}>
-      {children}
+      {children.length > 0 ? (
+        children
+      ) : (
+        <BackgroundHint
+          header='No charts selected'
+          text='Select one of the chart types with the buttons in the header'
+          icon={<ChartIcon />}
+        />
+      )}
     </Box>
   );
 };

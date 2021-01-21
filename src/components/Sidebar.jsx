@@ -18,7 +18,11 @@ import { isThemeDark } from '@skybrush/app-theme-material-ui';
 import { setPlaybackSpeed } from '~/features/playback/actions';
 import { getPlaybackSpeed } from '~/features/playback/selectors';
 import { closeSidebar } from '~/features/sidebar/slice';
-import { setScenery, toggleGrid } from '~/features/settings/actions';
+import {
+  setScenery,
+  toggleAxes,
+  toggleGrid,
+} from '~/features/settings/actions';
 
 import SkybrushLogo from './SkybrushLogo';
 
@@ -67,8 +71,10 @@ const SidebarDrawer = ({
   onClose,
   onSetPlaybackSpeed,
   onSetScenery,
+  onToggleAxes,
   onToggleGrid,
   scenery,
+  showAxes,
   showGrid,
   speed,
 }) => {
@@ -101,7 +107,7 @@ const SidebarDrawer = ({
             </FormControl>
           </Box>
 
-          <Box px={2}>
+          <Box px={2} pt={2} pb={1}>
             <FormControl fullWidth variant='filled'>
               <InputLabel id='sidebar-playback-speed-label'>
                 Playback speed
@@ -120,6 +126,16 @@ const SidebarDrawer = ({
               </Select>
             </FormControl>
           </Box>
+
+          <ListItem>
+            <Switch
+              color='primary'
+              edge='start'
+              checked={showAxes}
+              onChange={onToggleAxes}
+            />
+            <ListItemText primary='Show axes' />
+          </ListItem>
 
           <ListItem>
             <Switch
@@ -146,9 +162,11 @@ SidebarDrawer.propTypes = {
   onClose: PropTypes.func,
   onSetPlaybackSpeed: PropTypes.func,
   onSetScenery: PropTypes.func,
+  onToggleAxes: PropTypes.func,
   onToggleGrid: PropTypes.func,
   open: PropTypes.bool,
   scenery: PropTypes.oneOf(['day', 'night', 'indoor']),
+  showAxes: PropTypes.bool,
   showGrid: PropTypes.bool,
   speed: PropTypes.number,
 };
@@ -159,6 +177,7 @@ export default connect(
     open: state.sidebar.open,
     scenery: state.settings.threeD.scenery,
     speed: getPlaybackSpeed(state),
+    showAxes: Boolean(state.settings.threeD.axes),
     showGrid: state.settings.threeD.grid !== 'none',
   }),
   // mapDispatchToProps
@@ -167,6 +186,7 @@ export default connect(
     onSetScenery: setScenery,
     onSetPlaybackSpeed: (event) =>
       setPlaybackSpeed(Number.parseFloat(event.target.value)),
+    onToggleAxes: toggleAxes,
     onToggleGrid: toggleGrid,
   }
 )(SidebarDrawer);

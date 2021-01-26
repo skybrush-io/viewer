@@ -186,7 +186,7 @@ const createOptions = ({
 
         title: (item) => {
           if (item.length > 0) {
-            return formatPlaybackTimestamp(item[0].x);
+            return formatPlaybackTimestamp(item[0].xLabel);
           }
         },
       },

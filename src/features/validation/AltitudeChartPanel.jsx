@@ -1,7 +1,10 @@
 import { connect } from 'react-redux';
 
 import ChartPanel from './ChartPanel';
-import { getSampledAltitudesForDrones } from './selectors';
+import {
+  getAltitudeWarningThreshold,
+  getSampledAltitudesForDrones,
+} from './selectors';
 import { createChartDataSelector } from './utils';
 
 const getDataForAltitudeChart = createChartDataSelector(
@@ -18,7 +21,7 @@ export default connect(
   (state) => ({
     data: getDataForAltitudeChart(state),
     range: Y_RANGE,
-    threshold: 150,
+    threshold: getAltitudeWarningThreshold(state),
     thresholdLabel: 'Altitude threshold',
     title: 'Altitudes',
     verticalUnit: ' m',

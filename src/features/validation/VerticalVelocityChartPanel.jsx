@@ -1,7 +1,10 @@
 import { connect } from 'react-redux';
 
 import ChartPanel from './ChartPanel';
-import { getSampledVerticalVelocitiesForDrones } from './selectors';
+import {
+  getSampledVerticalVelocitiesForDrones,
+  getVerticalVelocityThreshold,
+} from './selectors';
 import { createChartDataSelector } from './utils';
 
 const getDataForVerticalVelocityChart = createChartDataSelector(
@@ -18,7 +21,7 @@ export default connect(
   (state) => ({
     data: getDataForVerticalVelocityChart(state),
     range: Y_RANGE,
-    threshold: 3,
+    threshold: getVerticalVelocityThreshold(state),
     thresholdIsAbsolute: true,
     thresholdLabel: 'Z velocity threshold',
     title: 'Vertical velocities',

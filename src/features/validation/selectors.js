@@ -1,14 +1,72 @@
+import get from 'lodash-es/get';
 import range from 'lodash-es/range';
 import { createSelector } from '@reduxjs/toolkit';
 
 import {
   getShowDuration,
+  getShowEnvironmentType,
   getTrajectoryPlayers,
 } from '~/features/show/selectors';
 import { formatPlaybackTimestamp } from '~/utils/formatters';
 
 import getClosestPair from './closest-pair';
-import { SAMPLES_PER_SECOND } from './constants';
+import { DEFAULT_VALIDATION_SETTINGS, SAMPLES_PER_SECOND } from './constants';
+
+/**
+ * Selector that returns the validation settings of the current show (if any).
+ */
+export const getValidationSettings = createSelector(
+  (state) => get(state, 'show.data.settings.validation'),
+  getShowEnvironmentType,
+  (validation, type) => {
+    const settings = {
+      ...(DEFAULT_VALIDATION_SETTINGS[type] ||
+        DEFAULT_VALIDATION_SETTINGS.outdoor),
+    };
+
+    // Unfortunately some of our show files use underscore-styled validation
+    // settings instead of camelCased. We need to fix that, but until then
+    // here's a compatibility workaround.
+    if (validation && validation.max_altitude !== undefined) {
+      settings.maxAltitude = validation.max_altitude;
+      settings.maxVelocityXY = validation.max_velocity_xy;
+      settings.maxVelocityZ = validation.max_velocity_z;
+      settings.minDistance = validation.min_distance;
+    } else {
+      Object.assign(settings, validation);
+    }
+
+    return settings;
+  }
+);
+
+/**
+ * Selector that selects the altitude warning threshold from the show specification,
+ * falling back to a default if needed.
+ */
+export const getAltitudeWarningThreshold = (state) =>
+  getValidationSettings(state).maxAltitude;
+
+/**
+ * Selector that selects the horizontal velocity threshold from the show specification,
+ * falling back to a default if needed.
+ */
+export const getHorizontalVelocityThreshold = (state) =>
+  getValidationSettings(state).maxVelocityXY;
+
+/**
+ * Selector that selects the proximity warning threshold from the show specification,
+ * falling back to a default if needed.
+ */
+export const getProximityWarningThreshold = (state) =>
+  getValidationSettings(state).minDistance;
+
+/**
+ * Selector that selects the vertical velocity threshold from the show specification,
+ * falling back to a default if needed.
+ */
+export const getVerticalVelocityThreshold = (state) =>
+  getValidationSettings(state).maxVelocityZ;
 
 /**
  * Returns whether there is at least one validation message in the message store.

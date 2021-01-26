@@ -27,3 +27,22 @@ export const CHART_COLORS = [
   lime,
   teal,
 ].map((color) => color[500]);
+
+/**
+ * Default validation settings for indoor and outdoor shows if the show file
+ * does not specify validation settings.
+ */
+export const DEFAULT_VALIDATION_SETTINGS = {
+  indoor: Object.freeze({
+    maxAltitude: 6,
+    maxVelocityXY: 2.5,
+    maxVelocityZ: 1,
+    minDistance: 0.5,
+  }),
+  outdoor: Object.freeze({
+    maxAltitude: 150,
+    maxVelocityXY: 10,
+    maxVelocityZ: 2,
+    minDistance: 3,
+  }),
+};

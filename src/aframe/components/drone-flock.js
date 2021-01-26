@@ -243,7 +243,7 @@ AFrame.registerComponent('drone-flock', {
       // Update drone sizes
       for (const item of this._drones) {
         const { entity } = item;
-        this.system.updateEntiySize(entity, droneSize);
+        this.system.updateEntitySize(entity, droneSize);
       }
     }
   },

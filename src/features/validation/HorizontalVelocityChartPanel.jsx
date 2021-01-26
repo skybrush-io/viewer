@@ -1,7 +1,10 @@
 import { connect } from 'react-redux';
 
 import ChartPanel from './ChartPanel';
-import { getSampledHorizontalVelocitiesForDrones } from './selectors';
+import {
+  getHorizontalVelocityThreshold,
+  getSampledHorizontalVelocitiesForDrones,
+} from './selectors';
 import { createChartDataSelector } from './utils';
 
 const getDataForHorizontalVelocityChart = createChartDataSelector(
@@ -18,7 +21,7 @@ export default connect(
   (state) => ({
     data: getDataForHorizontalVelocityChart(state),
     range: Y_RANGE,
-    threshold: 10,
+    threshold: getHorizontalVelocityThreshold(state),
     thresholdLabel: 'XY velocity threshold',
     title: 'Horizontal velocities',
     verticalUnit: ' m/s',

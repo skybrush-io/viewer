@@ -52,12 +52,28 @@ export const getDroneSwarmSpecification = (state) => {
 };
 
 /**
- * Returns the initial configuration of the camera in the drone show.
+ * Returns a unique ID for the currently loaded show so 3D components can
+ * reset the camera position when a new show is loaded.
  */
-export const getInitialCameraConfigurationOfShow = () => ({
-  position: [0, 20, 50], // [-52.9, 9.93, 0.22],
-  rotation: [0, 0, 0], // [0, -114.6, 0]
-});
+export const getLoadedShowId = (state) => state.show.id;
+
+/**
+ * Selector that returns the type of the show (indoor or outdoor).
+ */
+export const getShowEnvironmentType = (state) =>
+  get(state, 'show.data.environment.type') || 'outdoor';
+
+/**
+ * Selector that returns whether the show is indoor.
+ */
+export const isShowIndoor = (state) =>
+  getShowEnvironmentType(state) === 'indoor';
+
+/**
+ * Selector that returns whether the show is outdoor.
+ */
+export const isShowOutdoor = (state) =>
+  getShowEnvironmentType(state) === 'outdoor';
 
 /**
  * Returns an array containing all the light programs. The array will contain

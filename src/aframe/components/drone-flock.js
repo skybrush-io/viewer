@@ -16,6 +16,18 @@ import store from '~/store';
 
 const { THREE } = AFrame;
 
+const defaultGeometry = {
+  primitive: 'sphere',
+  radius: 1,
+  segmentsHeight: 9,
+  segmentsWidth: 18,
+};
+
+function getGlowMeshFromEntity(entity) {
+  const glowEntity = entity.childNodes[0];
+  return glowEntity ? glowEntity.getObject3D('mesh') : undefined;
+}
+
 AFrame.registerSystem('drone-flock', {
   init() {
     const boundGetElapsedSecodsGetter = () =>
@@ -46,20 +58,18 @@ AFrame.registerSystem('drone-flock', {
     glowElement.setAttribute('sprite', {
       blending: 'additive',
       color: new THREE.Color('#ff8800'),
-      scale: `${droneSize * 2} ${droneSize * 2} 1`,
+      scale: `${droneSize * 4} ${droneSize * 4} 1`,
       src: '#glow-texture',
       transparent: true,
     });
     return glowElement;
   },
 
-  _createDefaultUAVEntity(droneSize) {
+  _createDefaultUAVEntity(droneSize = 1) {
     const element = document.createElement('a-entity');
     element.setAttribute('geometry', {
-      primitive: 'sphere',
-      radius: droneSize * 0.5,
-      segmentsHeight: 9,
-      segmentsWidth: 18,
+      ...defaultGeometry,
+      radius: droneSize,
     });
     element.setAttribute('material', {
       color: new THREE.Color('#0088ff'),
@@ -122,18 +132,21 @@ AFrame.registerSystem('drone-flock', {
       // no further updates from the UAV for a while
     }
 
-    // TODO(ntamas): this is quite complex; we probably need to encapsulate the
-    // glow as a separate component so we can simplify both the cloning code and
-    // this part here.
-    //
-    // Also, we could cache the glow material somewhere so we don't need to look
-    // it up all the time.
-    const glowEntity = entity.childNodes[0];
-    if (glowEntity) {
-      const glowMesh = glowEntity.getObject3D('mesh');
-      if (glowMesh && glowMesh.material) {
-        glowMesh.material.color.copy(color);
-      }
+    const glowMesh = getGlowMeshFromEntity(entity);
+    if (glowMesh && glowMesh.material) {
+      glowMesh.material.color.copy(color);
+    }
+  },
+
+  updateEntitySize(entity, size) {
+    entity.setAttribute('geometry', {
+      ...defaultGeometry,
+      radius: size,
+    });
+
+    const glowMesh = getGlowMeshFromEntity(entity);
+    if (glowMesh && glowMesh.scale) {
+      glowMesh.scale.set(size * 4, size * 4, 1);
     }
   },
 });
@@ -204,10 +217,11 @@ AFrame.registerComponent('drone-flock', {
   },
 
   update(oldData) {
+    const oldDroneSize = oldData.droneSize || 0;
     const oldSize = oldData.size || 0;
     const { droneSize, size, type } = this.data;
 
-    // TODO: support changing radii or types on the fly
+    // TODO: support changing types on the fly
 
     if (size > oldSize) {
       // Add new drones
@@ -222,6 +236,14 @@ AFrame.registerComponent('drone-flock', {
       for (let i = size; i < oldSize; i++) {
         const { entity } = this._drones.pop();
         entity.remove();
+      }
+    }
+
+    if (oldDroneSize !== droneSize) {
+      // Update drone sizes
+      for (const item of this._drones) {
+        const { entity } = item;
+        this.system.updateEntiySize(entity, droneSize);
       }
     }
   },

@@ -100,6 +100,7 @@ const SidebarDrawer = ({
                 value={scenery}
                 onChange={onSetScenery}
               >
+                <MenuItem value='auto'>Automatic</MenuItem>
                 <MenuItem value='day'>Day</MenuItem>
                 <MenuItem value='night'>Night</MenuItem>
                 <MenuItem value='indoor'>Indoor</MenuItem>
@@ -165,7 +166,7 @@ SidebarDrawer.propTypes = {
   onToggleAxes: PropTypes.func,
   onToggleGrid: PropTypes.func,
   open: PropTypes.bool,
-  scenery: PropTypes.oneOf(['day', 'night', 'indoor']),
+  scenery: PropTypes.oneOf(['auto', 'day', 'night', 'indoor']),
   showAxes: PropTypes.bool,
   showGrid: PropTypes.bool,
   speed: PropTypes.number,

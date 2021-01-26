@@ -11,6 +11,7 @@ const { actions, reducer } = createSlice({
   name: 'show',
 
   initialState: {
+    id: 0, // used to allow 3D components to recognize when a new show is loaded
     data: null,
     loading: false,
     error: null,
@@ -20,6 +21,7 @@ const { actions, reducer } = createSlice({
     clearLoadedShow: (state) => {
       state.data = null;
       state.error = null;
+      state.id = 0;
     },
 
     requestToLoadShow: () => {
@@ -33,6 +35,7 @@ const { actions, reducer } = createSlice({
       state.data = action.payload;
       state.loading = false;
       state.error = null;
+      state.id += 1;
     },
 
     [loadShow.pending]: (state) => {

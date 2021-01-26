@@ -10,7 +10,7 @@ const { actions, reducer } = createSlice({
   initialState: {
     threeD: {
       // Scenery to use in the 3D view
-      scenery: 'night',
+      scenery: 'auto',
 
       // Whether to show the coordinate system axes in 3D view.
       axes: false,

@@ -15,7 +15,12 @@ import Scenery from './Scenery';
 import AFrame from '~/aframe';
 import { objectToString } from '@skybrush/aframe-components';
 import {
+  getEffectiveScenery,
   getInitialCameraConfigurationOfShow,
+  getPreferredDroneRadius,
+} from '~/features/three-d/selectors';
+import {
+  getLoadedShowId,
   getNumberOfDronesInShow,
 } from '~/features/show/selectors';
 
@@ -26,10 +31,12 @@ const ThreeDView = React.forwardRef((props, ref) => {
   const {
     axes,
     cameraConfiguration,
+    droneSize,
     grid,
     navigation,
     numDrones,
     scenery,
+    showId,
     showStatistics,
     vrEnabled,
   } = props;
@@ -72,9 +79,10 @@ const ThreeDView = React.forwardRef((props, ref) => {
       </a-assets>
 
       <a-entity
+        key={`camera-rig-${showId}`}
         id='camera-rig'
-        position={cameraConfiguration.position.join(' ')} // "-52.9 9.93 0.22"
-        rotation={cameraConfiguration.rotation.join(' ')} // "-24.63 -114.6 0"
+        position={cameraConfiguration.position.join(' ')}
+        rotation={cameraConfiguration.rotation.join(' ')}
       >
         <a-camera
           sync-pose-with-store=''
@@ -86,7 +94,7 @@ const ThreeDView = React.forwardRef((props, ref) => {
 
       <a-entity rotation='-90 0 90'>
         {axes && <CoordinateSystemAxes length={10} lineWidth={10} />}
-        <a-drone-flock drone-size={1.5} size={numDrones} />
+        <a-drone-flock drone-size={droneSize} size={numDrones} />
       </a-entity>
 
       <Scenery scale={10} type={scenery} grid={grid} />
@@ -100,13 +108,15 @@ ThreeDView.propTypes = {
     position: PropTypes.arrayOf(PropTypes.number).isRequired,
     rotation: PropTypes.arrayOf(PropTypes.number).isRequired,
   }),
+  droneSize: PropTypes.number,
   grid: PropTypes.string,
   navigation: PropTypes.shape({
     mode: PropTypes.oneOf(['walk', 'fly']),
     parameters: PropTypes.object,
   }),
   numDrones: PropTypes.number,
-  scenery: PropTypes.string,
+  scenery: PropTypes.oneOf(['day', 'night', 'indoor']),
+  showId: PropTypes.number,
   showStatistics: PropTypes.bool,
   vrEnabled: PropTypes.bool,
 };
@@ -122,9 +132,12 @@ export default connect(
   // mapStateToProps
   (state) => ({
     cameraConfiguration: getInitialCameraConfigurationOfShow(state),
+    droneSize: getPreferredDroneRadius(state),
     numDrones: getNumberOfDronesInShow(state),
+    showId: getLoadedShowId(state),
     ...state.settings.threeD,
     ...state.threeD,
+    scenery: getEffectiveScenery(state),
   }),
   // mapDispatchToProps
   {},

@@ -2,6 +2,8 @@
   "appId": "com.collmot.skybrush.viewer",
   "productName": "Skybrush Viewer",
 
+  "artifactName": "${productName} ${version}.${ext}",
+
   "files": [
     {
       "filter": ["assets/**/*", "!assets/shows/*", "!assets/models/*", "!node_modules"]

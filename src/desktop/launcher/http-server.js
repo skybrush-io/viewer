@@ -5,6 +5,23 @@ const SSDPServer = require('node-ssdp').Server;
 
 const apiV1 = require('./api-v1');
 
+// Monkey-patch SSDPServer._send so we never send advertisements and we respond
+// to requests from our own IP only
+const _originalSend = SSDPServer.prototype._send;
+SSDPServer.prototype._send = function (message, host, port, cb) {
+  if (typeof host === 'function') {
+    // This is an advertisement
+    cb = host;
+    cb();
+  } else if (host === '127.0.0.1') {
+    // Regular message for localhost
+    _originalSend.call(this, message, host, port, cb);
+  } else {
+    // Regular message for somewhere else; ignored
+    cb();
+  }
+};
+
 const setupSSDPDiscovery = (port) => {
   const UPNP_DEVICE_ID = `urn:collmot-com:device:skybrush-viewer:1`;
   const UPNP_SERVICE_ID = `urn:collmot-com:service:skyc-validator:1`;

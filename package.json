@@ -1,7 +1,7 @@
 {
   "name": "@collmot/skybrush-viewer",
   "productName": "Skybrush Viewer",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Viewer for Skybrush drone shows",
   "main": "launcher.bundle.js",
   "scripts": {

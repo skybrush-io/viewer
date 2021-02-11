@@ -36,6 +36,7 @@ window.isElectron = true;
 // any functionality that requires Node.js -- they are not allowed to use
 // Node.js modules themselves
 window.bridge = {
+  actions: {},
   createStateStore,
   loadShowFromFile: (filename) => ipc.callMain('loadShowFromFile', filename),
   selectLocalShowFileForOpening: () =>

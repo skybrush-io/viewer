@@ -7,6 +7,8 @@ const createAppMenu = require('./app-menu');
 const setupIpc = require('./ipc');
 const registerMediaProtocol = require('./media-protocol');
 
+const ENABLE_HTTP_SERVER = true;
+
 /**
  * Main entry point of the application.
  *
@@ -15,6 +17,13 @@ const registerMediaProtocol = require('./media-protocol');
 function run(argv) {
   // Clean up temporary files even when an uncaught exception occurs
   tmp.setGracefulCleanup();
+
+  // Start an HTTP server in the background for processing incoming JSON show
+  // data from the Blender plugin
+  if (ENABLE_HTTP_SERVER) {
+    const setupHttpServer = require('./http-server');
+    setupHttpServer(argv);
+  }
 
   setupApp({
     appMenu: createAppMenu,
@@ -40,7 +49,10 @@ function run(argv) {
 }
 
 module.exports = (argv) => {
-  const parser = setupCli();
+  const parser = setupCli().option(
+    '-p, --port <number>',
+    'Start listener on a specific port'
+  );
   parser.parse(argv || process.argv);
   run(parser.opts());
 };

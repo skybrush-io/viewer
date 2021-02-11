@@ -6,7 +6,9 @@ import { configureStoreAndPersistence } from '@skybrush/redux-toolkit';
 
 import reducer from './features';
 import { loadShow } from './features/show/async';
+import { requestToLoadShow } from './features/show/slice';
 import { setOverlayVisibility } from './features/three-d/slice';
+import { setMode as setUIMode } from './features/ui/slice';
 import rootSaga from './sagas';
 
 /**
@@ -41,9 +43,15 @@ export const { store, persistor } = configureStoreAndPersistence({
   },
 });
 
-// Send the store dispatcher function back to the preloader
+// Send the store dispatcher function and some of the allowed actions back to
+// the preloader
 if (window.bridge) {
   window.bridge.dispatch = store.dispatch;
+  window.bridge.actions = {
+    ...window.bridge.actions,
+    requestToLoadShow,
+    setUIMode,
+  };
 }
 
 export default store;

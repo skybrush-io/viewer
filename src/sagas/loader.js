@@ -68,15 +68,16 @@ function deriveShowFileUrls(href) {
       return {
         show: 'https://share.skybrush.io/s/itu-2019/show.json',
       };
-    } else {
-      return {
-        audio: new URL('music.mp3', url).toString(),
-        show: new URL('show.json', url).toString(),
-      };
     }
-  } else {
-    return undefined;
+
+    return {
+      audio: new URL('music.mp3', url).toString(),
+      show: new URL('show.json', url).toString(),
+    };
   }
+
+  return undefined;
+}
 
 /**
  * Main saga that simply launches a worker saga that watches a request

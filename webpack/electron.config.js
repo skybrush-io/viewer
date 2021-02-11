@@ -31,7 +31,7 @@ if (process.env.NODE_ENV !== 'production' && process.env.DEPLOYMENT !== '1') {
   plugins.push(
     new WebpackShellPluginNext({
       onBuildEnd: {
-        scripts: ['electron launcher.js -p 5001'],
+        scripts: ['electron launcher.js'],
         blocking: false,
         dev: true,
         parallel: true,

@@ -34,6 +34,8 @@ const setupHttpServer = ({ port = 0 } = {}) => {
   app.use('/api/v1', apiV1);
 
   app.use((error, _req, res, next) => {
+    console.log(error);
+
     if (res.headersSent) {
       return next(error);
     }

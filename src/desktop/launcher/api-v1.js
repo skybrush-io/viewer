@@ -36,4 +36,8 @@ router.post('/load', async (req, res, next) => {
   }
 });
 
+router.get('/ping', (_req, res) => {
+  res.json({ result: true });
+});
+
 module.exports = router;

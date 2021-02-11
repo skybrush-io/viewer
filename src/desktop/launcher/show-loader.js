@@ -16,6 +16,8 @@ const loadShowFromFile = async (filename, window) => {
     // Set the filename on the window
     window.setRepresentedFilename(filename);
   }
+
+  return showSpec;
 };
 
 const loadShowFromBuffer = async (buffer, window) => {

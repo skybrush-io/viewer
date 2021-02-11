@@ -42,7 +42,7 @@ module.exports = {
     // Resolve process.env in the code
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development',
-      DEPLOYMENT: '0'
+      DEPLOYMENT: '0',
     }),
 
     // Resolve the git version number and commit hash in the code
@@ -61,13 +61,13 @@ module.exports = {
     alias: {
       '~': path.resolve(projectRoot, 'src'),
       config: path.resolve(projectRoot, 'config', 'default'),
-      'layout-bmfont-text': '@collmot/layout-bmfont-text'
+      'layout-bmfont-text': '@collmot/layout-bmfont-text',
     },
     extensions: ['.webpack.js', '.web.js', '.js', '.jsx', '.json'],
     fallback: {
-      "http": require.resolve("stream-http"),
-      "https": require.resolve("https-browserify")
-    }
+      http: require.resolve('stream-http'),
+      https: require.resolve('https-browserify'),
+    },
   },
   module: {
     rules: [
@@ -99,11 +99,11 @@ module.exports = {
       },
       {
         test: /\.(woff|woff2|eot|ttf|svg|mp3|wav|ogg|gltf|obj)$/,
-        type: 'asset/resource'
+        type: 'asset/resource',
       },
       {
         test: /\.worker\.js$/,
-        use: { loader: 'worker-loader' }
+        use: { loader: 'worker-loader' },
       },
     ],
   },

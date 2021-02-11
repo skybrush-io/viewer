@@ -25,20 +25,24 @@ function* loadShowFromRequestChannelSaga(chan) {
   while (true) {
     const { audio, missingAudioIsOkay, show } = yield take(chan);
 
-    let audioOkay = true;
+    try {
+      let audioOkay = true;
 
-    if (audio && missingAudioIsOkay) {
-      try {
-        const audioResponse = yield call(ky.head, audio);
-        audioOkay = audioResponse.ok;
-      } catch {
-        audioOkay = false;
+      if (audio && missingAudioIsOkay) {
+        try {
+          const audioResponse = yield call(ky.head, audio);
+          audioOkay = audioResponse.ok;
+        } catch {
+          audioOkay = false;
+        }
       }
-    }
 
-    const { payload: showSpec } = yield putResolve(loadShow(freeze(show)));
-    const audioInShowSpec = get(showSpec, 'media.audio.url');
-    yield put(setAudioUrl(audioOkay ? audio || audioInShowSpec : null));
+      const { payload: showSpec } = yield putResolve(loadShow(freeze(show)));
+      const audioInShowSpec = get(showSpec, 'media.audio.url');
+      yield put(setAudioUrl(audioOkay ? audio || audioInShowSpec : null));
+    } catch {
+      console.error('Unexpected error while loading show');
+    }
   }
 }
 
@@ -73,7 +77,6 @@ function deriveShowFileUrls(href) {
   } else {
     return undefined;
   }
-}
 
 /**
  * Main saga that simply launches a worker saga that watches a request

@@ -32,6 +32,11 @@ function convertLightProgramToUint8Array(input) {
     return Uint8Array.from(Base64.atob(input), (char) => char.charCodeAt(0));
   }
 
+  if (typeof input === 'undefined') {
+    // Just use constant white. 7 = SET WHITE, 127 = duration: 127 * 20 msec
+    return Uint8Array.from([7, 127]);
+  }
+
   throw new Error('Unsupported input type for light program');
 }
 

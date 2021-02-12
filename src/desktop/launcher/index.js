@@ -1,6 +1,6 @@
 // See webpack/launcher.config.js and https://github.com/visionmedia/debug/issues/467
 // for more information about why this is needed
-window.__runtime_process_env = {
+global.__runtime_process_env = {
 	DEBUG: false
 };
 

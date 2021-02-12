@@ -2,8 +2,23 @@
 const express = require('express');
 const http = require('http');
 const SSDPServer = require('node-ssdp').Server;
+const { networkInterfaces } = require('os');
 
 const apiV1 = require('./api-v1');
+
+function isOwnIPAddress(address) {
+  const nets = networkInterfaces();
+
+  for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+      if (net.address === address) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
 
 // Monkey-patch SSDPServer._send so we never send advertisements and we respond
 // to requests from our own IP only
@@ -13,11 +28,11 @@ SSDPServer.prototype._send = function (message, host, port, cb) {
     // This is an advertisement
     cb = host;
     cb();
-  } else if (host === '127.0.0.1') {
-    // Regular message for localhost
+  } else if (host === '127.0.0.1' || isOwnIPAddress(host)) {
+    // Check whether the host IP address is ours; we don't respond to requests
+    // coming from another machine
     _originalSend.call(this, message, host, port, cb);
   } else {
-    // Regular message for somewhere else; ignored
     cb();
   }
 };

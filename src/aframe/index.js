@@ -3,7 +3,8 @@ import AFrame from '@skybrush/aframe-components';
 import 'aframe-environment-component';
 import 'aframe-glow';
 import 'aframe-look-at-component';
-import 'aframe-meshline-component';
+
+import '@collmot/aframe-meshline-component';
 
 import '@skybrush/aframe-components/altitude-control';
 import '@skybrush/aframe-components/better-wasd-controls';

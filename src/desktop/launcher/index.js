@@ -5,6 +5,7 @@ global.__runtime_process_env = {
 };
 
 const { app, protocol } = require('electron');
+const ElectronStore = require('electron-store');
 const tmp = require('tmp-promise');
 
 const { setupApp, setupCli } = require('@skybrush/electron-app-framework');
@@ -23,6 +24,9 @@ const ENABLE_HTTP_SERVER = true;
 function run(argv) {
   // Clean up temporary files even when an uncaught exception occurs
   tmp.setGracefulCleanup();
+
+  // Allow the Electron state store to be created in the renderer process
+  ElectronStore.initRenderer();
 
   // Start an HTTP server in the background for processing incoming JSON show
   // data from the Blender plugin

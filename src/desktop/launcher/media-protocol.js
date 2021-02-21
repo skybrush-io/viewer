@@ -11,13 +11,10 @@ const registerMediaProtocol = () => {
   protocol.registerFileProtocol('media', (request, callback) => {
     try {
       const parsedUrl = new URL(request.url);
-      let index;
-
-      if (parsedUrl.host === 'audio') {
-        index = Number.parseInt(parsedUrl.pathname.slice(1), 10);
-      } else {
-        index = -1;
-      }
+      const index =
+        parsedUrl.host === 'audio'
+          ? Number.parseInt(parsedUrl.pathname.slice(1), 10)
+          : -1;
 
       const audioBuffer = index >= 0 ? getAudioBuffer(index) : null;
 

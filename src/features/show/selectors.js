@@ -28,7 +28,7 @@ const EMPTY_OBJECT = Object.freeze({});
 export const getTimestampDisplayOffset = createSelector(
   (state) => get(state, 'show.data.meta'),
   (meta) => {
-    const offset = meta ? meta.getTimestampOffset : 0;
+    const offset = meta ? meta.timestampOffset : 0;
 
     if (typeof offset === 'number' && Number.isFinite(offset)) {
       return offset;

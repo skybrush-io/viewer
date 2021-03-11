@@ -11,7 +11,9 @@ import TopOverlay from './TopOverlay';
 
 const Overlays = ({ visible }) => (
   <>
-    {window.isElectron && isRunningOnMac && <TopOverlay />}
+    {window.bridge && window.bridge.isElectron && isRunningOnMac && (
+      <TopOverlay />
+    )}
     <Fade in={visible}>
       <BottomOverlay />
     </Fade>

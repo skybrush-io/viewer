@@ -1,8 +1,9 @@
+const { contextBridge } = require('electron');
 const { ipcRenderer: ipc } = require('electron-better-ipc');
 const unhandled = require('electron-unhandled');
 const createStorageEngine = require('redux-persist-electron-storage');
 
-const setupIpc = require('./ipc');
+const { receiveActionsFromRenderer, setupIpc } = require('./ipc');
 
 unhandled({
   logger: (error) => console.error(error.stack),
@@ -35,13 +36,14 @@ window.isElectron = true;
 // These are the only functions that the renderer processes may call to access
 // any functionality that requires Node.js -- they are not allowed to use
 // Node.js modules themselves
-window.bridge = {
-  actions: {},
+contextBridge.exposeInMainWorld('bridge', {
   createStateStore,
+  isElectron: true,
   loadShowFromFile: (filename) => ipc.callMain('loadShowFromFile', filename),
+  provideActions: receiveActionsFromRenderer,
   selectLocalShowFileForOpening: () =>
     ipc.callMain('selectLocalShowFileForOpening'),
-};
+});
 
 // Set up IPC channels that we are going to listen to
 setupIpc();

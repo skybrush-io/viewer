@@ -13,7 +13,9 @@ const SIDEBAR_WIDTH = 160;
 
 const ValidationView = () => (
   <Box flex={1} display='flex' flexDirection='column' overflow='hidden' pr={1}>
-    {window.isElectron && isRunningOnMac && <TopOverlay />}
+    {window.bridge && window.bridge.isElectron && isRunningOnMac && (
+      <TopOverlay />
+    )}
     <ValidationHeader style={{ paddingLeft: SIDEBAR_WIDTH }} />
     <Box flex={1} display='flex' flexDirection='row' overflow='hidden'>
       <ValidationSidebar width={SIDEBAR_WIDTH} />

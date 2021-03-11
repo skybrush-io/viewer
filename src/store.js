@@ -2,6 +2,7 @@
  * @file The master store for the application state.
  */
 
+import { bindActionCreators } from '@reduxjs/toolkit';
 import { configureStoreAndPersistence } from '@skybrush/redux-toolkit';
 
 import reducer from './features';
@@ -43,15 +44,19 @@ export const { store, persistor } = configureStoreAndPersistence({
   },
 });
 
-// Send the store dispatcher function and some of the allowed actions back to
-// the preloader
+// Send the some of the allowed actions back to the preloader, bound to the
+// store instance. The preloader may then call these actions but cannot dispatch
+// arbitrary actions to the store.
 if (window.bridge) {
-  window.bridge.dispatch = store.dispatch;
-  window.bridge.actions = {
-    ...window.bridge.actions,
-    requestToLoadShow,
-    setUIMode,
-  };
+  window.bridge.provideActions(
+    bindActionCreators(
+      {
+        requestToLoadShow,
+        setUIMode,
+      },
+      store.dispatch
+    )
+  );
 }
 
 export default store;

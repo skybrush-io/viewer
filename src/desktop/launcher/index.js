@@ -1,7 +1,7 @@
 // See webpack/launcher.config.js and https://github.com/visionmedia/debug/issues/467
 // for more information about why this is needed
 global.__runtime_process_env = {
-	DEBUG: false
+  DEBUG: false,
 };
 
 const { app, protocol } = require('electron');

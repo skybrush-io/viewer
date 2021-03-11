@@ -14,6 +14,45 @@ import createLightProgramPlayer from '~/utils/lights';
 
 export const canLoadShowFromLocalFile = () => config.io.localFiles;
 
+const EMPTY_OBJECT = Object.freeze({});
+
+/**
+ * Selector that returns the timestamp offset of the show.
+ *
+ * Timestamp offsets are used when the currently loaded show comes from
+ * Skybrush Studio and it contains only a part of the full trajectory. In
+ * such cases, the timestamps in the show file are from T=0, but the metadata
+ * of the show contains an offset value that should be used whenever a timestamp
+ * is formatted on the UI.
+ */
+export const getTimestampDisplayOffset = createSelector(
+  (state) => get(state, 'show.data.meta'),
+  (meta) => {
+    const offset = meta ? meta.getTimestampOffset : 0;
+
+    if (typeof offset === 'number' && Number.isFinite(offset)) {
+      return offset;
+    }
+
+    return 0;
+  }
+);
+
+/**
+ * Selector that returns a function that is suitable for turning a timestamp
+ * (expressed in nubmer of seconds) to a timestamp that can appear on the UI,
+ * taking into account any timestamp offsets that may be configured in the
+ * state store for the show.
+ */
+export const getTimestampFormatter = createSelector(
+  getTimestampDisplayOffset,
+  (offset) => {
+    return offset === 0
+      ? formatPlaybackTimestamp
+      : (value) => formatPlaybackTimestamp(value + offset);
+  }
+);
+
 /**
  * Returns whether a trajectory object "looks like" a valid trajectory.
  */
@@ -40,7 +79,7 @@ export const isValidLightProgram = (program) =>
  */
 export const getCommonShowSettings = (state) => {
   const result = get(state, 'show.data.settings');
-  return typeof result === 'object' ? result : {};
+  return typeof result === 'object' ? result : EMPTY_OBJECT;
 };
 
 /**
@@ -168,7 +207,8 @@ export const getShowDuration = createSelector(
  */
 export const getShowDurationAsString = createSelector(
   getShowDuration,
-  formatPlaybackTimestamp
+  getTimestampFormatter,
+  (duration, formatter) => formatter(duration)
 );
 
 /**
@@ -176,7 +216,8 @@ export const getShowDurationAsString = createSelector(
  */
 export const getShowMetadata = createSelector(
   (state) => state.show.data,
-  (data) => (data && typeof data.meta === 'object' ? data.meta : null) || {}
+  (data) =>
+    (data && typeof data.meta === 'object' ? data.meta : null) || EMPTY_OBJECT
 );
 
 /**

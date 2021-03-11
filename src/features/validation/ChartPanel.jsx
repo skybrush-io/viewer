@@ -16,8 +16,6 @@ import {
   isThemeDark,
 } from '@skybrush/app-theme-material-ui';
 
-import { formatPlaybackTimestamp } from '~/utils/formatters';
-
 import { CHART_COLORS } from './constants';
 
 require('chartjs-plugin-annotation');
@@ -108,6 +106,7 @@ const createThresholdAnnotation = (value, label) => ({
 });
 
 const createOptions = ({
+  formatPlaybackTimestamp,
   range,
   threshold,
   thresholdIsAbsolute,
@@ -124,6 +123,10 @@ const createOptions = ({
 
   // Ensure that we don't have exaggerated "spikes" on noisy velocity plots
   base.elements.line.borderJoinStyle = 'bevel';
+
+  const timestampFormatter = formatPlaybackTimestamp
+    ? (value) => formatPlaybackTimestamp(value)
+    : (value) => String(value);
 
   let options = {
     legend: {
@@ -163,9 +166,7 @@ const createOptions = ({
       xAxes: [
         {
           ticks: {
-            callback(value) {
-              return formatPlaybackTimestamp(value);
-            },
+            callback: timestampFormatter,
           },
         },
       ],
@@ -186,7 +187,7 @@ const createOptions = ({
 
         title: (item) => {
           if (item.length > 0) {
-            return formatPlaybackTimestamp(item[0].xLabel);
+            return timestampFormatter(item[0].xLabel);
           }
         },
       },
@@ -207,8 +208,7 @@ const createOptions = ({
   merge(base, options);
   options = base;
 
-  options.scales.xAxes[0].ticks.callback = (value) =>
-    formatPlaybackTimestamp(value);
+  options.scales.xAxes[0].ticks.callback = timestampFormatter;
 
   if (range && Array.isArray(range) && range.length >= 2) {
     options.scales.yAxes[0].ticks.suggestedMin = range[0];
@@ -220,6 +220,7 @@ const createOptions = ({
 
 const ChartPanel = ({
   data,
+  formatPlaybackTimestamp,
   height,
   range,
   threshold,
@@ -270,13 +271,21 @@ const ChartPanel = ({
   const options = useMemo(
     () =>
       createOptions({
+        formatPlaybackTimestamp,
         range,
         threshold,
         thresholdIsAbsolute,
         thresholdLabel,
         verticalUnit,
       }),
-    [range, threshold, thresholdIsAbsolute, thresholdLabel, verticalUnit]
+    [
+      formatPlaybackTimestamp,
+      range,
+      threshold,
+      thresholdIsAbsolute,
+      thresholdLabel,
+      verticalUnit,
+    ]
   );
 
   return (
@@ -301,6 +310,7 @@ ChartPanel.propTypes = {
       role: PropTypes.oneOf(['minimum', 'maximum', 'mean', 'single']),
     })
   ),
+  formatPlaybackTimestamp: PropTypes.func,
   height: PropTypes.number,
   range: PropTypes.arrayOf(PropTypes.number),
   threshold: PropTypes.number,

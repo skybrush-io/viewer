@@ -5,9 +5,9 @@ import { createSelector } from '@reduxjs/toolkit';
 import {
   getShowDuration,
   getShowEnvironmentType,
+  getTimestampFormatter,
   getTrajectoryPlayers,
 } from '~/features/show/selectors';
-import { formatPlaybackTimestamp } from '~/utils/formatters';
 
 import getClosestPair from './closest-pair';
 import { DEFAULT_VALIDATION_SETTINGS, SAMPLES_PER_SECOND } from './constants';
@@ -98,7 +98,8 @@ export const getSampledTimeInstants = createSelector(
  */
 export const getFormattedSampledTimeInstants = createSelector(
   getSampledTimeInstants,
-  (samples) => samples.map(formatPlaybackTimestamp)
+  getTimestampFormatter,
+  (samples, formatter) => samples.map(formatter)
 );
 
 /**
@@ -220,9 +221,11 @@ export const getSelectionToChartIndexMapping = createSelector(
   getSelection,
   (selection) => {
     const mapping = {};
-    selection.forEach((itemId, index) => {
+
+    for (const [index, itemId] of selection.entries()) {
       mapping[itemId] = index;
-    });
+    }
+
     return mapping;
   }
 );

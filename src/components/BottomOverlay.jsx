@@ -20,11 +20,11 @@ import { loadShowFromLocalFile } from '~/features/show/actions';
 import {
   canLoadShowFromLocalFile,
   getShowDuration,
+  getTimestampFormatter,
   hasLoadedShowFile,
 } from '~/features/show/selectors';
 import ToggleValidationModeButton from '~/features/validation/ToggleValidationModeButton';
 import VirtualReality from '~/icons/VirtualReality';
-import { formatPlaybackTimestamp } from '~/utils/formatters';
 
 import PlaybackSlider from './PlaybackSlider';
 
@@ -49,6 +49,7 @@ const BottomOverlay = ({
   audioReady,
   canLoadShowFromLocalFile,
   duration,
+  formatPlaybackTimestamp,
   hasAudio,
   hasShow,
   leftText,
@@ -91,7 +92,7 @@ const BottomOverlay = ({
           <PlaybackSlider />
         </Box>
         <Box textAlign='right' pl={2}>
-          {formatPlaybackTimestamp(duration)}
+          {formatPlaybackTimestamp && formatPlaybackTimestamp(duration)}
         </Box>
         <Box px={1}>
           {config.modes.vr && (
@@ -129,6 +130,7 @@ BottomOverlay.propTypes = {
   audioReady: PropTypes.bool,
   canLoadShowFromLocalFile: PropTypes.bool,
   duration: PropTypes.number,
+  formatPlaybackTimestamp: PropTypes.func,
   hasAudio: PropTypes.bool,
   hasShow: PropTypes.bool,
   leftText: PropTypes.string,
@@ -146,6 +148,7 @@ export default connect(
     audioReady: isAudioReadyToPlay(state),
     canLoadShowFromLocalFile: canLoadShowFromLocalFile(state),
     duration: getShowDuration(state),
+    formatPlaybackTimestamp: getTimestampFormatter(state),
     hasAudio: hasAudio(state),
     hasShow: hasLoadedShowFile(state),
     leftText:

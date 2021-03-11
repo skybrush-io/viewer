@@ -1,5 +1,7 @@
 import { connect } from 'react-redux';
 
+import { getTimestampFormatter } from '~/features/show/selectors';
+
 import ChartPanel from './ChartPanel';
 import {
   getAltitudeWarningThreshold,
@@ -20,6 +22,7 @@ export default connect(
   // mapStateToProps
   (state) => ({
     data: getDataForAltitudeChart(state),
+    formatPlaybackTimestamp: getTimestampFormatter(state),
     range: Y_RANGE,
     threshold: getAltitudeWarningThreshold(state),
     thresholdLabel: 'Altitude threshold',

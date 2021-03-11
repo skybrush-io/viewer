@@ -16,12 +16,15 @@ import {
   isAdjustingPlaybackPosition,
   isPlaying,
 } from '~/features/playback/selectors';
-import { getShowDuration } from '~/features/show/selectors';
-import { formatPlaybackTimestamp } from '~/utils/formatters';
+import {
+  getShowDuration,
+  getTimestampFormatter,
+} from '~/features/show/selectors';
 
 const PlaybackSlider = ({
   dragging,
   duration,
+  formatPlaybackTimestamp,
   getElapsedSeconds,
   onDragged,
   onDragging,
@@ -48,6 +51,7 @@ const PlaybackSlider = ({
 PlaybackSlider.propTypes = {
   dragging: PropTypes.bool,
   duration: PropTypes.number,
+  formatPlaybackTimestamp: PropTypes.func,
   getElapsedSeconds: PropTypes.func,
   onDragged: PropTypes.func,
   onDragging: PropTypes.func,
@@ -64,6 +68,7 @@ export default connect(
   (state) => ({
     dragging: isAdjustingPlaybackPosition(state),
     duration: getShowDuration(state),
+    formatPlaybackTimestamp: getTimestampFormatter(state),
     getElapsedSeconds: getElapsedSecondsGetter(state),
     playing: isPlaying(state),
   }),

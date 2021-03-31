@@ -28,10 +28,6 @@ function createStateStore() {
   });
 }
 
-// Inject isElectron into 'window' so we can easily detect that we are
-// running inside Electron
-window.isElectron = true;
-
 // Inject the bridge functions between the main and the renderer processes.
 // These are the only functions that the renderer processes may call to access
 // any functionality that requires Node.js -- they are not allowed to use

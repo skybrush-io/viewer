@@ -7,8 +7,11 @@ import { getIndicesOfSelectedDrones } from './items';
 import { getSampledTimeInstants, isSelectionEmpty } from './selectors';
 
 const createChartPoint = (x, y) => ({ x, y });
+const createChartPointWithTip = (x, y, tip) => ({ x, y, tip });
 
 export const createChartPoints = (xs, ys) => zipWith(xs, ys, createChartPoint);
+export const createChartPointsWithTips = (xs, ys, tips) =>
+  zipWith(xs, ys, tips, createChartPointWithTip);
 
 export const createChartDataSelector = (selector) => {
   // Sub-selector that returns the chart data that should be shown if some
@@ -32,39 +35,53 @@ export const createChartDataSelector = (selector) => {
   const getAggregatedChartData = createSelector(
     selector,
     getSampledTimeInstants,
-    (data, times) => {
+    getNamesOfDronesInShow,
+    (data, times, names) => {
       const minValues = [];
       const maxValues = [];
-      // const meanValues = [];
 
       const numberDrones = data.length;
       const numberFrames = times.length;
 
       minValues.length = numberFrames;
       maxValues.length = numberFrames;
-      // meanValues.length = numberFrames;
 
       for (let frameIndex = 0; frameIndex < numberFrames; frameIndex++) {
         const time = times[frameIndex];
         let minValue = Number.POSITIVE_INFINITY;
         let maxValue = Number.NEGATIVE_INFINITY;
-        const sum = 0;
+        let minIndex;
+        let maxIndex;
 
         for (let droneIndex = 0; droneIndex < numberDrones; droneIndex++) {
           const currentValue = data[droneIndex][frameIndex];
-          minValue = Math.min(minValue, currentValue);
-          maxValue = Math.max(maxValue, currentValue);
-          // sum += currentValue;
+
+          if (minValue > currentValue) {
+            minValue = currentValue;
+            minIndex = droneIndex;
+          }
+
+          if (maxValue < currentValue) {
+            maxValue = currentValue;
+            maxIndex = droneIndex;
+          }
         }
 
-        minValues[frameIndex] = { x: time, y: minValue };
-        maxValues[frameIndex] = { x: time, y: maxValue };
-        /*
-        meanValues[frameIndex] = {
+        minValues[frameIndex] = {
           x: time,
-          y: sum / Math.max(numberDrones, 1),
+          y: minValue,
         };
-        */
+        if (minIndex !== undefined) {
+          minValues[frameIndex].tip = names[minIndex];
+        }
+
+        maxValues[frameIndex] = {
+          x: time,
+          y: maxValue,
+        };
+        if (maxIndex !== undefined) {
+          maxValues[frameIndex].tip = names[maxIndex];
+        }
       }
 
       return [
@@ -78,13 +95,6 @@ export const createChartDataSelector = (selector) => {
           values: maxValues,
           role: 'maximum',
         },
-        /*
-        {
-          label: 'Mean',
-          values: meanValues,
-          role: 'mean',
-        },
-        */
       ];
     }
   );

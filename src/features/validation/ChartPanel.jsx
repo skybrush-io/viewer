@@ -175,6 +175,8 @@ const createOptions = ({
     tooltips: {
       callbacks: {
         label: (item, data) => {
+          const originalDataPoint =
+            data.datasets[item.datasetIndex].data[item.index];
           let label = data.datasets[item.datasetIndex].label || '';
 
           if (label) {
@@ -182,7 +184,9 @@ const createOptions = ({
           }
 
           label += Math.round(item.value * 100) / 100;
-          return label + verticalUnit;
+          return originalDataPoint.tip
+            ? `${label}${verticalUnit} (${originalDataPoint.tip})`
+            : `${label}${verticalUnit}`;
         },
 
         title: (item) => {
@@ -304,7 +308,11 @@ ChartPanel.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       values: PropTypes.arrayOf(
-        PropTypes.shape({ x: PropTypes.number, y: PropTypes.number })
+        PropTypes.shape({
+          x: PropTypes.number,
+          y: PropTypes.number,
+          tip: PropTypes.string,
+        })
       ),
       label: PropTypes.string,
       role: PropTypes.oneOf(['minimum', 'maximum', 'mean', 'single']),

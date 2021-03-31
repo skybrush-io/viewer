@@ -174,10 +174,12 @@ export const getSampledVerticalVelocitiesForDrones = createSelector(
 );
 
 /**
- * Returns an array mapping frames to the distance of the closest drone pair in
- * that frame, or null if the frame has at most one drone.
+ * Returns two arrays, one mapping frames to the distance of the closest drone
+ * pair in that frame, and another mapping frames to the indices of the closts
+ * drone pairs in the at frame. Each item of the array may be null if the frame
+ * has at most one drone.
  */
-export const getNearestNeighborDistancesForFrames = createSelector(
+export const getNearestNeighborsAndDistancesForFrames = createSelector(
   getSampledPositionsForDrones,
   getSampledTimeInstants,
   (positionsByDrones, times) => {
@@ -185,7 +187,8 @@ export const getNearestNeighborDistancesForFrames = createSelector(
     // the background so we don't lock the UI
     const numberFrames = times.length;
     const numberDrones = positionsByDrones.length;
-    const result = new Array(numberFrames);
+    const distances = new Array(numberFrames);
+    const indices = new Array(numberFrames);
     const positionsInCurrentFrame = new Array(numberDrones);
 
     for (let frameIndex = 0; frameIndex < numberFrames; frameIndex++) {
@@ -195,16 +198,26 @@ export const getNearestNeighborDistancesForFrames = createSelector(
       }
 
       const closestPair = getClosestPair(positionsInCurrentFrame);
-      result[frameIndex] = closestPair
-        ? Math.hypot(
-            closestPair[0].x - closestPair[1].x,
-            closestPair[0].y - closestPair[1].y,
-            closestPair[0].z - closestPair[1].z
-          )
-        : null;
+      if (closestPair) {
+        const firstIndex = positionsInCurrentFrame.indexOf(closestPair[0]);
+        const secondIndex = positionsInCurrentFrame.indexOf(closestPair[1]);
+
+        distances[frameIndex] = Math.hypot(
+          closestPair[0].x - closestPair[1].x,
+          closestPair[0].y - closestPair[1].y,
+          closestPair[0].z - closestPair[1].z
+        );
+        indices[frameIndex] =
+          firstIndex < secondIndex
+            ? [firstIndex, secondIndex]
+            : [secondIndex, firstIndex];
+      } else {
+        distances[frameIndex] = null;
+        indices[frameIndex] = null;
+      }
     }
 
-    return result;
+    return [distances, indices];
   }
 );
 

@@ -1,5 +1,6 @@
 // See webpack/launcher.config.js and https://github.com/visionmedia/debug/issues/467
 // for more information about why this is needed
+// eslint-disable-next-line
 global.__runtime_process_env = {
   DEBUG: false,
 };
@@ -58,11 +59,11 @@ function run(argv) {
   setupIpc();
 }
 
-module.exports = (argv) => {
-  const parser = setupCli().option(
-    '-p, --port <number>',
-    'Start listener on a specific port'
-  );
-  parser.parse(argv || process.argv);
+module.exports = () => {
+  const parser = setupCli();
+
+  parser.option('-p, --port <number>', 'Start listener on a specific port');
+  parser.parse();
+
   run(parser.opts());
 };

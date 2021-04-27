@@ -42,6 +42,7 @@ function run(argv) {
       backgroundColor: '#20242a', // same as the background color of the cover page
       debug: argv.debug,
       rootDir: __dirname,
+      showMenuBar: false,
       titleBarStyle: 'hiddenInset',
     },
   });

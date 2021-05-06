@@ -44,7 +44,7 @@ export const { store, persistor } = configureStoreAndPersistence({
   },
 });
 
-// Send the some of the allowed actions back to the preloader, bound to the
+// Send some of the allowed actions back to the preloader, bound to the
 // store instance. The preloader may then call these actions but cannot dispatch
 // arbitrary actions to the store.
 if (window.bridge) {

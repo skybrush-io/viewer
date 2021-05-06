@@ -128,7 +128,7 @@ async function invokeElectronBuilder(appConfig) {
 }
 
 async function invokeElectronBuilderForMacOS() {
-  await execa('electron-builder', ['-m'], electronBuilderSpawnOptions);
+  await execa('electron-builder', ['-m', '--universal'], electronBuilderSpawnOptions);
 }
 
 async function invokeElectronBuilderForLinux() {

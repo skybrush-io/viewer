@@ -1,4 +1,5 @@
 import isNil from 'lodash-es/isNil';
+import sortBy from 'lodash-es/sortBy';
 import { createSelector } from '@reduxjs/toolkit';
 
 import { getNamesOfDronesInShow } from '~/features/show/selectors';
@@ -29,10 +30,13 @@ export function getDroneIndexFromItemId(itemId) {
 export const getSidebarItemsForSingleDrones = createSelector(
   getNamesOfDronesInShow,
   (names) =>
-    names.map((name, index) => ({
-      id: createItemIdForDroneIndex(index),
-      label: name,
-    }))
+    sortBy(
+      names.map((name, index) => ({
+        id: createItemIdForDroneIndex(index),
+        label: name,
+      })),
+      ['label']
+    )
 );
 
 export const getIndicesOfSelectedDrones = createSelector(

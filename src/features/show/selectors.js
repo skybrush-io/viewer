@@ -140,7 +140,9 @@ export const getLightProgramPlayers = createSelector(
 export const getNamesOfDronesInShow = createSelector(
   getDroneSwarmSpecification,
   (swarm) =>
-    swarm.map((drone, index) => get(drone, 'name') || `Drone ${index + 1}`)
+    swarm.map(
+      (drone, index) => get(drone, 'settings.name') || `Drone ${index + 1}`
+    )
 );
 
 /**

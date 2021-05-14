@@ -86,14 +86,14 @@ export const createChartDataSelector = (selector) => {
 
       return [
         {
-          label: 'Minimum',
-          values: minValues,
-          role: 'minimum',
-        },
-        {
           label: 'Maximum',
           values: maxValues,
           role: 'maximum',
+        },
+        {
+          label: 'Minimum',
+          values: minValues,
+          role: 'minimum',
         },
       ];
     }

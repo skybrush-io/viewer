@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { useHarmonicIntervalFn, useUpdate } from 'react-use';
 
 import Slider from '@material-ui/core/Slider';
+import { orange } from '@material-ui/core/colors';
+import { withStyles } from '@material-ui/core/styles';
 
 import { stripEvent } from '@skybrush/redux-toolkit';
 
@@ -17,9 +19,22 @@ import {
   isPlaying,
 } from '~/features/playback/selectors';
 import {
+  getMarksFromShowCues,
   getShowDuration,
   getTimestampFormatter,
 } from '~/features/show/selectors';
+
+const styles = {
+  mark: {
+    height: 4,
+    width: 4,
+    backgroundColor: orange[500],
+    transform: 'translateY(-1px)',
+  },
+  markActive: {
+    opacity: 1,
+  },
+};
 
 const PlaybackSlider = ({
   dragging,
@@ -30,6 +45,7 @@ const PlaybackSlider = ({
   onDragging,
   playing,
   updateInterval,
+  ...rest
 }) => {
   const update = useUpdate();
   useHarmonicIntervalFn(update, playing && !dragging ? updateInterval : null);
@@ -44,6 +60,7 @@ const PlaybackSlider = ({
       valueLabelFormat={formatPlaybackTimestamp}
       onChange={onDragging}
       onChangeCommitted={onDragged}
+      {...rest}
     />
   );
 };
@@ -70,6 +87,7 @@ export default connect(
     duration: getShowDuration(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
     getElapsedSeconds: getElapsedSecondsGetter(state),
+    marks: getMarksFromShowCues(state),
     playing: isPlaying(state),
   }),
   // mapDispatchToProps
@@ -77,4 +95,4 @@ export default connect(
     onDragged: stripEvent(setPlaybackPosition),
     onDragging: stripEvent(temporarilyOverridePlaybackPosition),
   }
-)(PlaybackSlider);
+)(withStyles(styles)(PlaybackSlider));

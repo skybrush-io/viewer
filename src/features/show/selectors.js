@@ -1,6 +1,7 @@
 import config from 'config';
 import get from 'lodash-es/get';
 import maxBy from 'lodash-es/maxBy';
+import uniq from 'lodash-es/uniq';
 
 import { createSelector } from '@reduxjs/toolkit';
 
@@ -14,6 +15,7 @@ import createLightProgramPlayer from '~/utils/lights';
 
 export const canLoadShowFromLocalFile = () => config.io.localFiles;
 
+const EMPTY_ARRAY = Object.freeze([]);
 const EMPTY_OBJECT = Object.freeze({});
 
 /**
@@ -87,7 +89,7 @@ export const getCommonShowSettings = (state) => {
  */
 export const getDroneSwarmSpecification = (state) => {
   const result = get(state, 'show.data.swarm.drones');
-  return Array.isArray(result) ? result : [];
+  return Array.isArray(result) ? result : EMPTY_ARRAY;
 };
 
 /**
@@ -115,6 +117,15 @@ export const isShowOutdoor = (state) =>
   getShowEnvironmentType(state) === 'outdoor';
 
 /**
+ * Returns an array containing all the cues from the show file, or an empty
+ * array if the show has no cues.
+ */
+export const getCues = (state) => {
+  const cues = get(state, 'show.data.settings.cues.items');
+  return Array.isArray(cues) ? cues : EMPTY_ARRAY;
+};
+
+/**
  * Returns an array containing all the light programs. The array will contain
  * undefined for all the drones that have no light programs in the mission.
  */
@@ -132,6 +143,16 @@ const getLightPrograms = createSelector(getDroneSwarmSpecification, (swarm) =>
 export const getLightProgramPlayers = createSelector(
   getLightPrograms,
   (lightPrograms) => lightPrograms.map(createLightProgramPlayer)
+);
+
+/**
+ * Returns an object that is suitable to be passed to the playback slider
+ * component to mark the important cues in the currently loaded show.
+ */
+export const getMarksFromShowCues = createSelector(getCues, (cues) =>
+  uniq(cues.map((cue) => cue.time)).map((value) => ({
+    value,
+  }))
 );
 
 /**

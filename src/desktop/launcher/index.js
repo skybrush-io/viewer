@@ -12,6 +12,7 @@ const tmp = require('tmp-promise');
 const { setupApp, setupCli } = require('@skybrush/electron-app-framework');
 
 const createAppMenu = require('./app-menu');
+const setupFileOpener = require('./file-opener');
 const setupIpc = require('./ipc');
 const registerMediaProtocol = require('./media-protocol');
 
@@ -20,9 +21,10 @@ const ENABLE_HTTP_SERVER = true;
 /**
  * Main entry point of the application.
  *
- * @param  {Object}  argv  the parsed command line arguments
+ * @param  {string[]}  filenames the filenames passed in the command line arguments
+ * @param  {Object}    options   the parsed command line arguments
  */
-function run(argv) {
+function run(filenames, options) {
   // Clean up temporary files even when an uncaught exception occurs
   tmp.setGracefulCleanup();
 
@@ -33,14 +35,14 @@ function run(argv) {
   // data from the Blender plugin
   if (ENABLE_HTTP_SERVER) {
     const setupHttpServer = require('./http-server');
-    setupHttpServer(argv);
+    setupHttpServer(options);
   }
 
   setupApp({
     appMenu: createAppMenu,
     mainWindow: {
       backgroundColor: '#20242a', // same as the background color of the cover page
-      debug: argv.debug,
+      debug: options.debug,
       rootDir: __dirname,
       showMenuBar: false,
       titleBarStyle: 'hiddenInset',
@@ -58,6 +60,9 @@ function run(argv) {
 
   // Set up IPC handlers
   setupIpc();
+
+  // Set up file opener handlers
+  setupFileOpener(filenames);
 }
 
 module.exports = () => {
@@ -66,5 +71,5 @@ module.exports = () => {
   parser.option('-p, --port <number>', 'Start listener on a specific port');
   parser.parse();
 
-  run(parser.opts());
+  run(parser.args, parser.opts());
 };

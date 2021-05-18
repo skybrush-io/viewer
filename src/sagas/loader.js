@@ -11,7 +11,7 @@ import { freeze } from '@reduxjs/toolkit';
 
 import { setAudioUrl } from '~/features/audio/slice';
 import { loadShow } from '~/features/show/async';
-import { requestToLoadShow } from '~/features/show/slice';
+import { loadShowFromObject } from '~/features/show/slice';
 
 const PATHNAME_REGEX = /^\/s\/(?<id>[-\w]+)\/?$/;
 
@@ -119,7 +119,7 @@ export default function* loaderSaga() {
   }
 
   while (true) {
-    const request = yield take(requestToLoadShow.toString());
+    const request = yield take(loadShowFromObject.toString());
     const show = request.payload;
 
     if (show) {

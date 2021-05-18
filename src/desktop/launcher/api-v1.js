@@ -1,10 +1,10 @@
 /* eslint-disable unicorn/prevent-abbreviations, new-cap */
-const { BrowserWindow } = require('electron');
 const { ipcMain: ipc } = require('electron-better-ipc');
 const express = require('express');
 const pTimeout = require('p-timeout');
 
 const { loadShowFromBuffer } = require('./show-loader');
+const { getFirstMainWindow } = require('./utils');
 
 const router = express.Router();
 
@@ -14,18 +14,13 @@ router.post('/load', async (req, res, next) => {
   }
 
   try {
-    const allWindows = BrowserWindow.getAllWindows();
-    if (allWindows.length === 0) {
-      throw new Error('All windows are closed');
-    }
-
-    const targetWindow = allWindows[0];
+    const targetWindow = getFirstMainWindow({ required: true });
 
     await pTimeout(
       (async () => {
         const showSpec = await loadShowFromBuffer(req.body);
         await ipc.callRenderer(targetWindow, 'setUIMode', 'validation');
-        await ipc.callRenderer(targetWindow, 'loadShowSpecification', showSpec);
+        await ipc.callRenderer(targetWindow, 'loadShowFromObject', showSpec);
       })(),
       10000
     );

@@ -7,7 +7,8 @@ import { configureStoreAndPersistence } from '@skybrush/redux-toolkit';
 
 import reducer from './features';
 import { loadShow } from './features/show/async';
-import { requestToLoadShow } from './features/show/slice';
+import { loadShowFromLocalFile } from './features/show/actions';
+import { loadShowFromObject } from './features/show/slice';
 import { setOverlayVisibility } from './features/three-d/slice';
 import { setMode as setUIMode } from './features/ui/slice';
 import rootSaga from './sagas';
@@ -51,7 +52,8 @@ if (window.bridge) {
   window.bridge.provideActions(
     bindActionCreators(
       {
-        requestToLoadShow,
+        loadShowFromLocalFile,
+        loadShowFromObject,
         setUIMode,
       },
       store.dispatch

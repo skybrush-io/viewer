@@ -21,6 +21,12 @@
     }
   ],
 
+  "fileAssociations": [{
+    "ext": "skyc",
+    "description": "Skybrush compiled show file",
+    "role": "Viewer"
+  }],
+
   "linux": {
     "category": "Utility",
     "target": "AppImage"

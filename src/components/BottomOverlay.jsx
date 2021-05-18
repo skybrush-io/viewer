@@ -16,7 +16,7 @@ import {
 import { toggleMuted } from '~/features/audio/slice';
 import { rewind, togglePlayback } from '~/features/playback/actions';
 import { isPlaying } from '~/features/playback/selectors';
-import { loadShowFromLocalFile } from '~/features/show/actions';
+import { pickLocalFileAndLoadShow } from '~/features/show/actions';
 import {
   canLoadShowFromLocalFile,
   getShowDuration,
@@ -160,7 +160,7 @@ export default connect(
   // mapDispatchToProps
   {
     onLoadShowFromLocalFile: () => async (dispatch) => {
-      await dispatch(loadShowFromLocalFile());
+      await dispatch(pickLocalFileAndLoadShow());
       await dispatch(rewind());
     },
 

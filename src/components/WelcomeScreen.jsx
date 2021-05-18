@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import Folder from '@material-ui/icons/Folder';
 
 import { shouldUseWelcomeScreen } from '~/features/settings/selectors';
-import { loadShowFromLocalFile } from '~/features/show/actions';
+import { pickLocalFileAndLoadShow } from '~/features/show/actions';
 import {
   canLoadShowFromLocalFile,
   hasLoadedShowFile,
@@ -57,6 +57,6 @@ export default connect(
   }),
   // mapDispatchToProps
   {
-    onLoadShowFromLocalFile: loadShowFromLocalFile,
+    onLoadShowFromLocalFile: pickLocalFileAndLoadShow,
   }
 )(WelcomeScreen);

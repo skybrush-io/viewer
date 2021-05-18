@@ -22,26 +22,14 @@ const createActionProxy =
 
 module.exports = {
   receiveActionsFromRenderer: (actions) => {
-    fs.appendFileSync(
-      '/tmp/debug.txt',
-      `Received actions from renderer: ${JSON.stringify(
-        Object.keys(actions)
-      )}\n`
-    );
     Object.assign(actionsFromRenderer, actions);
   },
 
   setupIpc: () => {
-    ipc.answerMain('notifyFileOpeningRequest', (filename) => {
-      fs.appendFileSync(
-        '/tmp/debug.txt',
-        `Main process wants us to open ${filename}, ${JSON.stringify(
-          Object.keys(actionsFromRenderer)
-        )}\n`
-      );
-
-      getActionByName('loadShowFromLocalFile')(filename);
-    });
+    ipc.answerMain(
+      'notifyFileOpeningRequest',
+      createActionProxy('loadShowFromLocalFile')
+    );
 
     ipc.answerMain(
       'loadShowFromObject',

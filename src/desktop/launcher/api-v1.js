@@ -8,6 +8,19 @@ const { getFirstMainWindow } = require('./utils');
 
 const router = express.Router();
 
+router.post('/focus', async (req, res, next) => {
+  try {
+    const targetWindow = getFirstMainWindow();
+    if (targetWindow) {
+      targetWindow.show();
+    }
+
+    res.json({ result: true });
+  } catch (error) {
+    return next(error);
+  }
+});
+
 router.post('/load', async (req, res, next) => {
   if (!req.is('application/skybrush-compiled')) {
     return res.sendStatus(400);
@@ -21,6 +34,7 @@ router.post('/load', async (req, res, next) => {
         const showSpec = await loadShowFromBuffer(req.body);
         await ipc.callRenderer(targetWindow, 'setUIMode', 'validation');
         await ipc.callRenderer(targetWindow, 'loadShowFromObject', showSpec);
+        targetWindow.show();
       })(),
       10000
     );

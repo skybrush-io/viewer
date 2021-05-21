@@ -249,7 +249,7 @@ export const getShowMetadata = createSelector(
 export const getShowTitle = createSelector(
   getShowMetadata,
   getNumberOfDronesInShow,
-  (meta, numberDrones) => meta.title || `Show with ${numberDrones} drones`
+  (meta, droneCount) => meta.title || `Show with ${droneCount} drones`
 );
 
 /**

@@ -252,7 +252,7 @@ const ChartPanel = ({
           datasets.push({
             label: dataset.label || `Series ${index + 1}`,
             data: dataset.values,
-            fill: dataset.role === 'minimum' ? '+1' : false,
+            fill: dataset.role === 'maximum' ? '+1' : false,
             showLine: true,
             interpolate: true,
             ...lineStyles[styleIndex % numberStyles],

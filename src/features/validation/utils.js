@@ -40,20 +40,20 @@ export const createChartDataSelector = (selector) => {
       const minValues = [];
       const maxValues = [];
 
-      const numberDrones = data.length;
-      const numberFrames = times.length;
+      const droneCount = data.length;
+      const frameCount = times.length;
 
-      minValues.length = numberFrames;
-      maxValues.length = numberFrames;
+      minValues.length = frameCount;
+      maxValues.length = frameCount;
 
-      for (let frameIndex = 0; frameIndex < numberFrames; frameIndex++) {
+      for (let frameIndex = 0; frameIndex < frameCount; frameIndex++) {
         const time = times[frameIndex];
         let minValue = Number.POSITIVE_INFINITY;
         let maxValue = Number.NEGATIVE_INFINITY;
         let minIndex;
         let maxIndex;
 
-        for (let droneIndex = 0; droneIndex < numberDrones; droneIndex++) {
+        for (let droneIndex = 0; droneIndex < droneCount; droneIndex++) {
           const currentValue = data[droneIndex][frameIndex];
 
           if (minValue > currentValue) {

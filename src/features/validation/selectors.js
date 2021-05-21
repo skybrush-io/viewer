@@ -185,14 +185,14 @@ export const getNearestNeighborsAndDistancesForFrames = createSelector(
   (positionsByDrones, times) => {
     // TODO(ntamas): make this async and make it run in a worker or at least in
     // the background so we don't lock the UI
-    const numberFrames = times.length;
-    const numberDrones = positionsByDrones.length;
-    const distances = new Array(numberFrames);
-    const indices = new Array(numberFrames);
-    const positionsInCurrentFrame = new Array(numberDrones);
+    const frameCount = times.length;
+    const droneCount = positionsByDrones.length;
+    const distances = Array.from({ length: frameCount });
+    const indices = Array.from({ length: frameCount });
+    const positionsInCurrentFrame = Array.from({ length: droneCount });
 
-    for (let frameIndex = 0; frameIndex < numberFrames; frameIndex++) {
-      for (let droneIndex = 0; droneIndex < numberDrones; droneIndex++) {
+    for (let frameIndex = 0; frameIndex < frameCount; frameIndex++) {
+      for (let droneIndex = 0; droneIndex < droneCount; droneIndex++) {
         positionsInCurrentFrame[droneIndex] =
           positionsByDrones[droneIndex][frameIndex];
       }

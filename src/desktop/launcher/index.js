@@ -24,7 +24,7 @@ const ENABLE_HTTP_SERVER = true;
  * @param  {string[]}  filenames the filenames passed in the command line arguments
  * @param  {Object}    options   the parsed command line arguments
  */
-function run(filenames, options) {
+async function run(filenames, options) {
   // Clean up temporary files even when an uncaught exception occurs
   tmp.setGracefulCleanup();
 
@@ -35,7 +35,7 @@ function run(filenames, options) {
   // data from the Blender plugin
   if (ENABLE_HTTP_SERVER) {
     const setupHttpServer = require('./http-server');
-    setupHttpServer(options);
+    await setupHttpServer(options);
   }
 
   setupApp({
@@ -65,11 +65,11 @@ function run(filenames, options) {
   setupFileOpener(filenames);
 }
 
-module.exports = () => {
+module.exports = async () => {
   const parser = setupCli();
 
   parser.option('-p, --port <number>', 'Start listener on a specific port');
   parser.parse();
 
-  run(parser.args, parser.opts());
+  await run(parser.args, parser.opts());
 };

@@ -1,8 +1,9 @@
 /* eslint-disable unicorn/prevent-abbreviations */
-const express = require('express');
+const { createSocket } = require('dgram');
 const http = require('http');
-const SSDPServer = require('node-ssdp').Server;
 const { networkInterfaces } = require('os');
+const express = require('express');
+const SSDPServer = require('node-ssdp').Server;
 
 const apiV1 = require('./api-v1');
 
@@ -37,7 +38,44 @@ SSDPServer.prototype._send = function (message, host, port, cb) {
   }
 };
 
-const setupSSDPDiscovery = (port) => {
+// Monkeypatch SSDPServer so we create sockets for local and non-local interfaces
+// alike. This is because we need a socket on localhost even if no other
+// interface is available. However, we also need non-local interfaces because
+// older versions of the Skybrush Studio for Blender add-on look for Skybrush
+// Viewer in the "real" IP addresses of the network interfaces only, not on
+// 127.0.0.1. This was fixed in versions 1.9.2 and 1.10.0 of the Blender add-on.
+SSDPServer.prototype._createSockets = function () {
+  const interfaces = networkInterfaces();
+
+  this.sockets = {};
+
+  for (const iName of Object.keys(interfaces)) {
+    if (this._interfaces && this._interfaces.includes(iName)) {
+      continue;
+    }
+
+    this._logger('discovering all IPs from interface %s', iName);
+
+    for (const ipInfo of interfaces[iName]) {
+      if (ipInfo.family === 'IPv4') {
+        const socket = createSocket({
+          type: 'udp4',
+          reuseAddr: this._reuseAddr,
+        });
+        if (socket) {
+          socket.unref();
+          this.sockets[ipInfo.address] = socket;
+        }
+      }
+    }
+  }
+
+  if (Object.keys(this.sockets).length === 0) {
+    throw new Error('No sockets available, cannot start.');
+  }
+};
+
+const setupSSDPDiscovery = async (port) => {
   const UPNP_DEVICE_ID = `urn:collmot-com:device:skybrush-viewer:1`;
   const UPNP_SERVICE_ID = `urn:collmot-com:service:skyc-validator:1`;
 
@@ -47,17 +85,20 @@ const setupSSDPDiscovery = (port) => {
   server.addUSN(UPNP_DEVICE_ID);
   server.addUSN(UPNP_SERVICE_ID);
 
-  server.start();
-
-  process.on('exit', () => server.stop());
+  try {
+    await server.start();
+    process.on('exit', () => server.stop());
+  } catch {
+    console.warn('No SSDP sockets were created; SSDP discovery is disabled.');
+  }
 };
 
-const setupHttpServer = ({ port = 0 } = {}) => {
+const setupHttpServer = async ({ port = 0 } = {}) => {
   const app = express();
   const server = http.createServer(app).listen({ port });
 
   port = server.address().port;
-  setupSSDPDiscovery(port);
+  await setupSSDPDiscovery(port);
 
   app.set('port', port);
 

@@ -64,15 +64,17 @@ function deriveShowFileUrls(href) {
   const url = new URL(href);
   const match = url.pathname.match(PATHNAME_REGEX);
   if (match) {
+    const now = Date.now();
+
     if (match.groups.id === 'test') {
       return {
-        show: 'https://share.skybrush.io/s/itu-2019/show.json',
+        show: `https://share.skybrush.io/s/itu-2019/show.json?t=${now}`,
       };
     }
 
     return {
-      audio: new URL('music.mp3', url).toString(),
-      show: new URL('show.json', url).toString(),
+      audio: new URL(`music.mp3?t=${now}`, url).toString(),
+      show: new URL(`show.json?t=${now}`, url).toString(),
     };
   }
 

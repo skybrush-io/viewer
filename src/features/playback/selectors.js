@@ -1,6 +1,15 @@
 import isNil from 'lodash-es/isNil';
 import { createSelector } from '@reduxjs/toolkit';
 
+import { isAudioReadyToPlay } from '~/features/audio/selectors';
+import { hasLoadedShowFile } from '~/features/show/selectors';
+
+/**
+ * Returns whether the "toggle playback" action is available now.
+ */
+export const canTogglePlayback = (state) =>
+  isPlaying(state) || (hasLoadedShowFile(state) && isAudioReadyToPlay(state));
+
 /**
  * Selector that returns the current playback speed multiplier.
  */
@@ -8,6 +17,12 @@ export const getPlaybackSpeed = (state) => {
   const { speed } = state.playback;
   return isNil(speed) ? 1 : speed;
 };
+
+/**
+ * Returns the number of seconds elapsed at the current or given timestamp.
+ */
+export const getElapsedSeconds = (state, ...args) =>
+  getElapsedSecondsGetter(state)(...args);
 
 /**
  * Selector that returns a getter function that can be invoked with a timestamp
@@ -19,25 +34,26 @@ export const getElapsedSecondsGetter = createSelector(
   (state) => state.playback.stoppedAt,
   (state) => state.playback.adjustedTo,
   getPlaybackSpeed,
-  (startedAt, stoppedAt, adjustedTo, speed) => (timestamp = null) => {
-    if (!isNil(adjustedTo)) {
-      return adjustedTo;
-    }
+  (startedAt, stoppedAt, adjustedTo, speed) =>
+    (timestamp = null) => {
+      if (!isNil(adjustedTo)) {
+        return adjustedTo;
+      }
 
-    if (timestamp === null) {
-      timestamp = Date.now();
-    }
+      if (timestamp === null) {
+        timestamp = Date.now();
+      }
 
-    if (!startedAt || timestamp < startedAt) {
-      return 0;
-    }
+      if (!startedAt || timestamp < startedAt) {
+        return 0;
+      }
 
-    if (stoppedAt && timestamp > stoppedAt) {
-      return ((stoppedAt - startedAt) * speed) / 1000;
-    }
+      if (stoppedAt && timestamp > stoppedAt) {
+        return ((stoppedAt - startedAt) * speed) / 1000;
+      }
 
-    return ((timestamp - startedAt) * speed) / 1000;
-  }
+      return ((timestamp - startedAt) * speed) / 1000;
+    }
 );
 
 /**

@@ -8,14 +8,10 @@ import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 
-import {
-  hasAudio,
-  isAudioMuted,
-  isAudioReadyToPlay,
-} from '~/features/audio/selectors';
+import { hasAudio, isAudioMuted } from '~/features/audio/selectors';
 import { toggleMuted } from '~/features/audio/slice';
-import { rewind, togglePlayback } from '~/features/playback/actions';
-import { isPlaying } from '~/features/playback/selectors';
+import { togglePlayback } from '~/features/playback/actions';
+import { canTogglePlayback, isPlaying } from '~/features/playback/selectors';
 import { pickLocalFileAndLoadShow } from '~/features/show/actions';
 import {
   canLoadShowFromLocalFile,
@@ -46,8 +42,8 @@ const noWrap = {
 };
 
 const BottomOverlay = ({
-  audioReady,
   canLoadShowFromLocalFile,
+  canTogglePlayback,
   duration,
   formatPlaybackTimestamp,
   hasAudio,
@@ -80,7 +76,7 @@ const BottomOverlay = ({
         <Box px={2}>
           <PlayStopButton
             edge='start'
-            disabled={!playing && (!audioReady || !hasShow)}
+            disabled={!canTogglePlayback}
             playing={playing}
             onClick={onTogglePlayback}
           />
@@ -127,8 +123,8 @@ const BottomOverlay = ({
 };
 
 BottomOverlay.propTypes = {
-  audioReady: PropTypes.bool,
   canLoadShowFromLocalFile: PropTypes.bool,
+  canTogglePlayback: PropTypes.bool,
   duration: PropTypes.number,
   formatPlaybackTimestamp: PropTypes.func,
   hasAudio: PropTypes.bool,
@@ -145,8 +141,8 @@ BottomOverlay.propTypes = {
 export default connect(
   // mapStateToProps
   (state) => ({
-    audioReady: isAudioReadyToPlay(state),
     canLoadShowFromLocalFile: canLoadShowFromLocalFile(state),
+    canTogglePlayback: canTogglePlayback(state),
     duration: getShowDuration(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
     hasAudio: hasAudio(state),

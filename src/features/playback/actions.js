@@ -1,5 +1,8 @@
+import { getShowDuration } from '~/features/show/selectors';
+
 import {
-  getElapsedSecondsGetter,
+  canTogglePlayback,
+  getElapsedSeconds,
   getPlaybackSpeed,
   isPlaying,
 } from './selectors';
@@ -23,10 +26,14 @@ export const togglePlayback = () => (dispatch, getState) => {
   const now = Date.now();
   const state = getState();
 
+  if (!canTogglePlayback(state)) {
+    return;
+  }
+
   if (isPlaying(state)) {
     dispatch(setStartStopTimeAndSpeed({ stop: now }));
   } else {
-    const elapsed = getElapsedSecondsGetter(state)(now);
+    const elapsed = getElapsedSeconds(state, now);
     const speed = getPlaybackSpeed(state);
 
     dispatch(
@@ -49,6 +56,20 @@ export const setPlaybackPosition = (seconds) => (dispatch, getState) => {
   dispatch(setStartStopTimeAndSpeed({ start, stop }));
 };
 
+export const adjustPlaybackPositionBy = (delta) => (dispatch, getState) => {
+  if (!Number.isFinite(delta)) {
+    return;
+  }
+
+  const state = getState();
+  const seconds = getElapsedSeconds(state);
+  const newPosition = Math.min(
+    Math.max(0, seconds + delta),
+    getShowDuration(state)
+  );
+  dispatch(setPlaybackPosition(newPosition));
+};
+
 export const setPlaybackSpeed = (speed) => (dispatch, getState) => {
   speed = Number.parseFloat(speed);
 
@@ -58,7 +79,7 @@ export const setPlaybackSpeed = (speed) => (dispatch, getState) => {
 
   const state = getState();
   const now = Date.now();
-  const seconds = getElapsedSecondsGetter(state)(now);
+  const seconds = getElapsedSeconds(state, now);
 
   const start = now - (seconds / speed) * 1000;
   const stop = isPlaying(state) ? null : now;

@@ -9,6 +9,7 @@ import MainTopLevelView from './components/MainTopLevelView';
 import Sidebar from './components/Sidebar';
 import SplashScreen from './components/SplashScreen';
 
+import AppHotkeys from './hotkeys';
 import { persistor, store } from './store';
 import ThemeProvider from './theme';
 
@@ -31,7 +32,9 @@ const App = () => (
             <>
               <SplashScreen visible={!bootstrapped} />
               <CssBaseline />
-              <MainTopLevelView />
+              <AppHotkeys>
+                <MainTopLevelView />
+              </AppHotkeys>
               <Sidebar />
             </>
           )}

@@ -1,4 +1,3 @@
-const fs = require('fs');
 const { ipcRenderer: ipc } = require('electron-better-ipc');
 
 const actionsFromRenderer = {};

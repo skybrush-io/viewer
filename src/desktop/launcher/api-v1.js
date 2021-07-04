@@ -3,7 +3,7 @@ const { ipcMain: ipc } = require('electron-better-ipc');
 const express = require('express');
 const pTimeout = require('p-timeout');
 
-const { loadShowFromBuffer } = require('./show-loader');
+const { getShowAsObjectFromBuffer } = require('./show-loader');
 const { getFirstMainWindow } = require('./utils');
 
 const router = express.Router();
@@ -31,7 +31,7 @@ router.post('/load', async (req, res, next) => {
 
     await pTimeout(
       (async () => {
-        const showSpec = await loadShowFromBuffer(req.body);
+        const showSpec = await getShowAsObjectFromBuffer(req.body);
         await ipc.callRenderer(targetWindow, 'setUIMode', 'validation');
         await ipc.callRenderer(targetWindow, 'loadShowFromObject', showSpec);
         targetWindow.show();

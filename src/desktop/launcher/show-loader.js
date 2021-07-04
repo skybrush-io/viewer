@@ -1,16 +1,16 @@
-const { get } = require('lodash');
 const fs = require('fs').promises;
-
-const { getUrlToAudioBuffer, setAudioBuffer } = require('./media-buffers');
+const { get } = require('lodash');
 
 const { loadCompiledShow } = require('@skybrush/show-format');
 
-const loadShowFromFile = async (filename, window) => {
+const { getUrlToAudioBuffer, setAudioBuffer } = require('./media-buffers');
+
+const getShowAsObjectFromLocalFile = async (filename, window) => {
   const contents = await fs.readFile(filename);
 
-  // don't pass 'window' to loadShowFromBuffer(), we don't want it to modify the
+  // don't pass 'window' to getShowAsObjectFromBuffer(), we don't want it to modify the
   // file path represented by the window
-  const showSpec = await loadShowFromBuffer(contents);
+  const showSpec = await getShowAsObjectFromBuffer(contents);
 
   if (showSpec && window) {
     // Set the filename on the window
@@ -20,7 +20,7 @@ const loadShowFromFile = async (filename, window) => {
   return showSpec;
 };
 
-const loadShowFromBuffer = async (buffer, window) => {
+const getShowAsObjectFromBuffer = async (buffer, window) => {
   const showSpec = await loadCompiledShow(buffer, { assets: true });
 
   if (showSpec) {
@@ -52,6 +52,6 @@ const loadShowFromBuffer = async (buffer, window) => {
 };
 
 module.exports = {
-  loadShowFromBuffer,
-  loadShowFromFile,
+  getShowAsObjectFromBuffer,
+  getShowAsObjectFromLocalFile,
 };

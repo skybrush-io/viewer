@@ -24,9 +24,12 @@ const { actions, reducer } = createSlice({
       state.id = 0;
     },
 
-    loadShowFromObject: () => {
-      /* nothing to do, the loader saga will pick this up and take care of
-       * everything */
+    loadShowFromObject: {
+      reducer: () => {
+        /* nothing to do, the loader saga will pick this up and take care of
+         * everything */
+      },
+      prepare: (show, options = {}) => ({ payload: { show, options } }),
     },
   },
 

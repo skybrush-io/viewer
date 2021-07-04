@@ -10,6 +10,7 @@ import { call, fork, put, putResolve, take } from 'redux-saga/effects';
 import { freeze } from '@reduxjs/toolkit';
 
 import { setAudioUrl } from '~/features/audio/slice';
+import { rewind } from '~/features/playback/actions';
 import { loadShow } from '~/features/show/async';
 import { loadShowFromObject } from '~/features/show/slice';
 
@@ -23,7 +24,7 @@ const PATHNAME_REGEX = /^\/s\/(?<id>[-\w]+)\/?$/;
  */
 function* loadShowFromRequestChannelSaga(chan) {
   while (true) {
-    const { audio, missingAudioIsOkay, show } = yield take(chan);
+    const { audio, keepPlayhead, missingAudioIsOkay, show } = yield take(chan);
 
     try {
       let audioOkay = true;
@@ -40,6 +41,10 @@ function* loadShowFromRequestChannelSaga(chan) {
       const { payload: showSpec } = yield putResolve(loadShow(freeze(show)));
       const audioInShowSpec = get(showSpec, 'media.audio.url');
       yield put(setAudioUrl(audioOkay ? audio || audioInShowSpec : null));
+
+      if (!keepPlayhead) {
+        yield put(rewind());
+      }
     } catch {
       console.error('Unexpected error while loading show');
     }
@@ -122,10 +127,9 @@ export default function* loaderSaga() {
 
   while (true) {
     const request = yield take(loadShowFromObject.toString());
-    const show = request.payload;
-
+    const { show } = request.payload;
     if (show) {
-      yield put(chan, { show });
+      yield put(chan, request.payload);
     }
   }
 }

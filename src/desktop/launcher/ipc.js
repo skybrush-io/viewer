@@ -1,10 +1,13 @@
 const { ipcMain: ipc } = require('electron-better-ipc');
 
 const dialogs = require('./dialogs');
-const { loadShowFromFile } = require('./show-loader');
+const { getShowAsObjectFromLocalFile } = require('./show-loader');
 
 module.exports = () => {
-  ipc.answerRenderer('loadShowFromFile', loadShowFromFile);
+  ipc.answerRenderer(
+    'getShowAsObjectFromLocalFile',
+    getShowAsObjectFromLocalFile
+  );
   ipc.answerRenderer(
     'selectLocalShowFileForOpening',
     dialogs.selectLocalShowFileForOpening

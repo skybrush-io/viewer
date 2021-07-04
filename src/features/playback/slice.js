@@ -50,11 +50,7 @@ const { actions, reducer } = createSlice({
       if (speed !== undefined) {
         const validatedSpeed = validatePlaybackSpeed(speed);
 
-        if (validatedSpeed) {
-          state.speed = validatedSpeed;
-        } else {
-          state.speed = 1;
-        }
+        state.speed = validatedSpeed ? validatedSpeed : 1;
       }
 
       state.adjustedTo = null;
@@ -63,18 +59,12 @@ const { actions, reducer } = createSlice({
     temporarilyOverridePlaybackPosition(state, action) {
       const value = Number(action.payload);
 
-      if (!Number.isNaN(value) && value >= 0) {
-        state.adjustedTo = value;
-      } else {
-        state.adjustedTo = null;
-      }
+      state.adjustedTo = !Number.isNaN(value) && value >= 0 ? value : null;
     },
   },
 });
 
-export const {
-  setStartStopTimeAndSpeed,
-  temporarilyOverridePlaybackPosition,
-} = actions;
+export const { setStartStopTimeAndSpeed, temporarilyOverridePlaybackPosition } =
+  actions;
 
 export default reducer;

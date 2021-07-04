@@ -159,11 +159,7 @@ export default connect(
   }),
   // mapDispatchToProps
   {
-    onLoadShowFromLocalFile: () => async (dispatch) => {
-      await dispatch(pickLocalFileAndLoadShow());
-      await dispatch(rewind());
-    },
-
+    onLoadShowFromLocalFile: pickLocalFileAndLoadShow,
     onToggleMuted: toggleMuted,
     onTogglePlayback: togglePlayback,
   }

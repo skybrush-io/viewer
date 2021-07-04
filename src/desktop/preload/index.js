@@ -35,7 +35,8 @@ function createStateStore() {
 contextBridge.exposeInMainWorld('bridge', {
   createStateStore,
   isElectron: true,
-  loadShowFromFile: (filename) => ipc.callMain('loadShowFromFile', filename),
+  getShowAsObjectFromLocalFile: (filename) =>
+    ipc.callMain('getShowAsObjectFromLocalFile', filename),
   provideActions: (...args) => {
     receiveActionsFromRenderer(...args);
 

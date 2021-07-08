@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.1] - 2021-07-08
+
+### Fixed
+
+- Holding down the Shift key now also increases velocity along the Z axis.
+
+- The viewer does not allow the camera to go below Z = 0 any more.
+
 ## [1.9.0] - 2021-07-04
 
 ### Added

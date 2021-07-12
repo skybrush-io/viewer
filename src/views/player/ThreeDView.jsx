@@ -44,7 +44,7 @@ const ThreeDView = React.forwardRef((props, ref) => {
   const extraCameraProps = {
     'altitude-control': objectToString({
       enabled: true,
-      min: 0.01,
+      min: 0.01 - cameraConfiguration.position[1],
     }),
     'better-wasd-controls': objectToString({
       fly: navigation && navigation.mode === 'fly',

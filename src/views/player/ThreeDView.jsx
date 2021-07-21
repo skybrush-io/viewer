@@ -8,8 +8,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Scenery from './Scenery';
-
 // eslint-disable-next-line no-unused-vars
 import AFrame from '~/aframe';
 import { objectToString } from '@skybrush/aframe-components';
@@ -22,7 +20,9 @@ import {
   getLoadedShowId,
   getNumberOfDronesInShow,
 } from '~/features/show/selectors';
+
 import CoordinateSystemAxes from './CoordinateSystemAxes';
+import Scenery from './Scenery';
 
 import glow from '~/../assets/img/sphere-glow-hollow.png';
 // const flapperDrone = require('~/../assets/models/flapper-drone.obj').default;
@@ -59,7 +59,9 @@ const ThreeDView = React.forwardRef((props, ref) => {
     extraSceneProps.stats = 'true';
   }
 
-  extraSceneProps['vr-mode-ui'] = config.buttons.vr ? 'enabled: true; enterVRButton: #vr-button' : 'enabled: false';
+  extraSceneProps['vr-mode-ui'] = config.buttons.vr
+    ? 'enabled: true; enterVRButton: #vr-button'
+    : 'enabled: false';
 
   return (
     <a-scene

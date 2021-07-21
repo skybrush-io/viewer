@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import CoordinateSystemAxes from './CoordinateSystemAxes';
 import Scenery from './Scenery';
 
 // eslint-disable-next-line no-unused-vars
@@ -23,6 +22,7 @@ import {
   getLoadedShowId,
   getNumberOfDronesInShow,
 } from '~/features/show/selectors';
+import CoordinateSystemAxes from './CoordinateSystemAxes';
 
 import glow from '~/../assets/img/sphere-glow-hollow.png';
 // const flapperDrone = require('~/../assets/models/flapper-drone.obj').default;
@@ -59,11 +59,7 @@ const ThreeDView = React.forwardRef((props, ref) => {
     extraSceneProps.stats = 'true';
   }
 
-  if (config.buttons.vr) {
-    extraSceneProps['vr-mode-ui'] = 'enabled: true; enterVRButton: #vr-button';
-  } else {
-    extraSceneProps['vr-mode-ui'] = 'enabled: false';
-  }
+  extraSceneProps['vr-mode-ui'] = config.buttons.vr ? 'enabled: true; enterVRButton: #vr-button' : 'enabled: false';
 
   return (
     <a-scene
@@ -98,7 +94,7 @@ const ThreeDView = React.forwardRef((props, ref) => {
         <a-drone-flock drone-size={droneSize} size={numDrones} />
       </a-entity>
 
-      <Scenery scale={10} type={scenery} grid={grid} />
+      <Scenery type={scenery} grid={grid} />
     </a-scene>
   );
 });

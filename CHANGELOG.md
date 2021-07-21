@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- When viewing an indoor show, a single square on the floor texture now represents
+  1 meter instead of 20 meters.
+
 ## [1.9.2] - 2021-07-19
 
 ### Fixed

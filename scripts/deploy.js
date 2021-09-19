@@ -9,7 +9,6 @@ const { program } = require('commander');
 const execa = require('execa');
 const { copy, emptyDir, ensureDir, readJson, remove } = require('fs-extra');
 const Listr = require('listr');
-const ora = require('ora');
 const path = require('path');
 const pify = require('pify');
 const webpack = require('webpack');
@@ -152,6 +151,7 @@ async function cleanup() {
  */
 async function main() {
   const appConfig = await loadAppConfig();
+  const ora = await import('ora');
 
   // OutputDir = path.resolve(outputDir, appConfig.version)
 

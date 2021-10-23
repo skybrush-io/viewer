@@ -113,8 +113,11 @@
     "dotenv-webpack": "^7.0.3",
     "electron": "^15.3.0",
     "electron-builder": "^22.13.1",
-    "eslint": "^8.1.0",
+    "eslint": "^7.32.0",
+    "eslint-config-xo": "^0.39.0",
     "eslint-config-xo-react": "^0.25.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-promise": "^5.1.1",
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "execa": "^5.1.1",
@@ -123,7 +126,7 @@
     "html-webpack-plugin": "^5.4.0",
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
-    "listr": "^0.14.3",
+    "listr": "^0.14.2",
     "ora": "^6.0.1",
     "patch-package": "^6.4.7",
     "pify": "^5.0.0",
@@ -178,7 +181,9 @@
       "react/require-default-props": 0,
       "unicorn/filename-case": 0,
       "unicorn/no-array-callback-reference": 0,
-      "unicorn/no-fn-reference-in-iterator": 0
+      "unicorn/no-fn-reference-in-iterator": 0,
+      "unicorn/numeric-separators-style": 0,
+      "unicorn/prefer-module": 0
     }
   }
 }

@@ -1,8 +1,9 @@
 // Webpack configuration for the output that is directly usable on
 // https://share.skybrush.io
 
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 

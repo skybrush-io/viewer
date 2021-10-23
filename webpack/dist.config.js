@@ -1,9 +1,10 @@
 // Webpack configuration for the output that is directly usable on
 // https://share.skybrush.io
 
+const path = require('path');
+
 const CompressionPlugin = require('compression-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const path = require('path');
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 

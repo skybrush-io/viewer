@@ -1,6 +1,8 @@
+const fs = require('fs').promises;
+const process = require('process');
+
 const { program } = require('commander');
 const { loadCompiledShow } = require('@skybrush/show-format');
-const fs = require('fs').promises;
 
 program
   .storeOptionsAsProperties(false)

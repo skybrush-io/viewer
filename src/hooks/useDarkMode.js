@@ -1,3 +1,5 @@
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-export default () => useMediaQuery('(prefers-color-scheme: dark)');
+const useDarkMode = () => useMediaQuery('(prefers-color-scheme: dark)');
+
+export default useDarkMode;

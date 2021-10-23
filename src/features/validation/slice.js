@@ -68,10 +68,7 @@ const { actions, reducer } = createSlice({
   },
 });
 
-export const {
-  setDisabledValidators,
-  setSelection,
-  setVisiblePanels,
-} = actions;
+export const { setDisabledValidators, setSelection, setVisiblePanels } =
+  actions;
 
 export default reducer;

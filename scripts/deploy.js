@@ -5,11 +5,13 @@
  * to a given remote location using rsync
  */
 
+const path = require('path');
+const process = require('process');
+
 const { program } = require('commander');
 const execa = require('execa');
 const { copy, emptyDir, ensureDir, readJson, remove } = require('fs-extra');
 const Listr = require('listr');
-const path = require('path');
 const pify = require('pify');
 const webpack = require('webpack');
 
@@ -24,7 +26,10 @@ const outputDir = path.resolve(projectRoot, 'dist');
 
 program
   .storeOptionsAsProperties(false)
-  .option('-p, --production', 'whether to build the application in production mode')
+  .option(
+    '-p, --production',
+    'whether to build the application in production mode'
+  )
   .parse(process.argv);
 
 const options = program.opts();
@@ -127,7 +132,11 @@ async function invokeElectronBuilder(appConfig) {
 }
 
 async function invokeElectronBuilderForMacOS() {
-  await execa('electron-builder', ['-m', '--universal'], electronBuilderSpawnOptions);
+  await execa(
+    'electron-builder',
+    ['-m', '--universal'],
+    electronBuilderSpawnOptions
+  );
 }
 
 async function invokeElectronBuilderForLinux() {

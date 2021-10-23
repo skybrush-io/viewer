@@ -1,9 +1,8 @@
 // Use strict mode so we can have block-scoped declarations
 'use strict';
 
-// Don't use let in the line below because older Node.js versions on Linux
-// will not like it
 const path = require('path');
+const process = require('process');
 const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
 

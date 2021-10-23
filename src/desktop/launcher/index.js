@@ -1,6 +1,6 @@
 // See webpack/launcher.config.js and https://github.com/visionmedia/debug/issues/467
 // for more information about why this is needed
-// eslint-disable-next-line
+// eslint-disable-next-line camelcase
 global.__runtime_process_env = {
   DEBUG: false,
 };

@@ -52,10 +52,7 @@ const { actions, reducer } = createSlice({
   },
 });
 
-export const {
-  setCameraPose,
-  setNavigationMode,
-  setOverlayVisibility,
-} = actions;
+export const { setCameraPose, setNavigationMode, setOverlayVisibility } =
+  actions;
 
 export default reducer;

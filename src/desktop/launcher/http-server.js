@@ -2,6 +2,8 @@
 const { createSocket } = require('dgram');
 const http = require('http');
 const { networkInterfaces } = require('os');
+const process = require('process');
+
 const express = require('express');
 const SSDPServer = require('node-ssdp').Server;
 

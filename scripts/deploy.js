@@ -160,7 +160,7 @@ async function cleanup() {
  */
 async function main() {
   const appConfig = await loadAppConfig();
-  const ora = await import('ora');
+  const { default: ora } = await import('ora');
 
   // OutputDir = path.resolve(outputDir, appConfig.version)
 

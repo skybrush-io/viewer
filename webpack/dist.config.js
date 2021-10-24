@@ -14,7 +14,7 @@ const { getHtmlMetaTags, projectRoot } = require('./helpers');
 module.exports = merge(baseConfig, {
   // Make sure to use a _single_ entry point here; we want a single bundle.js
   // in the browser-based deployment for sake of simplicity
-  entry: ['@babel/polyfill', 'whatwg-fetch', './src/index'],
+  entry: ['whatwg-fetch', './src/index'],
   output: {
     filename: 'bundle.js',
     publicPath: '/build/',

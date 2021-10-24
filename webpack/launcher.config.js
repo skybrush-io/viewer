@@ -12,7 +12,7 @@ const plugins = [
 ];
 
 module.exports = merge(baseConfig, {
-  entry: ['@babel/polyfill', './launcher.js'],
+  entry: './launcher.js',
   output: {
     filename: 'launcher.bundle.js',
   },

@@ -63,7 +63,6 @@ const ValidationHeader = ({
           Close show
         </Button>
       )}
-      <Button startIcon={<Settings />}>Settings</Button>
       <Button endIcon={<ChevronRight />} onClick={onReturnToViewer}>
         Return to viewer
       </Button>

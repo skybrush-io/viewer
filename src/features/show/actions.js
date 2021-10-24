@@ -1,10 +1,14 @@
+import { withProgressIndicator } from './async';
 import { loadShowFromObject } from './slice';
 
 export const loadShowFromLocalFile = (filename) => async (dispatch) => {
   const { getShowAsObjectFromLocalFile } = window.bridge || {};
 
   if (getShowAsObjectFromLocalFile) {
-    const show = await getShowAsObjectFromLocalFile(filename);
+    const loadAction = await dispatch(
+      withProgressIndicator(getShowAsObjectFromLocalFile(filename))
+    );
+    const show = loadAction.payload;
     dispatch(loadShowFromObject(show));
   }
 };

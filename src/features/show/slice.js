@@ -5,7 +5,7 @@
 
 import { createSlice } from '@reduxjs/toolkit';
 
-import { loadShow } from './async';
+import { loadShow, withProgressIndicator } from './async';
 
 const { actions, reducer } = createSlice({
   name: 'show',
@@ -46,6 +46,20 @@ const { actions, reducer } = createSlice({
     },
 
     [loadShow.rejected]: (state) => {
+      state.loading = false;
+      state.error = 'Failed to load drone show.';
+    },
+
+    [withProgressIndicator.pending]: (state) => {
+      state.loading = true;
+    },
+
+    [withProgressIndicator.fulfilled]: (state) => {
+      state.loading = false;
+      state.error = null;
+    },
+
+    [withProgressIndicator.rejected]: (state) => {
       state.loading = false;
       state.error = 'Failed to load drone show.';
     },

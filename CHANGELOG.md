@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Restored the progress indicator while loading a show.
+
 - When viewing an indoor show, a single square on the floor texture now represents
   1 meter instead of 20 meters.
 

@@ -33,7 +33,6 @@
     "@material-ui/icons": "^4.11.2",
     "@mui/icons-material": "^5.0.5",
     "@mui/material": "^5.0.6",
-    "@mui/styles": "^5.0.2",
     "@reduxjs/toolkit": "^1.6.2",
     "@skybrush/aframe-components": "^1.4.0",
     "@skybrush/app-theme-material-ui": "^1.2.7",

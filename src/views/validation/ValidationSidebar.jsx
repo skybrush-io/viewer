@@ -6,10 +6,10 @@ import { FixedSizeList as List } from 'react-window';
 import useResizeObserver from 'use-resize-observer';
 
 import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 
-import DenseCheckbox from '~/components/DenseCheckbox';
 import {
   clearSelection,
   toggleItemInSelection,
@@ -28,8 +28,9 @@ const SidebarListItemPresentation = ({
   style,
 }) => (
   <ListItem button dense style={style} onClick={onToggleSelection}>
-    <DenseCheckbox
+    <Checkbox
       checked={!isNil(chartIndex)}
+      size='small'
       style={{ color: chartIndex ? CHART_COLORS[chartIndex] : undefined }}
     />
     <ListItemText primary={label} />
@@ -67,10 +68,18 @@ const ShowAllDronesListItem = connect(
   }
 )(SidebarListItemPresentation);
 
+const style = {
+  '& .MuiCheckbox-root': {
+    marginLeft: '-3px',
+    marginRight: '9px',
+    padding: 0,
+  },
+};
+
 const ValidationSidebar = ({ singleDroneItems, width }) => {
   const { ref, height = 0 } = useResizeObserver();
   return (
-    <Box ref={ref} width={width}>
+    <Box ref={ref} width={width} sx={style}>
       <List
         height={height}
         width={width}

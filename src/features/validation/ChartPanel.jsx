@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import { orange } from '@mui/material/colors';
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
 
 import {
   createChartStyle,
@@ -21,56 +21,51 @@ import { CHART_COLORS } from './constants';
 require('chartjs-plugin-annotation');
 require('chartjs-plugin-crosshair');
 
-const useStyles = makeStyles(
-  (theme) => {
-    const isDark = isThemeDark(theme);
+const StyledCard = styled(Card)(({ height, theme }) => {
+  const isDark = isThemeDark(theme);
 
-    return {
-      root: {
-        ...createSecondaryAreaStyle(theme),
-        position: 'relative',
+  return {
+    ...createSecondaryAreaStyle(theme),
 
-        '& .reset-zoom': {
-          position: 'absolute',
-          top: theme.spacing(2),
-          right: theme.spacing(2),
+    position: 'relative',
+    height,
 
-          cursor: 'pointer',
+    '& .reset-zoom': {
+      position: 'absolute',
+      top: theme.spacing(2),
+      right: theme.spacing(2),
 
-          ...theme.typography.button,
-          borderRadius: theme.shape.borderRadius,
-          padding: theme.spacing(1, 2),
-          transition: theme.transitions.create(
-            ['background-color', 'box-shadow', 'border-color', 'color'],
-            {
-              duration: theme.transitions.duration.short,
-            }
-          ),
-          color: theme.palette.getContrastText(
-            theme.palette.grey[isDark ? 800 : 300]
-          ),
-          backgroundColor: theme.palette.grey[isDark ? 800 : 300],
-          boxShadow: theme.shadows[4],
-          border: 'none',
-        },
+      cursor: 'pointer',
 
-        '& .reset-zoom:hover': {
-          textDecoration: 'none',
-          backgroundColor: isDark
-            ? theme.palette.grey[700]
-            : theme.palette.text.primary,
-          // Reset on touch devices, it doesn't add specificity
-          '@media (hover: none)': {
-            backgroundColor: 'transparent',
-          },
-        },
+      ...theme.typography.button,
+      borderRadius: theme.shape.borderRadius,
+      padding: theme.spacing(1, 2),
+      transition: theme.transitions.create(
+        ['background-color', 'box-shadow', 'border-color', 'color'],
+        {
+          duration: theme.transitions.duration.short,
+        }
+      ),
+      color: theme.palette.getContrastText(
+        theme.palette.grey[isDark ? 800 : 300]
+      ),
+      backgroundColor: theme.palette.grey[isDark ? 800 : 300],
+      boxShadow: theme.shadows[4],
+      border: 'none',
+    },
+
+    '& .reset-zoom:hover': {
+      textDecoration: 'none',
+      backgroundColor: isDark
+        ? theme.palette.grey[700]
+        : theme.palette.text.primary,
+      // Reset on touch devices, it doesn't add specificity
+      '@media (hover: none)': {
+        backgroundColor: 'transparent',
       },
-    };
-  },
-  {
-    name: 'ChartPanel',
-  }
-);
+    },
+  };
+});
 
 const createLineStyle = ({ canvas, color = 'rgb(0, 128, 255)' } = {}) => ({
   backgroundColor: createGradientBackground({
@@ -233,8 +228,6 @@ const ChartPanel = ({
   title,
   verticalUnit,
 }) => {
-  const classes = useStyles();
-
   const chartData = useMemo(
     () => (canvas) => {
       const lineStyles = createLineStyles({ canvas });
@@ -293,14 +286,14 @@ const ChartPanel = ({
   );
 
   return (
-    <Card square className={classes.root} style={{ height }}>
+    <StyledCard square height={height}>
       <Scatter data={chartData} options={options} />
       {title && (
         <Box left={8} top={4} position='absolute'>
           <Typography variant='button'>{title}</Typography>
         </Box>
       )}
-    </Card>
+    </StyledCard>
   );
 };
 

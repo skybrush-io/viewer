@@ -6,7 +6,7 @@ import VolumeOff from '@mui/icons-material/VolumeOff';
 import VolumeUp from '@mui/icons-material/VolumeUp';
 
 const VolumeButton = ({ muted, ...rest }) => (
-  <IconButton disableRipple {...rest} size="large">
+  <IconButton disableRipple {...rest} size='large'>
     {muted ? <VolumeOff /> : <VolumeUp />}
   </IconButton>
 );

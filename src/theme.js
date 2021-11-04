@@ -6,7 +6,10 @@ import { connect } from 'react-redux';
 
 import { blue, lightBlue, red } from '@mui/material/colors';
 
-import { createThemeProvider, isThemeDark } from '@skybrush/app-theme-material-ui';
+import {
+  createThemeProvider,
+  isThemeDark,
+} from '@skybrush/app-theme-material-ui';
 
 /**
  * Helper function that returns whether the given Material UI theme is a dark theme.

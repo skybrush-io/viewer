@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Box from '@material-ui/core/Box';
+import Box from '@mui/material/Box';
 
 import TopOverlay from '~/components/TopOverlay';
 import { isRunningOnMac } from '~/utils/platform';
@@ -11,8 +11,19 @@ import ValidationSidebar from './ValidationSidebar';
 
 const SIDEBAR_WIDTH = 160;
 
+const styles = {
+  root: {
+    backgroundColor: '#303030',
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'column',
+    overflow: 'hidden',
+    pr: 1,
+  },
+};
+
 const ValidationView = () => (
-  <Box flex={1} display='flex' flexDirection='column' overflow='hidden' pr={1}>
+  <Box sx={styles.root}>
     {window.bridge && window.bridge.isElectron && isRunningOnMac && (
       <TopOverlay />
     )}

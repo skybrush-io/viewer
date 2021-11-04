@@ -2,12 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
-import Close from '@material-ui/icons/Close';
-import ChevronRight from '@material-ui/icons/ChevronRight';
-import Settings from '@material-ui/icons/Settings';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Close from '@mui/icons-material/Close';
+import ChevronRight from '@mui/icons-material/ChevronRight';
 
 import {
   canLoadShowFromLocalFile,
@@ -21,15 +19,18 @@ import { setMode } from '~/features/ui/slice';
 
 import PanelToggleChip from './PanelToggleChip';
 
-const useStyles = makeStyles((theme) => ({
+const styles = {
   root: {
     display: 'flex',
-    padding: theme.spacing(1, 0),
-    '& > *': {
-      margin: theme.spacing(0.5),
+    py: 1,
+    '& > div': {
+      m: 0.5,
+    },
+    '& > button': {
+      m: 0.5,
     },
   },
-}));
+};
 
 const ValidationHeader = ({
   canLoadShowFromLocalFile,
@@ -39,36 +40,38 @@ const ValidationHeader = ({
   onTogglePanel,
   visiblePanels,
   ...rest
-}) => {
-  const classes = useStyles();
-  return (
-    <Box className={classes.root} {...rest}>
-      {PANELS.map(({ component, id, ...rest }) => {
-        return (
-          <PanelToggleChip
-            key={id}
-            selected={visiblePanels.includes(id)}
-            onClick={() => onTogglePanel(id)}
-            {...rest}
-          />
-        );
-      })}
-      <Box flex='1' />
-      {canLoadShowFromLocalFile && (
-        <Button
-          startIcon={<Close />}
-          disabled={!hasLoadedShowFile}
-          onClick={onClearLoadedShow}
-        >
-          Close show
-        </Button>
-      )}
-      <Button endIcon={<ChevronRight />} onClick={onReturnToViewer}>
-        Return to viewer
+}) => (
+  <Box sx={styles.root} {...rest}>
+    {PANELS.map(({ component, id, ...rest }) => {
+      return (
+        <PanelToggleChip
+          key={id}
+          selected={visiblePanels.includes(id)}
+          onClick={() => onTogglePanel(id)}
+          {...rest}
+        />
+      );
+    })}
+    <Box flex='1' />
+    {canLoadShowFromLocalFile && (
+      <Button
+        color='inherit'
+        startIcon={<Close />}
+        disabled={!hasLoadedShowFile}
+        onClick={onClearLoadedShow}
+      >
+        Close show
       </Button>
-    </Box>
-  );
-};
+    )}
+    <Button
+      color='inherit'
+      endIcon={<ChevronRight />}
+      onClick={onReturnToViewer}
+    >
+      Return to viewer
+    </Button>
+  </Box>
+);
 
 ValidationHeader.propTypes = {
   canLoadShowFromLocalFile: PropTypes.bool,

@@ -5,21 +5,18 @@ import React from 'react';
 import { connect } from 'react-redux';
 import useResizeObserver from 'use-resize-observer';
 
-import Box from '@material-ui/core/Box';
-import { makeStyles } from '@material-ui/core/styles';
-import ChartIcon from '@material-ui/icons/InsertChartOutlined';
+import Box from '@mui/material/Box';
+import ChartIcon from '@mui/icons-material/InsertChartOutlined';
 import BackgroundHint from '~/components/BackgroundHint';
 import { findPanelById } from '~/features/validation/panels';
 import { getVisiblePanels } from '~/features/validation/selectors';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'grid',
-    gridTemplateColumns: 'auto',
-    gap: theme.spacing(2),
-    overflow: 'hidden',
-  },
-}));
+const style = {
+  display: 'grid',
+  gridTemplateColumns: 'auto',
+  gap: 2,
+  overflow: 'hidden',
+};
 
 const isPanelHeightValid = (panel) =>
   typeof panel.height === 'number' &&
@@ -27,7 +24,6 @@ const isPanelHeightValid = (panel) =>
   panel.height > 0;
 
 const ChartGrid = ({ visiblePanels, ...rest }) => {
-  const classes = useStyles();
   const { ref, height = 0 } = useResizeObserver();
 
   const panels = visiblePanels
@@ -72,7 +68,7 @@ const ChartGrid = ({ visiblePanels, ...rest }) => {
       : [];
 
   return (
-    <Box ref={ref} className={classes.root} {...rest}>
+    <Box ref={ref} sx={style} {...rest}>
       {children.length > 0 ? (
         children
       ) : (

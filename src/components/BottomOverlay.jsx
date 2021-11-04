@@ -4,9 +4,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Box from '@material-ui/core/Box';
-import IconButton from '@material-ui/core/IconButton';
-import { makeStyles } from '@material-ui/core/styles';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
 
 import { hasAudio, isAudioMuted } from '~/features/audio/selectors';
 import { toggleMuted } from '~/features/audio/slice';
@@ -29,11 +28,17 @@ import PlayStopButton from './buttons/PlayStopButton';
 import SettingsButton from './buttons/SettingsButton';
 import VolumeButton from './buttons/VolumeButton';
 
-const useStyles = makeStyles({
-  root: {
-    background: 'linear-gradient(transparent 0px, rgba(0, 0, 0, 0.6) 48px)',
-  },
-});
+const style = {
+  background: 'linear-gradient(transparent 0px, rgba(0, 0, 0, 0.6) 48px)',
+  cursor: 'default',
+  fontSize: 'fontSize',
+  pb: 0.5,
+
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  bottom: 0,
+};
 
 const noWrap = {
   overflow: 'hidden',
@@ -41,32 +46,27 @@ const noWrap = {
   whiteSpace: 'nowrap',
 };
 
-const BottomOverlay = ({
-  canLoadShowFromLocalFile,
-  canTogglePlayback,
-  duration,
-  formatPlaybackTimestamp,
-  hasAudio,
-  hasShow,
-  leftText,
-  muted,
-  playing,
-  rightText,
-  onLoadShowFromLocalFile,
-  onToggleMuted,
-  onTogglePlayback,
-  ...rest
-}) => {
-  const classes = useStyles();
-  return (
-    <Box
-      left={0}
-      right={0}
-      bottom={0}
-      position='absolute'
-      className={classes.root}
-      {...rest}
-    >
+const BottomOverlay = React.forwardRef(
+  (
+    {
+      canLoadShowFromLocalFile,
+      canTogglePlayback,
+      duration,
+      formatPlaybackTimestamp,
+      hasAudio,
+      hasShow,
+      leftText,
+      muted,
+      playing,
+      rightText,
+      onLoadShowFromLocalFile,
+      onToggleMuted,
+      onTogglePlayback,
+      ...rest
+    },
+    ref
+  ) => (
+    <Box ref={ref} sx={style} {...rest}>
       <Box display='flex' alignItems='center'>
         {canLoadShowFromLocalFile && (
           <Box pl={1} mr={-1}>
@@ -84,7 +84,7 @@ const BottomOverlay = ({
             <VolumeButton muted={muted} onClick={onToggleMuted} />
           ) : null}
         </Box>
-        <Box flex={1} textAlign='center'>
+        <Box flex={1} textAlign='center' pt={0.5}>
           <PlaybackSlider />
         </Box>
         <Box textAlign='right' pl={2}>
@@ -92,7 +92,7 @@ const BottomOverlay = ({
         </Box>
         <Box px={1}>
           {config.modes.vr && (
-            <IconButton id='vr-button'>
+            <IconButton id='vr-button' size='large'>
               <VirtualReality />
             </IconButton>
           )}
@@ -119,8 +119,8 @@ const BottomOverlay = ({
         </Box>
       ) : null}
     </Box>
-  );
-};
+  )
+);
 
 BottomOverlay.propTypes = {
   canLoadShowFromLocalFile: PropTypes.bool,
@@ -158,5 +158,7 @@ export default connect(
     onLoadShowFromLocalFile: pickLocalFileAndLoadShow,
     onToggleMuted: toggleMuted,
     onTogglePlayback: togglePlayback,
-  }
+  },
+  null,
+  { forwardRef: true }
 )(BottomOverlay);

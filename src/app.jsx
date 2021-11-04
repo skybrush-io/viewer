@@ -1,9 +1,11 @@
 import delay from 'delay';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import React from 'react';
 import { Provider as StoreProvider } from 'react-redux';
 import { ToastProvider } from 'react-toast-notifications';
 import { PersistGate } from 'redux-persist/es/integration/react';
+
+import CssBaseline from '@mui/material/CssBaseline';
+import { StyledEngineProvider } from '@mui/material/styles';
 
 import MainTopLevelView from './components/MainTopLevelView';
 import Sidebar from './components/Sidebar';
@@ -25,22 +27,24 @@ const waitForTopLevelView = async () => {
 
 const App = () => (
   <StoreProvider store={store}>
-    <ThemeProvider>
-      <ToastProvider placement='top-center'>
-        <PersistGate persistor={persistor} onBeforeLift={waitForTopLevelView}>
-          {(bootstrapped) => (
-            <>
-              <SplashScreen visible={!bootstrapped} />
-              <CssBaseline />
-              <AppHotkeys>
-                <MainTopLevelView />
-              </AppHotkeys>
-              <Sidebar />
-            </>
-          )}
-        </PersistGate>
-      </ToastProvider>
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider>
+        <ToastProvider placement='top-center'>
+          <PersistGate persistor={persistor} onBeforeLift={waitForTopLevelView}>
+            {(bootstrapped) => (
+              <>
+                <SplashScreen visible={!bootstrapped} />
+                <CssBaseline />
+                <AppHotkeys>
+                  <MainTopLevelView />
+                </AppHotkeys>
+                <Sidebar />
+              </>
+            )}
+          </PersistGate>
+        </ToastProvider>
+      </ThemeProvider>
+    </StyledEngineProvider>
   </StoreProvider>
 );
 

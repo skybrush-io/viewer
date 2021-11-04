@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Checkbox from '@material-ui/core/Checkbox';
-import { makeStyles } from '@material-ui/core/styles';
+import Checkbox from '@mui/material/Checkbox';
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles({
   root: {

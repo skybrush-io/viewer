@@ -3,9 +3,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { useHarmonicIntervalFn, useUpdate } from 'react-use';
 
-import Slider from '@material-ui/core/Slider';
-import { orange } from '@material-ui/core/colors';
-import { withStyles } from '@material-ui/core/styles';
+import Slider from '@mui/material/Slider';
+import { orange } from '@mui/material/colors';
+import { styled } from '@mui/material/styles';
 
 import { stripEvent } from '@skybrush/redux-toolkit';
 
@@ -24,17 +24,37 @@ import {
   getTimestampFormatter,
 } from '~/features/show/selectors';
 
-const styles = {
-  mark: {
+const styles = ({ theme }) => ({
+  '& .MuiSlider-valueLabel': {
+    lineHeight: 1.2,
+    fontSize: 12,
+    background: 'unset',
+    padding: 0,
+    width: 32,
+    height: 32,
+    borderRadius: '50% 50% 50% 0',
+    backgroundColor: theme.palette.primary.main,
+    transformOrigin: 'bottom left',
+    transform: 'translate(50%, -100%) rotate(-45deg) scale(0)',
+    '&:before': { display: 'none' },
+    '&.MuiSlider-valueLabelOpen': {
+      transform: 'translate(50%, -100%) rotate(-45deg) scale(1)',
+    },
+    '& > *': {
+      transform: 'rotate(45deg)',
+    },
+  },
+
+  '& .MuiSlider-mark': {
     height: 4,
     width: 4,
     backgroundColor: orange[500],
     transform: 'translateY(-1px)',
+    '&.MuiSlider-markActive': {
+      opacity: 1,
+    },
   },
-  markActive: {
-    opacity: 1,
-  },
-};
+});
 
 const PlaybackSlider = ({
   dragging,
@@ -55,6 +75,7 @@ const PlaybackSlider = ({
   return (
     <Slider
       max={duration}
+      size='small'
       value={elapsed}
       valueLabelDisplay='auto'
       valueLabelFormat={formatPlaybackTimestamp}
@@ -95,4 +116,4 @@ export default connect(
     onDragged: stripEvent(setPlaybackPosition),
     onDragging: stripEvent(temporarilyOverridePlaybackPosition),
   }
-)(withStyles(styles)(PlaybackSlider));
+)(styled(PlaybackSlider)(styles));

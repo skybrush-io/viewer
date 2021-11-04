@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import { FixedSizeList as List } from 'react-window';
 import useResizeObserver from 'use-resize-observer';
 
-import Box from '@material-ui/core/Box';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import Box from '@mui/material/Box';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 
 import DenseCheckbox from '~/components/DenseCheckbox';
 import {

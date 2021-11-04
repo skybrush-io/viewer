@@ -7,7 +7,7 @@ import {
   purple,
   red,
   teal,
-} from '@material-ui/core/colors';
+} from '@mui/material/colors';
 
 /**
  * Number of samples to take from trajectories per second for the validation.

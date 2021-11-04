@@ -2,12 +2,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Box from '@material-ui/core/Box';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Fab from '@material-ui/core/Fab';
-import { makeStyles } from '@material-ui/core/styles';
-import PlayIcon from '@material-ui/icons/PlayArrow';
-import WarningIcon from '@material-ui/icons/Warning';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import Fab from '@mui/material/Fab';
+import makeStyles from '@mui/styles/makeStyles';
+import PlayIcon from '@mui/icons-material/PlayArrow';
+import WarningIcon from '@mui/icons-material/Warning';
 
 import { rewind, togglePlayback } from '~/features/playback/actions';
 import { userInteractedWithPlayback } from '~/features/playback/selectors';

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Fade from '@material-ui/core/Fade';
+import Fade from '@mui/material/Fade';
 
 import { isRunningOnMac } from '~/utils/platform';
 

@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Folder from '@material-ui/icons/Folder';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Folder from '@mui/icons-material/Folder';
 
 import { shouldUseWelcomeScreen } from '~/features/settings/selectors';
 import { pickLocalFileAndLoadShow } from '~/features/show/actions';

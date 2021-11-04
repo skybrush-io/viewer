@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import { Scatter } from 'react-chartjs-2';
 
-import Box from '@material-ui/core/Box';
-import Card from '@material-ui/core/Card';
-import Typography from '@material-ui/core/Typography';
-import { orange } from '@material-ui/core/colors';
-import { makeStyles } from '@material-ui/core/styles';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Typography from '@mui/material/Typography';
+import { orange } from '@mui/material/colors';
+import makeStyles from '@mui/styles/makeStyles';
 
 import {
   createChartStyle,

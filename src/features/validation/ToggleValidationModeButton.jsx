@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import IconButton from '@material-ui/core/IconButton';
-import Assignment from '@material-ui/icons/Assignment';
-import AssignmentLate from '@material-ui/icons/AssignmentLate';
-import AssignmentTurnedIn from '@material-ui/icons/AssignmentTurnedIn';
+import IconButton from '@mui/material/IconButton';
+import Assignment from '@mui/icons-material/Assignment';
+import AssignmentLate from '@mui/icons-material/AssignmentLate';
+import AssignmentTurnedIn from '@mui/icons-material/AssignmentTurnedIn';
 
 import { toggleMode } from '~/features/ui/actions';
 
@@ -17,7 +17,12 @@ const ToggleValidationModeButton = ({
   validationInProgress,
   ...rest
 }) => (
-  <IconButton disableRipple onClick={onToggleValidationMode} {...rest}>
+  <IconButton
+    disableRipple
+    onClick={onToggleValidationMode}
+    {...rest}
+    size='large'
+  >
     {validationInProgress ? (
       <Assignment />
     ) : trajectoriesValid ? (

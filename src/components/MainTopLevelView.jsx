@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import React, { Suspense, useRef } from 'react';
 import { connect } from 'react-redux';
 
-import Box from '@material-ui/core/Box';
+import Box from '@mui/material/Box';
 
 import { MODES } from '~/features/ui/modes';
 import { getCurrentMode } from '~/features/ui/selectors';

@@ -2,17 +2,17 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Box from '@material-ui/core/Box';
-import Drawer from '@material-ui/core/Drawer';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import Switch from '@material-ui/core/Switch';
-import { makeStyles } from '@material-ui/core/styles';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Switch from '@mui/material/Switch';
+import makeStyles from '@mui/styles/makeStyles';
 import { isThemeDark } from '@skybrush/app-theme-material-ui';
 
 import { setPlaybackSpeed } from '~/features/playback/actions';
@@ -33,10 +33,11 @@ const useStyles = makeStyles(
       width: 250,
       display: 'flex',
       flexDirection: 'column',
+      padding: theme.spacing(1, 0),
     },
 
     footer: {
-      padding: theme.spacing(2),
+      padding: theme.spacing(0, 2),
       textAlign: 'center',
       opacity: 0.4,
     },

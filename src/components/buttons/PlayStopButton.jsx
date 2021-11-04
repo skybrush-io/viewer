@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import IconButton from '@material-ui/core/IconButton';
-import Pause from '@material-ui/icons/Pause';
-import Play from '@material-ui/icons/PlayArrow';
+import IconButton from '@mui/material/IconButton';
+import Pause from '@mui/icons-material/Pause';
+import Play from '@mui/icons-material/PlayArrow';
 
 const PlayStopButton = ({ playing, ...rest }) => (
-  <IconButton disableRipple {...rest}>
+  <IconButton disableRipple {...rest} size='large'>
     {playing ? <Pause /> : <Play />}
   </IconButton>
 );

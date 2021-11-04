@@ -1,10 +1,10 @@
 import React from 'react';
 
-import IconButton from '@material-ui/core/IconButton';
-import Folder from '@material-ui/icons/Folder';
+import IconButton from '@mui/material/IconButton';
+import Folder from '@mui/icons-material/Folder';
 
 const OpenButton = (props) => (
-  <IconButton disableRipple {...props}>
+  <IconButton disableRipple {...props} size='large'>
     <Folder />
   </IconButton>
 );

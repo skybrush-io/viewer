@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Box from '@material-ui/core/Box';
+import Box from '@mui/material/Box';
 
 import AudioController from '~/components/AudioController';
 import LoadingScreen from '~/components/LoadingScreen';

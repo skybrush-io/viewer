@@ -14,7 +14,7 @@ import {
   createGradientBackground,
   createSecondaryAreaStyle,
   isThemeDark,
-} from '@skybrush/app-theme-material-ui';
+} from '@skybrush/app-theme-mui';
 
 import { CHART_COLORS } from './constants';
 

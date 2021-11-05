@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import Fade from '@mui/material/Fade';
 import Close from '@mui/icons-material/Close';
 
-import { isThemeDark } from '@skybrush/app-theme-material-ui';
+import { isThemeDark } from '@skybrush/app-theme-mui';
 
 const styles = {
   root: {

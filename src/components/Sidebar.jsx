@@ -12,7 +12,7 @@ import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Switch from '@mui/material/Switch';
-import { isThemeDark } from '@skybrush/app-theme-material-ui';
+import { isThemeDark } from '@skybrush/app-theme-mui';
 
 import { setPlaybackSpeed } from '~/features/playback/actions';
 import { getPlaybackSpeed } from '~/features/playback/selectors';

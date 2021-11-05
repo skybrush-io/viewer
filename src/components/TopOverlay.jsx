@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Box from '@mui/material/Box';
-import { systemFont } from '@skybrush/app-theme-material-ui';
+import { systemFont } from '@skybrush/app-theme-mui';
 
 const style = {
   display: 'flex',

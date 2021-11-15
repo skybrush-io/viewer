@@ -42,12 +42,13 @@ const ThreeDView = React.forwardRef((props, ref) => {
   } = props;
 
   const extraCameraProps = {
-    'altitude-control': objectToString({
-      enabled: true,
-      min: 0.01 - cameraConfiguration.position[1],
-    }),
-    'better-wasd-controls': objectToString({
+    'advanced-camera-controls': objectToString({
       fly: navigation && navigation.mode === 'fly',
+      minAltitude: 0.01 - cameraConfiguration.position[1],
+      reverseMouseDrag: true,
+    }),
+    'look-controls': objectToString({
+      enabled: false,
     }),
     'wasd-controls': objectToString({
       enabled: false,
@@ -86,7 +87,6 @@ const ThreeDView = React.forwardRef((props, ref) => {
         <a-camera
           sync-pose-with-store=''
           id='three-d-camera'
-          look-controls='reverseMouseDrag: true'
           {...extraCameraProps}
         />
       </a-entity>

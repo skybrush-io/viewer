@@ -5,15 +5,25 @@
  * to a given remote location using rsync
  */
 
-const path = require('path');
-const process = require('process');
+import { createRequire } from 'node:module';
+import path from 'node:path';
+import process from 'node:process';
+import { fileURLToPath } from 'node:url';
 
-const { program } = require('commander');
-const execa = require('execa');
-const { copy, emptyDir, ensureDir, readJson, remove } = require('fs-extra');
-const Listr = require('listr');
-const pify = require('pify');
-const webpack = require('webpack');
+import { program } from 'commander';
+import { execa } from 'execa';
+import fsExtra from 'fs-extra';
+
+import Listr from 'listr';
+import pify from 'pify';
+import webpack from 'webpack';
+
+const { copy, emptyDir, ensureDir, readJSON, remove } = fsExtra;
+
+/** Compatibility variables */
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const require = createRequire(import.meta.url);
 
 /** The root directory of the project */
 const projectRoot = path.resolve(__dirname, '..');
@@ -35,7 +45,7 @@ program
 const options = program.opts();
 
 function loadAppConfig() {
-  return readJson(path.resolve(projectRoot, 'package.json'));
+  return readJSON(path.resolve(projectRoot, 'package.json'));
 }
 
 async function cleanDirs() {

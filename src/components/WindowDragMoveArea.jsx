@@ -3,6 +3,8 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import { systemFont } from '@skybrush/app-theme-mui';
 
+import { isRunningOnMac } from '~/utils/platform';
+
 const style = {
   display: 'flex',
   justifyContent: 'center',
@@ -22,6 +24,9 @@ const style = {
  * Overlay at the top of the window that acts as a draggable area on macOS
  * to allow the window to be moved around.
  */
-const TopOverlay = (props) => <Box sx={style} {...props} />;
+const WindowDragMoveArea = (props) =>
+  window.bridge && window.bridge.isElectron && isRunningOnMac ? (
+    <Box sx={style} {...props} />
+  ) : null;
 
-export default TopOverlay;
+export default WindowDragMoveArea;

@@ -7,16 +7,54 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import {
   createTrajectoryPlayer,
+  getCamerasFromShowSpecification,
   validateTrajectory,
 } from '@skybrush/show-format';
 
 import { formatPlaybackTimestamp } from '~/utils/formatters';
 import createLightProgramPlayer from '~/utils/lights';
+import {
+  skybrushRotationToQuaternion,
+  skybrushQuaternionToThreeJsRotation,
+  skybrushToThreeJsPosition,
+} from '~/utils/spatial';
 
 export const canLoadShowFromLocalFile = () => config.io.localFiles;
 
 const EMPTY_ARRAY = Object.freeze([]);
 const EMPTY_OBJECT = Object.freeze({});
+const DEFAULT_ORIENTATION = skybrushRotationToQuaternion([90, 0, -90]);
+const DEFAULT_CAMERAS = {
+  // Skybrush coordinate system: X points forward, Y points left, Z points up.
+  // [0, 0, 0] rotation is when the camera points downwards (negative Z) and the
+  // up-vector of the camera points towards left (positive Y). To have an upright
+  // camera that looks towards the positive X axis, we need to rotate around
+  // the world X axis by 90 degrees and then around the world Z axis by -90
+  // degrees.
+  indoor: [
+    {
+      name: 'Reset to origin',
+      position: [-10, 0, 2], // [0, 2, 10]
+      orientation: DEFAULT_ORIENTATION,
+      // don't set default: true here because then it would override the
+      // cameras in the .skyc file if the .skyc file does not designate any
+      // of the cameras as default
+    },
+  ],
+  outdoor: [
+    {
+      name: 'Reset to origin',
+      position: [-50, 0, 20], // [0, 20, 50]
+      orientation: DEFAULT_ORIENTATION,
+    },
+  ],
+};
+
+/**
+ * Selector that returns the specification of the currently loaded show, or
+ * undefined if no show is loaded.
+ */
+export const getShowSpecification = (state) => get(state, 'show.data');
 
 /**
  * Selector that returns the timestamp offset of the show.
@@ -115,6 +153,63 @@ export const isShowIndoor = (state) =>
  */
 export const isShowOutdoor = (state) =>
   getShowEnvironmentType(state) === 'outdoor';
+
+/**
+ * Returns an array containing all the cameras from the show file,
+ * or an empty array if the show has no cameras.
+ */
+export const getCameras = createSelector(getShowSpecification, (spec) =>
+  spec ? getCamerasFromShowSpecification(spec) : EMPTY_ARRAY
+);
+
+/**
+ * Returns an array containing all the perspective cameras from the show file,
+ * or an empty array if the show has no perspective cameras.
+ */
+export const getPerspectiveCameras = createSelector(getCameras, (cameras) =>
+  cameras && cameras.length > 0
+    ? cameras.filter((camera) => !camera.type || camera.type === 'perspective')
+    : EMPTY_ARRAY
+);
+
+/**
+ * Returns an array containing all the perspective cameras from the show file,
+ * or at least a fake camera if the show file has no cameras.
+ */
+export const getPerspectiveCamerasAndDefaultCamera = createSelector(
+  getPerspectiveCameras,
+  getShowEnvironmentType,
+  (cameras, type) => [...cameras, ...DEFAULT_CAMERAS[type]]
+);
+
+/**
+ * Returns the initial configuration of the camera in the drone show.
+ */
+export const getInitialCameraConfigurationOfShow = createSelector(
+  getPerspectiveCamerasAndDefaultCamera,
+  (cameras) => {
+    let selectedCamera;
+
+    // Assertion: cameras.length > 0
+    for (const camera of cameras) {
+      if (camera.default) {
+        selectedCamera = camera;
+        break;
+      }
+    }
+
+    if (!selectedCamera) {
+      selectedCamera = cameras[0];
+    }
+
+    return {
+      position: skybrushToThreeJsPosition(selectedCamera.position || [0, 0, 0]),
+      rotation: skybrushQuaternionToThreeJsRotation(
+        selectedCamera.orientation || DEFAULT_ORIENTATION
+      ),
+    };
+  }
+);
 
 /**
  * Returns an array containing all the cues from the show file, or an empty

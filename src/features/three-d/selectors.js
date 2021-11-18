@@ -1,20 +1,9 @@
 import get from 'lodash-es/get';
 
 import {
-  getShowEnvironmentType,
+  getPerspectiveCamerasAndDefaultCamera,
   isShowIndoor,
 } from '~/features/show/selectors';
-
-const INITIAL_CAMERA_CONFIGURATIONS = {
-  indoor: {
-    position: [0, 2, 10],
-    rotation: [0, 0, 0],
-  },
-  outdoor: {
-    position: [0, 20, 50], // [-52.9, 9.93, 0.22],
-    rotation: [0, 0, 0], // [0, -114.6, 0]
-  },
-};
 
 /**
  * Returns the effective scenery to show, depending on the user's preference and
@@ -31,15 +20,24 @@ export const getEffectiveScenery = (state) => {
 };
 
 /**
- * Returns the initial configuration of the camera in the drone show.
- */
-export const getInitialCameraConfigurationOfShow = (state) =>
-  INITIAL_CAMERA_CONFIGURATIONS[getShowEnvironmentType(state)] ||
-  INITIAL_CAMERA_CONFIGURATIONS.outdoor;
-
-/**
  * Selector that returns the radius that should be used for the drones in the
  * 3D view.
  */
 export const getPreferredDroneRadius = (state) =>
   isShowIndoor(state) ? 0.15 : 0.75;
+
+/**
+ * Selector that returns the index of the currently selected camera.
+ */
+export const getSelectedCameraIndex = (state) =>
+  get(state, 'threeD.camera.selectedIndex') || 0;
+
+/**
+ * Selector that returns the currently selected camera or undefined if no
+ * camera is selected.
+ */
+export const getSelectedCamera = (state) => {
+  const index = getSelectedCameraIndex(state);
+  const cameras = getPerspectiveCamerasAndDefaultCamera(state);
+  return Array.isArray(cameras) && index >= 0 ? cameras[index] : undefined;
+};

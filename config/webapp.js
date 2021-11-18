@@ -12,7 +12,7 @@ const config = {
   modes: {
     player: true,
     validation: false,
-    vr: true,
+    vr: false, // advanced-camera-controls is not VR-friendly yet
   },
   preloadedShow: {
     audioUrl: music,

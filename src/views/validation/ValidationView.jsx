@@ -2,8 +2,7 @@ import React from 'react';
 
 import Box from '@mui/material/Box';
 
-import TopOverlay from '~/components/TopOverlay';
-import { isRunningOnMac } from '~/utils/platform';
+import WindowDragMoveArea from '~/components/WindowDragMoveArea';
 
 import ChartGrid from './ChartGrid';
 import ValidationHeader from './ValidationHeader';
@@ -24,9 +23,7 @@ const styles = {
 
 const ValidationView = () => (
   <Box sx={styles.root}>
-    {window.bridge && window.bridge.isElectron && isRunningOnMac && (
-      <TopOverlay />
-    )}
+    <WindowDragMoveArea />
     <ValidationHeader style={{ paddingLeft: SIDEBAR_WIDTH }} />
     <Box flex={1} display='flex' flexDirection='row' overflow='hidden'>
       <ValidationSidebar width={SIDEBAR_WIDTH} />

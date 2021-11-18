@@ -9,16 +9,17 @@ import Box from '@mui/material/Box';
 
 import AudioController from '~/components/AudioController';
 import LoadingScreen from '~/components/LoadingScreen';
-import Overlays from '~/components/Overlays';
-import OverlayVisibilityController from '~/components/OverlayVisibilityController';
 import WelcomeScreen from '~/components/WelcomeScreen';
+import { cameraRef } from '~/features/three-d/saga';
 
+import Overlays from './Overlays';
+import OverlayVisibilityController from './OverlayVisibilityController';
 import ThreeDView from './ThreeDView';
 
 const PlayerView = ({ screenRef }) => (
   <>
     <Box position='relative' flex={1}>
-      <ThreeDView />
+      <ThreeDView cameraRef={cameraRef} />
       <Overlays />
       <WelcomeScreen />
       <LoadingScreen />

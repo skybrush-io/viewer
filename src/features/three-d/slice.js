@@ -11,6 +11,7 @@ const { actions, reducer } = createSlice({
     camera: {
       position: null,
       rotation: null,
+      selectedIndex: 0,
     },
 
     navigation: {
@@ -49,10 +50,26 @@ const { actions, reducer } = createSlice({
     setOverlayVisibility(state, action) {
       state.overlays.visible = Boolean(action.payload);
     },
+
+    setSelectedCameraIndex(state, action) {
+      const index = Number(action.payload);
+      if (index >= 0 && Number.isFinite(index) && Number.isInteger(index)) {
+        state.camera.selectedIndex = index;
+      }
+    },
+
+    switchToSelectedCamera() {
+      /* nop, the saga handles it */
+    },
   },
 });
 
-export const { setCameraPose, setNavigationMode, setOverlayVisibility } =
-  actions;
+export const {
+  setCameraPose,
+  setNavigationMode,
+  setOverlayVisibility,
+  setSelectedCameraIndex,
+  switchToSelectedCamera,
+} = actions;
 
 export default reducer;

@@ -4,12 +4,14 @@
 
 import { all } from 'redux-saga/effects';
 
+import cameraAnimatorSaga from '~/features/three-d/saga';
+
 import loaderSaga from './loader';
 
 /**
  * The root saga of the Skybrush application.
  */
 export default function* rootSaga() {
-  const sagas = [loaderSaga()];
+  const sagas = [loaderSaga(), cameraAnimatorSaga()];
   yield all(sagas);
 }

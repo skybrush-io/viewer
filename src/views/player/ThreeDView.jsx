@@ -13,10 +13,10 @@ import AFrame from '~/aframe';
 import { objectToString } from '@skybrush/aframe-components';
 import {
   getEffectiveScenery,
-  getInitialCameraConfigurationOfShow,
   getPreferredDroneRadius,
 } from '~/features/three-d/selectors';
 import {
+  getInitialCameraConfigurationOfShow,
   getLoadedShowId,
   getNumberOfDronesInShow,
 } from '~/features/show/selectors';
@@ -31,6 +31,7 @@ const ThreeDView = React.forwardRef((props, ref) => {
   const {
     axes,
     cameraConfiguration,
+    cameraRef,
     droneSize,
     grid,
     navigation,
@@ -42,16 +43,18 @@ const ThreeDView = React.forwardRef((props, ref) => {
   } = props;
 
   const extraCameraProps = {
-    'advanced-camera-controls': objectToString({
-      fly: navigation && navigation.mode === 'fly',
-      minAltitude: 0.01 - cameraConfiguration.position[1],
-      reverseMouseDrag: true,
-    }),
     'look-controls': objectToString({
       enabled: false,
     }),
     'wasd-controls': objectToString({
       enabled: false,
+    }),
+  };
+  const extraCameraRigProps = {
+    'advanced-camera-controls': objectToString({
+      fly: navigation && navigation.mode === 'fly',
+      minAltitude: 0.01 - cameraConfiguration.position[1],
+      reverseMouseDrag: true,
     }),
   };
   const extraSceneProps = {};
@@ -78,18 +81,16 @@ const ThreeDView = React.forwardRef((props, ref) => {
         {/* <a-asset-item id="flapper" src={flapperDrone} /> */}
       </a-assets>
 
-      <a-entity
-        key={`camera-rig-${showId}`}
-        id='camera-rig'
+      <a-camera
+        key={`camera-${showId}`}
+        ref={cameraRef}
+        sync-pose-with-store=''
+        id='three-d-camera'
         position={cameraConfiguration.position.join(' ')}
         rotation={cameraConfiguration.rotation.join(' ')}
-      >
-        <a-camera
-          sync-pose-with-store=''
-          id='three-d-camera'
-          {...extraCameraProps}
-        />
-      </a-entity>
+        {...extraCameraProps}
+        {...extraCameraRigProps}
+      />
 
       <a-entity rotation='-90 0 90'>
         {axes && <CoordinateSystemAxes length={10} lineWidth={10} />}
@@ -107,6 +108,7 @@ ThreeDView.propTypes = {
     position: PropTypes.arrayOf(PropTypes.number).isRequired,
     rotation: PropTypes.arrayOf(PropTypes.number).isRequired,
   }),
+  cameraRef: PropTypes.any,
   droneSize: PropTypes.number,
   grid: PropTypes.string,
   navigation: PropTypes.shape({

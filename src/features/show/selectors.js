@@ -6,6 +6,11 @@ import uniq from 'lodash-es/uniq';
 import { createSelector } from '@reduxjs/toolkit';
 
 import {
+  skybrushRotationToQuaternion,
+  skybrushQuaternionToThreeJsRotation,
+  skybrushToThreeJsPosition,
+} from '@skybrush/aframe-components/lib/spatial';
+import {
   createTrajectoryPlayer,
   getCamerasFromShowSpecification,
   validateTrajectory,
@@ -13,11 +18,6 @@ import {
 
 import { formatPlaybackTimestamp } from '~/utils/formatters';
 import createLightProgramPlayer from '~/utils/lights';
-import {
-  skybrushRotationToQuaternion,
-  skybrushQuaternionToThreeJsRotation,
-  skybrushToThreeJsPosition,
-} from '~/utils/spatial';
 
 export const canLoadShowFromLocalFile = () => config.io.localFiles;
 

@@ -4,7 +4,7 @@ import { select, take } from 'redux-saga/effects';
 import {
   skybrushToThreeJsPosition,
   skybrushToThreeJsQuaternion,
-} from '~/utils/spatial';
+} from '@skybrush/aframe-components/lib/spatial';
 
 import { getSelectedCamera } from './selectors';
 import { switchToSelectedCamera } from './slice';

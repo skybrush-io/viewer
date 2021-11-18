@@ -49,11 +49,9 @@ const ThreeDView = React.forwardRef((props, ref) => {
     'wasd-controls': objectToString({
       enabled: false,
     }),
-  };
-  const extraCameraRigProps = {
     'advanced-camera-controls': objectToString({
       fly: navigation && navigation.mode === 'fly',
-      minAltitude: 0.01 - cameraConfiguration.position[1],
+      minAltitude: 0.01,
       reverseMouseDrag: true,
     }),
   };
@@ -89,7 +87,6 @@ const ThreeDView = React.forwardRef((props, ref) => {
         position={cameraConfiguration.position.join(' ')}
         rotation={cameraConfiguration.rotation.join(' ')}
         {...extraCameraProps}
-        {...extraCameraRigProps}
       />
 
       <a-entity rotation='-90 0 90'>

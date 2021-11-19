@@ -7,7 +7,7 @@ import {
 } from '@skybrush/aframe-components/lib/spatial';
 
 import { getSelectedCamera } from './selectors';
-import { switchToSelectedCamera } from './slice';
+import { rotateViewTowards, switchToSelectedCamera } from './slice';
 
 export const cameraRef = React.createRef();
 
@@ -16,28 +16,57 @@ export const cameraRef = React.createRef();
  * to the appropriate camera.
  */
 export default function* cameraAnimatorSaga() {
+  const SWITCH_TO_SELECTED_CAMERA = switchToSelectedCamera.toString();
+  const ROTATE_VIEW_TOWARDS = rotateViewTowards.toString();
+
   while (true) {
-    yield take(switchToSelectedCamera.toString());
-    const camera = yield select(getSelectedCamera);
+    const action = yield take([SWITCH_TO_SELECTED_CAMERA, ROTATE_VIEW_TOWARDS]);
 
-    if (camera && cameraRef.current) {
-      const components = cameraRef.current.components;
-      const cameraControl = components
-        ? components['advanced-camera-controls']
-        : null;
-      const { position, orientation } = camera;
+    switch (action.type) {
+      case SWITCH_TO_SELECTED_CAMERA:
+        handleCameraSwitch(yield select(getSelectedCamera));
+        break;
 
-      if (Array.isArray(position) && position.length >= 3) {
-        const target = { position: skybrushToThreeJsPosition(position) };
+      case ROTATE_VIEW_TOWARDS:
+        handleViewRotationTowards(action.payload);
+        break;
 
-        if (Array.isArray(orientation) && orientation.length >= 4) {
-          target.quaternion = skybrushToThreeJsQuaternion(orientation);
-        }
-
-        if (cameraControl) {
-          cameraControl.startTransitionTo(target);
-        }
-      }
+      default:
+        break;
     }
+  }
+}
+
+function getCameraController() {
+  if (cameraRef.current) {
+    const components = cameraRef.current.components;
+    return components ? components['advanced-camera-controls'] : null;
+  }
+
+  return null;
+}
+
+function handleCameraSwitch(camera) {
+  const controller = getCameraController();
+  if (camera && controller) {
+    const { position, orientation } = camera;
+
+    if (Array.isArray(position) && position.length >= 3) {
+      const target = { position: skybrushToThreeJsPosition(position) };
+
+      if (Array.isArray(orientation) && orientation.length >= 4) {
+        target.quaternion = skybrushToThreeJsQuaternion(orientation);
+      }
+
+      controller.startTransitionTo(target);
+    }
+  }
+}
+
+function handleViewRotationTowards(point) {
+  const controller = getCameraController();
+  if (controller) {
+    const target = { lookAt: skybrushToThreeJsPosition(point) };
+    controller.startTransitionTo(target);
   }
 }

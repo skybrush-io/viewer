@@ -25,6 +25,10 @@ const { actions, reducer } = createSlice({
   },
 
   reducers: {
+    rotateViewTowards() {
+      /* nop, the saga handles it */
+    },
+
     setCameraPose(state, action) {
       const { position, rotation } = action.payload;
       state.camera.position = position;
@@ -65,6 +69,7 @@ const { actions, reducer } = createSlice({
 });
 
 export const {
+  rotateViewTowards,
   setCameraPose,
   setNavigationMode,
   setOverlayVisibility,

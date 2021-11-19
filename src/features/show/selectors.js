@@ -356,3 +356,55 @@ export const hasLoadedShowFile = (state) => Boolean(state.show.data);
  * Returns whether we are currently loading a show file.
  */
 export const isLoadingShowFile = (state) => state.show.loading;
+
+/**
+ * Returns the center of the axis-aligned bounding box of all the drones at
+ * the current playback position.
+ */
+export const getCenterOfBoundingBoxOfDronesAt = (state, time) => {
+  const players = getTrajectoryPlayers(state);
+  const boundingBox = {
+    count: 0,
+    max: [
+      Number.NEGATIVE_INFINITY,
+      Number.NEGATIVE_INFINITY,
+      Number.NEGATIVE_INFINITY,
+    ],
+    min: [
+      Number.POSITIVE_INFINITY,
+      Number.POSITIVE_INFINITY,
+      Number.POSITIVE_INFINITY,
+    ],
+  };
+  const position = { x: 0, y: 0, z: 0 };
+
+  for (const player of players) {
+    player.getPositionAt(time, position);
+
+    if (
+      !Number.isFinite(position.x) ||
+      !Number.isFinite(position.y) ||
+      !Number.isFinite(position.z)
+    ) {
+      continue;
+    }
+
+    boundingBox.max[0] = Math.max(boundingBox.max[0], position.x);
+    boundingBox.max[1] = Math.max(boundingBox.max[1], position.y);
+    boundingBox.max[2] = Math.max(boundingBox.max[2], position.z);
+    boundingBox.min[0] = Math.min(boundingBox.min[0], position.x);
+    boundingBox.min[1] = Math.min(boundingBox.min[1], position.y);
+    boundingBox.min[2] = Math.min(boundingBox.min[2], position.z);
+    boundingBox.count++;
+  }
+
+  if (boundingBox.count) {
+    return [
+      (boundingBox.min[0] + boundingBox.max[0]) / 2,
+      (boundingBox.min[1] + boundingBox.max[1]) / 2,
+      (boundingBox.min[2] + boundingBox.max[2]) / 2,
+    ];
+  }
+
+  return null;
+};

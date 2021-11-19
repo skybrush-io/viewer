@@ -148,7 +148,7 @@ export default connect(
     hasAudio: hasAudio(state),
     hasShow: hasLoadedShowFile(state),
     leftText:
-      'Use arrow keys to move around (Shift to run) and E/C to change altitude. Drag the scenery to look around.',
+      'Use arrow keys to move around (Shift to run) and E/C to change altitude. Drag the scenery to look around. Scroll wheel or +/- to zoom.',
     muted: isAudioMuted(state),
     playing: isPlaying(state),
     rightText: 'Skybrush © 2020-2021 CollMot Robotics Ltd.',

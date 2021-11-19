@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added a camera switcher at the top of the screen; the switcher allows the
+  user to select from pre-defined camera configurations if the show file
+  specifies them.
+
+- You can now zoom in and out with the scroll wheel or with the +/- keys. This
+  is useful in cases when the show file contains a camera preset for the
+  audience position but it is far from the show center.
+
+- Added a button next to the playback slider that rotates the view towards the
+  center of the axis-aligned bounding box of the drones.
+
+### Removed
+
+- Removed VR headset toggle from the playback slider as the new camera
+  transition framework is not compatible with VR mode. Let us know if you miss
+  this feature and we will find a way to implement it again.
+
 ## [1.9.5] - 2021-10-24
 
 ### Fixed

@@ -51,7 +51,7 @@ const ThreeDView = React.forwardRef((props, ref) => {
     }),
     'advanced-camera-controls': objectToString({
       fly: navigation && navigation.mode === 'fly',
-      minAltitude: 0.01,
+      minAltitude: 0.5,
       reverseMouseDrag: true,
     }),
   };

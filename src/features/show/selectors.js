@@ -168,7 +168,21 @@ export const getCameras = createSelector(getShowSpecification, (spec) =>
  */
 export const getPerspectiveCameras = createSelector(getCameras, (cameras) =>
   cameras && cameras.length > 0
-    ? cameras.filter((camera) => !camera.type || camera.type === 'perspective')
+    ? cameras
+        .filter(
+          (camera) => camera && (!camera.type || camera.type === 'perspective')
+        )
+        .map((camera) =>
+          // Make sure that the camera has a minimum height of 1m otherwise it
+          // would be placed below the ground if it is far from the center
+          // (as we have hills in the scenery there)
+          Array.isArray(camera.position) && camera.position[2] < 1
+            ? {
+                ...camera,
+                position: [camera.position[0], camera.position[1], 1],
+              }
+            : camera
+        )
     : EMPTY_ARRAY
 );
 
@@ -179,7 +193,10 @@ export const getPerspectiveCameras = createSelector(getCameras, (cameras) =>
 export const getPerspectiveCamerasAndDefaultCamera = createSelector(
   getPerspectiveCameras,
   getShowEnvironmentType,
-  (cameras, type) => [...cameras, ...DEFAULT_CAMERAS[type]]
+  (cameras, type) => {
+    const hasDefaultCamera = cameras.some((camera) => camera.default);
+    return hasDefaultCamera ? cameras : [...DEFAULT_CAMERAS[type], ...cameras];
+  }
 );
 
 /**
@@ -199,6 +216,8 @@ export const getInitialCameraConfigurationOfShow = createSelector(
     }
 
     if (!selectedCamera) {
+      // Assertion: first camera is always the "default camera" that was added
+      // by us
       selectedCamera = cameras[0];
     }
 

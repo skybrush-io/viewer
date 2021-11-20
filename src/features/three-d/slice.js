@@ -25,6 +25,10 @@ const { actions, reducer } = createSlice({
   },
 
   reducers: {
+    resetZoom() {
+      /* nop, the saga handles it */
+    },
+
     rotateViewTowards() {
       /* nop, the saga handles it */
     },
@@ -69,6 +73,7 @@ const { actions, reducer } = createSlice({
 });
 
 export const {
+  resetZoom,
   rotateViewTowards,
   setCameraPose,
   setNavigationMode,

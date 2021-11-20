@@ -1,11 +1,11 @@
 import React from 'react';
 
 import IconButton from '@mui/material/IconButton';
-import GpsFixed from '@mui/icons-material/GpsFixed';
+import CenterFocusStrong from '@mui/icons-material/CenterFocusStrong';
 
 const TrackDronesButton = (props) => (
   <IconButton disableRipple {...props} size='large'>
-    <GpsFixed />
+    <CenterFocusStrong />
   </IconButton>
 );
 

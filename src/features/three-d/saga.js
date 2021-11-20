@@ -7,7 +7,7 @@ import {
 } from '@skybrush/aframe-components/lib/spatial';
 
 import { getSelectedCamera } from './selectors';
-import { rotateViewTowards, switchToSelectedCamera } from './slice';
+import { resetZoom, rotateViewTowards, switchToSelectedCamera } from './slice';
 
 export const cameraRef = React.createRef();
 
@@ -16,23 +16,34 @@ export const cameraRef = React.createRef();
  * to the appropriate camera.
  */
 export default function* cameraAnimatorSaga() {
-  const SWITCH_TO_SELECTED_CAMERA = switchToSelectedCamera.toString();
+  const RESET_ZOOM = resetZoom.toString();
   const ROTATE_VIEW_TOWARDS = rotateViewTowards.toString();
+  const SWITCH_TO_SELECTED_CAMERA = switchToSelectedCamera.toString();
 
   while (true) {
-    const action = yield take([SWITCH_TO_SELECTED_CAMERA, ROTATE_VIEW_TOWARDS]);
+    const action = yield take([
+      RESET_ZOOM,
+      ROTATE_VIEW_TOWARDS,
+      SWITCH_TO_SELECTED_CAMERA,
+    ]);
+    const controller = getCameraController();
+    if (controller) {
+      switch (action.type) {
+        case RESET_ZOOM:
+          handleResetZoom(controller);
+          break;
 
-    switch (action.type) {
-      case SWITCH_TO_SELECTED_CAMERA:
-        handleCameraSwitch(yield select(getSelectedCamera));
-        break;
+        case SWITCH_TO_SELECTED_CAMERA:
+          handleCameraSwitch(controller, yield select(getSelectedCamera));
+          break;
 
-      case ROTATE_VIEW_TOWARDS:
-        handleViewRotationTowards(action.payload);
-        break;
+        case ROTATE_VIEW_TOWARDS:
+          handleViewRotationTowards(controller, action.payload);
+          break;
 
-      default:
-        break;
+        default:
+          break;
+      }
     }
   }
 }
@@ -46,9 +57,8 @@ function getCameraController() {
   return null;
 }
 
-function handleCameraSwitch(camera) {
-  const controller = getCameraController();
-  if (camera && controller) {
+function handleCameraSwitch(controller, camera) {
+  if (camera) {
     const { position, orientation } = camera;
 
     if (Array.isArray(position) && position.length >= 3) {
@@ -63,10 +73,11 @@ function handleCameraSwitch(camera) {
   }
 }
 
-function handleViewRotationTowards(point) {
-  const controller = getCameraController();
-  if (controller) {
-    const target = { lookAt: skybrushToThreeJsPosition(point) };
-    controller.startTransitionTo(target);
-  }
+function handleResetZoom(controller) {
+  controller.resetZoom();
+}
+
+function handleViewRotationTowards(controller, point) {
+  const target = { lookAt: skybrushToThreeJsPosition(point) };
+  controller.startTransitionTo(target);
 }

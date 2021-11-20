@@ -33,7 +33,7 @@ const DEFAULT_CAMERAS = {
   // degrees.
   indoor: [
     {
-      name: 'Reset to origin',
+      name: 'Default view',
       position: [-10, 0, 2], // [0, 2, 10]
       orientation: DEFAULT_ORIENTATION,
       // don't set default: true here because then it would override the
@@ -43,7 +43,7 @@ const DEFAULT_CAMERAS = {
   ],
   outdoor: [
     {
-      name: 'Reset to origin',
+      name: 'Default view',
       position: [-50, 0, 20], // [0, 20, 50]
       orientation: DEFAULT_ORIENTATION,
     },

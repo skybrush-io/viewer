@@ -6,8 +6,11 @@ import Box from '@mui/material/Box';
 
 import { systemFont } from '@skybrush/app-theme-mui';
 
+import TrackDronesButton from '~/components/buttons/TrackDronesButton';
+import ZoomOutButton from '~/components/buttons/ZoomOutButton';
 import WindowDragMoveArea from '~/components/WindowDragMoveArea';
 import { hasLoadedShowFile } from '~/features/show/selectors';
+import { resetZoom, rotateViewToDrones } from '~/features/three-d/actions';
 
 import CameraSelectorChip from './CameraSelectorChip';
 
@@ -33,25 +36,36 @@ const style = {
  * to allow the window to be moved around.
  */
 const TopOverlay = React.forwardRef(
-  ({ cameraSelectorVisible, ...rest }, ref) => (
+  ({ hasShow, onRotateViewToDrones, onResetZoom, ...rest }, ref) => (
     <Box ref={ref} sx={style} {...rest}>
       <WindowDragMoveArea />
-      {cameraSelectorVisible && <CameraSelectorChip />}
+      {hasShow && (
+        <>
+          <ZoomOutButton onClick={onResetZoom} />
+          <CameraSelectorChip />
+          <TrackDronesButton onClick={onRotateViewToDrones} />
+        </>
+      )}
     </Box>
   )
 );
 
 TopOverlay.propTypes = {
-  cameraSelectorVisible: PropTypes.bool,
+  hasShow: PropTypes.bool,
+  onResetZoom: PropTypes.func,
+  onRotateViewToDrones: PropTypes.func,
 };
 
 export default connect(
   // mapStateToProps
   (state) => ({
-    cameraSelectorVisible: hasLoadedShowFile(state),
+    hasShow: hasLoadedShowFile(state),
   }),
   // mapDispatchToProps
-  {},
+  {
+    onResetZoom: resetZoom,
+    onRotateViewToDrones: rotateViewToDrones,
+  },
   null,
   { forwardRef: true }
 )(TopOverlay);

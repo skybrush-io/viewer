@@ -11,7 +11,6 @@ import PlaybackSlider from '~/components/PlaybackSlider';
 import OpenButton from '~/components/buttons/OpenButton';
 import PlayStopButton from '~/components/buttons/PlayStopButton';
 import SettingsButton from '~/components/buttons/SettingsButton';
-import TrackDronesButton from '~/components/buttons/TrackDronesButton';
 import VolumeButton from '~/components/buttons/VolumeButton';
 
 import { hasAudio, isAudioMuted } from '~/features/audio/selectors';
@@ -25,7 +24,6 @@ import {
   getTimestampFormatter,
   hasLoadedShowFile,
 } from '~/features/show/selectors';
-import { rotateViewToDrones } from '~/features/three-d/actions';
 import ToggleValidationModeButton from '~/features/validation/ToggleValidationModeButton';
 
 import VirtualReality from '~/icons/VirtualReality';
@@ -62,7 +60,6 @@ const BottomOverlay = React.forwardRef(
       playing,
       rightText,
       onLoadShowFromLocalFile,
-      onRotateViewToDrones,
       onToggleMuted,
       onTogglePlayback,
       ...rest
@@ -94,10 +91,6 @@ const BottomOverlay = React.forwardRef(
           {formatPlaybackTimestamp && formatPlaybackTimestamp(duration)}
         </Box>
         <Box px={1}>
-          <TrackDronesButton
-            disabled={!hasShow}
-            onClick={onRotateViewToDrones}
-          />
           {config.modes.vr && (
             <IconButton id='vr-button' size='large'>
               <VirtualReality />
@@ -164,7 +157,6 @@ export default connect(
   // mapDispatchToProps
   {
     onLoadShowFromLocalFile: pickLocalFileAndLoadShow,
-    onRotateViewToDrones: rotateViewToDrones,
     onToggleMuted: toggleMuted,
     onTogglePlayback: togglePlayback,
   },

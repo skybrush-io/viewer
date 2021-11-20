@@ -8,6 +8,8 @@ import {
   switchToSelectedCamera,
 } from './slice';
 
+export { resetZoom } from './slice';
+
 export const rotateViewToDrones = () => (dispatch, getState) => {
   const state = getState();
   const time = getElapsedSeconds(state);

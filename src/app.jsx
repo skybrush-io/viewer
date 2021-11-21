@@ -10,6 +10,7 @@ import { StyledEngineProvider } from '@mui/material/styles';
 import MainTopLevelView from './components/MainTopLevelView';
 import Sidebar from './components/Sidebar';
 import SplashScreen from './components/SplashScreen';
+import WindowTitleManager from './components/WindowTitleManager';
 
 import AppHotkeys from './hotkeys';
 import { persistor, store } from './store';
@@ -34,6 +35,10 @@ const App = () => (
             {(bootstrapped) => (
               <>
                 <SplashScreen visible={!bootstrapped} />
+                <WindowTitleManager
+                  loading={!bootstrapped}
+                  appName='Skybrush Viewer'
+                />
                 <CssBaseline />
                 <AppHotkeys>
                   <MainTopLevelView />

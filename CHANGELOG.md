@@ -18,7 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   audience position but it is far from the show center.
 
 - Added a button in the top overlay that rotates the view towards the center of
-  the axis-aligned bounding box of the drones.
+  the axis-aligned bounding box of the drones, and another button that resets
+  the camera zoom to 1:1.
 
 ### Removed
 

@@ -35,6 +35,7 @@
     "@skybrush/aframe-components": "^1.8.1",
     "@skybrush/app-theme-mui": "^1.0.1",
     "@skybrush/electron-app-framework": "^2.0.13",
+    "@skybrush/mui-components": "^2.0.0",
     "@skybrush/redux-toolkit": "^1.3.7",
     "@skybrush/show-format": "^1.4.0",
     "@tippyjs/react": "^4.2.6",

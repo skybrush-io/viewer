@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import Assignment from '@mui/icons-material/Assignment';
 import AssignmentLate from '@mui/icons-material/AssignmentLate';
 import AssignmentTurnedIn from '@mui/icons-material/AssignmentTurnedIn';
+import Tooltip from '@skybrush/mui-components/lib/Tooltip';
 
 import { toggleMode } from '~/features/ui/actions';
 
@@ -17,20 +18,22 @@ const ToggleValidationModeButton = ({
   validationInProgress,
   ...rest
 }) => (
-  <IconButton
-    disableRipple
-    onClick={onToggleValidationMode}
-    {...rest}
-    size='large'
-  >
-    {validationInProgress ? (
-      <Assignment />
-    ) : trajectoriesValid ? (
-      <AssignmentTurnedIn />
-    ) : (
-      <AssignmentLate />
-    )}
-  </IconButton>
+  <Tooltip content='Validate trajectories'>
+    <IconButton
+      disableRipple
+      onClick={onToggleValidationMode}
+      {...rest}
+      size='large'
+    >
+      {validationInProgress ? (
+        <Assignment />
+      ) : trajectoriesValid ? (
+        <AssignmentTurnedIn />
+      ) : (
+        <AssignmentLate />
+      )}
+    </IconButton>
+  </Tooltip>
 );
 
 ToggleValidationModeButton.propTypes = {

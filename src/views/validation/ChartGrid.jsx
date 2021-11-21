@@ -7,7 +7,8 @@ import useResizeObserver from 'use-resize-observer';
 
 import Box from '@mui/material/Box';
 import ChartIcon from '@mui/icons-material/InsertChartOutlined';
-import BackgroundHint from '~/components/BackgroundHint';
+import BackgroundHint from '@skybrush/mui-components/lib/BackgroundHint';
+
 import { findPanelById } from '~/features/validation/panels';
 import { getVisiblePanels } from '~/features/validation/selectors';
 

@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the axis-aligned bounding box of the drones, and another button that resets
   the camera zoom to 1:1.
 
+- You can now drag and drop a .skyc file directly into the viewer window to
+  open it.
+
 ### Removed
 
 - Removed VR headset toggle from the playback slider as the new camera

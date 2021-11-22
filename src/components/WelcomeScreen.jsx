@@ -12,6 +12,7 @@ import {
   canLoadShowFromLocalFile,
   hasLoadedShowFile,
   isLoadingShowFile,
+  lastLoadingAttemptFailed,
 } from '~/features/show/selectors';
 
 import CentralHelperPanel from './CentralHelperPanel';
@@ -53,7 +54,8 @@ export default connect(
     visible:
       shouldUseWelcomeScreen(state) &&
       !hasLoadedShowFile(state) &&
-      !isLoadingShowFile(state),
+      !isLoadingShowFile(state) &&
+      !lastLoadingAttemptFailed(state),
   }),
   // mapDispatchToProps
   {

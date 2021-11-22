@@ -1,4 +1,5 @@
 const { BrowserWindow } = require('electron');
+const { platform } = require('os');
 
 const getFirstMainWindow = (options = {}) => {
   const { required = false } = options;
@@ -15,6 +16,9 @@ const getFirstMainWindow = (options = {}) => {
   return allWindows[0];
 };
 
+const isRunningOnMac = platform() === 'darwin';
+
 module.exports = {
   getFirstMainWindow,
+  isRunningOnMac,
 };

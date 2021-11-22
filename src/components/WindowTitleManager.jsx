@@ -1,16 +1,20 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
+import { connect } from 'react-redux';
 
-const WindowTitleManager = ({ appName }) => {
+import { hasLoadedShowFile, getShowTitle } from '~/features/show/selectors';
+
+const WindowTitleManager = ({ appName, showTitle }) => {
   useEffect(() => {
     if (window && window.bridge && window.bridge.isElectron) {
       // Running inside Electron, use the bridge API to ask the renderer
-      // process to change the window title
+      // process to change the window title.
+      window.bridge.setTitle({ appName });
     } else {
       // Running inside the browser, set the title of the document
-      document.title = appName;
+      document.title = showTitle ? `${showTitle} | ${appName}` : appName;
     }
-  }, [appName]);
+  }, [appName, showTitle]);
 
   return null;
 };
@@ -20,4 +24,11 @@ WindowTitleManager.propTypes = {
   loading: PropTypes.bool,
 };
 
-export default WindowTitleManager;
+export default connect(
+  // mapStateToProps
+  (state) => ({
+    showTitle: hasLoadedShowFile(state) ? getShowTitle(state) : '',
+  }),
+  // mapDispatchToProps
+  {}
+)(WindowTitleManager);

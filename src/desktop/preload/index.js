@@ -1,5 +1,6 @@
 const { contextBridge } = require('electron');
 const { ipcRenderer: ipc } = require('electron-better-ipc');
+
 const createStorageEngine = require('redux-persist-electron-storage');
 
 const { receiveActionsFromRenderer, setupIpc } = require('./ipc');
@@ -35,6 +36,9 @@ contextBridge.exposeInMainWorld('bridge', {
   },
   selectLocalShowFileForOpening: () =>
     ipc.callMain('selectLocalShowFileForOpening'),
+  setTitle: ({ appName, representedFile }) => {
+    ipc.callMain('setTitle', { appName, representedFile });
+  },
 });
 
 // Set up IPC channels that we are going to listen to

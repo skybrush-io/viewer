@@ -5,6 +5,7 @@ const pTimeout = require('p-timeout');
 
 const { getShowAsObjectFromBuffer } = require('./show-loader');
 const { getFirstMainWindow } = require('./utils');
+const { setTitle } = require('./window-title');
 
 const router = express.Router();
 
@@ -34,6 +35,7 @@ router.post('/load', async (req, res, next) => {
         const showSpec = await getShowAsObjectFromBuffer(req.body);
         await ipc.callRenderer(targetWindow, 'setUIMode', 'validation');
         await ipc.callRenderer(targetWindow, 'loadShowFromObject', showSpec);
+        setTitle(targetWindow, { representedFile: null });
         targetWindow.show();
       })(),
       10000

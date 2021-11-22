@@ -1,9 +1,11 @@
 const fs = require('fs').promises;
+
 const { get } = require('lodash');
 
 const { loadCompiledShow } = require('@skybrush/show-format');
 
 const { getUrlToAudioBuffer, setAudioBuffer } = require('./media-buffers');
+const { setTitle } = require('./window-title');
 
 const getShowAsObjectFromLocalFile = async (filename, window) => {
   const contents = await fs.readFile(filename);
@@ -13,8 +15,8 @@ const getShowAsObjectFromLocalFile = async (filename, window) => {
   const showSpec = await getShowAsObjectFromBuffer(contents);
 
   if (showSpec && window) {
-    // Set the filename on the window
-    window.setRepresentedFilename(filename);
+    // Set the filename and title on the window
+    setTitle(window, { representedFile: filename });
   }
 
   return showSpec;
@@ -45,7 +47,7 @@ const getShowAsObjectFromBuffer = async (buffer, window) => {
   }
 
   if (showSpec && window) {
-    window.setRepresentedFilename('');
+    setTitle(window, { representedFile: null });
   }
 
   return showSpec;

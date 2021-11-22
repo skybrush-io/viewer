@@ -358,23 +358,32 @@ export const getShowMetadata = createSelector(
 );
 
 /**
- * Returns a suitable title string for the current show file.
- */
-export const getShowTitle = createSelector(
-  getShowMetadata,
-  getNumberOfDronesInShow,
-  (meta, droneCount) => meta.title || `Show with ${droneCount} drones`
-);
-
-/**
  * Returns whether there is a show file currently loaded.
  */
 export const hasLoadedShowFile = (state) => Boolean(state.show.data);
 
 /**
+ * Returns a suitable title string for the current show file.
+ */
+export const getShowTitle = createSelector(
+  hasLoadedShowFile,
+  getShowMetadata,
+  getNumberOfDronesInShow,
+  (hasLoadedShow, meta, droneCount) =>
+    hasLoadedShow
+      ? meta.title || `Show with ${droneCount} drones`
+      : 'No show loaded'
+);
+
+/**
  * Returns whether we are currently loading a show file.
  */
 export const isLoadingShowFile = (state) => state.show.loading;
+
+/**
+ * Returns whetner the last loading attempt of a show ended with an error.
+ */
+export const lastLoadingAttemptFailed = (state) => state.show.error;
 
 /**
  * Returns the center of the axis-aligned bounding box of all the drones at

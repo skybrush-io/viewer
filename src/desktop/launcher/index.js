@@ -45,6 +45,7 @@ async function run(filenames, options) {
       debug: options.debug,
       rootDir: __dirname,
       showMenuBar: false,
+      title: 'Skybrush Viewer',
       titleBarStyle: 'hiddenInset',
     },
   });

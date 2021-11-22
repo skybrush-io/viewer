@@ -50,6 +50,7 @@ const ThreeDView = React.forwardRef((props, ref) => {
       enabled: false,
     }),
     'advanced-camera-controls': objectToString({
+      acceptsKeyboardEvent: 'notEditable',
       fly: navigation && navigation.mode === 'fly',
       minAltitude: 0.5,
       reverseMouseDrag: true,

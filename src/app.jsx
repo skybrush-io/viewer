@@ -7,6 +7,7 @@ import { PersistGate } from 'redux-persist/es/integration/react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { StyledEngineProvider } from '@mui/material/styles';
 
+import DragDropHandler from './components/DragDropHandler';
 import MainTopLevelView from './components/MainTopLevelView';
 import Sidebar from './components/Sidebar';
 import SplashScreen from './components/SplashScreen';
@@ -35,6 +36,7 @@ const App = () => (
             {(bootstrapped) => (
               <>
                 <SplashScreen visible={!bootstrapped} />
+                <DragDropHandler />
                 <WindowTitleManager
                   loading={!bootstrapped}
                   appName='Skybrush Viewer'

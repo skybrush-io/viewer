@@ -30,6 +30,12 @@ const styles = {
     left: -4,
     zIndex: 1,
   },
+
+  label: {
+    mt: 4,
+    textAlign: 'center',
+    userSelect: 'none',
+  },
 };
 
 const LoadingScreen = ({
@@ -51,13 +57,14 @@ const LoadingScreen = ({
         aria-label='play'
         color='primary'
         style={{ opacity: !loading && (canPlay || error) ? 1 : 0 }}
+        disableRipple={Boolean(error)}
         onClick={onPlay}
       >
         {error && <WarningIcon />}
         {canPlay && !error && <PlayIcon />}
       </Fab>
     </Box>
-    <Box textAlign='center' mt={4}>
+    <Box sx={styles.label}>
       {loading && 'Loading show'}
       {!loading && error ? error : null}
       {!loading && !error && canPlay && 'Click to play'}

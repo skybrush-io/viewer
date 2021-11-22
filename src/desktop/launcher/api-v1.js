@@ -35,7 +35,12 @@ router.post('/load', async (req, res, next) => {
         const showSpec = await getShowAsObjectFromBuffer(req.body);
         await ipc.callRenderer(targetWindow, 'setUIMode', 'validation');
         await ipc.callRenderer(targetWindow, 'loadShowFromObject', showSpec);
-        setTitle(targetWindow, { representedFile: null });
+
+        const filename = req.body?.meta?.filename;
+        setTitle(targetWindow, {
+          representedFile: null,
+          alternateFile: filename,
+        });
         targetWindow.show();
       })(),
       10000

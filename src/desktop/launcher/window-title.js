@@ -7,7 +7,7 @@ const { isRunningOnMac } = require('./utils');
 const appNames = new WeakMap();
 const representedFiles = new WeakMap();
 
-const setTitle = (window, { appName, representedFile }) => {
+const setTitle = (window, { appName, representedFile, alternateFile }) => {
   if (appName !== undefined) {
     appNames.set(window, isNil(appName) ? '' : String(appName));
   }
@@ -15,7 +15,11 @@ const setTitle = (window, { appName, representedFile }) => {
   if (representedFile !== undefined) {
     representedFiles.set(
       window,
-      isNil(representedFile) ? '' : String(representedFile)
+      isNil(representedFile)
+        ? isNil(alternateFile)
+          ? ''
+          : '@' + String(alternateFile)
+        : String(representedFile)
     );
   }
 
@@ -26,7 +30,11 @@ const setTitle = (window, { appName, representedFile }) => {
   if (isRunningOnMac) {
     if (filename) {
       window.setTitle(filename);
-      window.setRepresentedFilename(representedFile);
+      if (representedFile.charAt(0) !== '@') {
+        window.setRepresentedFilename(representedFile);
+      } else {
+        window.setRepresentedFilename('');
+      }
     } else {
       window.setTitle(appName);
       window.setRepresentedFilename('');

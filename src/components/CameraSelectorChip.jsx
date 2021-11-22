@@ -3,8 +3,10 @@ import React, { useState } from 'react';
 
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
 import Chip from '@mui/material/Chip';
+import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
 
 function getLabelForCamera(camera, index) {
   return camera.name || `Camera ${index}`;
@@ -16,6 +18,7 @@ function getLabelForCamera(camera, index) {
  */
 const CameraSelectorChip = ({
   cameras,
+  hotkeys,
   onCameraSelected,
   selectedCameraIndex,
   ...rest
@@ -71,7 +74,12 @@ const CameraSelectorChip = ({
       >
         {(cameras || []).map((camera, index) => (
           <MenuItem key={index} onClick={() => handleClose(index)}>
-            {getLabelForCamera(camera, index)}
+            <ListItemText>{getLabelForCamera(camera, index)}</ListItemText>
+            {hotkeys[index] && (
+              <Typography variant='body' color='text.secondary' ml={2}>
+                {hotkeys[index]}
+              </Typography>
+            )}
           </MenuItem>
         ))}
       </Menu>
@@ -88,6 +96,7 @@ CameraSelectorChip.propTypes = {
       orientation: PropTypes.arrayOf(PropTypes.number),
     })
   ),
+  hotkeys: PropTypes.arrayOf(PropTypes.string),
   onCameraSelected: PropTypes.func,
   selectedCameraIndex: PropTypes.number,
 };

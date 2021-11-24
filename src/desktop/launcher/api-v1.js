@@ -28,6 +28,7 @@ router.post('/load', async (req, res, next) => {
   }
 
   try {
+    const proposedTitle = req.header('x-skybrush-viewer-title');
     const targetWindow = getFirstMainWindow({ required: true });
 
     await pTimeout(
@@ -36,11 +37,11 @@ router.post('/load', async (req, res, next) => {
         await ipc.callRenderer(targetWindow, 'setUIMode', 'validation');
         await ipc.callRenderer(targetWindow, 'loadShowFromObject', showSpec);
 
-        const filename = req.body?.meta?.filename;
         setTitle(targetWindow, {
           representedFile: null,
-          alternateFile: filename,
+          alternateFile: proposedTitle || null,
         });
+
         targetWindow.show();
       })(),
       10000

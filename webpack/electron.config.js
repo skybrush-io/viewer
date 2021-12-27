@@ -45,5 +45,8 @@ module.exports = merge(baseConfig, {
   entry: {
     app: ['process/browser', './src/index'],
   },
+  devServer: {
+    server: 'https'
+  },
   plugins,
 });

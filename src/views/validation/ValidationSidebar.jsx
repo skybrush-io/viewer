@@ -26,16 +26,19 @@ const SidebarListItemPresentation = ({
   label,
   onToggleSelection,
   style,
-}) => (
-  <ListItem button dense style={style} onClick={onToggleSelection}>
-    <Checkbox
-      checked={!isNil(chartIndex)}
-      size='small'
-      style={{ color: chartIndex ? CHART_COLORS[chartIndex] : undefined }}
-    />
-    <ListItemText primary={label} />
-  </ListItem>
-);
+}) => {
+  console.log(chartIndex);
+  return (
+    <ListItem button dense style={style} onClick={onToggleSelection}>
+      <Checkbox
+        checked={!isNil(chartIndex)}
+        size='small'
+        style={{ color: chartIndex ? CHART_COLORS[chartIndex] : undefined }}
+      />
+      <ListItemText primary={label} />
+    </ListItem>
+  );
+};
 
 SidebarListItemPresentation.propTypes = {
   chartIndex: PropTypes.number,

@@ -235,7 +235,9 @@ export const getSelectionToChartIndexMapping = createSelector(
   (selection) => {
     const mapping = {};
 
+    console.log(selection);
     for (const [index, itemId] of selection.entries()) {
+      console.log(itemId, index);
       mapping[itemId] = index;
     }
 

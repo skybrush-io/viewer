@@ -8,8 +8,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-// eslint-disable-next-line no-unused-vars
-import AFrame from '~/aframe';
+import '~/aframe';
+
 import { objectToString } from '@skybrush/aframe-components';
 import {
   getEffectiveScenery,

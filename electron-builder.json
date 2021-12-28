@@ -29,15 +29,24 @@
 
   "linux": {
     "category": "Utility",
-    "target": "AppImage"
+    "target": {
+	  "target": "AppImage",
+	  "arch": "x64"
+	}
   },
 
   "mac": {
     "category": "public.app-category.utilities",
-    "target": "dmg"
+    "target": {
+	  "target": "dmg",
+	  "arch": "universal"
+	}
   },
 
   "win": {
-    "target": "portable"
+    "target": {
+	  "target": "portable",
+	  "arch": "x64"
+	}
   }
 }

@@ -65,7 +65,15 @@ module.exports = {
       config: path.resolve(projectRoot, 'config', 'default'),
       'layout-bmfont-text': '@collmot/layout-bmfont-text',
     },
-    extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js', '.jsx', '.json'],
+    extensions: [
+      '.webpack.js',
+      '.web.js',
+      '.ts',
+      '.tsx',
+      '.js',
+      '.jsx',
+      '.json',
+    ],
     fallback: {
       http: require.resolve('stream-http'),
       https: require.resolve('https-browserify'),
@@ -93,7 +101,7 @@ module.exports = {
           path.join(projectRoot, 'config'),
           path.join(projectRoot, 'src'),
         ],
-        loader: 'source-map-loader'
+        loader: 'source-map-loader',
       },
       {
         test: /\.less$/,

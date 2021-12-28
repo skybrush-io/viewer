@@ -1,5 +1,4 @@
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 
 import Box from '@mui/material/Box';
@@ -18,11 +17,17 @@ import {
 import CentralHelperPanel from './CentralHelperPanel';
 import SkybrushLogo from './SkybrushLogo';
 
+interface WelcomeScreenProps {
+  canLoadShowFromLocalFile: boolean;
+  onLoadShowFromLocalFile: () => void;
+  visible: boolean;
+}
+
 const WelcomeScreen = ({
   canLoadShowFromLocalFile,
   onLoadShowFromLocalFile,
   visible,
-}) => (
+}: WelcomeScreenProps) => (
   <CentralHelperPanel visible={visible}>
     <Box textAlign='center' mb={4}>
       <SkybrushLogo />
@@ -41,18 +46,12 @@ const WelcomeScreen = ({
   </CentralHelperPanel>
 );
 
-WelcomeScreen.propTypes = {
-  canLoadShowFromLocalFile: PropTypes.bool,
-  onLoadShowFromLocalFile: PropTypes.func,
-  visible: PropTypes.bool,
-};
-
 export default connect(
   // mapStateToProps
   (state) => ({
-    canLoadShowFromLocalFile: canLoadShowFromLocalFile(state),
+    canLoadShowFromLocalFile: canLoadShowFromLocalFile(),
     visible:
-      shouldUseWelcomeScreen(state) &&
+      shouldUseWelcomeScreen() &&
       !hasLoadedShowFile(state) &&
       !isLoadingShowFile(state) &&
       !lastLoadingAttemptFailed(state),

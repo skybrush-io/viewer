@@ -1,5 +1,4 @@
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 
 import Box from '@mui/material/Box';
@@ -12,6 +11,8 @@ import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Switch from '@mui/material/Switch';
+import { Theme } from '@mui/material/styles';
+
 import { isThemeDark } from '@skybrush/app-theme-mui';
 
 import { setPlaybackSpeed } from '~/features/playback/actions';
@@ -48,19 +49,32 @@ const styles = {
 
   root: {
     '& .MuiDrawer-paper': {
-      background: (theme) =>
+      background: (theme: Theme) =>
         isThemeDark(theme)
           ? 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) 80%, black)'
           : 'rgba(255, 255, 255, 0.7)',
     },
   },
-};
+} as const;
 
 const modalProps = {
   BackdropProps: {
     invisible: true,
   },
 };
+
+interface SidebarDrawerProps {
+  open: boolean;
+  onClose: () => void;
+  onSetScenery: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSetPlaybackSpeed: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onToggleAxes: () => void;
+  onToggleGrid: () => void;
+  scenery: 'auto' | 'day' | 'night' | 'indoor';
+  showAxes: boolean;
+  showGrid: boolean;
+  speed: number;
+}
 
 /**
  * Sidebar drawer component for the application.
@@ -76,7 +90,7 @@ const SidebarDrawer = ({
   showAxes,
   showGrid,
   speed,
-}) => (
+}: SidebarDrawerProps) => (
   <Drawer
     anchor='right'
     open={open}
@@ -153,22 +167,10 @@ const SidebarDrawer = ({
   </Drawer>
 );
 
-SidebarDrawer.propTypes = {
-  onClose: PropTypes.func,
-  onSetPlaybackSpeed: PropTypes.func,
-  onSetScenery: PropTypes.func,
-  onToggleAxes: PropTypes.func,
-  onToggleGrid: PropTypes.func,
-  open: PropTypes.bool,
-  scenery: PropTypes.oneOf(['auto', 'day', 'night', 'indoor']),
-  showAxes: PropTypes.bool,
-  showGrid: PropTypes.bool,
-  speed: PropTypes.number,
-};
-
 export default connect(
   // mapStateToProps
-  (state) => ({
+  // TODO: remove 'any' after migration to TypeScript
+  (state: any) => ({
     open: state.sidebar.open,
     scenery: state.settings.threeD.scenery,
     speed: getPlaybackSpeed(state),
@@ -177,9 +179,10 @@ export default connect(
   }),
   // mapDispatchToProps
   {
-    onClose: closeSidebar,
+    // TODO: remove casting after migration to TypeScript
+    onClose: closeSidebar as any as () => void,
     onSetScenery: setScenery,
-    onSetPlaybackSpeed: (event) =>
+    onSetPlaybackSpeed: (event: React.ChangeEvent<HTMLInputElement>) =>
       setPlaybackSpeed(Number.parseFloat(event.target.value)),
     onToggleAxes: toggleAxes,
     onToggleGrid: toggleGrid,

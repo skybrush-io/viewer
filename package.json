@@ -181,7 +181,9 @@
       "unicorn/no-array-callback-reference": 0,
       "unicorn/no-fn-reference-in-iterator": 0,
       "unicorn/numeric-separators-style": 0,
-      "unicorn/prefer-module": 0
+      "unicorn/prefer-module": 0,
+      "@typescript-eslint/naming-convention": 0,
+      "@typescript-eslint/no-unsafe-assignment": 0
     }
   }
 }

@@ -23,6 +23,7 @@ import {
   toggleAxes,
   toggleGrid,
 } from '~/features/settings/actions';
+import type { RootState } from '~/store';
 
 import SkybrushLogo from './SkybrushLogo';
 
@@ -169,8 +170,7 @@ const SidebarDrawer = ({
 
 export default connect(
   // mapStateToProps
-  // TODO: remove 'any' after migration to TypeScript
-  (state: any) => ({
+  (state: RootState) => ({
     open: state.sidebar.open,
     scenery: state.settings.threeD.scenery,
     speed: getPlaybackSpeed(state),
@@ -179,8 +179,7 @@ export default connect(
   }),
   // mapDispatchToProps
   {
-    // TODO: remove casting after migration to TypeScript
-    onClose: closeSidebar as any as () => void,
+    onClose: closeSidebar,
     onSetScenery: setScenery,
     onSetPlaybackSpeed: (event: React.ChangeEvent<HTMLInputElement>) =>
       setPlaybackSpeed(Number.parseFloat(event.target.value)),

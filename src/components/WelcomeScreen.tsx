@@ -13,6 +13,7 @@ import {
   isLoadingShowFile,
   lastLoadingAttemptFailed,
 } from '~/features/show/selectors';
+import type { RootState } from '~/store';
 
 import CentralHelperPanel from './CentralHelperPanel';
 import SkybrushLogo from './SkybrushLogo';
@@ -48,7 +49,7 @@ const WelcomeScreen = ({
 
 export default connect(
   // mapStateToProps
-  (state) => ({
+  (state: RootState) => ({
     canLoadShowFromLocalFile: canLoadShowFromLocalFile(),
     visible:
       shouldUseWelcomeScreen() &&

@@ -168,8 +168,8 @@ AFrame.registerComponent('drone-flock', {
     const boundGetTrajectoryPlayers = () =>
       getTrajectoryPlayers(store.getState());
     store.subscribe(
-      watch(boundGetTrajectoryPlayers)((lightProgramPlayers) => {
-        this._trajectoryPlayers = lightProgramPlayers;
+      watch(boundGetTrajectoryPlayers)((trajectoryPlayers) => {
+        this._trajectoryPlayers = trajectoryPlayers;
       })
     );
 

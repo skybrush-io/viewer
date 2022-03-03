@@ -63,7 +63,7 @@ module.exports = {
     alias: {
       '~': path.resolve(projectRoot, 'src'),
       config: path.resolve(projectRoot, 'config', 'default'),
-      'layout-bmfont-text': '@collmot/layout-bmfont-text',
+      'layout-bmfont-text': '@skybrush/layout-bmfont-text',
     },
     extensions: [
       '.webpack.js',

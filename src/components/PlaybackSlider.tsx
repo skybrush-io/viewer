@@ -65,7 +65,7 @@ interface PlaybackSliderProps {
   onDragged: (event: Event, value: number) => void;
   onDragging: (event: Event, value: number) => void;
   playing: boolean;
-  updateInterval: number;
+  updateInterval?: number;
 }
 
 const PlaybackSlider = ({

@@ -10,6 +10,7 @@ const config = {
   modes: {
     player: true,
     validation: true,
+    vr: false,
   },
   preloadedShow: {},
   useWelcomeScreen: true,

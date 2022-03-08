@@ -4,13 +4,17 @@
 
 import config from 'config';
 
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 
 import '~/aframe';
 
 import { objectToString } from '@skybrush/aframe-components';
+import type {
+  ThreeJsPosition,
+  ThreeJsRotation,
+} from '@skybrush/aframe-components/lib/spatial';
+
 import {
   getEffectiveScenery,
   getPreferredDroneRadius,
@@ -20,17 +24,44 @@ import {
   getLoadedShowId,
   getNumberOfDronesInShow,
 } from '~/features/show/selectors';
+import type { RootState } from '~/store';
 
 import CoordinateSystemAxes from './CoordinateSystemAxes';
 import Scenery from './Scenery';
+import type { SceneryType } from './Scenery';
 
 import glow from '~/../assets/img/sphere-glow-hollow.png';
 // const flapperDrone = require('~/../assets/models/flapper-drone.obj').default;
 
-const ThreeDView = React.forwardRef((props, ref) => {
+interface ThreeDViewProps {
+  axes: boolean;
+  cameraConfiguration: {
+    position: ThreeJsPosition;
+    rotation: ThreeJsRotation;
+  };
+  cameraRef: React.RefObject<HTMLElement>;
+  droneSize: number;
+  grid: boolean | string;
+  navigation: {
+    mode: 'walk' | 'fly';
+    parameters: any;
+  };
+  numDrones: number;
+  scenery: SceneryType;
+  showId: number;
+  showStatistics: boolean;
+  vrEnabled?: boolean;
+}
+
+const DEFAULT_CAMERA_CONFIGURATION = {
+  position: [0, 20, 50],
+  rotation: [0, 0, 0],
+};
+
+const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
   const {
     axes,
-    cameraConfiguration,
+    cameraConfiguration = DEFAULT_CAMERA_CONFIGURATION,
     cameraRef,
     droneSize,
     grid,
@@ -56,13 +87,13 @@ const ThreeDView = React.forwardRef((props, ref) => {
       reverseMouseDrag: true,
     }),
   };
-  const extraSceneProps = {};
+  const extraSceneProps: Record<string, string> = {};
 
   if (showStatistics) {
     extraSceneProps.stats = 'true';
   }
 
-  extraSceneProps['vr-mode-ui'] = config.buttons.vr
+  extraSceneProps['vr-mode-ui'] = config.modes.vr
     ? 'enabled: true; enterVRButton: #vr-button'
     : 'enabled: false';
 
@@ -100,36 +131,9 @@ const ThreeDView = React.forwardRef((props, ref) => {
   );
 });
 
-ThreeDView.propTypes = {
-  axes: PropTypes.bool,
-  cameraConfiguration: PropTypes.shape({
-    position: PropTypes.arrayOf(PropTypes.number).isRequired,
-    rotation: PropTypes.arrayOf(PropTypes.number).isRequired,
-  }),
-  cameraRef: PropTypes.any,
-  droneSize: PropTypes.number,
-  grid: PropTypes.string,
-  navigation: PropTypes.shape({
-    mode: PropTypes.oneOf(['walk', 'fly']),
-    parameters: PropTypes.object,
-  }),
-  numDrones: PropTypes.number,
-  scenery: PropTypes.oneOf(['day', 'night', 'indoor']),
-  showId: PropTypes.number,
-  showStatistics: PropTypes.bool,
-  vrEnabled: PropTypes.bool,
-};
-
-ThreeDView.defaultProps = {
-  cameraConfiguration: {
-    position: [0, 20, 50],
-    rotation: [0, 0, 0],
-  },
-};
-
 export default connect(
   // mapStateToProps
-  (state) => ({
+  (state: RootState) => ({
     cameraConfiguration: getInitialCameraConfigurationOfShow(state),
     droneSize: getPreferredDroneRadius(state),
     numDrones: getNumberOfDronesInShow(state),

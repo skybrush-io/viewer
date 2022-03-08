@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
-import React, { memo } from 'react';
+import * as React from 'react';
+
 import { objectToString } from '@skybrush/aframe-components';
 
 const grounds = {
@@ -50,10 +50,17 @@ const environments = {
   },
 };
 
+export type SceneryType = keyof typeof environments;
+
+interface SceneryProps {
+  grid: boolean | string;
+  type: SceneryType;
+}
+
 /**
  * Component that renders a basic scenery in which the drones will be placed.
  */
-const Scenery = ({ grid, type }) => {
+const Scenery = ({ grid, type = 'night' }: SceneryProps) => {
   const scale = type === 'indoor' ? 0.5 : 10;
   return (
     <a-entity position='0 -0.001 0' scale={`${scale} ${scale} ${scale}`}>
@@ -68,13 +75,4 @@ const Scenery = ({ grid, type }) => {
   );
 };
 
-Scenery.propTypes = {
-  grid: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-  type: PropTypes.oneOf(Object.keys(environments)),
-};
-
-Scenery.defaultProps = {
-  type: 'night',
-};
-
-export default memo(Scenery);
+export default React.memo(Scenery);

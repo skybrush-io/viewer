@@ -171,6 +171,7 @@
         }
       ],
       "node/file-extension-in-import": 0,
+      "no-bitwise": 0,
       "no-negated-condition": 0,
       "no-warning-comments": 0,
       "object-curly-spacing": [

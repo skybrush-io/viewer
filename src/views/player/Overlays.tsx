@@ -1,13 +1,14 @@
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 
 import Fade from '@mui/material/Fade';
 
+import type { RootState } from '~/store';
+
 import BottomOverlay from './BottomOverlay';
 import TopOverlay from './TopOverlay';
 
-const Overlays = ({ visible }) => (
+const Overlays = ({ visible = false }: { visible: boolean }) => (
   <>
     <Fade in={visible}>
       <TopOverlay />
@@ -18,17 +19,9 @@ const Overlays = ({ visible }) => (
   </>
 );
 
-Overlays.propTypes = {
-  visible: PropTypes.bool,
-};
-
-Overlays.defaultProps = {
-  visible: false,
-};
-
 export default connect(
   // mapStateToProps
-  (state) => ({
+  (state: RootState) => ({
     ...state.threeD.overlays,
   }),
   // mapDispatchToProps

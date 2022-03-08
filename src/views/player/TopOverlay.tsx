@@ -1,8 +1,7 @@
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 
-import Box from '@mui/material/Box';
+import Box, { BoxProps } from '@mui/material/Box';
 
 import { systemFont } from '@skybrush/app-theme-mui';
 
@@ -11,6 +10,7 @@ import ZoomOutButton from '~/components/buttons/ZoomOutButton';
 import WindowDragMoveArea from '~/components/WindowDragMoveArea';
 import { hasLoadedShowFile } from '~/features/show/selectors';
 import { resetZoom, rotateViewToDrones } from '~/features/three-d/actions';
+import type { RootState } from '~/store';
 
 import CameraSelectorChip from './CameraSelectorChip';
 
@@ -31,12 +31,21 @@ const style = {
   textAlign: 'center',
 };
 
+interface TopOverlayProps extends BoxProps {
+  hasShow: boolean;
+  onRotateViewToDrones: () => void;
+  onResetZoom: () => void;
+}
+
 /**
  * Overlay at the top of the window that acts as a draggable area on macOS
  * to allow the window to be moved around.
  */
 const TopOverlay = React.forwardRef(
-  ({ hasShow, onRotateViewToDrones, onResetZoom, ...rest }, ref) => (
+  (
+    { hasShow, onRotateViewToDrones, onResetZoom, ...rest }: TopOverlayProps,
+    ref
+  ) => (
     <Box ref={ref} sx={style} {...rest}>
       <WindowDragMoveArea />
       {hasShow && (
@@ -50,15 +59,9 @@ const TopOverlay = React.forwardRef(
   )
 );
 
-TopOverlay.propTypes = {
-  hasShow: PropTypes.bool,
-  onResetZoom: PropTypes.func,
-  onRotateViewToDrones: PropTypes.func,
-};
-
 export default connect(
   // mapStateToProps
-  (state) => ({
+  (state: RootState) => ({
     hasShow: hasLoadedShowFile(state),
   }),
   // mapDispatchToProps

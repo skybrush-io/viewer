@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useMouseHovered, useTimeout } from 'react-use';
@@ -10,9 +10,15 @@ import {
 
 // import React from 'react';
 
+interface UseMouseMovingStateOptions {
+  onStarted?: () => void;
+  onStopped?: () => void;
+  timeout?: number;
+}
+
 const useMouseMovingState = (
-  areaRef,
-  { onStarted, onStopped, timeout } = { timeout: 3000 }
+  areaRef: React.RefObject<Element>,
+  { onStarted, onStopped, timeout = 3000 }: UseMouseMovingStateOptions = {}
 ) => {
   const [moving, setMoving] = useState(false);
   const [lastPosition, setLastPosition] = useState([0, 0]);
@@ -55,6 +61,13 @@ const useMouseMovingState = (
   return moving;
 };
 
+interface OverlayVisibilityControllerProps {
+  areaRef: React.RefObject<Element>;
+  onHide?: () => void;
+  onShow?: () => void;
+  timeout?: number;
+}
+
 /**
  * Component that renders nothing but tracks mouse movements within the given
  * DOM node, and controls the visibility of an overlay based on the mouse move
@@ -64,7 +77,12 @@ const useMouseMovingState = (
  * mouse stops moving or leaves the overlay area, and it stays so for a given
  * timeout, the overlay is hidden.
  */
-const OverlayVisibilityController = ({ areaRef, onHide, onShow, timeout }) => {
+const OverlayVisibilityController = ({
+  areaRef,
+  onHide,
+  onShow,
+  timeout = 3000,
+}: OverlayVisibilityControllerProps) => {
   useMouseMovingState(areaRef, {
     onStarted: onShow,
     onStopped: onHide,
@@ -75,17 +93,6 @@ const OverlayVisibilityController = ({ areaRef, onHide, onShow, timeout }) => {
   // until the mouse button is released
 
   return null;
-};
-
-OverlayVisibilityController.propTypes = {
-  areaRef: PropTypes.object,
-  onHide: PropTypes.func,
-  onSHow: PropTypes.func,
-  timeout: PropTypes.number,
-};
-
-OverlayVisibilityController.defaultProps = {
-  timeout: 3000,
 };
 
 export default connect(

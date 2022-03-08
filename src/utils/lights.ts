@@ -1,6 +1,21 @@
-import Deque from 'denque';
+import * as Deque from 'denque';
 import { Base64 } from 'js-base64';
 import isArrayBuffer from 'lodash-es/isArrayBuffer';
+
+export type Color = [number, number, number];
+
+interface LightProgramExecutor {
+  execute: () => Generator<ExecutorState, void, void>;
+  reset: () => void;
+}
+
+export interface LightProgramPlayer {
+  evaluateColorAt: (seconds: number, color: Color) => void;
+  iterate: () => Generator<[number, Color], void, void>;
+}
+
+type LightProgramLike = string | object | ArrayBuffer;
+type LoopItem = [number, number];
 
 /**
  * Helper function that takes a base64-encoded string or an ArrayBuffer and
@@ -9,7 +24,7 @@ import isArrayBuffer from 'lodash-es/isArrayBuffer';
  * Also accepts Uint8Array objects as an input; returns the array intact if
  * this is the case.
  */
-function convertLightProgramToUint8Array(input) {
+function convertLightProgramToUint8Array(input: LightProgramLike): Uint8Array {
   if (isArrayBuffer(input)) {
     return new Uint8Array(input);
   }
@@ -19,7 +34,7 @@ function convertLightProgramToUint8Array(input) {
   }
 
   if (typeof input === 'object') {
-    const { version, data } = input;
+    const { version, data } = input as any;
 
     if (version !== 1) {
       throw new Error('Only version 1 light programs are supported');
@@ -29,7 +44,10 @@ function convertLightProgramToUint8Array(input) {
   }
 
   if (typeof input === 'string') {
-    return Uint8Array.from(Base64.atob(input), (char) => char.charCodeAt(0));
+    return Uint8Array.from(
+      Base64.atob(input),
+      (char) => char.codePointAt(0) ?? 0
+    );
   }
 
   if (typeof input === 'undefined') {
@@ -56,6 +74,14 @@ function convertLightProgramToUint8Array(input) {
  * set to zero and the start color is set to black.
  */
 class ExecutorState {
+  timestamp: number;
+  duration: number;
+  endTime: number;
+
+  private _startColor: Color;
+  private _endColor: Color;
+  private _isFade: boolean;
+
   /**
    * Constructor.
    */
@@ -70,14 +96,14 @@ class ExecutorState {
   }
 
   /**
-   * Returns the color that is valid at the start of the interval.
+   * Returns the color that is valid at the start of the current segment.
    */
   get startColor() {
     return this._startColor;
   }
 
   /**
-   * Returns the color that is valid at the end of the interval.
+   * Returns the color that is valid at the end of the current segment.
    */
   get endColor() {
     return this._isFade ? this._endColor : this._startColor;
@@ -96,7 +122,7 @@ class ExecutorState {
    *
    * Returns the state object for easy chainability.
    */
-  advanceTimeBy(duration) {
+  advanceTimeBy(duration: number): this {
     let i;
 
     this.timestamp = this.endTime;
@@ -117,14 +143,14 @@ class ExecutorState {
   /**
    * Returns whether the slice contains the given timestamp.
    */
-  containsTime(time) {
+  containsTime(time: number): boolean {
     return time >= this.timestamp && time <= this.endTime;
   }
 
   /**
    * Returns an exact copy of this state object.
    */
-  copy() {
+  copy(): ExecutorState {
     const result = new ExecutorState();
 
     result.timestamp = this.timestamp;
@@ -143,7 +169,7 @@ class ExecutorState {
    * The timestamp is assumed to be within the time range spanned by the
    * state object.
    */
-  evaluateColorAt(timestamp, color) {
+  evaluateColorAt<T extends Color>(timestamp: number, color: T): T {
     let i;
 
     if (this._isFade) {
@@ -168,12 +194,10 @@ class ExecutorState {
    *
    * Returns the state object for easy chainability.
    */
-  fadeToColor(color, duration) {
-    let i;
-
+  fadeToColor(color: Color, duration: number): this {
     this.advanceTimeBy(duration);
 
-    for (i = 0; i < 3; i++) {
+    for (let i = 0; i < 3; i++) {
       this._endColor[i] = color[i];
     }
 
@@ -188,12 +212,10 @@ class ExecutorState {
    *
    * Returns the state object for easy chainability.
    */
-  fadeToGray(grayLevel, duration) {
-    let i;
-
+  fadeToGray(grayLevel: number, duration: number): this {
     this.advanceTimeBy(duration);
 
-    for (i = 0; i < 3; i++) {
+    for (let i = 0; i < 3; i++) {
       this._endColor[i] = grayLevel;
     }
 
@@ -206,7 +228,7 @@ class ExecutorState {
    * Scales the components of the colors in this slice uniformly with the
    * given multiplier.
    */
-  scaleColorsBy(factor) {
+  scaleColorsBy(factor: number): void {
     for (let i = 0; i < 3; i++) {
       this._startColor[i] *= factor;
       this._endColor[i] *= factor;
@@ -219,12 +241,10 @@ class ExecutorState {
    *
    * Returns the state object for easy chainability.
    */
-  setToConstantColor(color, duration) {
-    let i;
-
+  setToConstantColor(color: Color, duration: number): this {
     this.advanceTimeBy(duration);
 
-    for (i = 0; i < 3; i++) {
+    for (let i = 0; i < 3; i++) {
       this._startColor[i] = color[i];
     }
 
@@ -237,12 +257,10 @@ class ExecutorState {
    *
    * Returns the state object for easy chainability.
    */
-  setToConstantGray(grayLevel, duration) {
-    let i;
-
+  setToConstantGray(grayLevel: number, duration: number): this {
     this.advanceTimeBy(duration);
 
-    for (i = 0; i < 3; i++) {
+    for (let i = 0; i < 3; i++) {
       this._startColor[i] = grayLevel;
     }
 
@@ -251,16 +269,19 @@ class ExecutorState {
 }
 
 /**
- * Generator function that executes commands from the given light program
- * (provided as a base64-encoded string, an ArrayBuffer or an Uint8Array)
+ * Creates a generator function that executes commands from the given light
+ * program (provided as a base64-encoded string, an ArrayBuffer or an Uint8Array)
  * and yields the state object for every relevant timestamp.
  */
-function createLightProgramExecutor(program, initialState = undefined) {
+function createLightProgramExecutor(
+  program: LightProgramLike,
+  initialState: ExecutorState | undefined = undefined
+): LightProgramExecutor {
   const bytes = convertLightProgramToUint8Array(program);
   const numberBytes = bytes.length;
-  const loops = [];
-  let index;
-  let state;
+  const loops: LoopItem[] = [];
+  let index: number;
+  let state: ExecutorState;
 
   function reset() {
     index = 0;
@@ -296,7 +317,7 @@ function createLightProgramExecutor(program, initialState = undefined) {
     return getNextByte() || 0 /* end */;
   }
 
-  function parseColorInto(color) {
+  function parseColorInto(color: Color) {
     color[0] = getNextByte() || 0;
     color[1] = getNextByte() || 0;
     color[2] = getNextByte() || 0;
@@ -311,12 +332,12 @@ function createLightProgramExecutor(program, initialState = undefined) {
 
   // eslint-disable-next-line complexity
   function* execute() {
-    const color = [0, 0, 0];
-    let duration;
-    let grayLevel;
-    let iterations;
-    let loopItem;
-    let newTimestamp;
+    const color: Color = [0, 0, 0];
+    let duration: number;
+    let grayLevel: number;
+    let iterations: number;
+    let loopItem: LoopItem | undefined;
+    let newTimestamp: number;
 
     if (numberBytes === 0) {
       return;
@@ -451,16 +472,18 @@ function createLightProgramExecutor(program, initialState = undefined) {
  * single `evaluateColorAt()` function that evaluates the color at a given
  * timestamp, specified in seconds.
  */
-export default function createLightProgramPlayer(program) {
+export default function createLightProgramPlayer(
+  program: LightProgramLike
+): LightProgramPlayer {
   const executor = createLightProgramExecutor(program);
   const slices = new Deque();
   const maxHistoryLength = 31;
-  let lastSliceEndTime;
-  let endReached;
-  let sliceGenerator;
+  let lastSliceEndTime: number;
+  let endReached: boolean;
+  let sliceGenerator: Iterator<ExecutorState> | null = null;
 
   function storeNextSliceFromExecutor() {
-    let slice;
+    let slice: ExecutorState;
 
     if (sliceGenerator) {
       const { value, done } = sliceGenerator.next();
@@ -499,12 +522,12 @@ export default function createLightProgramPlayer(program) {
    *
    * The result is provided in an output argument to avoid allocations.
    *
-   * @param  {number}   seconds  the timestamp
-   * @param  {number[]} color    the result will be returned here
+   * @param  seconds  the timestamp
+   * @param  color    the result will be returned here
    */
-  function evaluateColorAt(seconds, color) {
-    let index;
-    let slice;
+  function evaluateColorAt(seconds: number, color: Color) {
+    let index: number;
+    let slice: ExecutorState;
 
     if (!Number.isFinite(seconds)) {
       throw new TypeError('infinite timestamps not supported');
@@ -533,18 +556,18 @@ export default function createLightProgramPlayer(program) {
       index--;
     }
 
-    return slice.evaluateColorAt(seconds, color);
+    return slice!.evaluateColorAt(seconds, color);
   }
 
   /**
    * Iterator that evaluates the light program with the given number of frames
    * per second, yielding timestamp-color pairs.
    *
-   * @param {number} fps  the number of frames (evaluations) per second
+   * @param fps  the number of frames (evaluations) per second
    */
-  function* iterate(fps = 25) {
-    const dt = 1 / fps;
-    const color = [0, 0, 0];
+  function* iterate(fps = 25): Generator<[number, Color], void, void> {
+    const dt: number = 1 / fps;
+    const color: Color = [0, 0, 0];
     let [seconds, frames, t] = [0, 0, 0];
 
     // eslint-disable-next-line no-unmodified-loop-condition

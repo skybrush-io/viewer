@@ -2,8 +2,7 @@
  * @file Component that shows a three-dimensional view of the drone flock.
  */
 
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as React from 'react';
 
 import Box from '@mui/material/Box';
 
@@ -16,7 +15,7 @@ import Overlays from './Overlays';
 import OverlayVisibilityController from './OverlayVisibilityController';
 import ThreeDView from './ThreeDView';
 
-const PlayerView = ({ screenRef }) => (
+const PlayerView = ({ screenRef }: { screenRef: React.RefObject<Element> }) => (
   <>
     <Box position='relative' flex={1}>
       <ThreeDView cameraRef={cameraRef} />
@@ -29,9 +28,5 @@ const PlayerView = ({ screenRef }) => (
     <OverlayVisibilityController areaRef={screenRef} />
   </>
 );
-
-PlayerView.propTypes = {
-  screenRef: PropTypes.any,
-};
 
 export default PlayerView;

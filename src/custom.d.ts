@@ -4,6 +4,17 @@ declare module '*.png' {
   export default value;
 }
 
+// Custom elements used by A-Frame
+declare namespace JSX {
+  interface IntrinsicElements {
+    'a-assets': any;
+    'a-camera': any;
+    'a-drone-flock': any;
+    'a-entity': any;
+    'a-scene': any;
+  }
+}
+
 // Provide typings for configuration
 declare module 'config' {
   const config: {
@@ -16,6 +27,7 @@ declare module 'config' {
     modes: {
       player: boolean;
       validation: boolean;
+      vr: boolean;
     };
     useWelcomeScreen: boolean;
   };
@@ -71,14 +83,19 @@ declare module '@skybrush/show-format' {
   ): asserts trajectory is Trajectory;
 }
 
+// Provide typings for @skybrush/aframe-components
+declare module '@skybrush/aframe-components' {
+  export function objectToString(object: any): string;
+}
+
 // Provide typings for @skybrush/aframe-components/lib/spatial
 declare module '@skybrush/aframe-components/lib/spatial' {
   type EulerRotation = [number, number, number];
   type Position = [number, number, number];
   type Quaternion = [number, number, number, number];
-  type ThreeJsPosition = { x: number; y: number; z: number };
-  type ThreeJsQuaternion = { x: number; y: number; z: number; w: number };
-  type ThreeJsRotation = { x: number; y: number; z: number; order: string };
+  type ThreeJsPosition = [number, number, number];
+  type ThreeJsQuaternion = [number, number, number, number];
+  type ThreeJsRotation = [number, number, number];
 
   export function skybrushRotationToQuaternion(
     rotation: EulerRotation

@@ -1,7 +1,6 @@
 import config from 'config';
 
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 
 import Box from '@mui/material/Box';
@@ -28,6 +27,8 @@ import ToggleValidationModeButton from '~/features/validation/ToggleValidationMo
 
 import VirtualReality from '~/icons/VirtualReality';
 
+import type { RootState } from '~/store';
+
 const style = {
   background: 'linear-gradient(transparent 0px, rgba(0, 0, 0, 0.6) 48px)',
   cursor: 'default',
@@ -38,13 +39,29 @@ const style = {
   left: 0,
   right: 0,
   bottom: 0,
-};
+} as const;
 
 const noWrap = {
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
-};
+} as const;
+
+interface BottomOverlayProps {
+  canLoadShowFromLocalFile: boolean;
+  canTogglePlayback: boolean;
+  duration: number;
+  formatPlaybackTimestamp: (timestamp: number) => string;
+  hasAudio: boolean;
+  hasShow: boolean;
+  leftText: string;
+  muted: boolean;
+  playing: boolean;
+  rightText: string;
+  onLoadShowFromLocalFile: () => void;
+  onToggleMuted: () => void;
+  onTogglePlayback: () => void;
+}
 
 const BottomOverlay = React.forwardRef(
   (
@@ -63,7 +80,7 @@ const BottomOverlay = React.forwardRef(
       onToggleMuted,
       onTogglePlayback,
       ...rest
-    },
+    }: BottomOverlayProps,
     ref
   ) => (
     <Box ref={ref} sx={style} {...rest}>
@@ -88,7 +105,7 @@ const BottomOverlay = React.forwardRef(
           <PlaybackSlider />
         </Box>
         <Box textAlign='right' pl={2}>
-          {formatPlaybackTimestamp && formatPlaybackTimestamp(duration)}
+          {formatPlaybackTimestamp(duration)}
         </Box>
         <Box px={1}>
           {config.modes.vr && (
@@ -122,27 +139,10 @@ const BottomOverlay = React.forwardRef(
   )
 );
 
-BottomOverlay.propTypes = {
-  canLoadShowFromLocalFile: PropTypes.bool,
-  canTogglePlayback: PropTypes.bool,
-  duration: PropTypes.number,
-  formatPlaybackTimestamp: PropTypes.func,
-  hasAudio: PropTypes.bool,
-  hasShow: PropTypes.bool,
-  leftText: PropTypes.string,
-  muted: PropTypes.bool,
-  playing: PropTypes.bool,
-  onLoadShowFromLocalFile: PropTypes.func,
-  onRotateViewToDrones: PropTypes.func,
-  onToggleMuted: PropTypes.func,
-  onTogglePlayback: PropTypes.func,
-  rightText: PropTypes.string,
-};
-
 export default connect(
   // mapStateToProps
-  (state) => ({
-    canLoadShowFromLocalFile: canLoadShowFromLocalFile(state),
+  (state: RootState) => ({
+    canLoadShowFromLocalFile: canLoadShowFromLocalFile(),
     canTogglePlayback: canTogglePlayback(state),
     duration: getShowDuration(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
@@ -152,7 +152,7 @@ export default connect(
       'Use arrow keys to move around (Shift to run) and E/C to change altitude. Drag the scenery to look around. Scroll wheel or +/- to zoom.',
     muted: isAudioMuted(state),
     playing: isPlaying(state),
-    rightText: 'Skybrush © 2020-2021 CollMot Robotics Ltd.',
+    rightText: 'Skybrush © 2020-2022 CollMot Robotics Ltd.',
   }),
   // mapDispatchToProps
   {

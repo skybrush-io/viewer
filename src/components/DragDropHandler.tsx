@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 
 import { loadShowFromLocalFile } from '~/features/show/actions';
 
-const extractFileFromEvent = (event) => {
+const extractFileFromEvent = (event: DragEvent) => {
+  if (!event.dataTransfer) {
+    return undefined;
+  }
+
   const { files, items } = event.dataTransfer;
   let file;
 
@@ -13,19 +17,25 @@ const extractFileFromEvent = (event) => {
     file = files[0];
   }
 
+  if (!file) {
+    return undefined;
+  }
+
   // The requirement of the file.path property prevents this from working in
   // the browser, but that's exactly what we want
-  return file && file.name.endsWith('.skyc') && file.path
-    ? file.path
-    : undefined;
+  return file.name.endsWith('.skyc') && file.path ? file.path : undefined;
 };
 
-const onFileDragging = (event) => {
+const onFileDragging = (event: DragEvent) => {
   // Prevent the default behaviour of the browser
   event.preventDefault();
 };
 
-const DragDropHandler = ({ onFileDropped }) => {
+interface DragDropHandlerProps {
+  onFileDropped: (filename: string) => void;
+}
+
+const DragDropHandler = ({ onFileDropped }: DragDropHandlerProps) => {
   const handleDrop = useCallback(
     (event) => {
       const filename = extractFileFromEvent(event);

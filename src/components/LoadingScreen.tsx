@@ -1,5 +1,4 @@
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 
 import Box from '@mui/material/Box';
@@ -15,6 +14,7 @@ import {
   isLoadingShowFile,
 } from '~/features/show/selectors';
 import { shouldShowPlaybackHintButton } from '~/features/settings/selectors';
+import type { RootState } from '~/store';
 
 import CentralHelperPanel from './CentralHelperPanel';
 
@@ -36,7 +36,16 @@ const styles = {
     textAlign: 'center',
     userSelect: 'none',
   },
-};
+} as const;
+
+interface LoadingScreenProps {
+  canPlay: boolean;
+  error: string | null;
+  loading: boolean;
+  onDismiss: () => void;
+  onPlay: () => void;
+  visible: boolean;
+}
 
 const LoadingScreen = ({
   canPlay,
@@ -45,7 +54,7 @@ const LoadingScreen = ({
   onDismiss,
   onPlay,
   visible,
-}) => (
+}: LoadingScreenProps) => (
   <CentralHelperPanel
     canDismiss={!loading && !error}
     visible={visible}
@@ -72,25 +81,15 @@ const LoadingScreen = ({
   </CentralHelperPanel>
 );
 
-LoadingScreen.propTypes = {
-  canPlay: PropTypes.bool,
-  error: PropTypes.string,
-  loading: PropTypes.bool,
-  onDismiss: PropTypes.func,
-  onPlay: PropTypes.func,
-  visible: PropTypes.bool,
-};
-
 export default connect(
   // mapStateToProps
-  (state) => ({
+  (state: RootState) => ({
     canPlay: hasLoadedShowFile(state),
     error: state.show.error,
     loading: isLoadingShowFile(state),
     visible:
       isLoadingShowFile(state) ||
-      (!userInteractedWithPlayback(state) &&
-        shouldShowPlaybackHintButton(state)) ||
+      (!userInteractedWithPlayback(state) && shouldShowPlaybackHintButton()) ||
       Boolean(state.show.error),
   }),
   // mapDispatchToProps

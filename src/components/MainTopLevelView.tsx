@@ -2,24 +2,28 @@
  * @file Component that shows a three-dimensional view of the drone flock.
  */
 
-import PropTypes from 'prop-types';
-import React, { Suspense, useRef } from 'react';
+import * as React from 'react';
+import { Suspense, useRef } from 'react';
 import { connect } from 'react-redux';
 
 import Box from '@mui/material/Box';
 
-import { MODES } from '~/features/ui/modes';
+import { UIMode } from '~/features/ui/modes';
 import { getCurrentMode } from '~/features/ui/selectors';
-
+import type { RootState } from '~/store';
 import PlayerView from '~/views/player';
 
 import PageLoadingIndicator from './PageLoadingIndicator';
 
-const LazyValidationView = React.lazy(() =>
-  import(/* webpackChunkName: "validation" */ '~/views/validation')
+const LazyValidationView = React.lazy(
+  async () => import(/* webpackChunkName: "validation" */ '~/views/validation')
 );
 
-const MainTopLevelView = ({ mode }) => {
+interface MainTopLevelViewProps {
+  mode: UIMode;
+}
+
+const MainTopLevelView = ({ mode }: MainTopLevelViewProps) => {
   const ref = useRef(null);
 
   return (
@@ -32,13 +36,9 @@ const MainTopLevelView = ({ mode }) => {
   );
 };
 
-MainTopLevelView.propTypes = {
-  mode: PropTypes.oneOf(MODES),
-};
-
 export default connect(
   // mapStateToProps
-  (state) => ({
+  (state: RootState) => ({
     mode: getCurrentMode(state),
   }),
   // mapDispatchToProps

@@ -1,24 +1,26 @@
-import Color from 'color';
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as Color from 'color';
+import * as React from 'react';
 
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Fade from '@mui/material/Fade';
+import { Theme } from '@mui/material/styles';
 import Close from '@mui/icons-material/Close';
 
 import { isThemeDark } from '@skybrush/app-theme-mui';
 
 const styles = {
   root: {
-    background: (theme) =>
-      new Color(
-        isThemeDark(theme)
-          ? theme.palette.black
-          : theme.palette.background.default
-      )
-        .alpha(0.7)
-        .string(),
+    background: (theme: Theme) =>
+      String(
+        new Color(
+          isThemeDark(theme)
+            ? theme.palette.common.black
+            : theme.palette.background.default
+        )
+          .alpha(0.7)
+          .string()
+      ),
     borderRadius: 1,
     boxShadow: 8,
     fontSize: 'fontSize',
@@ -39,7 +41,19 @@ const styles = {
   },
 };
 
-const CentralHelperPanel = ({ canDismiss, children, onDismiss, visible }) => (
+interface CentralHelperPanelProps {
+  canDismiss: boolean;
+  children: React.ReactNode;
+  onDismiss: () => void;
+  visible: boolean;
+}
+
+const CentralHelperPanel = ({
+  canDismiss,
+  children,
+  onDismiss,
+  visible,
+}: CentralHelperPanelProps) => (
   <Fade appear mountOnEnter unmountOnExit timeout={500} in={visible}>
     <Box sx={styles.root}>
       {children}
@@ -53,15 +67,5 @@ const CentralHelperPanel = ({ canDismiss, children, onDismiss, visible }) => (
     </Box>
   </Fade>
 );
-
-CentralHelperPanel.propTypes = {
-  canDismiss: PropTypes.bool,
-  children: PropTypes.oneOfType([
-    PropTypes.node,
-    PropTypes.arrayOf(PropTypes.node),
-  ]),
-  onDismiss: PropTypes.func,
-  visible: PropTypes.bool,
-};
 
 export default CentralHelperPanel;

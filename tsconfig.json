@@ -4,7 +4,7 @@
     "baseUrl": "./src",
     "jsx": "react",
     "outDir": "./dist/",
-    "module": "es6",
+    "module": "esnext",
     "moduleResolution": "node",
     "noImplicitAny": true,
     "noImplicitThis": true,

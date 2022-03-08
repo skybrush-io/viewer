@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -16,7 +16,7 @@ const styles = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
   },
-};
+} as const;
 
 const PageLoadingIndicator = () => (
   <Box sx={styles.root}>

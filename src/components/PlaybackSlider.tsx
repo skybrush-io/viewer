@@ -1,11 +1,10 @@
-import PropTypes from 'prop-types';
-import React from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 import { useHarmonicIntervalFn, useUpdate } from 'react-use';
 
 import Slider from '@mui/material/Slider';
 import { orange } from '@mui/material/colors';
-import { styled } from '@mui/material/styles';
+import { styled, Theme } from '@mui/material/styles';
 
 import { stripEvent } from '@skybrush/redux-toolkit';
 
@@ -24,7 +23,9 @@ import {
   getTimestampFormatter,
 } from '~/features/show/selectors';
 
-const styles = ({ theme }) => ({
+import type { RootState } from '~/store';
+
+const styles = ({ theme }: { theme: Theme }) => ({
   '& .MuiSlider-valueLabel': {
     lineHeight: 1.2,
     fontSize: 12,
@@ -56,6 +57,17 @@ const styles = ({ theme }) => ({
   },
 });
 
+interface PlaybackSliderProps {
+  dragging: boolean;
+  duration: number;
+  formatPlaybackTimestamp: (timestamp: number) => string;
+  getElapsedSeconds: () => number;
+  onDragged: (event: Event, value: number) => void;
+  onDragging: (event: Event, value: number) => void;
+  playing: boolean;
+  updateInterval: number;
+}
+
 const PlaybackSlider = ({
   dragging,
   duration,
@@ -64,9 +76,9 @@ const PlaybackSlider = ({
   onDragged,
   onDragging,
   playing,
-  updateInterval,
+  updateInterval = 200,
   ...rest
-}) => {
+}: PlaybackSliderProps) => {
   const update = useUpdate();
   useHarmonicIntervalFn(update, playing && !dragging ? updateInterval : null);
 
@@ -86,24 +98,9 @@ const PlaybackSlider = ({
   );
 };
 
-PlaybackSlider.propTypes = {
-  dragging: PropTypes.bool,
-  duration: PropTypes.number,
-  formatPlaybackTimestamp: PropTypes.func,
-  getElapsedSeconds: PropTypes.func,
-  onDragged: PropTypes.func,
-  onDragging: PropTypes.func,
-  playing: PropTypes.bool,
-  updateInterval: PropTypes.number,
-};
-
-PlaybackSlider.defaultProps = {
-  updateInterval: 200,
-};
-
 export default connect(
   // mapStateToProps
-  (state) => ({
+  (state: RootState) => ({
     dragging: isAdjustingPlaybackPosition(state),
     duration: getShowDuration(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),

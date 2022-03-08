@@ -3,8 +3,8 @@
  * visuals.
  */
 
-import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useRef } from 'react';
+import * as React from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { useToasts } from 'react-toast-notifications';
 
@@ -19,6 +19,18 @@ import {
   isAdjustingPlaybackPosition,
   isPlayingInRealTime,
 } from '~/features/playback/selectors';
+import type { RootState } from '~/store';
+
+interface AudioControllerProps {
+  elapsedSecondsGetter: () => number;
+  muted: boolean;
+  onCanPlay: () => void;
+  onLoadedMetadata: () => void;
+  onSeeked: () => void;
+  onSeeking: () => void;
+  playing: boolean;
+  url: string;
+}
 
 const AudioController = ({
   elapsedSecondsGetter,
@@ -29,15 +41,15 @@ const AudioController = ({
   onSeeking,
   playing,
   url,
-}) => {
-  const audioRef = useRef(null);
+}: AudioControllerProps) => {
+  const audioRef = useRef<HTMLAudioElement>(null);
   const { addToast } = useToasts();
   const onError = useCallback(() => {
     addToast('Error while playing audio; playback stopped.', {
       appearance: 'error',
     });
 
-    if (audioRef) {
+    if (audioRef?.current) {
       console.error(audioRef.current.error);
     }
   }, [addToast, audioRef]);
@@ -51,7 +63,7 @@ const AudioController = ({
         // visuals. I don't know why it's needed or whether it varies from
         // machine to machine. We need to test it.
         audioRef.current.currentTime = elapsedSecondsGetter() + 0.15;
-        audioRef.current.play();
+        void audioRef.current.play();
       } else {
         audioRef.current.pause();
       }
@@ -73,20 +85,9 @@ const AudioController = ({
   ) : null;
 };
 
-AudioController.propTypes = {
-  elapsedSecondsGetter: PropTypes.func,
-  muted: PropTypes.bool,
-  onCanPlay: PropTypes.func,
-  onLoadedMetadata: PropTypes.func,
-  onSeeking: PropTypes.func,
-  onSeeked: PropTypes.func,
-  playing: PropTypes.bool,
-  url: PropTypes.string,
-};
-
 export default connect(
   // mapStateToProps
-  (state) => ({
+  (state: RootState) => ({
     ...state.audio,
     elapsedSecondsGetter: getElapsedSecondsGetter(state),
     playing: isPlayingInRealTime(state) && !isAdjustingPlaybackPosition(state),

@@ -102,6 +102,7 @@
     "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {
+    "@types/color": "^3.0.3",
     "@types/lodash-es": "^4.17.6",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.13",

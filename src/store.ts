@@ -45,7 +45,7 @@ export const { store, persistor } = configureStoreAndPersistence({
   ignoredPaths: ['show.data'],
 
   devTools: {
-    actionsBlacklist: [setOverlayVisibility.type],
+    actionsDenylist: [setOverlayVisibility.type],
     scrubbedActions: [loadShow.fulfilled.type],
     scrubbedPaths: ['show.data'],
   },

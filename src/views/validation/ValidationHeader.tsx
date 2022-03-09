@@ -1,8 +1,7 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Box from '@mui/material/Box';
+import Box, { BoxProps } from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Close from '@mui/icons-material/Close';
 import ChevronRight from '@mui/icons-material/ChevronRight';
@@ -15,7 +14,9 @@ import { clearLoadedShow } from '~/features/show/slice';
 import { togglePanelVisibility } from '~/features/validation/actions';
 import { PANELS } from '~/features/validation/panels';
 import { getVisiblePanels } from '~/features/validation/selectors';
+import { UIMode } from '~/features/ui/modes';
 import { setMode } from '~/features/ui/slice';
+import type { AppThunk, RootState } from '~/store';
 
 import PanelToggleChip from './PanelToggleChip';
 
@@ -30,7 +31,16 @@ const styles = {
       m: 0.5,
     },
   },
-};
+} as const;
+
+interface ValidationHeaderProps extends BoxProps {
+  canLoadShowFromLocalFile: boolean;
+  hasLoadedShowFile: boolean;
+  onClearLoadedShow: () => void;
+  onReturnToViewer: () => void;
+  onTogglePanel: (id: string) => void;
+  visiblePanels: string[];
+}
 
 const ValidationHeader = ({
   canLoadShowFromLocalFile,
@@ -40,14 +50,16 @@ const ValidationHeader = ({
   onTogglePanel,
   visiblePanels,
   ...rest
-}) => (
+}: ValidationHeaderProps) => (
   <Box sx={styles.root} {...rest}>
     {PANELS.map(({ component, id, ...rest }) => {
       return (
         <PanelToggleChip
           key={id}
           selected={visiblePanels.includes(id)}
-          onClick={() => onTogglePanel(id)}
+          onClick={() => {
+            onTogglePanel(id);
+          }}
           {...rest}
         />
       );
@@ -73,29 +85,20 @@ const ValidationHeader = ({
   </Box>
 );
 
-ValidationHeader.propTypes = {
-  canLoadShowFromLocalFile: PropTypes.bool,
-  hasLoadedShowFile: PropTypes.bool,
-  onClearLoadedShow: PropTypes.func,
-  onReturnToViewer: PropTypes.func,
-  onTogglePanel: PropTypes.func,
-  visiblePanels: PropTypes.arrayOf(PropTypes.string),
-};
-
 export default connect(
   // mapStateToProps
-  (state) => ({
+  (state: RootState) => ({
     canLoadShowFromLocalFile: canLoadShowFromLocalFile(),
     hasLoadedShowFile: hasLoadedShowFile(state),
     visiblePanels: getVisiblePanels(state),
   }),
   // mapDispatchToProps
-  (dispatch) => ({
-    onClearLoadedShow: () => {
+  {
+    onClearLoadedShow: (): AppThunk => (dispatch) => {
       dispatch(clearLoadedShow());
-      dispatch(setMode('player'));
+      dispatch(setMode(UIMode.PLAYER));
     },
-    onReturnToViewer: () => dispatch(setMode('player')),
-    onTogglePanel: (id) => dispatch(togglePanelVisibility(id)),
-  })
+    onReturnToViewer: () => setMode(UIMode.PLAYER),
+    onTogglePanel: (id: string) => togglePanelVisibility(id),
+  }
 )(ValidationHeader);

@@ -19,7 +19,7 @@ const styles = {
     overflow: 'hidden',
     pr: 1,
   },
-};
+} as const;
 
 const ValidationView = () => (
   <Box sx={styles.root}>

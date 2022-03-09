@@ -102,10 +102,12 @@
     "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {
+    "@types/chart.js": "^2.9.35",
     "@types/color": "^3.0.3",
     "@types/lodash-es": "^4.17.6",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.13",
+    "@types/react-window": "^1.8.5",
     "@types/timsort": "^0.3.0",
     "clean-webpack-plugin": "^4.0.0",
     "compression-webpack-plugin": "^9.2.0",

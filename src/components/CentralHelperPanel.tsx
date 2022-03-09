@@ -1,5 +1,5 @@
-import * as Color from 'color';
-import * as React from 'react';
+import Color from 'color';
+import React from 'react';
 
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -42,9 +42,9 @@ const styles = {
 };
 
 interface CentralHelperPanelProps {
-  canDismiss: boolean;
+  canDismiss?: boolean;
   children: React.ReactNode;
-  onDismiss: () => void;
+  onDismiss?: () => void;
   visible: boolean;
 }
 

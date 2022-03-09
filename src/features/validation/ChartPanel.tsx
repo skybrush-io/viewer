@@ -1,10 +1,10 @@
 import merge from 'lodash-es/merge';
-import PropTypes from 'prop-types';
-import React, { useMemo } from 'react';
+import React from 'react';
+import { useMemo } from 'react';
 import { Scatter } from 'react-chartjs-2';
 
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
+import Card, { CardProps } from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import { orange } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
@@ -18,14 +18,18 @@ import {
 
 import { CHART_COLORS } from './constants';
 
-require('chartjs-plugin-annotation');
-require('chartjs-plugin-crosshair');
+import 'chartjs-plugin-annotation';
+import 'chartjs-plugin-crosshair';
 
-const StyledCard = styled(Card)(({ height, theme }) => {
+interface StyledCardProps extends CardProps {
+  height: number;
+}
+
+const StyledCard = styled(Card)<StyledCardProps>(({ height, theme }) => {
   const isDark = isThemeDark(theme);
 
   return {
-    ...createSecondaryAreaStyle(theme),
+    ...createSecondaryAreaStyle(theme, {}),
 
     position: 'relative',
     height,
@@ -67,7 +71,13 @@ const StyledCard = styled(Card)(({ height, theme }) => {
   };
 });
 
-const createLineStyle = ({ canvas, color = 'rgb(0, 128, 255)' } = {}) => ({
+const createLineStyle = ({
+  canvas,
+  color = 'rgb(0, 128, 255)',
+}: {
+  canvas: HTMLCanvasElement;
+  color: string;
+}) => ({
   backgroundColor: createGradientBackground({
     alpha: 0.4,
     height: 800,
@@ -78,11 +88,14 @@ const createLineStyle = ({ canvas, color = 'rgb(0, 128, 255)' } = {}) => ({
   pointBackgroundColor: color,
 });
 
-const createLineStyles = (options) => {
-  return CHART_COLORS.map((color) => createLineStyle({ ...options, color }));
+const createLineStyles = ({ canvas }: { canvas: HTMLCanvasElement }) => {
+  return CHART_COLORS.map((color) => createLineStyle({ canvas, color }));
 };
 
-const createThresholdAnnotation = (value, label) => ({
+const createThresholdAnnotation = (
+  value: number,
+  label: string | undefined
+) => ({
   type: 'line',
   mode: 'horizontal',
   scaleID: 'left',
@@ -100,6 +113,10 @@ const createThresholdAnnotation = (value, label) => ({
   },
 });
 
+interface ChartOptionsWithAnnotation extends Chart.ChartOptions {
+  annotation?: {};
+}
+
 const createOptions = ({
   formatPlaybackTimestamp,
   range,
@@ -107,7 +124,14 @@ const createOptions = ({
   thresholdIsAbsolute,
   thresholdLabel,
   verticalUnit,
-} = {}) => {
+}: {
+  formatPlaybackTimestamp?: (value: number) => string;
+  range?: [number, number];
+  threshold?: number;
+  thresholdIsAbsolute?: boolean;
+  thresholdLabel?: string;
+  verticalUnit?: string;
+} = {}): ChartOptionsWithAnnotation => {
   const base = createChartStyle({
     animate: false,
     dark: true,
@@ -120,10 +144,10 @@ const createOptions = ({
   base.elements.line.borderJoinStyle = 'bevel';
 
   const timestampFormatter = formatPlaybackTimestamp
-    ? (value) => formatPlaybackTimestamp(value)
-    : (value) => String(value);
+    ? (value: number) => formatPlaybackTimestamp(value)
+    : (value: number) => String(value);
 
-  let options = {
+  let options: ChartOptionsWithAnnotation = {
     legend: {
       labels: {
         usePointStyle: true,
@@ -169,25 +193,32 @@ const createOptions = ({
 
     tooltips: {
       callbacks: {
-        label: (item, data) => {
-          const originalDataPoint =
-            data.datasets[item.datasetIndex].data[item.index];
-          let label = data.datasets[item.datasetIndex].label || '';
+        label(item: Chart.ChartTooltipItem, data: Chart.ChartData) {
+          if (!data.datasets) {
+            return '';
+          }
+
+          const datasetIndex = item.datasetIndex!;
+          const index = item.index!;
+          const value = item.value!;
+          const originalDataPoint = data.datasets[datasetIndex].data![index];
+          let label: string = data.datasets[datasetIndex].label || '';
 
           if (label) {
             label += ': ';
           }
 
-          label += Math.round(item.value * 100) / 100;
-          return originalDataPoint.tip
-            ? `${label}${verticalUnit} (${originalDataPoint.tip})`
-            : `${label}${verticalUnit}`;
+          label += String(Math.round(Number(value) * 100) / 100);
+          const originalTip: string = (originalDataPoint as any)?.tip;
+          return originalTip
+            ? `${label}${verticalUnit ?? ''} (${originalTip})`
+            : `${label}${verticalUnit ?? ''}`;
         },
 
-        title: (item) => {
-          if (item.length > 0) {
-            return timestampFormatter(item[0].xLabel);
-          }
+        title(item: Chart.ChartTooltipItem[]) {
+          return item.length > 0
+            ? timestampFormatter(item[0].xLabel as any)
+            : '';
         },
       },
       intersect: false,
@@ -207,15 +238,35 @@ const createOptions = ({
   merge(base, options);
   options = base;
 
-  options.scales.xAxes[0].ticks.callback = timestampFormatter;
+  options.scales!.xAxes![0].ticks!.callback = timestampFormatter;
 
   if (range && Array.isArray(range) && range.length >= 2) {
-    options.scales.yAxes[0].ticks.suggestedMin = range[0];
-    options.scales.yAxes[0].ticks.suggestedMax = range[1];
+    options.scales!.yAxes![0].ticks!.suggestedMin = range[0];
+    options.scales!.yAxes![0].ticks!.suggestedMax = range[1];
   }
 
   return options;
 };
+
+interface ChartPanelProps {
+  data: Array<{
+    values: Array<{
+      x: number;
+      y: number;
+      tip: string;
+    }>;
+    label: string;
+    role: 'minimum' | 'maximum' | 'mean' | 'single';
+  }>;
+  formatPlaybackTimestamp?: (value: number) => string;
+  height: number;
+  range: [number, number];
+  threshold?: number;
+  thresholdIsAbsolute?: boolean;
+  thresholdLabel?: string;
+  title?: string;
+  verticalUnit?: string;
+}
 
 const ChartPanel = ({
   data,
@@ -226,10 +277,10 @@ const ChartPanel = ({
   thresholdIsAbsolute,
   thresholdLabel,
   title,
-  verticalUnit,
-}) => {
+  verticalUnit = '',
+}: ChartPanelProps) => {
   const chartData = useMemo(
-    () => (canvas) => {
+    () => (canvas: HTMLCanvasElement) => {
       const lineStyles = createLineStyles({ canvas });
       const numberStyles = lineStyles.length;
 
@@ -295,34 +346,6 @@ const ChartPanel = ({
       )}
     </StyledCard>
   );
-};
-
-ChartPanel.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      values: PropTypes.arrayOf(
-        PropTypes.shape({
-          x: PropTypes.number,
-          y: PropTypes.number,
-          tip: PropTypes.string,
-        })
-      ),
-      label: PropTypes.string,
-      role: PropTypes.oneOf(['minimum', 'maximum', 'mean', 'single']),
-    })
-  ),
-  formatPlaybackTimestamp: PropTypes.func,
-  height: PropTypes.number,
-  range: PropTypes.arrayOf(PropTypes.number),
-  threshold: PropTypes.number,
-  thresholdIsAbsolute: PropTypes.bool,
-  thresholdLabel: PropTypes.string,
-  title: PropTypes.string,
-  verticalUnit: PropTypes.string,
-};
-
-ChartPanel.defaultProps = {
-  verticalUnit: '',
 };
 
 export default ChartPanel;

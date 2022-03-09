@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import Box, { BoxProps } from '@mui/material/Box';
 import { systemFont } from '@skybrush/app-theme-mui';

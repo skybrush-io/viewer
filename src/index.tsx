@@ -3,7 +3,7 @@
  * when it is being run as a desktop application.
  */
 
-import * as React from 'react';
+import React from 'react';
 import { render } from 'react-dom';
 
 import App from './app';

@@ -29,6 +29,10 @@ declare module 'config' {
       validation: boolean;
       vr: boolean;
     };
+    preloadedShow?: {
+      data: any;
+      audioUrl: string;
+    };
     useWelcomeScreen: boolean;
   };
   export default config;

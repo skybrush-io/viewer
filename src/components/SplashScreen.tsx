@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { CoverPagePresentation as CoverPage } from 'react-cover-page';
 
 import logo from '~/../assets/icons/splash.png';

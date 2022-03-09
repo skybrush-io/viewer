@@ -2,7 +2,7 @@
  * @file Component that shows a three-dimensional view of the drone flock.
  */
 
-import * as React from 'react';
+import React from 'react';
 import { Suspense, useRef } from 'react';
 import { connect } from 'react-redux';
 

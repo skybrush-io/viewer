@@ -2,7 +2,12 @@
  * @file The master store for the application state.
  */
 
-import { AnyAction, bindActionCreators, ThunkAction } from '@reduxjs/toolkit';
+import {
+  AnyAction,
+  bindActionCreators,
+  Dispatch,
+  ThunkAction,
+} from '@reduxjs/toolkit';
 import { configureStoreAndPersistence } from '@skybrush/redux-toolkit';
 
 import reducer from './features';
@@ -65,10 +70,10 @@ if (isElectronWindow(window)) {
 export default store;
 
 export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,
   RootState,
   unknown,
   AnyAction
 >;
+export type AppDispatch = Dispatch;

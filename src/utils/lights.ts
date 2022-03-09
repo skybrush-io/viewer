@@ -1,4 +1,4 @@
-import * as Deque from 'denque';
+import Deque from 'denque';
 import { Base64 } from 'js-base64';
 import isArrayBuffer from 'lodash-es/isArrayBuffer';
 

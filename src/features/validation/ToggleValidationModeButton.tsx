@@ -1,23 +1,30 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import IconButton from '@mui/material/IconButton';
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Assignment from '@mui/icons-material/Assignment';
 import AssignmentLate from '@mui/icons-material/AssignmentLate';
 import AssignmentTurnedIn from '@mui/icons-material/AssignmentTurnedIn';
 import Tooltip from '@skybrush/mui-components/lib/Tooltip';
 
 import { toggleMode } from '~/features/ui/actions';
+import { UIMode } from '~/features/ui/modes';
+import type { RootState } from '~/store';
 
 import { hasValidationMessages } from './selectors';
+
+interface ToggleValidationModeButtonProps extends IconButtonProps {
+  onToggleValidationMode?: () => void;
+  trajectoriesValid?: boolean;
+  validationInProgress?: boolean;
+}
 
 const ToggleValidationModeButton = ({
   onToggleValidationMode,
   trajectoriesValid,
   validationInProgress,
   ...rest
-}) => (
+}: ToggleValidationModeButtonProps) => (
   <Tooltip content='Validate trajectories'>
     <IconButton
       disableRipple
@@ -36,19 +43,13 @@ const ToggleValidationModeButton = ({
   </Tooltip>
 );
 
-ToggleValidationModeButton.propTypes = {
-  onToggleValidationMode: PropTypes.func,
-  trajectoriesValid: PropTypes.bool,
-  validationInProgress: PropTypes.bool,
-};
-
 export default connect(
   // mapStateToProps
-  (state) => ({
+  (state: RootState) => ({
     trajectoriesValid: !hasValidationMessages(state),
   }),
   // mapDispatchToProps
   {
-    onToggleValidationMode: () => toggleMode('validation'),
+    onToggleValidationMode: () => toggleMode(UIMode.VALIDATION),
   }
 )(ToggleValidationModeButton);

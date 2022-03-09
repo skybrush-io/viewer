@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Folder from '@mui/icons-material/Folder';

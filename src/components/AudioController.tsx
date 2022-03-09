@@ -3,7 +3,7 @@
  * visuals.
  */
 
-import * as React from 'react';
+import React from 'react';
 import { useCallback, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { useToasts } from 'react-toast-notifications';

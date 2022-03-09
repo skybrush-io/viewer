@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 
 import { getTimestampFormatter, isShowIndoor } from '~/features/show/selectors';
+import type { RootState } from '~/store';
 
 import ChartPanel from './ChartPanel';
 import {
@@ -21,7 +22,7 @@ const Y_RANGE_OUTDOOR = [0, 10];
 
 export default connect(
   // mapStateToProps
-  (state) => ({
+  (state: RootState) => ({
     data: getDataForAltitudeChart(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
     range: isShowIndoor(state) ? Y_RANGE_INDOOR : Y_RANGE_OUTDOOR,

@@ -5,6 +5,7 @@ import {
   getNamesOfDronesInShow,
   getTimestampFormatter,
 } from '~/features/show/selectors';
+import type { RootState } from '~/store';
 
 import ChartPanel from './ChartPanel';
 
@@ -41,7 +42,7 @@ const getDataForProximityChart = createSelector(
 
 export default connect(
   // mapStateToProps
-  (state) => ({
+  (state: RootState) => ({
     data: getDataForProximityChart(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
     threshold: getProximityWarningThreshold(state),

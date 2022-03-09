@@ -1,5 +1,5 @@
 import delay from 'delay';
-import * as React from 'react';
+import React from 'react';
 import { Provider as StoreProvider } from 'react-redux';
 import { ToastProvider } from 'react-toast-notifications';
 import { PersistGate } from 'redux-persist/es/integration/react';

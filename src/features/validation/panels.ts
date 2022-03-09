@@ -10,11 +10,12 @@ export enum ValidationPanel {
   PROXIMITY = 'proximity',
 }
 
-interface PanelSpecification {
+export interface PanelSpecification {
   id: ValidationPanel;
   label: string;
   component: any;
   priority: number;
+  height?: number;
 }
 
 export const PANELS: PanelSpecification[] = [

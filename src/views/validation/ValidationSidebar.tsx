@@ -1,5 +1,4 @@
 import isNil from 'lodash-es/isNil';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { FixedSizeList as List } from 'react-window';
@@ -20,49 +19,47 @@ import {
   getSelectionToChartIndexMapping,
   isSelectionEmpty,
 } from '~/features/validation/selectors';
+import type { AppDispatch, RootState } from '~/store';
+
+interface SidebarListItemPresentationProps {
+  chartIndex: number;
+  label?: string;
+  onToggleSelection: () => void;
+  style?: React.CSSProperties;
+}
 
 const SidebarListItemPresentation = ({
   chartIndex,
   label,
   onToggleSelection,
   style,
-}) => {
-  console.log(chartIndex);
-  return (
-    <ListItem button dense style={style} onClick={onToggleSelection}>
-      <Checkbox
-        checked={!isNil(chartIndex)}
-        size='small'
-        style={{ color: chartIndex ? CHART_COLORS[chartIndex] : undefined }}
-      />
-      <ListItemText primary={label} />
-    </ListItem>
-  );
-};
-
-SidebarListItemPresentation.propTypes = {
-  chartIndex: PropTypes.number,
-  label: PropTypes.string,
-  onToggleSelection: PropTypes.func,
-  style: PropTypes.any,
-};
+}: SidebarListItemPresentationProps) => (
+  <ListItem button dense style={style} onClick={onToggleSelection}>
+    <Checkbox
+      checked={!isNil(chartIndex)}
+      size='small'
+      style={{ color: chartIndex ? CHART_COLORS[chartIndex] : undefined }}
+    />
+    <ListItemText primary={label} />
+  </ListItem>
+);
 
 const SidebarListItem = connect(
   // mapStateToProps
-  (state, ownProps) => ({
+  (state: RootState, ownProps: { id: string }) => ({
     chartIndex: getSelectionToChartIndexMapping(state)[ownProps.id],
   }),
   // mapDispatchToProps
-  (dispatch, ownProps) => ({
-    onToggleSelection: () => {
-      dispatch(toggleItemInSelection(ownProps.id));
+  (dispatch: AppDispatch, ownProps: { id: string }) => ({
+    onToggleSelection() {
+      dispatch(toggleItemInSelection(ownProps.id) as any);
     },
   })
 )(SidebarListItemPresentation);
 
 const ShowAllDronesListItem = connect(
   // mapStateToProps
-  (state) => ({
+  (state: RootState) => ({
     chartIndex: isSelectionEmpty(state) ? 0 : undefined,
     label: 'All drones',
   }),
@@ -79,7 +76,15 @@ const style = {
   },
 };
 
-const ValidationSidebar = ({ singleDroneItems, width }) => {
+interface ValidationSidebarProps {
+  singleDroneItems: Array<{ id: string; label: string }>;
+  width?: number;
+}
+
+const ValidationSidebar = ({
+  singleDroneItems,
+  width = 160,
+}: ValidationSidebarProps) => {
   const { ref, height = 0 } = useResizeObserver();
   return (
     <Box ref={ref} width={width} sx={style}>
@@ -93,32 +98,18 @@ const ValidationSidebar = ({ singleDroneItems, width }) => {
           const item = index > 0 ? singleDroneItems[index - 1] : undefined;
           return index === 0 ? (
             <ShowAllDronesListItem style={style} />
-          ) : (
+          ) : item ? (
             <SidebarListItem key={item.id} {...item} style={style} />
-          );
+          ) : null;
         }}
       </List>
     </Box>
   );
 };
 
-ValidationSidebar.propTypes = {
-  singleDroneItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      label: PropTypes.string,
-    })
-  ),
-  width: PropTypes.number,
-};
-
-ValidationSidebar.defaultProps = {
-  width: 160,
-};
-
 export default connect(
   // mapStateToProps
-  (state) => ({
+  (state: RootState) => ({
     singleDroneItems: getSidebarItemsForSingleDrones(state),
   }),
   // mapDispatchToProps

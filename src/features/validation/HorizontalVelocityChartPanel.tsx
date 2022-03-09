@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 
 import { getTimestampFormatter } from '~/features/show/selectors';
+import type { RootState } from '~/store';
 
 import ChartPanel from './ChartPanel';
 import {
@@ -20,7 +21,7 @@ const Y_RANGE = [0, 1];
 
 export default connect(
   // mapStateToProps
-  (state) => ({
+  (state: RootState) => ({
     data: getDataForHorizontalVelocityChart(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
     range: Y_RANGE,

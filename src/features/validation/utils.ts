@@ -28,12 +28,13 @@ const createChartPointWithTip = (
   tip,
 });
 
-export const createChartPoints = (xs: number[], ys: number[]) =>
+export const createChartPoints = (xs: number[], ys: Array<number | null>) =>
   zipWith(xs, ys, createChartPoint);
+
 export const createChartPointsWithTips = (
   xs: number[],
-  ys: number[],
-  tips: string[]
+  ys: Array<number | null>,
+  tips: Array<string | null>
 ) => zipWith(xs, ys, tips, createChartPointWithTip);
 
 export const createChartDataSelector = (

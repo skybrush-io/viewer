@@ -1,16 +1,20 @@
 import isNil from 'lodash-es/isNil';
 import sumBy from 'lodash-es/sumBy';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import useResizeObserver from 'use-resize-observer';
 
-import Box from '@mui/material/Box';
+import Box, { BoxProps } from '@mui/material/Box';
 import ChartIcon from '@mui/icons-material/InsertChartOutlined';
 import BackgroundHint from '@skybrush/mui-components/lib/BackgroundHint';
 
-import { findPanelById } from '~/features/validation/panels';
+import {
+  findPanelById,
+  PanelSpecification,
+  ValidationPanel,
+} from '~/features/validation/panels';
 import { getVisiblePanels } from '~/features/validation/selectors';
+import type { RootState } from '~/store';
 
 const style = {
   display: 'grid',
@@ -19,17 +23,21 @@ const style = {
   overflow: 'hidden',
 };
 
-const isPanelHeightValid = (panel) =>
+const isPanelHeightValid = (panel: PanelSpecification): boolean =>
   typeof panel.height === 'number' &&
   Number.isFinite(panel.height) &&
   panel.height > 0;
 
-const ChartGrid = ({ visiblePanels, ...rest }) => {
+interface ChartGridProps extends BoxProps {
+  visiblePanels: ValidationPanel[];
+}
+
+const ChartGrid = ({ visiblePanels, ...rest }: ChartGridProps) => {
   const { ref, height = 0 } = useResizeObserver();
 
-  const panels = visiblePanels
+  const panels: PanelSpecification[] = visiblePanels
     .map((panelId) => findPanelById(panelId))
-    .filter(Boolean);
+    .filter((spec): spec is PanelSpecification => !isNil(spec));
   const panelHeights = panels.map((panel) =>
     isPanelHeightValid(panel) ? panel.height : undefined
   );
@@ -83,17 +91,9 @@ const ChartGrid = ({ visiblePanels, ...rest }) => {
   );
 };
 
-ChartGrid.propTypes = {
-  visiblePanels: PropTypes.arrayOf(PropTypes.string),
-};
-
-ChartGrid.defaultProps = {
-  visiblePanels: [],
-};
-
 export default connect(
   // mapStateToProps
-  (state) => ({
+  (state: RootState) => ({
     visiblePanels: getVisiblePanels(state),
   }),
   // mapDispatchToProps

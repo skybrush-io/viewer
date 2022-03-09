@@ -2,6 +2,8 @@ import get from 'lodash-es/get';
 import range from 'lodash-es/range';
 import { createSelector } from '@reduxjs/toolkit';
 
+import { ThreeJsVector } from '@skybrush/show-format';
+
 import {
   getShowDuration,
   getShowEnvironmentType,
@@ -13,7 +15,6 @@ import type { RootState } from '~/store';
 import getClosestPair from './closest-pair';
 import { DEFAULT_VALIDATION_SETTINGS, SAMPLES_PER_SECOND } from './constants';
 import { ValidationSettings } from './types';
-import { ThreeJsVector } from '@skybrush/show-format';
 
 /**
  * Selector that returns the validation settings of the current show (if any).
@@ -190,7 +191,10 @@ export const getSampledVerticalVelocitiesForDrones = createSelector(
 export const getNearestNeighborsAndDistancesForFrames = createSelector(
   getSampledPositionsForDrones,
   getSampledTimeInstants,
-  (positionsByDrones, times) => {
+  (
+    positionsByDrones,
+    times
+  ): [Array<number | null>, Array<[number, number] | null>] => {
     // TODO(ntamas): make this async and make it run in a worker or at least in
     // the background so we don't lock the UI
     const frameCount = times.length;
@@ -250,9 +254,7 @@ export const getSelectionToChartIndexMapping = createSelector(
   (selection) => {
     const mapping: Record<string, number> = {};
 
-    console.log(selection);
     for (const [index, itemId] of selection.entries()) {
-      console.log(itemId, index);
       mapping[itemId] = index;
     }
 

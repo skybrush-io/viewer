@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { select, take } from 'redux-saga/effects';
 
 import {

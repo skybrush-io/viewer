@@ -6,7 +6,6 @@
   "main": "launcher.bundle.js",
   "scripts": {
     "bundle": "rimraf build && cross-env NODE_ENV=production webpack --mode=production --progress --config webpack/dist.config.js",
-    "dist": "node scripts/deploy.mjs -p",
     "lint": "xo",
     "postinstall": "patch-package",
     "analyze": "webpack --config webpack/browser.config.js --progress --json >stats.json",

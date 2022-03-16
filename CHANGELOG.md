@@ -7,9 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Miscellaneous
+## [2.0.0] - 2022-03-16
+
+### Changed
 
 - Most of the project code was re-written in TypeScript
+
+- The application is now licensed as GNU GPL v3 or later.
+
+Strictly speaking, none of the above are breaking changes, but we believe that
+the license change is significant enough to warrant a major version bump.
 
 ## [1.10.1] - 2021-12-27
 

@@ -20,7 +20,7 @@
   },
   "keywords": [],
   "author": "CollMot Robotics Ltd",
-  "license": "UNLICENSED",
+  "license": "GPL-3.0-or-later",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.8.2",

@@ -26,6 +26,11 @@ Navigate to ``http://localhost:8080`` after startup to use the app in
 a browser. Note that not all features may be available in a browser
 environment.
 
+Support
+-------
+
+For any support questions please contact us on our [Discord server](https://skybrush.io/r/discord).
+
 License
 -------
 

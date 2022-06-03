@@ -5,12 +5,11 @@ import { connect } from 'react-redux';
 
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
+import MuteButton from '@skybrush/mui-components/lib/MuteButton';
+import PlayStopButton from '@skybrush/mui-components/lib/PlayStopButton';
 
-import PlaybackSlider from '~/components/PlaybackSlider';
 import OpenButton from '~/components/buttons/OpenButton';
-import PlayStopButton from '~/components/buttons/PlayStopButton';
 import SettingsButton from '~/components/buttons/SettingsButton';
-import VolumeButton from '~/components/buttons/VolumeButton';
 
 import { hasAudio, isAudioMuted } from '~/features/audio/selectors';
 import { toggleMuted } from '~/features/audio/slice';
@@ -28,6 +27,8 @@ import ToggleValidationModeButton from '~/features/validation/ToggleValidationMo
 import VirtualReality from '~/icons/VirtualReality';
 
 import type { RootState } from '~/store';
+
+import PlaybackSlider from './PlaybackSlider';
 
 const style = {
   background: 'linear-gradient(transparent 0px, rgba(0, 0, 0, 0.6) 48px)',
@@ -97,9 +98,7 @@ const BottomOverlay = React.forwardRef(
             playing={playing}
             onClick={onTogglePlayback}
           />
-          {hasAudio ? (
-            <VolumeButton muted={muted} onClick={onToggleMuted} />
-          ) : null}
+          {hasAudio && <MuteButton muted={muted} onClick={onToggleMuted} />}
         </Box>
         <Box flex={1} textAlign='center' pt={0.5}>
           <PlaybackSlider />

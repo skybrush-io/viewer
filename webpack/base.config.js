@@ -1,6 +1,3 @@
-// Use strict mode so we can have block-scoped declarations
-'use strict';
-
 const path = require('path');
 const process = require('process');
 const webpack = require('webpack');
@@ -23,7 +20,7 @@ module.exports = {
     filename: '[name].bundle.js',
   },
 
-  devtool: enableSourceMap ? 'cheap-module-source-map' : undefined,
+  devtool: enableSourceMap ? 'eval-cheap-module-source-map' : undefined,
 
   devServer: {
     hot: true,
@@ -38,7 +35,7 @@ module.exports = {
       React: 'react',
     }),
 
-    // Resolve process.env in the code; the object below provides the default
+    // Resolve process.env in the code; the object below provides the
     // default values
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development',

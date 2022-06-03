@@ -16,7 +16,6 @@ import { loadShowFromLocalFile } from './features/show/actions';
 import { loadShowFromObject } from './features/show/slice';
 import { setOverlayVisibility } from './features/three-d/slice';
 import { setMode as setUIMode } from './features/ui/slice';
-import rootSaga from './sagas';
 import { isElectronWindow } from './window';
 
 /**
@@ -24,7 +23,6 @@ import { isElectronWindow } from './window';
  */
 export const { store, persistor } = configureStoreAndPersistence({
   reducer,
-  // sagas: rootSaga,
 
   storage: {
     key: 'skybrush-viewer',

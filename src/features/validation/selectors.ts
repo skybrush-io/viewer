@@ -2,7 +2,7 @@ import get from 'lodash-es/get';
 import range from 'lodash-es/range';
 import { createSelector } from '@reduxjs/toolkit';
 
-import { ThreeJsVector } from '@skybrush/show-format';
+import { Vector3, Vector3Tuple } from '@skybrush/show-format';
 
 import {
   getShowDuration,
@@ -119,7 +119,7 @@ export const getSampledPositionsForDrones = createSelector(
     // the background so we don't lock the UI
     return players.map((player) =>
       samples.map((time) =>
-        player.getPositionAt(time, { x: 0, y: 0, z: 0, t: time })
+        player.getPositionAt(time, { x: 0, y: 0, z: 0, t: time } as any)
       )
     );
   }
@@ -137,7 +137,7 @@ export const getSampledVelocitiesForDrones = createSelector(
     // the background so we don't lock the UI
     return players.map((player) =>
       samples.map((time) =>
-        player.getVelocityAt(time, { x: 0, y: 0, z: 0, t: time })
+        player.getVelocityAt(time, { x: 0, y: 0, z: 0, t: time } as any)
       )
     );
   }
@@ -203,7 +203,7 @@ export const getNearestNeighborsAndDistancesForFrames = createSelector(
     const indices: Array<[number, number] | null> = Array.from({
       length: frameCount,
     });
-    const positionsInCurrentFrame: ThreeJsVector[] = Array.from({
+    const positionsInCurrentFrame: Vector3[] = Array.from({
       length: droneCount,
     });
 

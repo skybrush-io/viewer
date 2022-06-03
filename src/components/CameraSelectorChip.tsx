@@ -7,16 +7,16 @@ import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import { CameraSpecification } from '@skybrush/show-format';
+import { Camera } from '@skybrush/show-format';
 
-function getLabelForCamera(camera: CameraSpecification, index: number): string {
+function getLabelForCamera(camera: Camera, index: number): string {
   return camera.name ?? `Camera ${index}`;
 }
 
 interface CameraSelectorChipProps extends ChipProps {
-  cameras: CameraSpecification[];
+  cameras: Camera[];
   hotkeys: string[];
-  onCameraSelected: (index: number, camera: CameraSpecification) => void;
+  onCameraSelected: (index: number, camera: Camera) => void;
   selectedCameraIndex: number;
 }
 

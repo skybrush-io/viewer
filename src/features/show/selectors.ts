@@ -14,19 +14,18 @@ import {
   skybrushToThreeJsPosition,
 } from '@skybrush/aframe-components/lib/spatial';
 import {
-  createTrajectoryPlayer,
-  getCamerasFromShowSpecification,
-  validateTrajectory,
-} from '@skybrush/show-format';
-import type {
-  CameraSpecification,
+  Camera,
   DroneSpecification,
   ShowSpecification,
   Trajectory,
   TrajectoryPlayer,
+  createLightProgramPlayer,
+  createTrajectoryPlayer,
+  getCamerasFromShowSpecification,
+  validateTrajectory,
+  ShowMetadata,
 } from '@skybrush/show-format';
 import { formatPlaybackTimestamp } from '~/utils/formatters';
-import createLightProgramPlayer from '~/utils/lights';
 
 import type { RootState } from '~/store';
 
@@ -35,7 +34,7 @@ export const canLoadShowFromLocalFile = (): boolean => config.io.localFiles;
 const EMPTY_ARRAY = Object.freeze([]);
 const EMPTY_OBJECT = Object.freeze({});
 const DEFAULT_ORIENTATION = skybrushRotationToQuaternion([90, 0, -90]);
-const DEFAULT_CAMERAS: Record<string, CameraSpecification[]> = {
+const DEFAULT_CAMERAS: Record<string, Camera[]> = {
   // Skybrush coordinate system: X points forward, Y points left, Z points up.
   // [0, 0, 0] rotation is when the camera points downwards (negative Z) and the
   // up-vector of the camera points towards left (positive Y). To have an upright
@@ -178,10 +177,10 @@ export const isShowOutdoor = (state: RootState) =>
  */
 export const getCameras = createSelector(
   getShowSpecification,
-  (spec: ShowSpecification): CameraSpecification[] =>
+  (spec: ShowSpecification): Camera[] =>
     spec
       ? getCamerasFromShowSpecification(spec)
-      : (EMPTY_ARRAY as any as CameraSpecification[])
+      : (EMPTY_ARRAY as any as Camera[])
 );
 
 /**
@@ -195,7 +194,7 @@ export const getPerspectiveCameras = createSelector(getCameras, (cameras) =>
           (camera) => camera && (!camera.type || camera.type === 'perspective')
         )
         .map(
-          (camera: CameraSpecification): CameraSpecification =>
+          (camera: Camera): Camera =>
             // Make sure that the camera has a minimum height of 1m otherwise it
             // would be placed below the ground if it is far from the center
             // (as we have hills in the scenery there)
@@ -206,7 +205,7 @@ export const getPerspectiveCameras = createSelector(getCameras, (cameras) =>
                 }
               : camera
         )
-    : (EMPTY_ARRAY as any as CameraSpecification[])
+    : (EMPTY_ARRAY as any as Camera[])
 );
 
 /**
@@ -379,7 +378,7 @@ export const getShowDurationAsString = createSelector(
  */
 export const getShowMetadata = createSelector(
   (state: RootState) => state.show.data,
-  (data) =>
+  (data): ShowMetadata =>
     (data && typeof data.meta === 'object' ? data.meta : null) || EMPTY_OBJECT
 );
 

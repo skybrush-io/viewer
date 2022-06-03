@@ -3,14 +3,14 @@
  */
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { Vector } from '@skybrush/show-format';
+import type { Vector3Tuple } from '@skybrush/show-format';
 
 type NavigationMode = 'walk' | 'fly';
 
 interface ThreeDSliceState {
   camera: {
-    position: Vector | null;
-    rotation: Vector | null;
+    position: Vector3Tuple | null;
+    rotation: Vector3Tuple | null;
     selectedIndex: number;
   };
 
@@ -49,13 +49,13 @@ const { actions, reducer } = createSlice({
       /* nop, the saga handles it */
     },
 
-    rotateViewTowards(_state, _action: PayloadAction<Vector>) {
+    rotateViewTowards(_state, _action: PayloadAction<Vector3Tuple>) {
       /* nop, the saga handles it */
     },
 
     setCameraPose(
       state,
-      action: PayloadAction<{ position: Vector; rotation: Vector }>
+      action: PayloadAction<{ position: Vector3Tuple; rotation: Vector3Tuple }>
     ) {
       const { position, rotation } = action.payload;
       state.camera.position = position;

@@ -1,3 +1,4 @@
+import { ShowSpecification } from '@skybrush/show-format';
 import type { AppThunk } from '~/store';
 import { getElectronBridge } from '~/window';
 
@@ -13,7 +14,7 @@ export const loadShowFromLocalFile =
       const loadAction = await dispatch(
         withProgressIndicator(getShowAsObjectFromLocalFile(filename))
       );
-      const show = loadAction.payload;
+      const show: ShowSpecification = loadAction.payload as ShowSpecification;
       dispatch(loadShowFromObject(show));
     }
   };

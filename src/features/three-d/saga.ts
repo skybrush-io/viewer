@@ -7,7 +7,7 @@ import {
   ThreeJsPosition,
   ThreeJsQuaternion,
 } from '@skybrush/aframe-components/lib/spatial';
-import { CameraSpecification, Vector } from '@skybrush/show-format';
+import { Camera, Vector3Tuple } from '@skybrush/show-format';
 
 import { getSelectedCamera } from './selectors';
 import { resetZoom, rotateViewTowards, switchToSelectedCamera } from './slice';
@@ -76,7 +76,7 @@ function getCameraController(): CameraController | undefined {
 
 function handleCameraSwitch(
   controller: CameraController,
-  camera: CameraSpecification | undefined
+  camera: Camera | undefined
 ) {
   if (camera) {
     const { position, orientation } = camera;
@@ -101,7 +101,7 @@ function handleResetZoom(controller: CameraController) {
 
 function handleViewRotationTowards(
   controller: CameraController,
-  point: Vector
+  point: Vector3Tuple
 ) {
   const target = { lookAt: skybrushToThreeJsPosition(point) };
   controller.startTransitionTo(target);

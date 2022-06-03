@@ -1,4 +1,4 @@
-import { ThreeJsVector } from '@skybrush/show-format';
+import { Vector3 } from '@skybrush/show-format';
 import minBy from 'lodash-es/minBy';
 
 // in my measurements, timsort was slightly better than the built-in JS sort
@@ -7,11 +7,11 @@ import minBy from 'lodash-es/minBy';
 import { sort } from 'timsort';
 
 interface OrderedPoints {
-  orderedByX: ThreeJsVector[];
-  orderedByY: ThreeJsVector[];
+  orderedByX: Vector3[];
+  orderedByY: Vector3[];
 }
 
-function getDistanceSquared(pair: [ThreeJsVector, ThreeJsVector]) {
+function getDistanceSquared(pair: [Vector3, Vector3]) {
   return (
     (pair[0].x - pair[1].x) ** 2 +
     (pair[0].y - pair[1].y) ** 2 +
@@ -22,16 +22,13 @@ function getDistanceSquared(pair: [ThreeJsVector, ThreeJsVector]) {
 function getPointsOrderedByY(
   minX: number,
   maxX: number,
-  allPointsOrderedByY: ThreeJsVector[]
+  allPointsOrderedByY: Vector3[]
 ) {
   return allPointsOrderedByY.filter((p) => p.x >= minX && p.x < maxX);
 }
 
-function mergeSortedArraysByY(
-  array1: ThreeJsVector[],
-  array2: ThreeJsVector[]
-): ThreeJsVector[] {
-  const mergedArray: ThreeJsVector[] = [];
+function mergeSortedArraysByY(array1: Vector3[], array2: Vector3[]): Vector3[] {
+  const mergedArray: Vector3[] = [];
   const array1Length = array1.length;
   const array2Length = array2.length;
 
@@ -82,12 +79,12 @@ function divide({ orderedByX, orderedByY }: OrderedPoints): {
   };
 }
 
-function baseCase(points: ThreeJsVector[]): [ThreeJsVector, ThreeJsVector] {
+function baseCase(points: Vector3[]): [Vector3, Vector3] {
   if (points.length === 2) {
-    return points as any as [ThreeJsVector, ThreeJsVector];
+    return points as any as [Vector3, Vector3];
   }
 
-  const combinations: Array<[ThreeJsVector, ThreeJsVector]> = [
+  const combinations: Array<[Vector3, Vector3]> = [
     [points[0], points[1]],
     [points[0], points[2]],
     [points[1], points[2]],
@@ -96,22 +93,18 @@ function baseCase(points: ThreeJsVector[]): [ThreeJsVector, ThreeJsVector] {
   return minBy(combinations, getDistanceSquared)!;
 }
 
-function getCandidates(
-  orderedByY: ThreeJsVector[],
-  minX: number,
-  maxX: number
-) {
+function getCandidates(orderedByY: Vector3[], minX: number, maxX: number) {
   return orderedByY.filter((p) => p.x > minX && p.x < maxX);
 }
 
-function getClosestPairInIntersection(points: ThreeJsVector[]) {
+function getClosestPairInIntersection(points: Vector3[]) {
   let minDistSq = Number.POSITIVE_INFINITY;
-  let closestPair: [ThreeJsVector, ThreeJsVector];
+  let closestPair: [Vector3, Vector3];
   const numberOfPoints = points.length;
 
   for (let i = 0; i < numberOfPoints; i++) {
     for (let j = i + 1; j < numberOfPoints && j - i <= 15; j++) {
-      const pair: [ThreeJsVector, ThreeJsVector] = [points[i], points[j]];
+      const pair: [Vector3, Vector3] = [points[i], points[j]];
       const distanceSq = getDistanceSquared(pair);
       if (distanceSq < minDistSq) {
         minDistSq = distanceSq;
@@ -126,8 +119,8 @@ function getClosestPairInIntersection(points: ThreeJsVector[]) {
 function combine(
   left: OrderedPoints,
   right: OrderedPoints,
-  closestOnLeft: [ThreeJsVector, ThreeJsVector],
-  closestOnRight: [ThreeJsVector, ThreeJsVector]
+  closestOnLeft: [Vector3, Vector3],
+  closestOnRight: [Vector3, Vector3]
 ) {
   const closestPair = minBy(
     [closestOnLeft, closestOnRight],
@@ -156,9 +149,7 @@ function combine(
  * A precondition of using this function is that there must be at least two
  * points in the input.
  */
-function getClosestPairOrdered(
-  points: OrderedPoints
-): [ThreeJsVector, ThreeJsVector] {
+function getClosestPairOrdered(points: OrderedPoints): [Vector3, Vector3] {
   if (points.orderedByX.length <= 3) {
     return baseCase(points.orderedByX);
   }
@@ -175,19 +166,19 @@ function getClosestPairOrdered(
   ); // O(n)
 }
 
-function orderByX(points: ThreeJsVector[]) {
+function orderByX(points: Vector3[]) {
   const result = points.concat();
   sort(result, (a, b) => a.x - b.x);
   return result;
 }
 
-function orderByY(points: ThreeJsVector[]) {
+function orderByY(points: Vector3[]) {
   const result = points.concat();
   sort(result, (a, b) => a.y - b.y);
   return result;
 }
 
-function getClosestPair(points: ThreeJsVector[]) {
+function getClosestPair(points: Vector3[]) {
   if (points.length < 2) {
     return undefined;
   }

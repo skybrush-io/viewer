@@ -29,7 +29,7 @@
     "@mui/material": "^5.8.2",
     "@reduxjs/toolkit": "^1.8.2",
     "@skybrush/aframe-components": "^1.9.3",
-    "@skybrush/app-theme-mui": "file:../skybrush.js/packages/app-theme-mui/skybrush-app-theme-mui-2.0.5.tgz",
+    "@skybrush/app-theme-mui": "^2.0.6",
     "@skybrush/electron-app-framework": "^2.1.6",
     "@skybrush/layout-bmfont-text": "^1.3.5",
     "@skybrush/mui-components": "^3.1.0",

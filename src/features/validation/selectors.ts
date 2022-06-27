@@ -29,13 +29,16 @@ export const getValidationSettings = createSelector(
         DEFAULT_VALIDATION_SETTINGS.outdoor),
     };
 
+    console.log(validation);
+
     // Unfortunately some of our show files use underscore-styled validation
     // settings instead of camelCased. We need to fix that, but until then
     // here's a compatibility workaround.
-    if (validation && validation.max_altitude !== undefined) {
+    if (validation?.max_altitude !== undefined) {
       settings.maxAltitude = validation.max_altitude;
       settings.maxVelocityXY = validation.max_velocity_xy;
       settings.maxVelocityZ = validation.max_velocity_z;
+      settings.maxVelocityZUp = validation.max_velocity_z_up;
       settings.minDistance = validation.min_distance;
     } else {
       Object.assign(settings, validation);
@@ -67,10 +70,22 @@ export const getProximityWarningThreshold = (state: RootState) =>
   getValidationSettings(state).minDistance;
 
 /**
- * Selector that selects the vertical velocity threshold from the show specification,
+ * Selector that selects the upwards vertical velocity threshold from the show specification,
  * falling back to a default if needed.
  */
-export const getVerticalVelocityThreshold = (state: RootState) =>
+export const getVerticalVelocityThresholdUp = (state: RootState) => {
+  const { maxVelocityZ, maxVelocityZUp } = getValidationSettings(state);
+  return typeof maxVelocityZUp === 'number' && Number.isFinite(maxVelocityZUp)
+    ? maxVelocityZUp
+    : maxVelocityZ;
+};
+
+/**
+ * Selector that selects the downwards vertical velocity threshold from the show
+ * specification, falling back to a default if needed. Note that the return
+ * value is positive even though the vector points towards the negative Z axis.
+ */
+export const getVerticalVelocityThresholdDown = (state: RootState) =>
   getValidationSettings(state).maxVelocityZ;
 
 /**

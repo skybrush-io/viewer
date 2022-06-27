@@ -6,7 +6,8 @@ import type { RootState } from '~/store';
 import ChartPanel from './ChartPanel';
 import {
   getSampledVerticalVelocitiesForDrones,
-  getVerticalVelocityThreshold,
+  getVerticalVelocityThresholdDown,
+  getVerticalVelocityThresholdUp,
 } from './selectors';
 import { createChartDataSelector } from './utils';
 
@@ -25,8 +26,10 @@ export default connect(
     data: getDataForVerticalVelocityChart(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
     range: Y_RANGE,
-    threshold: getVerticalVelocityThreshold(state),
-    thresholdIsAbsolute: true,
+    threshold: [
+      getVerticalVelocityThresholdUp(state),
+      -getVerticalVelocityThresholdDown(state),
+    ],
     thresholdLabel: 'Z velocity threshold',
     title: 'Vertical velocities',
     verticalUnit: ' m/s',

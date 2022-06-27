@@ -1,6 +1,5 @@
 import merge from 'lodash-es/merge';
-import React from 'react';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Scatter } from 'react-chartjs-2';
 
 import Box from '@mui/material/Box';
@@ -121,14 +120,12 @@ const createOptions = ({
   formatPlaybackTimestamp,
   range,
   threshold,
-  thresholdIsAbsolute,
   thresholdLabel,
   verticalUnit,
 }: {
   formatPlaybackTimestamp?: (value: number) => string;
   range?: [number, number];
-  threshold?: number;
-  thresholdIsAbsolute?: boolean;
+  threshold?: number | number[];
   thresholdLabel?: string;
   verticalUnit?: string;
 } = {}): ChartOptionsWithAnnotation => {
@@ -145,7 +142,7 @@ const createOptions = ({
 
   const timestampFormatter = formatPlaybackTimestamp
     ? (value: number) => formatPlaybackTimestamp(value)
-    : (value: number) => String(value);
+    : String;
 
   let options: ChartOptionsWithAnnotation = {
     legend: {
@@ -202,7 +199,7 @@ const createOptions = ({
           const index = item.index!;
           const value = item.value!;
           const originalDataPoint = data.datasets[datasetIndex].data![index];
-          let label: string = data.datasets[datasetIndex].label || '';
+          let label: string = data.datasets[datasetIndex].label ?? '';
 
           if (label) {
             label += ': ';
@@ -226,12 +223,17 @@ const createOptions = ({
     },
   };
 
-  if (typeof threshold === 'number' && Number.isFinite(threshold)) {
-    const annotations = [createThresholdAnnotation(threshold, thresholdLabel)];
-    if (thresholdIsAbsolute) {
-      annotations.push(createThresholdAnnotation(-threshold, thresholdLabel));
-    }
+  const thresholds: number[] =
+    typeof threshold === 'number'
+      ? [threshold]
+      : Array.isArray(threshold)
+      ? threshold
+      : [];
 
+  const annotations = thresholds
+    .filter(Number.isFinite)
+    .map((threshold) => createThresholdAnnotation(threshold, thresholdLabel));
+  if (annotations.length > 0) {
     options.annotation = { annotations };
   }
 
@@ -261,8 +263,7 @@ interface ChartPanelProps {
   formatPlaybackTimestamp?: (value: number) => string;
   height: number;
   range: [number, number];
-  threshold?: number;
-  thresholdIsAbsolute?: boolean;
+  threshold?: number | number[];
   thresholdLabel?: string;
   title?: string;
   verticalUnit?: string;
@@ -274,7 +275,6 @@ const ChartPanel = ({
   height,
   range,
   threshold,
-  thresholdIsAbsolute,
   thresholdLabel,
   title,
   verticalUnit = '',
@@ -322,18 +322,10 @@ const ChartPanel = ({
         formatPlaybackTimestamp,
         range,
         threshold,
-        thresholdIsAbsolute,
         thresholdLabel,
         verticalUnit,
       }),
-    [
-      formatPlaybackTimestamp,
-      range,
-      threshold,
-      thresholdIsAbsolute,
-      thresholdLabel,
-      verticalUnit,
-    ]
+    [formatPlaybackTimestamp, range, threshold, thresholdLabel, verticalUnit]
   );
 
   return (

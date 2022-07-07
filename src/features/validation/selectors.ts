@@ -29,8 +29,6 @@ export const getValidationSettings = createSelector(
         DEFAULT_VALIDATION_SETTINGS.outdoor),
     };
 
-    console.log(validation);
-
     // Unfortunately some of our show files use underscore-styled validation
     // settings instead of camelCased. We need to fix that, but until then
     // here's a compatibility workaround.

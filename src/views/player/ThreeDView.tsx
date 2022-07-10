@@ -146,7 +146,6 @@ export default connect(
     cameraConfiguration: getInitialCameraConfigurationOfShow(state),
     droneSize: getPreferredDroneRadius(state),
     numDrones: getNumberOfDronesInShow(state),
-    scaleLabels: true,
     showId: getLoadedShowId(state),
     ...state.settings.threeD,
     ...state.threeD,

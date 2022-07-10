@@ -32,3 +32,10 @@ export const toggleLabels = (): AppThunk => (dispatch, getState) => {
 
   dispatch(updateAppSettings('threeD', { showLabels: !showLabels }));
 };
+
+export const toggleScaleLabels = (): AppThunk => (dispatch, getState) => {
+  const state = getState();
+  const { scaleLabels } = state.settings.threeD;
+
+  dispatch(updateAppSettings('threeD', { scaleLabels: !scaleLabels }));
+};

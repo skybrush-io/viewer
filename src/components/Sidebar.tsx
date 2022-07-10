@@ -23,6 +23,7 @@ import {
   toggleAxes,
   toggleGrid,
   toggleLabels,
+  toggleScaleLabels,
 } from '~/features/settings/actions';
 import type { RootState } from '~/store';
 
@@ -73,6 +74,8 @@ interface SidebarDrawerProps {
   onToggleAxes: () => void;
   onToggleGrid: () => void;
   onToggleLabels: () => void;
+  onToggleScaleLabels: () => void;
+  scaleLabels: boolean;
   scenery: 'auto' | 'day' | 'night' | 'indoor';
   showAxes: boolean;
   showGrid: boolean;
@@ -91,6 +94,8 @@ const SidebarDrawer = ({
   onToggleAxes,
   onToggleGrid,
   onToggleLabels,
+  onToggleScaleLabels,
+  scaleLabels,
   scenery,
   showAxes,
   showGrid,
@@ -172,6 +177,18 @@ const SidebarDrawer = ({
           />
           <ListItemText primary='Show labels' />
         </ListItem>
+
+        {showLabels && (
+          <ListItem>
+            <Switch
+              color='primary'
+              edge='start'
+              checked={scaleLabels}
+              onChange={onToggleScaleLabels}
+            />
+            <ListItemText primary='Equalize label sizes' />
+          </ListItem>
+        )}
       </List>
 
       <Box sx={styles.footer}>
@@ -189,6 +206,7 @@ export default connect(
     open: state.sidebar.open,
     scenery: state.settings.threeD.scenery,
     speed: getPlaybackSpeed(state),
+    scaleLabels: Boolean(state.settings.threeD.scaleLabels),
     showAxes: Boolean(state.settings.threeD.axes),
     showGrid: state.settings.threeD.grid !== 'none',
     showLabels: Boolean(state.settings.threeD.showLabels),
@@ -202,5 +220,6 @@ export default connect(
     onToggleAxes: toggleAxes,
     onToggleGrid: toggleGrid,
     onToggleLabels: toggleLabels,
+    onToggleScaleLabels: toggleScaleLabels,
   }
 )(SidebarDrawer);

@@ -10,6 +10,7 @@ interface SettingsSliceState {
     axes: boolean;
     grid: 'none' | '1x1' | '2x2';
     quality: 'low' | 'medium' | 'high';
+    scaleLabels: boolean;
     showLabels: boolean;
     showStatistics: boolean;
   };
@@ -30,6 +31,10 @@ const initialState: SettingsSliceState = {
 
     // Rendering quality of the 3D view (low, medium or high)
     quality: 'medium',
+
+    // Whether to scale the labels such that the ones that are farther from the
+    // camera in the scene are larger to compensate for the distance
+    scaleLabels: false,
 
     // Whether to show statistics about the rendering in an overlay
     showStatistics: false,

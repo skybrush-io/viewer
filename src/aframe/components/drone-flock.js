@@ -34,6 +34,8 @@ function getLabelFromEntity(entity) {
   return entity.childNodes[0];
 }
 
+const DEFAULT_LABEL_SCALE = 3;
+
 AFrame.registerSystem('drone-flock', {
   init() {
     const boundGetElapsedSecodsGetter = () =>
@@ -93,7 +95,10 @@ AFrame.registerSystem('drone-flock', {
      * glow sprite */
     labelElement.setAttribute('position', '0 -0.05 1.5');
     labelElement.setAttribute('rotation', '0 -90 -90');
-    labelElement.setAttribute('scale', '3 3 3');
+    labelElement.setAttribute(
+      'scale',
+      `${DEFAULT_LABEL_SCALE} ${DEFAULT_LABEL_SCALE} ${DEFAULT_LABEL_SCALE}`
+    );
     labelElement.setAttribute('visible', visible ? 'true' : 'false');
 
     return labelElement;
@@ -149,6 +154,18 @@ AFrame.registerSystem('drone-flock', {
 
   tick() {
     this.currentTime = this._getElapsedSeconds();
+  },
+
+  resetLabelScale(entity) {
+    const label = getLabelFromEntity(entity);
+
+    if (label) {
+      label.object3D.scale.set(
+        DEFAULT_LABEL_SCALE,
+        DEFAULT_LABEL_SCALE,
+        DEFAULT_LABEL_SCALE
+      );
+    }
   },
 
   rotateEntityLabelTowards(entity, position, data) {
@@ -290,7 +307,8 @@ AFrame.registerComponent('drone-flock', {
     const oldDroneSize = oldData.droneSize || 0;
     const oldSize = oldData.size || 0;
     const oldShowLabels = Boolean(oldData.showLabels);
-    const { droneSize, showLabels, size, type } = this.data;
+    const oldScaleLabels = Boolean(oldData.scaleLabels);
+    const { droneSize, scaleLabels, showLabels, size, type } = this.data;
 
     // TODO: support changing types on the fly
 
@@ -328,6 +346,14 @@ AFrame.registerComponent('drone-flock', {
       for (const item of this._drones) {
         const { entity } = item;
         this.system.updateLabelVisibility(entity, showLabels);
+      }
+    }
+
+    if (oldScaleLabels !== scaleLabels && !scaleLabels) {
+      // Reset the scale of each label
+      for (const item of this._drones) {
+        const { entity } = item;
+        this.system.resetLabelScale(entity);
       }
     }
   },

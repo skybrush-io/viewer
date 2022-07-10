@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Added
+
+- Added a switch to the sidebar to toggle labels above the drones.
+
 ## Fixed
 
 - Fixed a bug in the light program player that rarely showed incorrect colors

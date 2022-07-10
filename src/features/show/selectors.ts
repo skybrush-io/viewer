@@ -244,9 +244,9 @@ export const getInitialCameraConfigurationOfShow = createSelector(
     }
 
     return {
-      position: skybrushToThreeJsPosition(selectedCamera.position || [0, 0, 0]),
+      position: skybrushToThreeJsPosition(selectedCamera.position ?? [0, 0, 0]),
       rotation: skybrushQuaternionToThreeJsRotation(
-        selectedCamera.orientation || DEFAULT_ORIENTATION
+        selectedCamera.orientation ?? DEFAULT_ORIENTATION
       ),
     };
   }
@@ -379,7 +379,7 @@ export const getShowDurationAsString = createSelector(
 export const getShowMetadata = createSelector(
   (state: RootState) => state.show.data,
   (data): ShowMetadata =>
-    (data && typeof data.meta === 'object' ? data.meta : null) || EMPTY_OBJECT
+    (data && typeof data.meta === 'object' ? data.meta : null) ?? EMPTY_OBJECT
 );
 
 /**

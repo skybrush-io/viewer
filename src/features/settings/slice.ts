@@ -10,7 +10,8 @@ interface SettingsSliceState {
     axes: boolean;
     grid: 'none' | '1x1' | '2x2';
     quality: 'low' | 'medium' | 'high';
-    showStatistics: false;
+    showLabels: boolean;
+    showStatistics: boolean;
   };
 }
 
@@ -32,6 +33,9 @@ const initialState: SettingsSliceState = {
 
     // Whether to show statistics about the rendering in an overlay
     showStatistics: false,
+
+    // Whether to show the labels above the drones in the 3D view
+    showLabels: false,
   },
 };
 

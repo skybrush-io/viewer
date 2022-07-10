@@ -22,6 +22,7 @@ import {
   setScenery,
   toggleAxes,
   toggleGrid,
+  toggleLabels,
 } from '~/features/settings/actions';
 import type { RootState } from '~/store';
 
@@ -71,9 +72,11 @@ interface SidebarDrawerProps {
   onSetPlaybackSpeed: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onToggleAxes: () => void;
   onToggleGrid: () => void;
+  onToggleLabels: () => void;
   scenery: 'auto' | 'day' | 'night' | 'indoor';
   showAxes: boolean;
   showGrid: boolean;
+  showLabels: boolean;
   speed: number;
 }
 
@@ -87,9 +90,11 @@ const SidebarDrawer = ({
   onSetScenery,
   onToggleAxes,
   onToggleGrid,
+  onToggleLabels,
   scenery,
   showAxes,
   showGrid,
+  showLabels,
   speed,
 }: SidebarDrawerProps) => (
   <Drawer
@@ -157,6 +162,16 @@ const SidebarDrawer = ({
           />
           <ListItemText primary='Show grid' />
         </ListItem>
+
+        <ListItem>
+          <Switch
+            color='primary'
+            edge='start'
+            checked={showLabels}
+            onChange={onToggleLabels}
+          />
+          <ListItemText primary='Show labels' />
+        </ListItem>
       </List>
 
       <Box sx={styles.footer}>
@@ -176,6 +191,7 @@ export default connect(
     speed: getPlaybackSpeed(state),
     showAxes: Boolean(state.settings.threeD.axes),
     showGrid: state.settings.threeD.grid !== 'none',
+    showLabels: Boolean(state.settings.threeD.showLabels),
   }),
   // mapDispatchToProps
   {
@@ -185,5 +201,6 @@ export default connect(
       setPlaybackSpeed(Number.parseFloat(event.target.value)),
     onToggleAxes: toggleAxes,
     onToggleGrid: toggleGrid,
+    onToggleLabels: toggleLabels,
   }
 )(SidebarDrawer);

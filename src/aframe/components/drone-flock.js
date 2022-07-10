@@ -24,8 +24,14 @@ const defaultGeometry = {
 };
 
 function getGlowMeshFromEntity(entity) {
-  const glowEntity = entity.childNodes[0];
+  // We assume that the label is the first child and the glow is the second
+  const glowEntity = entity.childNodes[1];
   return glowEntity ? glowEntity.getObject3D('mesh') : undefined;
+}
+
+function getLabelFromEntity(entity) {
+  // We assume that the label is the first child and the glow is the second
+  return entity.childNodes[0];
 }
 
 AFrame.registerSystem('drone-flock', {
@@ -40,17 +46,25 @@ AFrame.registerSystem('drone-flock', {
 
     this.currentTime = 0;
     this._getElapsedSeconds = boundGetElapsedSecodsGetter();
+    this._vec = new THREE.Vector3();
 
     this._entityFactories = {
       default: this._createDefaultUAVEntity.bind(this),
       flapper: this._createFlapperDroneEntity.bind(this),
     };
+
+    this.rotateEntityLabelTowards = this.rotateEntityLabelTowards.bind(this);
   },
 
-  createNewUAVEntity(type, droneSize) {
+  createNewUAVEntity({ type, droneSize, label, showLabel }) {
     const factory =
       this._entityFactories[type] || this._entityFactories.default;
-    return factory(droneSize);
+    const element = factory(droneSize);
+
+    element.append(this._createLabelEntity(label, showLabel));
+    element.append(this._createGlowEntity(droneSize));
+
+    return element;
   },
 
   _createGlowEntity(droneSize = 1) {
@@ -65,6 +79,26 @@ AFrame.registerSystem('drone-flock', {
     return glowElement;
   },
 
+  _createLabelEntity(label, visible) {
+    const labelElement = document.createElement('a-entity');
+    labelElement.setAttribute('text', {
+      value: label,
+      align: 'center',
+      anchor: 'center',
+      wrapCount: 4 /* fit ~4 chars inside the given width */,
+      width: 1,
+    });
+
+    /* Y coordinate is slightly offset from zero to prevent Z-fighting with the
+     * glow sprite */
+    labelElement.setAttribute('position', '0 -0.05 1.5');
+    labelElement.setAttribute('rotation', '0 -90 -90');
+    labelElement.setAttribute('scale', '3 3 3');
+    labelElement.setAttribute('visible', visible ? 'true' : 'false');
+
+    return labelElement;
+  },
+
   _createDefaultUAVEntity(droneSize = 1) {
     const element = document.createElement('a-entity');
     element.setAttribute('geometry', {
@@ -77,8 +111,6 @@ AFrame.registerSystem('drone-flock', {
       shader: 'flat',
     });
     element.setAttribute('position', '0 0 0');
-
-    element.append(this._createGlowEntity(droneSize));
 
     return element;
   },
@@ -119,6 +151,23 @@ AFrame.registerSystem('drone-flock', {
     this.currentTime = this._getElapsedSeconds();
   },
 
+  rotateEntityLabelTowards(entity, position, data) {
+    const { droneSize, scaleLabels } = data;
+    const label = getLabelFromEntity(entity);
+
+    if (label) {
+      if (scaleLabels) {
+        entity.object3D.getWorldPosition(this._vec);
+        const distance = this._vec.distanceTo(position);
+        const scale = distance / (20 * droneSize);
+        label.object3D.scale.set(scale, scale, scale);
+        label.object3D.position.z = 1 + scale * (droneSize / 8);
+      }
+
+      label.object3D.lookAt(position);
+    }
+  },
+
   updateEntityPositionAndColor(entity, position, color) {
     entity.object3D.position.copy(position);
 
@@ -149,11 +198,20 @@ AFrame.registerSystem('drone-flock', {
       glowMesh.scale.set(size * 4, size * 4, 1);
     }
   },
+
+  updateLabelVisibility(entity, visible) {
+    const label = getLabelFromEntity(entity);
+    if (label) {
+      label.object3D.visible = visible;
+    }
+  },
 });
 
 AFrame.registerComponent('drone-flock', {
   schema: {
     droneSize: { default: 1 },
+    scaleLabels: { default: false },
+    showLabels: { default: false },
     size: { default: 0 },
     type: { default: 'default' },
   },
@@ -161,6 +219,7 @@ AFrame.registerComponent('drone-flock', {
   init() {
     this._drones = [];
 
+    this._cameraPosition = new THREE.Vector3();
     this._color = new THREE.Color();
     this._colorArray = [0, 0, 0];
     this._vec = new THREE.Vector3();
@@ -188,10 +247,18 @@ AFrame.registerComponent('drone-flock', {
   remove() {},
 
   tick() {
-    const { currentTime, updateEntityPositionAndColor } = this.system;
+    const {
+      currentTime,
+      rotateEntityLabelTowards,
+      updateEntityPositionAndColor,
+    } = this.system;
     const vec = this._vec;
     const color = this._color;
     const colorArray = this._colorArray;
+    const camera = this.el.sceneEl.camera;
+    const showLabels = this.data.showLabels;
+
+    this._cameraPosition.setFromMatrixPosition(camera.matrixWorld);
 
     for (const item of this._drones) {
       const { entity, index } = item;
@@ -213,20 +280,29 @@ AFrame.registerComponent('drone-flock', {
       }
 
       updateEntityPositionAndColor(entity, vec, color);
+      if (showLabels) {
+        rotateEntityLabelTowards(entity, this._cameraPosition, this.data);
+      }
     }
   },
 
   update(oldData) {
     const oldDroneSize = oldData.droneSize || 0;
     const oldSize = oldData.size || 0;
-    const { droneSize, size, type } = this.data;
+    const oldShowLabels = Boolean(oldData.showLabels);
+    const { droneSize, showLabels, size, type } = this.data;
 
     // TODO: support changing types on the fly
 
     if (size > oldSize) {
       // Add new drones
       for (let i = oldSize; i < size; i++) {
-        const entity = this.system.createNewUAVEntity(type, droneSize);
+        const entity = this.system.createNewUAVEntity({
+          type,
+          droneSize,
+          label: String(i + 1),
+          showLabel: showLabels,
+        });
         this.el.append(entity);
 
         this._drones.push({ index: i, entity });
@@ -244,6 +320,14 @@ AFrame.registerComponent('drone-flock', {
       for (const item of this._drones) {
         const { entity } = item;
         this.system.updateEntitySize(entity, droneSize);
+      }
+    }
+
+    if (oldShowLabels !== showLabels) {
+      // Update label visibility
+      for (const item of this._drones) {
+        const { entity } = item;
+        this.system.updateLabelVisibility(entity, showLabels);
       }
     }
   },

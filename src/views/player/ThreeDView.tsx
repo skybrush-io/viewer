@@ -47,8 +47,10 @@ interface ThreeDViewProps {
     parameters: any;
   };
   numDrones: number;
+  scaleLabels: boolean;
   scenery: SceneryType;
   showId: number;
+  showLabels: boolean;
   showStatistics: boolean;
   vrEnabled?: boolean;
 }
@@ -67,8 +69,10 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
     grid,
     navigation,
     numDrones,
+    scaleLabels,
     scenery,
     showId,
+    showLabels,
     showStatistics,
     vrEnabled,
   } = props;
@@ -123,7 +127,12 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
 
       <a-entity rotation='-90 0 90'>
         {axes && <CoordinateSystemAxes length={10} lineWidth={10} />}
-        <a-drone-flock drone-size={droneSize} size={numDrones} />
+        <a-drone-flock
+          drone-size={droneSize}
+          scale-labels={scaleLabels}
+          show-labels={showLabels}
+          size={numDrones}
+        />
       </a-entity>
 
       <Scenery type={scenery} grid={grid} />
@@ -137,6 +146,7 @@ export default connect(
     cameraConfiguration: getInitialCameraConfigurationOfShow(state),
     droneSize: getPreferredDroneRadius(state),
     numDrones: getNumberOfDronesInShow(state),
+    scaleLabels: true,
     showId: getLoadedShowId(state),
     ...state.settings.threeD,
     ...state.threeD,

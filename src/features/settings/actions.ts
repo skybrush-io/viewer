@@ -25,3 +25,10 @@ export const toggleGrid = (): AppThunk => (dispatch, getState) => {
     updateAppSettings('threeD', { grid: grid === 'none' ? '1x1' : 'none' })
   );
 };
+
+export const toggleLabels = (): AppThunk => (dispatch, getState) => {
+  const state = getState();
+  const { showLabels } = state.settings.threeD;
+
+  dispatch(updateAppSettings('threeD', { showLabels: !showLabels }));
+};

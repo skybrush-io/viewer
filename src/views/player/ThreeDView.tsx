@@ -129,6 +129,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
         {axes && <CoordinateSystemAxes length={10} lineWidth={10} />}
         <a-drone-flock
           drone-size={droneSize}
+          label-color={scenery === 'day' ? 'black' : 'white'}
           scale-labels={scaleLabels}
           show-labels={showLabels}
           size={numDrones}

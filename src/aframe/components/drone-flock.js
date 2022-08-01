@@ -58,18 +58,25 @@ AFrame.registerSystem('drone-flock', {
     this.rotateEntityLabelTowards = this.rotateEntityLabelTowards.bind(this);
   },
 
-  createNewUAVEntity({ type, droneSize, label, labelColor, showLabel }) {
+  createNewUAVEntity({
+    type,
+    droneSize,
+    label,
+    labelColor,
+    showGlow,
+    showLabel,
+  }) {
     const factory =
       this._entityFactories[type] || this._entityFactories.default;
     const element = factory(droneSize);
 
     element.append(this._createLabelEntity(label, showLabel, labelColor));
-    element.append(this._createGlowEntity(droneSize));
+    element.append(this._createGlowEntity(droneSize, showGlow));
 
     return element;
   },
 
-  _createGlowEntity(droneSize = 1) {
+  _createGlowEntity(droneSize = 1, showGlow = true) {
     const glowElement = document.createElement('a-entity');
     glowElement.setAttribute('sprite', {
       blending: 'additive',
@@ -77,6 +84,7 @@ AFrame.registerSystem('drone-flock', {
       scale: `${droneSize * 4} ${droneSize * 4} 1`,
       src: '#glow-texture',
       transparent: true,
+      visible: showGlow,
     });
     return glowElement;
   },
@@ -218,6 +226,13 @@ AFrame.registerSystem('drone-flock', {
     }
   },
 
+  updateGlowVisibility(entity, visible) {
+    const glowMesh = getGlowMeshFromEntity(entity);
+    if (glowMesh) {
+      glowMesh.visible = visible;
+    }
+  },
+
   updateLabelColor(entity, color) {
     const label = getLabelFromEntity(entity);
     if (label) {
@@ -238,6 +253,7 @@ AFrame.registerComponent('drone-flock', {
     droneSize: { default: 1 },
     labelColor: { default: 'white' },
     scaleLabels: { default: false },
+    showGlow: { default: true },
     showLabels: { default: false },
     size: { default: 0 },
     type: { default: 'default' },
@@ -316,11 +332,19 @@ AFrame.registerComponent('drone-flock', {
   update(oldData) {
     const oldDroneSize = oldData.droneSize || 0;
     const oldSize = oldData.size || 0;
+    const oldShowGlow = Boolean(oldData.showGlow ?? true);
     const oldShowLabels = Boolean(oldData.showLabels);
     const oldScaleLabels = Boolean(oldData.scaleLabels);
     const oldLabelColor = oldData.labelColor ?? '#888';
-    const { droneSize, labelColor, scaleLabels, showLabels, size, type } =
-      this.data;
+    const {
+      droneSize,
+      labelColor,
+      scaleLabels,
+      showGlow,
+      showLabels,
+      size,
+      type,
+    } = this.data;
 
     // TODO: support changing types on the fly
 
@@ -332,6 +356,7 @@ AFrame.registerComponent('drone-flock', {
           droneSize,
           label: String(i + 1),
           labelColor,
+          showGlow,
           showLabel: showLabels,
         });
         this.el.append(entity);
@@ -359,6 +384,14 @@ AFrame.registerComponent('drone-flock', {
       for (const item of this._drones) {
         const { entity } = item;
         this.system.updateLabelColor(entity, labelColor);
+      }
+    }
+
+    if (oldShowGlow !== showGlow) {
+      // Update glow visibility
+      for (const item of this._drones) {
+        const { entity } = item;
+        this.system.updateGlowVisibility(entity, showGlow);
       }
     }
 

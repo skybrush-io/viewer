@@ -14,6 +14,7 @@ AFrame.registerPrimitive('a-drone-flock', {
     'drone-size': 'drone-flock.droneSize',
     'label-color': 'drone-flock.labelColor',
     'scale-labels': 'drone-flock.scaleLabels',
+    'show-glow': 'drone-flock.showGlow',
     'show-labels': 'drone-flock.showLabels',
     size: 'drone-flock.size',
     type: 'drone-flock.type',

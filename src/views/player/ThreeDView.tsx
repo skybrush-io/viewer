@@ -92,6 +92,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
     }),
   };
   const extraSceneProps: Record<string, string> = {};
+  const isLightScenery = scenery === 'day';
 
   if (showStatistics) {
     extraSceneProps.stats = 'true';
@@ -129,8 +130,9 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
         {axes && <CoordinateSystemAxes length={10} lineWidth={10} />}
         <a-drone-flock
           drone-size={droneSize}
-          label-color={scenery === 'day' ? 'black' : 'white'}
+          label-color={isLightScenery ? 'black' : 'white'}
           scale-labels={scaleLabels}
+          show-glow={!isLightScenery}
           show-labels={showLabels}
           size={numDrones}
         />

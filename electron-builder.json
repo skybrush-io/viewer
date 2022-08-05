@@ -18,6 +18,14 @@
         "*.woff",
         "*.woff2"
       ]
+    },
+    {
+      "from": "build/fonts",
+      "to": "fonts",
+      "filter": [
+        "*.png",
+        "*.json"
+      ]
     }
   ],
 
@@ -30,23 +38,23 @@
   "linux": {
     "category": "Utility",
     "target": {
-	  "target": "AppImage",
-	  "arch": "x64"
-	}
+      "target": "AppImage",
+      "arch": "x64"
+    }
   },
 
   "mac": {
     "category": "public.app-category.utilities",
     "target": {
-	  "target": "dmg",
-	  "arch": "universal"
-	}
+      "target": "dmg",
+      "arch": "universal"
+    }
   },
 
   "win": {
     "target": {
-	  "target": "portable",
-	  "arch": "x64"
-	}
+      "target": "portable",
+      "arch": "x64"
+    }
   }
 }

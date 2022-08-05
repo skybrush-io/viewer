@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.2] - 2022-08-06
+
+## Fixed
+
+- The font used in the 3D view is now bundled with the app instead of being
+  loaded from a CDN so it works even if you are offline.
+
 ## [2.2.1] - 2022-08-01
 
 ## Changed

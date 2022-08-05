@@ -14,6 +14,9 @@ import {
 } from '~/features/show/selectors';
 import store from '~/store';
 
+import fontUrl from '~/../assets/fonts/Roboto-msdf.json';
+import fontImageUrl from '~/../assets/fonts/Roboto-msdf.png';
+
 const { THREE } = AFrame;
 
 const defaultGeometry = {
@@ -93,6 +96,8 @@ AFrame.registerSystem('drone-flock', {
     const labelElement = document.createElement('a-entity');
     labelElement.setAttribute('text', {
       color,
+      font: fontUrl,
+      fontImage: fontImageUrl,
       value: label,
       align: 'center',
       anchor: 'center',

@@ -112,6 +112,16 @@ module.exports = {
         include: path.join(projectRoot, 'assets', 'css'),
       },
       {
+        test: /\.(png|json)$/,
+        type: 'asset/resource',
+        include: path.join(projectRoot, 'assets', 'fonts'),
+        generator: {
+          // Do not mangle filenames for fonts because the JSON refers to the
+          // PNG directly
+          filename: 'fonts/[name][ext]',
+        },
+      },
+      {
         test: /\.(png|jpg|skyc)$/,
         type: 'asset/resource',
         include: path.join(projectRoot, 'assets'),

@@ -1,7 +1,7 @@
 {
   "name": "@skybrush/viewer",
   "productName": "Skybrush Viewer",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Viewer for Skybrush drone shows",
   "main": "launcher.bundle.js",
   "scripts": {

@@ -47,9 +47,14 @@ async function run(filenames, options) {
       showMenuBar: false,
       title: 'Skybrush Viewer',
       titleBarStyle: 'hiddenInset',
+      webPreferences: {
+        sandbox: false  // because we need Node.js modules from the preloader
+      }
     },
   });
 
+  // Disable app sandbox so we can use Node.js modules from the preloader
+  app.enable
   // Register our soon-to-be-used media:// protocol as privileged so the
   // fetch() API can work with it
   protocol.registerSchemesAsPrivileged([

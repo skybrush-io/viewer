@@ -6,7 +6,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface SettingsSliceState {
   threeD: {
-    scenery: 'auto' | 'day' | 'night' | 'indoor';
+    scenery: 'disabled' | 'auto' | 'day' | 'night' | 'indoor';
     axes: boolean;
     grid: 'none' | '1x1' | '2x2';
     quality: 'low' | 'medium' | 'high';

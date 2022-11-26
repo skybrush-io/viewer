@@ -93,6 +93,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
   };
   const extraSceneProps: Record<string, string> = {};
   const isLightScenery = scenery === 'day';
+  const isSceneryEnabled = scenery !== 'disabled';
 
   if (showStatistics) {
     extraSceneProps.stats = 'true';
@@ -101,6 +102,10 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
   extraSceneProps['vr-mode-ui'] = config.modes.vr
     ? 'enabled: true; enterVRButton: #vr-button'
     : 'enabled: false';
+
+  if (!isSceneryEnabled) {
+    extraSceneProps.background = 'color: black';
+  }
 
   return (
     <a-scene

@@ -12,8 +12,8 @@ import type { RootState } from '~/store';
  */
 export const getEffectiveScenery = (
   state: RootState
-): 'day' | 'night' | 'indoor' => {
-  const scenery: 'day' | 'night' | 'indoor' | 'auto' =
+): 'disabled' | 'day' | 'night' | 'indoor' => {
+  const scenery: 'disabled' | 'day' | 'night' | 'indoor' | 'auto' =
     get(state, 'settings.threeD.scenery') || 'auto';
 
   if (scenery === 'auto') {

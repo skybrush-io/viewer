@@ -76,7 +76,7 @@ interface SidebarDrawerProps {
   onToggleLabels: () => void;
   onToggleScaleLabels: () => void;
   scaleLabels: boolean;
-  scenery: 'auto' | 'day' | 'night' | 'indoor';
+  scenery: 'disabled' | 'auto' | 'day' | 'night' | 'indoor';
   showAxes: boolean;
   showGrid: boolean;
   showLabels: boolean;
@@ -120,6 +120,7 @@ const SidebarDrawer = ({
               value={scenery}
               onChange={onSetScenery}
             >
+              <MenuItem value='disabled'>Disabled</MenuItem>
               <MenuItem value='auto'>Automatic</MenuItem>
               <MenuItem value='day'>Day</MenuItem>
               <MenuItem value='night'>Night</MenuItem>

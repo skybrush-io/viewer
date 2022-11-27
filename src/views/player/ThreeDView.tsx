@@ -23,6 +23,7 @@ import {
   getInitialCameraConfigurationOfShow,
   getLoadedShowId,
   getNumberOfDronesInShow,
+  isShowIndoor,
 } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 
@@ -33,7 +34,7 @@ import type { SceneryType } from './Scenery';
 import glow from '~/../assets/img/sphere-glow-hollow.png';
 // const flapperDrone = require('~/../assets/models/flapper-drone.obj').default;
 
-interface ThreeDViewProps {
+type ThreeDViewProps = {
   axes: boolean;
   cameraConfiguration: {
     position: ThreeJsPosition;
@@ -41,6 +42,7 @@ interface ThreeDViewProps {
   };
   cameraRef: React.RefObject<HTMLElement>;
   droneSize: number;
+  indoor: boolean;
   grid: boolean | string;
   navigation: {
     mode: 'walk' | 'fly';
@@ -53,7 +55,7 @@ interface ThreeDViewProps {
   showLabels: boolean;
   showStatistics: boolean;
   vrEnabled?: boolean;
-}
+};
 
 const DEFAULT_CAMERA_CONFIGURATION = {
   position: [0, 20, 50],
@@ -67,6 +69,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
     cameraRef,
     droneSize,
     grid,
+    indoor,
     navigation,
     numDrones,
     scaleLabels,
@@ -136,6 +139,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
         <a-drone-flock
           drone-size={droneSize}
           label-color={isLightScenery ? 'black' : 'white'}
+          indoor={indoor}
           scale-labels={scaleLabels}
           show-glow={!isLightScenery}
           show-labels={showLabels}
@@ -153,6 +157,7 @@ export default connect(
   (state: RootState) => ({
     cameraConfiguration: getInitialCameraConfigurationOfShow(state),
     droneSize: getPreferredDroneRadius(state),
+    indoor: isShowIndoor(state),
     numDrones: getNumberOfDronesInShow(state),
     showId: getLoadedShowId(state),
     ...state.settings.threeD,

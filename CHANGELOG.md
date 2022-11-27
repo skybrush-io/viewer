@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The scenery can now be replaced with a black background in the 3D view.
 
+## Fixed
+
+- Label placement and size is now also optimized for indoor shows.
+
 ## [2.2.2] - 2022-08-06
 
 ## Fixed

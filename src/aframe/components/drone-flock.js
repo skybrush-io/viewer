@@ -7,6 +7,10 @@
 import watch from 'redux-watch';
 import AFrame from '@skybrush/aframe-components';
 
+import {
+  DEFAULT_DRONE_RADIUS,
+  INDOOR_DRONE_SIZE_SCALING_FACTOR,
+} from '~/constants';
 import { getElapsedSecondsGetter } from '~/features/playback/selectors';
 import {
   getLightProgramPlayers,
@@ -38,6 +42,7 @@ function getLabelFromEntity(entity) {
 }
 
 const DEFAULT_LABEL_SCALE = 3;
+const DEFAULT_LABEL_OFFSET = DEFAULT_LABEL_SCALE / 2;
 
 AFrame.registerSystem('drone-flock', {
   init() {
@@ -63,6 +68,7 @@ AFrame.registerSystem('drone-flock', {
 
   createNewUAVEntity({
     type,
+    indoor,
     droneSize,
     label,
     labelColor,
@@ -73,7 +79,9 @@ AFrame.registerSystem('drone-flock', {
       this._entityFactories[type] || this._entityFactories.default;
     const element = factory(droneSize);
 
-    element.append(this._createLabelEntity(label, showLabel, labelColor));
+    element.append(
+      this._createLabelEntity(label, showLabel, labelColor, indoor)
+    );
     element.append(this._createGlowEntity(droneSize, showGlow));
 
     return element;
@@ -92,7 +100,7 @@ AFrame.registerSystem('drone-flock', {
     return glowElement;
   },
 
-  _createLabelEntity(label, visible, color = 'white') {
+  _createLabelEntity(label, visible, color = 'white', indoor = false) {
     const labelElement = document.createElement('a-entity');
     labelElement.setAttribute('text', {
       color,
@@ -108,11 +116,14 @@ AFrame.registerSystem('drone-flock', {
 
     /* Y coordinate is slightly offset from zero to prevent Z-fighting with the
      * glow sprite */
-    labelElement.setAttribute('position', '0 -0.05 1.5');
+    const scalingFactor = indoor ? INDOOR_DRONE_SIZE_SCALING_FACTOR : 1;
+    const labelScale = DEFAULT_LABEL_SCALE * scalingFactor;
+    const labelOffset = DEFAULT_LABEL_OFFSET * scalingFactor;
+    labelElement.setAttribute('position', `0 -0.05 ${labelOffset}`);
     labelElement.setAttribute('rotation', '0 -90 -90');
     labelElement.setAttribute(
       'scale',
-      `${DEFAULT_LABEL_SCALE} ${DEFAULT_LABEL_SCALE} ${DEFAULT_LABEL_SCALE}`
+      `${labelScale} ${labelScale} ${labelScale}`
     );
     labelElement.setAttribute('visible', visible ? 'true' : 'false');
 
@@ -171,29 +182,31 @@ AFrame.registerSystem('drone-flock', {
     this.currentTime = this._getElapsedSeconds();
   },
 
-  resetLabelScale(entity) {
+  resetLabelScaleAndPosition(entity, indoor = false) {
     const label = getLabelFromEntity(entity);
-
     if (label) {
-      label.object3D.scale.set(
-        DEFAULT_LABEL_SCALE,
-        DEFAULT_LABEL_SCALE,
-        DEFAULT_LABEL_SCALE
-      );
+      const scalingFactor = indoor ? INDOOR_DRONE_SIZE_SCALING_FACTOR : 1;
+      const labelScale = DEFAULT_LABEL_SCALE * scalingFactor;
+      const labelOffset = DEFAULT_LABEL_OFFSET * scalingFactor;
+
+      label.object3D.position.set(0, -0.05, labelOffset);
+      label.object3D.scale.set(labelScale, labelScale, labelScale);
     }
   },
 
   rotateEntityLabelTowards(entity, position, data) {
     const { droneSize, scaleLabels } = data;
     const label = getLabelFromEntity(entity);
+    const indoor = Boolean(data.indoor ?? false);
+    const scalingFactor = indoor ? INDOOR_DRONE_SIZE_SCALING_FACTOR : 1;
 
     if (label) {
       if (scaleLabels) {
         entity.object3D.getWorldPosition(this._vec);
         const distance = this._vec.distanceTo(position);
-        const scale = distance / (20 * droneSize);
+        const scale = (distance * scalingFactor) / (20 * droneSize);
         label.object3D.scale.set(scale, scale, scale);
-        label.object3D.position.z = 1 + scale * (droneSize / 8);
+        label.object3D.position.z = scalingFactor + scale * (droneSize / 8);
       }
 
       label.object3D.lookAt(position);
@@ -256,6 +269,7 @@ AFrame.registerSystem('drone-flock', {
 AFrame.registerComponent('drone-flock', {
   schema: {
     droneSize: { default: 1 },
+    indoor: { default: false },
     labelColor: { default: 'white' },
     scaleLabels: { default: false },
     showGlow: { default: true },
@@ -334,15 +348,18 @@ AFrame.registerComponent('drone-flock', {
     }
   },
 
+  /* eslint-disable complexity */
   update(oldData) {
     const oldDroneSize = oldData.droneSize || 0;
     const oldSize = oldData.size || 0;
+    const oldIndoor = Boolean(oldData.indoor ?? false);
     const oldShowGlow = Boolean(oldData.showGlow ?? true);
     const oldShowLabels = Boolean(oldData.showLabels);
     const oldScaleLabels = Boolean(oldData.scaleLabels);
     const oldLabelColor = oldData.labelColor ?? '#888';
     const {
       droneSize,
+      indoor,
       labelColor,
       scaleLabels,
       showGlow,
@@ -359,6 +376,7 @@ AFrame.registerComponent('drone-flock', {
         const entity = this.system.createNewUAVEntity({
           type,
           droneSize,
+          indoor,
           label: String(i + 1),
           labelColor,
           showGlow,
@@ -408,12 +426,16 @@ AFrame.registerComponent('drone-flock', {
       }
     }
 
-    if (oldScaleLabels !== scaleLabels && !scaleLabels) {
-      // Reset the scale of each label
+    if (
+      oldIndoor !== indoor ||
+      (oldScaleLabels !== scaleLabels && !scaleLabels)
+    ) {
+      // Reset the scale and position of each label
       for (const item of this._drones) {
         const { entity } = item;
-        this.system.resetLabelScale(entity);
+        this.system.resetLabelScaleAndPosition(entity, indoor);
       }
     }
   },
+  /* eslint-enable complexity */
 });

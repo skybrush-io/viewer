@@ -1,4 +1,8 @@
 import get from 'lodash-es/get';
+import {
+  DEFAULT_DRONE_RADIUS,
+  INDOOR_DRONE_SIZE_SCALING_FACTOR,
+} from '~/constants';
 
 import {
   getPerspectiveCamerasAndDefaultCamera,
@@ -28,7 +32,8 @@ export const getEffectiveScenery = (
  * 3D view.
  */
 export const getPreferredDroneRadius = (state: RootState): number =>
-  isShowIndoor(state) ? 0.15 : 0.75;
+  DEFAULT_DRONE_RADIUS *
+  (isShowIndoor(state) ? INDOOR_DRONE_SIZE_SCALING_FACTOR : 1);
 
 /**
  * Selector that returns the index of the currently selected camera.

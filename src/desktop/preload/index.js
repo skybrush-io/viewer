@@ -28,7 +28,7 @@ contextBridge.exposeInMainWorld('bridge', {
   isElectron: true,
   getShowAsObjectFromLocalFile: (filename) =>
     ipc.callMain('getShowAsObjectFromLocalFile', filename),
-  provideActions: (...args) => {
+  provideActions(...args) {
     receiveActionsFromRenderer(...args);
 
     // Let the main process know that we are now ready to open show files
@@ -36,7 +36,7 @@ contextBridge.exposeInMainWorld('bridge', {
   },
   selectLocalShowFileForOpening: () =>
     ipc.callMain('selectLocalShowFileForOpening'),
-  setTitle: ({ appName, representedFile }) => {
+  setTitle({ appName, representedFile }) {
     ipc.callMain('setTitle', { appName, representedFile });
   },
 });

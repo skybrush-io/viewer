@@ -1,4 +1,4 @@
-import { ShowSpecification } from '@skybrush/show-format';
+import type { ShowSpecification } from '@skybrush/show-format';
 import type { AppThunk } from '~/store';
 import { getElectronBridge } from '~/window';
 

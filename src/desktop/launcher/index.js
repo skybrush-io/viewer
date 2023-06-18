@@ -48,8 +48,8 @@ async function run(filenames, options) {
       title: 'Skybrush Viewer',
       titleBarStyle: 'hiddenInset',
       webPreferences: {
-        sandbox: false  // because we need Node.js modules from the preloader
-      }
+        sandbox: false, // because we need Node.js modules from the preloader
+      },
     },
   });
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 import Assignment from '@mui/icons-material/Assignment';
 import AssignmentLate from '@mui/icons-material/AssignmentLate';
 import AssignmentTurnedIn from '@mui/icons-material/AssignmentTurnedIn';

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
+import SvgIcon, { type SvgIconProps } from '@mui/material/SvgIcon';
 
 const VirtualReality = React.forwardRef<SVGSVGElement>(
   (props: SvgIconProps, ref) => (

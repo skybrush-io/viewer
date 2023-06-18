@@ -4,14 +4,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import useResizeObserver from 'use-resize-observer';
 
-import Box, { BoxProps } from '@mui/material/Box';
+import Box, { type BoxProps } from '@mui/material/Box';
 import ChartIcon from '@mui/icons-material/InsertChartOutlined';
 import BackgroundHint from '@skybrush/mui-components/lib/BackgroundHint';
 
 import {
   findPanelById,
-  PanelSpecification,
-  ValidationPanel,
+  type PanelSpecification,
+  type ValidationPanel,
 } from '~/features/validation/panels';
 import { getVisiblePanels } from '~/features/validation/selectors';
 import type { RootState } from '~/store';

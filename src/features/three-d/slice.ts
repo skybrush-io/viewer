@@ -2,7 +2,7 @@
  * @file Slice of the state object that stores the state of the 3D view.
  */
 
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { Vector3Tuple } from '@skybrush/show-format';
 
 type NavigationMode = 'walk' | 'fly';

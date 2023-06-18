@@ -1,15 +1,15 @@
-const path = require('path');
-const process = require('process');
+const path = require('node:path');
+const process = require('node:process');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const WebpackShellPluginNext = require('webpack-shell-plugin-next');
 
+const { productName } = require('../package.json');
+
 const baseConfig = require('./base.config.js');
 const { getHtmlMetaTags, projectRoot } = require('./helpers');
-
-const { productName } = require('../package.json');
 
 const htmlWebPackPluginConfiguration = {
   meta: getHtmlMetaTags(),
@@ -48,7 +48,7 @@ module.exports = merge(baseConfig, {
     app: ['process/browser', './src/index'],
   },
   devServer: {
-    server: 'https'
+    server: 'https',
   },
   plugins,
 });

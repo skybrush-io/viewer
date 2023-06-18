@@ -1,5 +1,5 @@
+const { platform } = require('node:os');
 const { BrowserWindow } = require('electron');
-const { platform } = require('os');
 
 const getFirstMainWindow = (options = {}) => {
   const { required = false } = options;

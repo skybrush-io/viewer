@@ -1,6 +1,6 @@
 import { getElapsedSeconds } from '~/features/playback/selectors';
 import { getCenterOfBoundingBoxOfDronesAt } from '~/features/show/selectors';
-import { AppThunk } from '~/store';
+import { type AppThunk } from '~/store';
 
 import {
   resetZoom as _resetZoom,

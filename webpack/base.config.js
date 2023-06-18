@@ -1,5 +1,5 @@
-const path = require('path');
-const process = require('process');
+const path = require('node:path');
+const process = require('node:process');
 const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
 

@@ -4,7 +4,7 @@
  */
 
 import { createSlice } from '@reduxjs/toolkit';
-import { ShowSpecification } from '@skybrush/show-format';
+import type { ShowSpecification } from '@skybrush/show-format';
 
 import { loadShow, withProgressIndicator } from './async';
 

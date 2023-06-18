@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prefer-top-level-await */
 /**
  * @file Default application configuration at startup.
  */

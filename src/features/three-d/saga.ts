@@ -4,10 +4,10 @@ import { select, take } from 'redux-saga/effects';
 import {
   skybrushToThreeJsPosition,
   skybrushToThreeJsQuaternion,
-  ThreeJsPosition,
-  ThreeJsQuaternion,
+  type ThreeJsPosition,
+  type ThreeJsQuaternion,
 } from '@skybrush/aframe-components/lib/spatial';
-import { Camera, Vector3Tuple } from '@skybrush/show-format';
+import type { Camera, Vector3Tuple } from '@skybrush/show-format';
 
 import { getSelectedCamera } from './selectors';
 import { resetZoom, rotateViewTowards, switchToSelectedCamera } from './slice';
@@ -55,7 +55,13 @@ function* cameraAnimatorSaga(): Generator<any, void, any> {
           break;
 
         case ROTATE_VIEW_TOWARDS:
-          handleViewRotationTowards(controller, action.payload);
+          if (Array.isArray(action.payload) && action.payload.length >= 3) {
+            handleViewRotationTowards(
+              controller,
+              action.payload as Vector3Tuple
+            );
+          }
+
           break;
 
         default:

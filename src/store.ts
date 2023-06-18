@@ -3,10 +3,10 @@
  */
 
 import {
-  AnyAction,
   bindActionCreators,
-  Dispatch,
-  ThunkAction,
+  type AnyAction,
+  type Dispatch,
+  type ThunkAction,
 } from '@reduxjs/toolkit';
 import { configureStoreAndPersistence } from '@skybrush/redux-toolkit';
 

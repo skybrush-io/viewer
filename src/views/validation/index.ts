@@ -1,3 +1,1 @@
-import ValidationView from './ValidationView';
-
-export default ValidationView;
+export { default } from './ValidationView';

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Box, { BoxProps } from '@mui/material/Box';
+import Box, { type BoxProps } from '@mui/material/Box';
 import { systemFont } from '@skybrush/app-theme-mui';
 
 import { isElectronWindow } from '~/window';

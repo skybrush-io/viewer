@@ -168,7 +168,7 @@
           ]
         }
       ],
-      "node/file-extension-in-import": 0,
+      "n/file-extension-in-import": 0,
       "no-bitwise": 0,
       "no-negated-condition": 0,
       "no-warning-comments": 0,
@@ -183,9 +183,12 @@
       "unicorn/filename-case": 0,
       "unicorn/no-array-callback-reference": 0,
       "unicorn/no-fn-reference-in-iterator": 0,
+      "unicorn/no-negated-condition": 0,
       "unicorn/numeric-separators-style": 0,
       "unicorn/prefer-module": 0,
+      "unicorn/switch-case-braces": 0,
       "@typescript-eslint/ban-types": 0,
+      "@typescript-eslint/consistent-type-definitions": 0,
       "@typescript-eslint/naming-convention": 0,
       "@typescript-eslint/no-unsafe-assignment": 0,
       "@typescript-eslint/no-unsafe-call": 0

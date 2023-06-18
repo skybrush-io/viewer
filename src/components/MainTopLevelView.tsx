@@ -2,13 +2,12 @@
  * @file Component that shows a three-dimensional view of the drone flock.
  */
 
-import React from 'react';
-import { Suspense, useRef } from 'react';
+import React, { Suspense, useRef } from 'react';
 import { connect } from 'react-redux';
 
 import Box from '@mui/material/Box';
 
-import { UIMode } from '~/features/ui/modes';
+import { type UIMode } from '~/features/ui/modes';
 import { getCurrentMode } from '~/features/ui/selectors';
 import type { RootState } from '~/store';
 import PlayerView from '~/views/player';

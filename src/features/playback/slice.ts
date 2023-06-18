@@ -3,7 +3,7 @@
  */
 
 import isNil from 'lodash-es/isNil';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 const validatePlaybackSpeed = (speed: number | null | undefined) => {
   return isNil(speed) || Number.isNaN(speed) || speed <= 0 || speed >= 100
@@ -64,6 +64,7 @@ const { actions, reducer } = createSlice({
       if (speed !== undefined) {
         const validatedSpeed = validatePlaybackSpeed(speed);
 
+        // eslint-disable-next-line unicorn/prefer-logical-operator-over-ternary
         state.speed = validatedSpeed ? validatedSpeed : 1;
       }
 

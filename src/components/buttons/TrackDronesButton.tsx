@@ -1,6 +1,6 @@
 import React from 'react';
 
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 import CenterFocusStrong from '@mui/icons-material/CenterFocusStrong';
 import Tooltip from '@skybrush/mui-components/lib/Tooltip';
 

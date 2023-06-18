@@ -20,11 +20,11 @@ const createActionProxy =
     getActionByName(name)(...args);
 
 module.exports = {
-  receiveActionsFromRenderer: (actions) => {
+  receiveActionsFromRenderer(actions) {
     Object.assign(actionsFromRenderer, actions);
   },
 
-  setupIpc: () => {
+  setupIpc() {
     ipc.answerMain(
       'notifyFileOpeningRequest',
       createActionProxy('loadShowFromLocalFile')

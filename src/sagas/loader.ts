@@ -4,8 +4,9 @@
 
 import config from 'config';
 import get from 'lodash-es/get';
+import isNil from 'lodash-es/isNil';
 import ky from 'ky';
-import { Channel, channel } from 'redux-saga';
+import { type Channel, channel } from 'redux-saga';
 import { call, fork, put, putResolve, take } from 'redux-saga/effects';
 import { freeze } from '@reduxjs/toolkit';
 
@@ -53,7 +54,8 @@ function* loadShowFromRequestChannelSaga(
         loadShow(freeze(show)) as any
       );
       const audioInShowSpec = get(showSpec, 'media.audio.url');
-      yield put(setAudioUrl(audioOkay ? audio ?? audioInShowSpec : null));
+      const audioUrl = isNil(audioInShowSpec) ? null : String(audioInShowSpec);
+      yield put(setAudioUrl(audioOkay ? audio ?? audioUrl : null));
 
       if (!keepPlayhead) {
         yield put(rewind() as any);

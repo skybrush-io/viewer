@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 import Settings from '@mui/icons-material/Settings';
 import Tooltip from '@skybrush/mui-components/lib/Tooltip';
 

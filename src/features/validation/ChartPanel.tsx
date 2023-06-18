@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { Scatter } from 'react-chartjs-2';
 
 import Box from '@mui/material/Box';
-import Card, { CardProps } from '@mui/material/Card';
+import Card, { type CardProps } from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import { orange } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
@@ -214,7 +214,7 @@ const createOptions = ({
 
         title(item: Chart.ChartTooltipItem[]) {
           return item.length > 0
-            ? timestampFormatter(item[0].xLabel as any)
+            ? timestampFormatter(item[0].xLabel as any as number)
             : '';
         },
       },

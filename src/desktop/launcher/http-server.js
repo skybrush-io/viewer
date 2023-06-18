@@ -1,8 +1,8 @@
 /* eslint-disable unicorn/prevent-abbreviations */
-const { createSocket } = require('dgram');
-const http = require('http');
-const { networkInterfaces } = require('os');
-const process = require('process');
+const { createSocket } = require('node:dgram');
+const http = require('node:http');
+const { networkInterfaces } = require('node:os');
+const process = require('node:process');
 
 const express = require('express');
 const SSDPServer = require('node-ssdp').Server;
@@ -104,7 +104,9 @@ const setupHttpServer = async ({ port = 0 } = {}) => {
 
   app.set('port', port);
 
-  app.use(express.raw({ type: 'application/skybrush-compiled', limit: '8mb' }));
+  app.use(
+    express.raw({ type: 'application/skybrush-compiled', limit: '16mb' })
+  );
 
   app.use('/api/v1', apiV1);
 

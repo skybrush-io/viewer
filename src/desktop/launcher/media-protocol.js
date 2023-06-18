@@ -1,5 +1,5 @@
+const { URL } = require('node:url');
 const { protocol } = require('electron');
-const { URL } = require('url');
 
 const { getAudioBuffer } = require('./media-buffers');
 

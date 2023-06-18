@@ -1,10 +1,11 @@
-const path = require('path');
+const path = require('node:path');
 
 const projectRoot = path.resolve(__dirname, '..');
 const outputDir = path.resolve(projectRoot, 'build');
 
-const getHtmlMetaTags = ({ disableCSP } = {}) => {
+const getHtmlMetaTags = ({ disableCSP = false } = {}) => {
   const result = {
+    // eslint-disable-next-line unicorn/text-encoding-identifier-case
     charset: 'utf-8',
     description:
       'Skybrush Viewer: The Next-generation Drone Light Show Software Suite',

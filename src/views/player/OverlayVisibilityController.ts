@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useMouseHovered, useTimeout } from 'react-use';

@@ -9,7 +9,7 @@ import {
   teal,
 } from '@mui/material/colors';
 
-import { ValidationSettings } from './types';
+import { type ValidationSettings } from './types';
 
 /**
  * Number of samples to take from trajectories per second for the validation.

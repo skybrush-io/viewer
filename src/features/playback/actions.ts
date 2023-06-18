@@ -78,7 +78,7 @@ export const adjustPlaybackPositionBy =
 export const setPlaybackSpeed =
   (speed_: any): AppThunk =>
   (dispatch, getState) => {
-    let speed = Number.parseFloat(speed_);
+    let speed = Number.parseFloat(String(speed_));
 
     if (Number.isNaN(speed) || speed <= 0 || speed >= 100) {
       speed = 1;

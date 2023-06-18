@@ -14,16 +14,16 @@ import {
   skybrushToThreeJsPosition,
 } from '@skybrush/aframe-components/lib/spatial';
 import {
-  Camera,
-  DroneSpecification,
-  ShowSpecification,
-  Trajectory,
-  TrajectoryPlayer,
   createLightProgramPlayer,
   createTrajectoryPlayer,
   getCamerasFromShowSpecification,
   validateTrajectory,
-  ShowMetadata,
+  type Camera,
+  type DroneSpecification,
+  type ShowMetadata,
+  type ShowSpecification,
+  type Trajectory,
+  type TrajectoryPlayer,
 } from '@skybrush/show-format';
 import { formatPlaybackTimestamp } from '~/utils/formatters';
 

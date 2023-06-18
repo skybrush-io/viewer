@@ -1,8 +1,10 @@
-const fs = require('fs').promises;
-const process = require('process');
+import { promises as fs } from 'node:fs';
+import process from 'node:process';
 
-const { program } = require('commander');
-const { loadCompiledShow } = require('@skybrush/show-format');
+import { program } from 'commander';
+import showFormat from '@skybrush/show-format';
+
+const { loadCompiledShow } = showFormat;
 
 program
   .storeOptionsAsProperties(false)
@@ -17,4 +19,4 @@ async function main(options) {
   await fs.writeFile(options.output, output);
 }
 
-main(program.opts());
+await main(program.opts());

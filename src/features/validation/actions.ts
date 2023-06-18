@@ -1,7 +1,7 @@
-import { PayloadAction } from '@reduxjs/toolkit';
+import { type PayloadAction } from '@reduxjs/toolkit';
 import type { AppThunk, RootState } from '~/store';
 
-import { findPanelById, ValidationPanel } from './panels';
+import { findPanelById, type ValidationPanel } from './panels';
 import { getSelection, getVisiblePanels } from './selectors';
 import { setSelection, setVisiblePanels } from './slice';
 
@@ -23,6 +23,7 @@ function createItemToggler(
         newSelection = selection.concat([itemId]);
         if (sort) {
           if (typeof sort === 'function') {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             newSelection.sort(sort);
           } else {
             newSelection.sort();

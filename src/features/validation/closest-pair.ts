@@ -1,4 +1,4 @@
-import { Vector3 } from '@skybrush/show-format';
+import { type Vector3 } from '@skybrush/show-format';
 import minBy from 'lodash-es/minBy';
 
 // in my measurements, timsort was slightly better than the built-in JS sort

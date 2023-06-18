@@ -2,7 +2,7 @@
  * @file Slice of the state object that stores the state of the audio playback.
  */
 
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { noPayload } from '@skybrush/redux-toolkit';
 
 interface AudioSliceState {
@@ -41,7 +41,7 @@ const { actions, reducer } = createSlice({
       state.seeking = true;
     }),
 
-    setAudioUrl(state, action: PayloadAction<string | undefined>) {
+    setAudioUrl(state, action: PayloadAction<string | null | undefined>) {
       const { payload } = action;
       state.url = typeof payload === 'string' ? payload : undefined;
     },

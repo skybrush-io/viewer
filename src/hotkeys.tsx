@@ -1,9 +1,10 @@
 import React from 'react';
+import { type Action } from 'redux';
 import { connect } from 'react-redux';
 import {
   configure as configureHotkeys,
   GlobalHotKeys,
-  KeyMap,
+  type KeyMap,
 } from 'react-hotkeys';
 
 import { toggleMuted } from '~/features/audio/slice';
@@ -13,8 +14,8 @@ import {
   togglePlayback,
 } from '~/features/playback/actions';
 import { switchToCameraByIndex } from '~/features/three-d/actions';
-import { Action } from 'redux';
-import { AppThunk } from './store';
+
+import { type AppThunk } from './store';
 
 configureHotkeys({
   // Uncomment the next line for debugging problems with hotkeys
@@ -83,22 +84,22 @@ const AppHotkeys = ({
     // Full-screen does not work yet; the OverlayVisibilityHandler stops working
     // and I don't have time to debug it.
     // TOGGLE_FULLSCREEN: toggleFullScreen,
-    SELECT_DEFAULT_CAMERA: () => {
+    SELECT_DEFAULT_CAMERA() {
       switchToCameraByIndex(0);
     },
-    SELECT_FIRST_CAMERA: () => {
+    SELECT_FIRST_CAMERA() {
       switchToCameraByIndex(1);
     },
-    SELECT_SECOND_CAMERA: () => {
+    SELECT_SECOND_CAMERA() {
       switchToCameraByIndex(2);
     },
-    SELECT_THIRD_CAMERA: () => {
+    SELECT_THIRD_CAMERA() {
       switchToCameraByIndex(3);
     },
-    SELECT_FOURTH_CAMERA: () => {
+    SELECT_FOURTH_CAMERA() {
       switchToCameraByIndex(4);
     },
-    SELECT_FIFTH_CAMERA: () => {
+    SELECT_FIFTH_CAMERA() {
       switchToCameraByIndex(5);
     },
     TOGGLE_MUTED: toggleMuted,

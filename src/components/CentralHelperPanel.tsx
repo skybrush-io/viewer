@@ -4,7 +4,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Fade from '@mui/material/Fade';
-import { Theme } from '@mui/material/styles';
+import { type Theme } from '@mui/material/styles';
 import Close from '@mui/icons-material/Close';
 
 import { isThemeDark } from '@skybrush/app-theme-mui';

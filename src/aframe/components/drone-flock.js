@@ -7,10 +7,7 @@
 import watch from 'redux-watch';
 import AFrame from '@skybrush/aframe-components';
 
-import {
-  DEFAULT_DRONE_RADIUS,
-  INDOOR_DRONE_SIZE_SCALING_FACTOR,
-} from '~/constants';
+import { INDOOR_DRONE_SIZE_SCALING_FACTOR } from '~/constants';
 import { getElapsedSecondsGetter } from '~/features/playback/selectors';
 import {
   getLightProgramPlayers,
@@ -351,7 +348,7 @@ AFrame.registerComponent('drone-flock', {
   /* eslint-disable complexity */
   update(oldData) {
     const oldDroneSize = oldData.droneSize || 0;
-    const oldSize = oldData.size || 0;
+    const oldSize = oldData.size || 0; // eslint-disable-line unicorn/explicit-length-check
     const oldIndoor = Boolean(oldData.indoor ?? false);
     const oldShowGlow = Boolean(oldData.showGlow ?? true);
     const oldShowLabels = Boolean(oldData.showLabels);

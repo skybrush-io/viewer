@@ -37,7 +37,7 @@ interface DragDropHandlerProps {
 
 const DragDropHandler = ({ onFileDropped }: DragDropHandlerProps) => {
   const handleDrop = useCallback(
-    (event) => {
+    (event: DragEvent) => {
       const filename = extractFileFromEvent(event);
       if (filename) {
         onFileDropped(filename);

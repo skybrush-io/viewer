@@ -3,7 +3,7 @@
  * show being executed.
  */
 
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 import { clearLoadedShow } from '~/features/show/slice';
 

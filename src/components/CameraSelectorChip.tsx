@@ -1,13 +1,12 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
-import Chip, { ChipProps } from '@mui/material/Chip';
+import Chip, { type ChipProps } from '@mui/material/Chip';
 import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import { Camera } from '@skybrush/show-format';
+import { type Camera } from '@skybrush/show-format';
 
 function getLabelForCamera(camera: Camera, index: number): string {
   return camera.name ?? `Camera ${index}`;

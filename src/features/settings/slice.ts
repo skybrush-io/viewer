@@ -2,7 +2,7 @@
  * @file Slice of the state object that stores the settings of the viewer.
  */
 
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 interface SettingsSliceState {
   threeD: {

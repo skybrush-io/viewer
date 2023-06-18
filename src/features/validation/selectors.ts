@@ -2,7 +2,7 @@ import get from 'lodash-es/get';
 import range from 'lodash-es/range';
 import { createSelector } from '@reduxjs/toolkit';
 
-import { Vector3, Vector3Tuple } from '@skybrush/show-format';
+import { type Vector3 } from '@skybrush/show-format';
 
 import {
   getShowDuration,
@@ -14,7 +14,7 @@ import type { RootState } from '~/store';
 
 import getClosestPair from './closest-pair';
 import { DEFAULT_VALIDATION_SETTINGS, SAMPLES_PER_SECOND } from './constants';
-import { ValidationSettings } from './types';
+import { type ValidationSettings } from './types';
 
 /**
  * Selector that returns the validation settings of the current show (if any).
@@ -132,7 +132,12 @@ export const getSampledPositionsForDrones = createSelector(
     // the background so we don't lock the UI
     return players.map((player) =>
       samples.map((time) =>
-        player.getPositionAt(time, { x: 0, y: 0, z: 0, t: time } as any)
+        player.getPositionAt(time, {
+          x: 0,
+          y: 0,
+          z: 0,
+          t: time,
+        } as any as Vector3)
       )
     );
   }
@@ -150,7 +155,12 @@ export const getSampledVelocitiesForDrones = createSelector(
     // the background so we don't lock the UI
     return players.map((player) =>
       samples.map((time) =>
-        player.getVelocityAt(time, { x: 0, y: 0, z: 0, t: time } as any)
+        player.getVelocityAt(time, {
+          x: 0,
+          y: 0,
+          z: 0,
+          t: time,
+        } as any as Vector3)
       )
     );
   }

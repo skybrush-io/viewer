@@ -151,7 +151,7 @@ export default connect(
       'Use arrow keys to move around (Shift to run) and E/C to change altitude. Drag the scenery to look around. Scroll wheel or +/- to zoom.',
     muted: isAudioMuted(state),
     playing: isPlaying(state),
-    rightText: 'Skybrush \u00A9 2020-2022 CollMot Robotics Ltd.',
+    rightText: 'Skybrush \u00A9 2020-2023 CollMot Robotics Ltd.',
   }),
   // mapDispatchToProps
   {

@@ -5,7 +5,7 @@
 
 import config from 'config';
 import React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 import App from './app';
 
@@ -21,9 +21,11 @@ class SkybrushViewer {
     new SkybrushViewer().render('#root');
   }
 
-  render(selector: string): void {
-    const root = document.querySelector(selector);
-    render(<App />, root);
+  render(selector: string): () => void {
+    const element = document.querySelector(selector);
+    const root = createRoot(element!);
+    root.render(<App />);
+    return root.unmount;
   }
 }
 

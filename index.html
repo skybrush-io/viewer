@@ -7,7 +7,9 @@
     </body>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            SkybrushViewer.run();
+            if (typeof SkybrushViewer != 'undefined') {
+                SkybrushViewer.run();
+            }
         });
     </script>
 </html>

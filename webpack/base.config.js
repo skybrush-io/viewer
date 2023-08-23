@@ -40,6 +40,7 @@ module.exports = {
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development',
       DEPLOYMENT: '0',
+      SKYBRUSH_VARIANT: 'default',
     }),
 
     // Resolve the git version number and commit hash in the code

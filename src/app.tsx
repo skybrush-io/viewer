@@ -28,7 +28,7 @@ const waitForTopLevelView = async () => {
   // Start the root saga
   store.runSaga(rootSaga);
 
-  // Load the initial show file
+  // Load the initial show file (if any)
   loadInitialShow(store.dispatch);
 
   // Give some time for the 3D scene to initialize itself

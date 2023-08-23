@@ -12,6 +12,7 @@ const config = {
     validation: false,
     vr: false, // advanced-camera-controls is not VR-friendly yet
   },
+  startAutomatically: false,
   useWelcomeScreen: false,
 };
 

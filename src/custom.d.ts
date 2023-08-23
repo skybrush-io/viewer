@@ -33,6 +33,7 @@ declare module 'config' {
       show: any;
       audio: string;
     };
+    startAutomatically: boolean;
     useWelcomeScreen: boolean;
   };
   export default config;

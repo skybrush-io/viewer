@@ -13,6 +13,7 @@ const config = {
     vr: false,
   },
   preloadedShow: {},
+  startAutomatically: true,
   useWelcomeScreen: true,
 };
 

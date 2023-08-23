@@ -2,6 +2,7 @@
 // https://share.skybrush.io
 
 const path = require('node:path');
+const process = require('node:process');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
@@ -18,7 +19,11 @@ module.exports = merge(baseConfig, {
 
   resolve: {
     alias: {
-      config: path.resolve(projectRoot, 'config', 'webapp'),
+      config: path.resolve(
+        projectRoot,
+        'config',
+        process.env.SKYBRUSH_VARIANT ?? 'webapp'
+      ),
     },
   },
 

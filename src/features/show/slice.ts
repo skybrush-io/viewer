@@ -3,10 +3,11 @@
  * show being executed.
  */
 
-import { createSlice } from '@reduxjs/toolkit';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 import type { ShowSpecification } from '@skybrush/show-format';
 
-import { loadShow, withProgressIndicator } from './async';
+import { _doLoadShow, withProgressIndicator } from './async';
+import type { ShowLoadingRequest } from './types';
 
 interface ShowSliceState {
   id: number;
@@ -32,30 +33,25 @@ const { actions, reducer } = createSlice({
       state.id = 0;
     },
 
-    loadShowFromObject: {
-      reducer() {
-        /* nothing to do, the loader saga will pick this up and take care of
-         * everything */
-      },
-      prepare: (show: ShowSpecification, options = {}) => ({
-        payload: { show, options },
-      }),
+    loadShowFromRequest(state, action: PayloadAction<ShowLoadingRequest>) {
+      /* nothing to do, the loader saga will pick this up and take care of
+       * everything */
     },
   },
 
   extraReducers(builder) {
-    builder.addCase(loadShow.fulfilled, (state, action) => {
+    builder.addCase(_doLoadShow.fulfilled, (state, action) => {
       state.data = action.payload as ShowSpecification;
       state.loading = false;
       state.error = null;
       state.id += 1;
     });
 
-    builder.addCase(loadShow.pending, (state) => {
+    builder.addCase(_doLoadShow.pending, (state) => {
       state.loading = true;
     });
 
-    builder.addCase(loadShow.rejected, (state) => {
+    builder.addCase(_doLoadShow.rejected, (state) => {
       state.loading = false;
       state.error = 'Failed to load drone show.';
     });
@@ -76,6 +72,6 @@ const { actions, reducer } = createSlice({
   },
 });
 
-export const { clearLoadedShow, loadShowFromObject } = actions;
+export const { clearLoadedShow, loadShowFromRequest } = actions;
 
 export default reducer;

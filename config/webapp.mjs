@@ -1,9 +1,6 @@
-/* eslint-disable unicorn/prefer-top-level-await */
 /**
- * @file Default application configuration at startup.
+ * @file Default application configuration at startup when running as a web app.
  */
-
-import music from '~/../assets/shows/demo.mp3';
 
 const config = {
   buttons: {
@@ -14,12 +11,6 @@ const config = {
     player: true,
     validation: false,
     vr: false, // advanced-camera-controls is not VR-friendly yet
-  },
-  preloadedShow: {
-    audioUrl: music,
-    data: import(
-      /* webpackChunkName: "show" */ '~/../assets/shows/demo.json'
-    ).then((module) => module.default),
   },
   useWelcomeScreen: false,
 };

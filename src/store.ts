@@ -11,9 +11,11 @@ import {
 import { configureStoreAndPersistence } from '@skybrush/redux-toolkit';
 
 import reducer from './features';
-import { loadShow } from './features/show/async';
-import { loadShowFromLocalFile } from './features/show/actions';
-import { loadShowFromObject } from './features/show/slice';
+import { _doLoadShow } from './features/show/async';
+import {
+  loadShowFromLocalFile,
+  loadShowFromObject,
+} from './features/show/actions';
 import { setOverlayVisibility } from './features/three-d/slice';
 import { setMode as setUIMode } from './features/ui/slice';
 import { isElectronWindow } from './window';
@@ -39,12 +41,12 @@ export const { store, persistor } = configureStoreAndPersistence({
     ],
   },
 
-  ignoredActions: [loadShow.fulfilled.type],
+  ignoredActions: [_doLoadShow.fulfilled.type],
   ignoredPaths: ['show.data'],
 
   devTools: {
     actionsDenylist: [setOverlayVisibility.type],
-    scrubbedActions: [loadShow.fulfilled.type],
+    scrubbedActions: [_doLoadShow.fulfilled.type],
     scrubbedPaths: ['show.data'],
   },
 });

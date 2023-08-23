@@ -22,10 +22,14 @@ import '~/../assets/css/aframe.less';
 
 import 'react-cover-page/themes/dark.css';
 import 'typeface-fira-sans';
+import { loadInitialShow } from './startup';
 
 const waitForTopLevelView = async () => {
   // Start the root saga
   store.runSaga(rootSaga);
+
+  // Load the initial show file
+  loadInitialShow(store.dispatch);
 
   // Give some time for the 3D scene to initialize itself
   await delay(1000);

@@ -9,7 +9,7 @@
     "lint": "xo",
     "postinstall": "patch-package",
     "analyze": "webpack --config webpack/browser.config.js --progress --json >stats.json",
-    "start": "webpack serve --config webpack/browser.config.js --progress",
+    "start": "cross-env SKYBRUSH_VARIANT=demo webpack serve --config webpack/browser.config.js --progress",
     "start:electron": "webpack serve --config webpack/electron.config.js --progress",
     "start:public": "webpack serve --config webpack/browser.config.js --progress --host 0.0.0.0",
     "test": "npm run lint"

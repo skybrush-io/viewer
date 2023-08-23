@@ -3,7 +3,7 @@ import type { AppThunk } from '~/store';
 import { getElectronBridge } from '~/window';
 
 import { withProgressIndicator } from './async';
-import { loadShowFromObject } from './slice';
+import { loadShowFromRequest } from './slice';
 
 export const loadShowFromLocalFile =
   (filename: string): AppThunk =>
@@ -30,3 +30,9 @@ export const pickLocalFileAndLoadShow = (): AppThunk => async (dispatch) => {
     }
   }
 };
+
+export const loadShowFromObject =
+  (show: ShowSpecification): AppThunk =>
+  (dispatch) => {
+    dispatch(loadShowFromRequest({ show }));
+  };

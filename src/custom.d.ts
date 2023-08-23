@@ -30,8 +30,8 @@ declare module 'config' {
       vr: boolean;
     };
     preloadedShow?: {
-      data: any;
-      audioUrl: string;
+      show: any;
+      audio: string;
     };
     useWelcomeScreen: boolean;
   };

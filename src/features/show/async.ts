@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-export const loadShow = createAsyncThunk(
+export const _doLoadShow = createAsyncThunk(
   'show/load',
   async <T>(promise: Promise<T>) => promise
 );

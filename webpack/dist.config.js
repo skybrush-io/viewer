@@ -39,6 +39,10 @@ module.exports = merge(baseConfig, {
       process: 'process/browser',
     }),
 
+    // Ignore chart.js -- not needed in the browser because we do not provide
+    // the validation UI there
+    new webpack.IgnorePlugin({ resourceRegExp: /chart\.?js/ }),
+
     // Create index.html on-the-fly
     new HtmlWebpackPlugin({
       meta: getHtmlMetaTags(),

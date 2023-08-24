@@ -31,7 +31,7 @@ function deriveShowFileRootUrl(href?: string): URL | undefined {
   return undefined;
 }
 
-export function getShowLoadingRequestFromRootUrl(
+export function createShowLoadingRequestFromRootUrl(
   url: string | URL
 ): ShowLoadingRequest {
   const now = Date.now();
@@ -57,7 +57,7 @@ export function getInitialShowLoadingRequest(): ShowLoadingRequest | undefined {
   if (rootUrl) {
     // looks like we are running on share.skybrush.io so let's load the show
     // file from the same folder where we are
-    return getShowLoadingRequestFromRootUrl(rootUrl);
+    return createShowLoadingRequestFromRootUrl(rootUrl);
   }
 
   // This is outside share.skybrush.io so just load a bundled demo show or

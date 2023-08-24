@@ -251,7 +251,7 @@ const createOptions = ({
 };
 
 interface ChartPanelProps {
-  data: Array<{
+  readonly data: Array<{
     values: Array<{
       x: number;
       y: number;
@@ -260,13 +260,13 @@ interface ChartPanelProps {
     label: string;
     role: 'minimum' | 'maximum' | 'mean' | 'single';
   }>;
-  formatPlaybackTimestamp?: (value: number) => string;
-  height: number;
-  range: [number, number];
-  threshold?: number | number[];
-  thresholdLabel?: string;
-  title?: string;
-  verticalUnit?: string;
+  readonly formatPlaybackTimestamp?: (value: number) => string;
+  readonly height: number;
+  readonly range: [number, number];
+  readonly threshold?: number | number[];
+  readonly thresholdLabel?: string;
+  readonly title?: string;
+  readonly verticalUnit?: string;
 }
 
 const ChartPanel = ({

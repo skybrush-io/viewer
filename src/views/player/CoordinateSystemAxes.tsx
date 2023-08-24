@@ -7,9 +7,9 @@ const AxisColors = {
 } as const;
 
 interface CoordinateSystemAxesProps {
-  leftHanded?: boolean;
-  length?: number;
-  lineWidth?: number;
+  readonly leftHanded?: boolean;
+  readonly length?: number;
+  readonly lineWidth?: number;
 }
 
 /**

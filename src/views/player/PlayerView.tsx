@@ -15,7 +15,11 @@ import Overlays from './Overlays';
 import OverlayVisibilityController from './OverlayVisibilityController';
 import ThreeDView from './ThreeDView';
 
-const PlayerView = ({ screenRef }: { screenRef: React.RefObject<Element> }) => (
+const PlayerView = ({
+  screenRef,
+}: {
+  readonly screenRef: React.RefObject<Element>;
+}) => (
   <>
     <Box position='relative' flex={1}>
       <ThreeDView cameraRef={cameraRef} />

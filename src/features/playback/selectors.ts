@@ -38,11 +38,11 @@ export const getElapsedSecondsGetter = createSelector(
   (state: RootState): number | null => state.playback.adjustedTo,
   getPlaybackSpeed,
   (
-      startedAt: number | null,
-      stoppedAt: number | null,
-      adjustedTo: number | null,
-      speed: number
-    ) =>
+    startedAt: number | null,
+    stoppedAt: number | null,
+    adjustedTo: number | null,
+    speed: number
+  ) =>
     (timestamp: number | null = null) => {
       if (!isNil(adjustedTo)) {
         return adjustedTo;

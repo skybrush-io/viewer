@@ -35,26 +35,26 @@ import glow from '~/../assets/img/sphere-glow-hollow.png';
 // const flapperDrone = require('~/../assets/models/flapper-drone.obj').default;
 
 type ThreeDViewProps = {
-  axes: boolean;
-  cameraConfiguration: {
+  readonly axes: boolean;
+  readonly cameraConfiguration: {
     position: ThreeJsPosition;
     rotation: ThreeJsRotation;
   };
-  cameraRef: React.RefObject<HTMLElement>;
-  droneSize: number;
-  indoor: boolean;
-  grid: boolean | string;
-  navigation: {
+  readonly cameraRef: React.RefObject<HTMLElement>;
+  readonly droneSize: number;
+  readonly indoor: boolean;
+  readonly grid: boolean | string;
+  readonly navigation: {
     mode: 'walk' | 'fly';
     parameters: any;
   };
-  numDrones: number;
-  scaleLabels: boolean;
-  scenery: SceneryType;
-  showId: number;
-  showLabels: boolean;
-  showStatistics: boolean;
-  vrEnabled?: boolean;
+  readonly numDrones: number;
+  readonly scaleLabels: boolean;
+  readonly scenery: SceneryType;
+  readonly showId: number;
+  readonly showLabels: boolean;
+  readonly showStatistics: boolean;
+  readonly vrEnabled?: boolean;
 };
 
 const DEFAULT_CAMERA_CONFIGURATION = {

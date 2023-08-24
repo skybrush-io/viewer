@@ -22,10 +22,10 @@ import {
 import type { AppDispatch, RootState } from '~/store';
 
 interface SidebarListItemPresentationProps {
-  chartIndex: number;
-  label?: string;
-  onToggleSelection: () => void;
-  style?: React.CSSProperties;
+  readonly chartIndex: number;
+  readonly label?: string;
+  readonly onToggleSelection: () => void;
+  readonly style?: React.CSSProperties;
 }
 
 const SidebarListItemPresentation = ({
@@ -77,8 +77,8 @@ const style = {
 };
 
 interface ValidationSidebarProps {
-  singleDroneItems: Array<{ id: string; label: string }>;
-  width?: number;
+  readonly singleDroneItems: Array<{ id: string; label: string }>;
+  readonly width?: number;
 }
 
 const ValidationSidebar = ({

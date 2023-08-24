@@ -29,7 +29,7 @@ const isPanelHeightValid = (panel: PanelSpecification): boolean =>
   panel.height > 0;
 
 interface ChartGridProps extends BoxProps {
-  visiblePanels: ValidationPanel[];
+  readonly visiblePanels: ValidationPanel[];
 }
 
 const ChartGrid = ({ visiblePanels, ...rest }: ChartGridProps) => {

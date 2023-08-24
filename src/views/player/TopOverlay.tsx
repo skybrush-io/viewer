@@ -32,9 +32,9 @@ const style = {
 };
 
 interface TopOverlayProps extends BoxProps {
-  hasShow: boolean;
-  onRotateViewToDrones: () => void;
-  onResetZoom: () => void;
+  readonly hasShow: boolean;
+  readonly onRotateViewToDrones: () => void;
+  readonly onResetZoom: () => void;
 }
 
 /**

@@ -32,7 +32,7 @@ const onFileDragging = (event: DragEvent) => {
 };
 
 interface DragDropHandlerProps {
-  onFileDropped: (filename: string) => void;
+  readonly onFileDropped: (filename: string) => void;
 }
 
 const DragDropHandler = ({ onFileDropped }: DragDropHandlerProps) => {

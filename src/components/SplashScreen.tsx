@@ -4,7 +4,7 @@ import { CoverPagePresentation as CoverPage } from 'react-cover-page';
 import logo from '~/../assets/icons/splash.png';
 
 interface SplashScreenProps {
-  visible: boolean;
+  readonly visible: boolean;
 }
 
 const SplashScreen = ({ visible = true }: SplashScreenProps) => (

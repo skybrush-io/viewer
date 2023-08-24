@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import Box from '@mui/material/Box';
 
-import { type UIMode } from '~/features/ui/modes';
+import { UIMode } from '~/features/ui/modes';
 import { getCurrentMode } from '~/features/ui/selectors';
 import type { RootState } from '~/store';
 import PlayerView from '~/views/player';
@@ -19,7 +19,7 @@ const LazyValidationView = React.lazy(
 );
 
 interface MainTopLevelViewProps {
-  mode: UIMode;
+  readonly mode: UIMode;
 }
 
 const MainTopLevelView = ({ mode }: MainTopLevelViewProps) => {
@@ -28,8 +28,8 @@ const MainTopLevelView = ({ mode }: MainTopLevelViewProps) => {
   return (
     <Box ref={ref} display='flex' flexDirection='column' height='100vh'>
       <Suspense fallback={<PageLoadingIndicator />}>
-        {mode === 'player' && <PlayerView screenRef={ref} />}
-        {mode === 'validation' && <LazyValidationView />}
+        {mode === UIMode.PLAYER && <PlayerView screenRef={ref} />}
+        {mode === UIMode.VALIDATION && <LazyValidationView />}
       </Suspense>
     </Box>
   );

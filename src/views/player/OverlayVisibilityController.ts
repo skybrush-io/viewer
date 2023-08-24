@@ -62,10 +62,10 @@ const useMouseMovingState = (
 };
 
 interface OverlayVisibilityControllerProps {
-  areaRef: React.RefObject<Element>;
-  onHide?: () => void;
-  onShow?: () => void;
-  timeout?: number;
+  readonly areaRef: React.RefObject<Element>;
+  readonly onHide?: () => void;
+  readonly onShow?: () => void;
+  readonly timeout?: number;
 }
 
 /**

@@ -49,19 +49,19 @@ const noWrap = {
 } as const;
 
 interface BottomOverlayProps {
-  canLoadShowFromLocalFile: boolean;
-  canTogglePlayback: boolean;
-  duration: number;
-  formatPlaybackTimestamp: (timestamp: number) => string;
-  hasAudio: boolean;
-  hasShow: boolean;
-  leftText: string;
-  muted: boolean;
-  playing: boolean;
-  rightText: string;
-  onLoadShowFromLocalFile: () => void;
-  onToggleMuted: () => void;
-  onTogglePlayback: () => void;
+  readonly canLoadShowFromLocalFile: boolean;
+  readonly canTogglePlayback: boolean;
+  readonly duration: number;
+  readonly formatPlaybackTimestamp: (timestamp: number) => string;
+  readonly hasAudio: boolean;
+  readonly hasShow: boolean;
+  readonly leftText: string;
+  readonly muted: boolean;
+  readonly playing: boolean;
+  readonly rightText: string;
+  readonly onLoadShowFromLocalFile: () => void;
+  readonly onToggleMuted: () => void;
+  readonly onTogglePlayback: () => void;
 }
 
 const BottomOverlay = React.forwardRef(

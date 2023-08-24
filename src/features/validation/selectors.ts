@@ -102,7 +102,7 @@ export const getSampledTimeInstants = createSelector(
     const numberSamples = Math.ceil(duration * SAMPLES_PER_SECOND);
     const result = range(numberSamples).map((x) => x / SAMPLES_PER_SECOND);
 
-    if (result.length > 0 && result[result.length - 1] < duration) {
+    if (result.length > 0 && result.at(-1)! < duration) {
       result.push(duration);
     }
 

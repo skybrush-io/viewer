@@ -13,10 +13,10 @@ function getLabelForCamera(camera: Camera, index: number): string {
 }
 
 interface CameraSelectorChipProps extends ChipProps {
-  cameras: Camera[];
-  hotkeys: string[];
-  onCameraSelected: (index: number, camera: Camera) => void;
-  selectedCameraIndex: number;
+  readonly cameras: Camera[];
+  readonly hotkeys: string[];
+  readonly onCameraSelected: (index: number, camera: Camera) => void;
+  readonly selectedCameraIndex: number;
 }
 
 /**

@@ -19,9 +19,9 @@ import CentralHelperPanel from './CentralHelperPanel';
 import SkybrushLogo from './SkybrushLogo';
 
 interface WelcomeScreenProps {
-  canLoadShowFromLocalFile: boolean;
-  onLoadShowFromLocalFile: () => void;
-  visible: boolean;
+  readonly canLoadShowFromLocalFile: boolean;
+  readonly onLoadShowFromLocalFile: () => void;
+  readonly visible: boolean;
 }
 
 const WelcomeScreen = ({

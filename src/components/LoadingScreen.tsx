@@ -39,12 +39,12 @@ const styles = {
 } as const;
 
 interface LoadingScreenProps {
-  canPlay: boolean;
-  error: string | null;
-  loading: boolean;
-  onDismiss: () => void;
-  onPlay: () => void;
-  visible: boolean;
+  readonly canPlay: boolean;
+  readonly error: string | null;
+  readonly loading: boolean;
+  readonly onDismiss: () => void;
+  readonly onPlay: () => void;
+  readonly visible: boolean;
 }
 
 const LoadingScreen = ({

@@ -14,9 +14,9 @@ import type { RootState } from '~/store';
 import { hasValidationMessages } from './selectors';
 
 interface ToggleValidationModeButtonProps extends IconButtonProps {
-  onToggleValidationMode?: () => void;
-  trajectoriesValid?: boolean;
-  validationInProgress?: boolean;
+  readonly onToggleValidationMode?: () => void;
+  readonly trajectoriesValid?: boolean;
+  readonly validationInProgress?: boolean;
 }
 
 const ToggleValidationModeButton = ({

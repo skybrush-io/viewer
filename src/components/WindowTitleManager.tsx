@@ -7,8 +7,8 @@ import { isElectronWindow } from '~/window';
 import type { RootState } from '~/store';
 
 interface WindowTitleManagerProps {
-  appName: string;
-  showTitle: string;
+  readonly appName: string;
+  readonly showTitle: string;
 }
 
 const WindowTitleManager = ({

@@ -9,7 +9,7 @@ const style = {
 } as const;
 
 interface PanelToggleChipProps extends ChipProps {
-  selected: boolean;
+  readonly selected: boolean;
 }
 
 const PanelToggleChip = ({ selected, ...rest }: PanelToggleChipProps) => (

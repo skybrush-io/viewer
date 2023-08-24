@@ -67,20 +67,22 @@ const modalProps = {
 };
 
 interface SidebarDrawerProps {
-  open: boolean;
-  onClose: () => void;
-  onSetScenery: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onSetPlaybackSpeed: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onToggleAxes: () => void;
-  onToggleGrid: () => void;
-  onToggleLabels: () => void;
-  onToggleScaleLabels: () => void;
-  scaleLabels: boolean;
-  scenery: 'disabled' | 'auto' | 'day' | 'night' | 'indoor';
-  showAxes: boolean;
-  showGrid: boolean;
-  showLabels: boolean;
-  speed: number;
+  readonly open: boolean;
+  readonly onClose: () => void;
+  readonly onSetScenery: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  readonly onSetPlaybackSpeed: (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => void;
+  readonly onToggleAxes: () => void;
+  readonly onToggleGrid: () => void;
+  readonly onToggleLabels: () => void;
+  readonly onToggleScaleLabels: () => void;
+  readonly scaleLabels: boolean;
+  readonly scenery: 'disabled' | 'auto' | 'day' | 'night' | 'indoor';
+  readonly showAxes: boolean;
+  readonly showGrid: boolean;
+  readonly showLabels: boolean;
+  readonly speed: number;
 }
 
 /**

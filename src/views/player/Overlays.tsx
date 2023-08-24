@@ -8,7 +8,7 @@ import type { RootState } from '~/store';
 import BottomOverlay from './BottomOverlay';
 import TopOverlay from './TopOverlay';
 
-const Overlays = ({ visible = false }: { visible: boolean }) => (
+const Overlays = ({ visible = false }: { readonly visible: boolean }) => (
   <>
     <Fade in={visible}>
       <TopOverlay />

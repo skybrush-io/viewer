@@ -56,8 +56,8 @@ const environments = {
 export type SceneryType = keyof typeof environments;
 
 type SceneryProps = {
-  grid: boolean | string;
-  type: SceneryType;
+  readonly grid: boolean | string;
+  readonly type: SceneryType;
 };
 
 /**

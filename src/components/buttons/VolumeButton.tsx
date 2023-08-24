@@ -7,7 +7,7 @@ import VolumeUp from '@mui/icons-material/VolumeUp';
 const VolumeButton = ({
   muted,
   ...rest
-}: IconButtonProps & { muted: boolean }) => (
+}: IconButtonProps & { readonly muted: boolean }) => (
   <IconButton disableRipple {...rest} size='large'>
     {muted ? <VolumeOff /> : <VolumeUp />}
   </IconButton>

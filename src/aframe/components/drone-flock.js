@@ -348,7 +348,7 @@ AFrame.registerComponent('drone-flock', {
   /* eslint-disable complexity */
   update(oldData) {
     const oldDroneSize = oldData.droneSize || 0;
-    const oldSize = oldData.size || 0; // eslint-disable-line unicorn/explicit-length-check
+    const oldSize = oldData.size || 0;
     const oldIndoor = Boolean(oldData.indoor ?? false);
     const oldShowGlow = Boolean(oldData.showGlow ?? true);
     const oldShowLabels = Boolean(oldData.showLabels);

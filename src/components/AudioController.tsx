@@ -21,14 +21,14 @@ import {
 import type { RootState } from '~/store';
 
 interface AudioControllerProps {
-  elapsedSecondsGetter: () => number;
-  muted: boolean;
-  onCanPlay: () => void;
-  onLoadedMetadata: () => void;
-  onSeeked: () => void;
-  onSeeking: () => void;
-  playing: boolean;
-  url: string;
+  readonly elapsedSecondsGetter: () => number;
+  readonly muted: boolean;
+  readonly onCanPlay: () => void;
+  readonly onLoadedMetadata: () => void;
+  readonly onSeeked: () => void;
+  readonly onSeeking: () => void;
+  readonly playing: boolean;
+  readonly url: string;
 }
 
 const AudioController = ({

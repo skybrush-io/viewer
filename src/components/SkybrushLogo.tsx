@@ -3,7 +3,7 @@ import React from 'react';
 import logo from '~/../assets/img/logo.png';
 
 interface SkybrushLogoProps extends React.ComponentPropsWithoutRef<'img'> {
-  width?: number;
+  readonly width?: number;
 }
 
 const SkybrushLogo = ({ width = 160, ...rest }: SkybrushLogoProps) => (

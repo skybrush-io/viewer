@@ -128,11 +128,11 @@ function combine(
   )!;
   const minDist = Math.sqrt(getDistanceSquared(closestPair));
   const allOrderedByY = mergeSortedArraysByY(left.orderedByY, right.orderedByY);
-  const frontierPoint = left.orderedByX[left.orderedByX.length - 1];
+  const frontierPoint = left.orderedByX.at(-1);
   const candidatesByY = getCandidates(
     allOrderedByY,
-    frontierPoint.x - minDist,
-    frontierPoint.x + minDist
+    frontierPoint!.x - minDist,
+    frontierPoint!.x + minDist
   );
   const closestInIntersection = getClosestPairInIntersection(candidatesByY);
 

@@ -34,12 +34,12 @@ const styles = {
 } as const;
 
 interface ValidationHeaderProps extends BoxProps {
-  canLoadShowFromLocalFile: boolean;
-  hasLoadedShowFile: boolean;
-  onClearLoadedShow: () => void;
-  onReturnToViewer: () => void;
-  onTogglePanel: (id: string) => void;
-  visiblePanels: string[];
+  readonly canLoadShowFromLocalFile: boolean;
+  readonly hasLoadedShowFile: boolean;
+  readonly onClearLoadedShow: () => void;
+  readonly onReturnToViewer: () => void;
+  readonly onTogglePanel: (id: string) => void;
+  readonly visiblePanels: string[];
 }
 
 const ValidationHeader = ({

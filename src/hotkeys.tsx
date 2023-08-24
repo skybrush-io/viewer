@@ -59,13 +59,13 @@ function onlyWhenNoButtonIsFocused<T extends any[], A>(
 }
 
 interface AppHotkeysProps {
-  cueForward: () => void;
-  cueBackward: () => void;
-  rewind: () => void;
-  switchToCameraByIndex: (index: number) => void;
-  toggleMuted: () => void;
-  togglePlayback: () => void;
-  children: React.ReactNode;
+  readonly cueForward: () => void;
+  readonly cueBackward: () => void;
+  readonly rewind: () => void;
+  readonly switchToCameraByIndex: (index: number) => void;
+  readonly toggleMuted: () => void;
+  readonly togglePlayback: () => void;
+  readonly children: React.ReactNode;
 }
 
 const AppHotkeys = ({

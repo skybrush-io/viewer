@@ -24,6 +24,7 @@ import {
   type ShowSpecification,
   type Trajectory,
   type TrajectoryPlayer,
+  CameraType,
 } from '@skybrush/show-format';
 import { formatPlaybackTimestamp } from '~/utils/formatters';
 
@@ -191,7 +192,8 @@ export const getPerspectiveCameras = createSelector(getCameras, (cameras) =>
   cameras && cameras.length > 0
     ? cameras
         .filter(
-          (camera) => camera && (!camera.type || camera.type === 'perspective')
+          (camera) =>
+            camera && (!camera.type || camera.type === CameraType.PERSPECTIVE)
         )
         .map(
           (camera: Camera): Camera =>
@@ -335,7 +337,7 @@ const getTrajectoryDuration = (trajectory: any): number => {
   const { points, takeoffTime } = trajectory;
 
   if (points.length > 0) {
-    const lastPoint = points[points.length - 1];
+    const lastPoint = points.at(-1);
     if (Array.isArray(lastPoint) && lastPoint.length > 1) {
       return lastPoint[0] + (takeoffTime ?? 0);
     }

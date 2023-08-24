@@ -42,10 +42,10 @@ const styles = {
 };
 
 interface CentralHelperPanelProps {
-  canDismiss?: boolean;
-  children: React.ReactNode;
-  onDismiss?: () => void;
-  visible: boolean;
+  readonly canDismiss?: boolean;
+  readonly children: React.ReactNode;
+  readonly onDismiss?: () => void;
+  readonly visible: boolean;
 }
 
 const CentralHelperPanel = ({

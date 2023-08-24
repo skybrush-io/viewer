@@ -1,7 +1,8 @@
 /* eslint-disable unicorn/prevent-abbreviations, new-cap */
+const { setTimeout } = require('node:timers/promises');
+
 const { ipcMain: ipc } = require('electron-better-ipc');
 const express = require('express');
-const pTimeout = require('p-timeout');
 
 const { getShowAsObjectFromBuffer } = require('./show-loader');
 const { getFirstMainWindow } = require('./utils');
@@ -31,7 +32,7 @@ router.post('/load', async (req, res, next) => {
     const proposedTitle = req.header('x-skybrush-viewer-title');
     const targetWindow = getFirstMainWindow({ required: true });
 
-    await pTimeout(
+    const success = Promise.race([
       (async () => {
         const showSpec = await getShowAsObjectFromBuffer(req.body);
         await ipc.callRenderer(targetWindow, 'setUIMode', 'validation');
@@ -43,11 +44,17 @@ router.post('/load', async (req, res, next) => {
         });
 
         targetWindow.show();
-      })(),
-      10000
-    );
 
-    res.json({ result: true });
+        return true;
+      })(),
+      setTimeout(10000, false),
+    ]);
+
+    if (success) {
+      res.json({ result: true });
+    } else {
+      throw new Error('Timeout');
+    }
   } catch (error) {
     return next(error);
   }

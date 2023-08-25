@@ -31,6 +31,12 @@ const style = {
   textAlign: 'center',
 };
 
+const buttonBarStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  WebkitAppRegion: 'no-drag',
+};
+
 interface TopOverlayProps extends BoxProps {
   readonly hasShow: boolean;
   readonly onRotateViewToDrones: () => void;
@@ -49,11 +55,11 @@ const TopOverlay = React.forwardRef(
     <Box ref={ref} sx={style} {...rest}>
       <WindowDragMoveArea />
       {hasShow && (
-        <>
+        <Box sx={buttonBarStyle}>
           <ZoomOutButton onClick={onResetZoom} />
           <CameraSelectorChip />
           <TrackDronesButton onClick={onRotateViewToDrones} />
-        </>
+        </Box>
       )}
     </Box>
   )

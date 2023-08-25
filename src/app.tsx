@@ -17,7 +17,6 @@ import { loadShowFromRequest } from './features/show/slice';
 import { type ShowLoadingRequest } from './features/show/types';
 import AppHotkeys from './hotkeys';
 import rootSaga from './sagas';
-import { getInitialShowLoadingRequest } from './startup';
 import { persistor, store } from './store';
 import ThemeProvider from './theme';
 
@@ -36,9 +35,8 @@ const App = ({ initialShow }: AppProps) => {
     store.runSaga(rootSaga);
 
     // Load the initial show file (if any)
-    const showRequest = initialShow ?? getInitialShowLoadingRequest();
-    if (showRequest) {
-      store.dispatch(loadShowFromRequest(showRequest));
+    if (initialShow) {
+      store.dispatch(loadShowFromRequest(initialShow));
     }
 
     // Give some time for the 3D scene to initialize itself

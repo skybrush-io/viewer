@@ -18,7 +18,7 @@ module.exports = merge(baseConfig, {
   entry: ['whatwg-fetch', './src/index'],
   output: {
     filename: 'bundle.js',
-    publicPath: '/build/',
+    publicPath: 'auto',
   },
 
   resolve: {

@@ -7,48 +7,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## Changed
+### Changed
 
 - Maximum drone count was bumped from 1000 to 5000.
 
+### Fixed
+
+- Fixed a bug that resulted in incorrect camera rotation when a default camera
+  was specified in a show file.
+
 ## [2.3.0] - 2022-11-27
 
-## Added
+### Added
 
 - The scenery can now be replaced with a black background in the 3D view.
 
-## Fixed
+### Fixed
 
 - Label placement and size is now also optimized for indoor shows.
 
 ## [2.2.2] - 2022-08-06
 
-## Fixed
+### Fixed
 
 - The font used in the 3D view is now bundled with the app instead of being
   loaded from a CDN so it works even if you are offline.
 
 ## [2.2.1] - 2022-08-01
 
-## Changed
+### Changed
 
 - Labels are now rendered as black with the 'day' scenery to improve
   visibility.
 
 - Glow is not rendered around drones any more with the 'day' scenery.
 
-## Fixed
+### Fixed
 
 - Fixed a label placement bug; the anchor point of each label is now the
   baseline of the label to ensure that they float nicely above the drones.
 
 ## [2.2.0] - 2022-08-01
 
-## Added
+### Added
 
 - Added a switch to the sidebar to toggle labels above the drones.
 
-## Fixed
+### Fixed
 
 - Fixed a bug in the light program player that rarely showed incorrect colors
   for drones when the show was rewound to an earlier timestamp.

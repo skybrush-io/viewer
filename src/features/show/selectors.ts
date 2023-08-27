@@ -398,7 +398,9 @@ export const getShowTitle = createSelector(
   getNumberOfDronesInShow,
   (hasLoadedShow, meta, droneCount) =>
     hasLoadedShow
-      ? String(meta.title) || `Show with ${droneCount} drones`
+      ? meta?.title
+        ? String(meta.title)
+        : `Show with ${droneCount} drones`
       : 'No show loaded'
 );
 

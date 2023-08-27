@@ -4,7 +4,7 @@
 
 import config from 'config';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import '~/aframe';
@@ -80,6 +80,9 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
     vrEnabled,
   } = props;
 
+  const [cameraId, setCameraId] = useState(0);
+  const [sceneLoaded, setSceneLoaded] = useState(false);
+
   const extraCameraProps = {
     'look-controls': objectToString({
       enabled: false,
@@ -110,6 +113,22 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
     extraSceneProps.background = 'color: black';
   }
 
+  // Updating the camera is tricky. We need to reset the camera position and
+  // rotation to the one prescribed by its props whenever the user loads a
+  // new show. The easiest way to achieve this is to assign a new key to the
+  // camera whenever a new show is loaded because this would unmount the old
+  // camera and mount a new one. However, we must _not_ unmount the camera
+  // when the scene is still loading, because it would cause the loading screen
+  // of the scene to get stuck. This is easy to trigger in Firefox, a bit harder
+  // in Chrome, but it's still a problem in both cases. That's why we need a
+  // separate cameraId and sceneLoaded state
+  useEffect(() => {
+    if (showId !== cameraId && (cameraRef.current as any)?.sceneEl?.hasLoaded) {
+      console.log('Updating camera ID to', showId);
+      setCameraId(showId);
+    }
+  }, [cameraId, cameraRef, showId]);
+
   return (
     <a-scene
       ref={ref}
@@ -125,7 +144,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
       </a-assets>
 
       <a-camera
-        key={`camera-${showId}`}
+        key={`camera-${cameraId}`}
         ref={cameraRef}
         sync-pose-with-store=''
         id='three-d-camera'

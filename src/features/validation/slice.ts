@@ -3,7 +3,11 @@
  * show being executed.
  */
 
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import {
+  type ActionReducerMapBuilder,
+  type PayloadAction,
+  createSlice,
+} from '@reduxjs/toolkit';
 
 import { clearLoadedShow } from '~/features/show/slice';
 
@@ -79,7 +83,7 @@ const { actions, reducer } = createSlice({
     },
   },
 
-  extraReducers(builder) {
+  extraReducers(builder: ActionReducerMapBuilder<ValidationSliceState>) {
     builder.addCase(clearLoadedShow, (state) => {
       removeAllMessages(state);
       state.selection = [];

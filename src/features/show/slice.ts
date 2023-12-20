@@ -3,7 +3,11 @@
  * show being executed.
  */
 
-import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
+import {
+  type ActionReducerMapBuilder,
+  type PayloadAction,
+  createSlice,
+} from '@reduxjs/toolkit';
 import type { ShowSpecification } from '@skybrush/show-format';
 
 import { _doLoadShow, withProgressIndicator } from './async';
@@ -39,7 +43,7 @@ const { actions, reducer } = createSlice({
     },
   },
 
-  extraReducers(builder) {
+  extraReducers(builder: ActionReducerMapBuilder<ShowSliceState>) {
     builder.addCase(_doLoadShow.fulfilled, (state, action) => {
       state.data = action.payload as ShowSpecification;
       state.loading = false;

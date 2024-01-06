@@ -27,6 +27,17 @@ module.exports = merge(baseConfig, {
     },
   },
 
+  module: {
+    rules: [
+      {
+        test: /\.m?js$/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
+    ],
+  },
+
   devServer: {
     // Fall back to serving index.html when the URL is not found
     historyApiFallback: true,

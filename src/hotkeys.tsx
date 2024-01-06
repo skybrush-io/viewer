@@ -47,8 +47,8 @@ export const cameraTriggerActions = [
   'SELECT_FIFTH_CAMERA',
 ];
 
-function onlyWhenNoButtonIsFocused<T extends any[], A>(
-  actionFactory: (...args: T) => Action<A> | AppThunk
+function onlyWhenNoButtonIsFocused<T extends any[], A extends Action>(
+  actionFactory: (...args: T) => A | AppThunk
 ) {
   return (...args: T) => {
     return !document.activeElement ||

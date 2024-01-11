@@ -13,6 +13,7 @@ interface SettingsSliceState {
     scaleLabels: boolean;
     showLabels: boolean;
     showStatistics: boolean;
+    showYaw: boolean;
   };
 }
 
@@ -41,6 +42,9 @@ const initialState: SettingsSliceState = {
 
     // Whether to show the labels above the drones in the 3D view
     showLabels: false,
+
+    // Whether to show yaw markers sitcking out of the drones in the 3D view
+    showYaw: false,
   },
 };
 

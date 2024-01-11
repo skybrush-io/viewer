@@ -54,6 +54,7 @@ type ThreeDViewProps = {
   readonly showId: number;
   readonly showLabels: boolean;
   readonly showStatistics: boolean;
+  readonly showYaw: boolean;
   readonly vrEnabled?: boolean;
 };
 
@@ -77,6 +78,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
     showId,
     showLabels,
     showStatistics,
+    showYaw,
     vrEnabled,
   } = props;
 
@@ -162,6 +164,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
           scale-labels={scaleLabels}
           show-glow={!isLightScenery}
           show-labels={showLabels}
+          show-yaw={showYaw}
           size={numDrones}
         />
       </a-entity>

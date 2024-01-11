@@ -16,14 +16,17 @@ import {
 import {
   createLightProgramPlayer,
   createTrajectoryPlayer,
+  createYawControlPlayer,
   getCamerasFromShowSpecification,
   validateTrajectory,
+  validateYawControl,
   type Camera,
   type DroneSpecification,
   type ShowMetadata,
   type ShowSpecification,
   type Trajectory,
   type TrajectoryPlayer,
+  type YawControl,
   CameraType,
 } from '@skybrush/show-format';
 import { formatPlaybackTimestamp } from '~/utils/formatters';
@@ -126,6 +129,20 @@ export const isValidLightProgram = (program: any): boolean =>
   typeof program === 'object' &&
   program.version === 1 &&
   typeof program.data === 'string';
+
+/**
+ * Returns whether a yaw control object "looks like" valid yaw control data.
+ */
+export const isValidYawControl = (
+  yawControl: any
+): yawControl is YawControl => {
+  try {
+    validateYawControl(yawControl);
+    return true;
+  } catch {
+    return false;
+  }
+};
 
 /**
  * Returns the common show settings that apply to all drones in the currently
@@ -353,6 +370,26 @@ const getTrajectoryDuration = (trajectory: any): number => {
 export const getTrajectoryPlayers = createSelector(
   getTrajectories,
   (trajectories) => trajectories.map(createTrajectoryPlayer)
+);
+
+/**
+ * Returns an array containing all the yaw controls. The array will contain
+ * undefined for all the drones that have no yaw control data in the mission.
+ */
+const getYawControls = createSelector(getDroneSwarmSpecification, (swarm) =>
+  swarm.map((drone: DroneSpecification): YawControl | undefined => {
+    const yawControl = get(drone, 'settings.yawControl');
+    return isValidYawControl(yawControl) ? yawControl : undefined;
+  })
+);
+
+/**
+ * Returns an array containing yaw control player objects
+ * for all the yaw controls.
+ */
+export const getYawControlPlayers = createSelector(
+  getYawControls,
+  (yawControls) => yawControls.map(createYawControlPlayer)
 );
 
 /**

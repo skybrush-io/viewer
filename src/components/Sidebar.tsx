@@ -24,6 +24,7 @@ import {
   toggleGrid,
   toggleLabels,
   toggleScaleLabels,
+  toggleYaw,
 } from '~/features/settings/actions';
 import type { RootState } from '~/store';
 
@@ -77,11 +78,13 @@ interface SidebarDrawerProps {
   readonly onToggleGrid: () => void;
   readonly onToggleLabels: () => void;
   readonly onToggleScaleLabels: () => void;
+  readonly onToggleYaw: () => void;
   readonly scaleLabels: boolean;
   readonly scenery: 'disabled' | 'auto' | 'day' | 'night' | 'indoor';
   readonly showAxes: boolean;
   readonly showGrid: boolean;
   readonly showLabels: boolean;
+  readonly showYaw: boolean;
   readonly speed: number;
 }
 
@@ -97,11 +100,13 @@ const SidebarDrawer = ({
   onToggleGrid,
   onToggleLabels,
   onToggleScaleLabels,
+  onToggleYaw,
   scaleLabels,
   scenery,
   showAxes,
   showGrid,
   showLabels,
+  showYaw,
   speed,
 }: SidebarDrawerProps) => (
   <Drawer
@@ -192,6 +197,16 @@ const SidebarDrawer = ({
             <ListItemText primary='Equalize label sizes' />
           </ListItem>
         )}
+
+        <ListItem>
+          <Switch
+            color='primary'
+            edge='start'
+            checked={showYaw}
+            onChange={onToggleYaw}
+          />
+          <ListItemText primary='Show yaw' />
+        </ListItem>
       </List>
 
       <Box sx={styles.footer}>
@@ -213,6 +228,7 @@ export default connect(
     showAxes: Boolean(state.settings.threeD.axes),
     showGrid: state.settings.threeD.grid !== 'none',
     showLabels: Boolean(state.settings.threeD.showLabels),
+    showYaw: Boolean(state.settings.threeD.showYaw),
   }),
   // mapDispatchToProps
   {
@@ -224,5 +240,6 @@ export default connect(
     onToggleGrid: toggleGrid,
     onToggleLabels: toggleLabels,
     onToggleScaleLabels: toggleScaleLabels,
+    onToggleYaw: toggleYaw,
   }
 )(SidebarDrawer);

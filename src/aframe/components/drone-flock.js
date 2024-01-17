@@ -393,7 +393,7 @@ AFrame.registerComponent('drone-flock', {
       if (yawControlPlayer) {
         yawControlPlayer.getYawAt(currentTime, rot);
       } else {
-        rot.setScalar(0);
+        rot.set(0, 0, 0);
       }
 
       if (lightProgramPlayer) {
@@ -404,9 +404,11 @@ AFrame.registerComponent('drone-flock', {
       }
 
       updateEntityPositionAndColor(entity, vec, color);
+
       if (showLabels) {
         rotateEntityLabelTowards(entity, this._cameraPosition, this.data);
       }
+
       if (showYaw) {
         updateYawRotation(entity, rot);
       }

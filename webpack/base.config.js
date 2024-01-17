@@ -77,6 +77,7 @@ module.exports = {
     fallback: {
       http: require.resolve('stream-http'),
       https: require.resolve('https-browserify'),
+      'process/browser': require.resolve('process/browser'),
       util: require.resolve('util'),
     },
   },

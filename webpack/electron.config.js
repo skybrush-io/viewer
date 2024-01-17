@@ -45,7 +45,7 @@ if (process.env.NODE_ENV !== 'production' && process.env.DEPLOYMENT !== '1') {
 
 module.exports = merge(baseConfig, {
   entry: {
-    app: ['process/browser', './src/index'],
+    app: ['./src/index'],
   },
   devServer: {
     server: 'https',

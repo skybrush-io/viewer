@@ -389,7 +389,7 @@ const getYawControls = createSelector(getDroneSwarmSpecification, (swarm) =>
  */
 export const getYawControlPlayers = createSelector(
   getYawControls,
-  (yawControls) => yawControls.map(createYawControlPlayer)
+  (yawControls) => yawControls.map((yc) => yc && createYawControlPlayer(yc))
 );
 
 /**

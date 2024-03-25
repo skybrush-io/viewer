@@ -496,6 +496,8 @@ AFrame.registerComponent('drone-flock', {
       }
     }
 
+    console.log('oldShowYaw =', oldShowYaw, ' showYaw =', showYaw);
+
     if (oldShowYaw !== showYaw) {
       // Update yaw visibility
       for (const item of this._drones) {

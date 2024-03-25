@@ -1,11 +1,9 @@
-Skybrush Viewer
-===============
+# Skybrush Viewer
 
 This repo contains the source code of Skybrush Viewer, the viewer app for
 Skybrush drone shows.
 
-Usage
------
+## Usage
 
 Make sure that you are using a recent LTS Node.js release, then run the
 following commands:
@@ -22,19 +20,17 @@ npm install
 npm run start
 ```
 
-Navigate to ``http://localhost:8080`` after startup to use the app in
+Navigate to `http://localhost:8080` after startup to use the app in
 a browser. Note that not all features may be available in a browser
 environment.
 
-Support
--------
+## Support
 
 For any support questions please contact us on our [Discord server](https://skybrush.io/r/discord).
 
-License
--------
+## License
 
-Copyright 2020-2023 CollMot Robotics Ltd.
+Copyright 2020-2024 CollMot Robotics Ltd.
 
 Skybrush Viewer is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software

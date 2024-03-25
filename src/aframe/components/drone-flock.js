@@ -139,7 +139,6 @@ AFrame.registerSystem('drone-flock', {
     const yawElement = document.createElement('a-entity');
 
     const cylinder = document.createElement('a-entity');
-    cylinder.object3D.visible = showYaw;
     cylinder.setAttribute('geometry', {
       primitive: 'cylinder',
       radius: droneSize / 10,
@@ -152,6 +151,8 @@ AFrame.registerSystem('drone-flock', {
     });
 
     yawElement.append(cylinder);
+    yawElement.setAttribute('visible', showYaw ? 'true' : 'false');
+
     return yawElement;
   },
 
@@ -495,8 +496,6 @@ AFrame.registerComponent('drone-flock', {
         this.system.updateLabelVisibility(entity, showLabels);
       }
     }
-
-    console.log('oldShowYaw =', oldShowYaw, ' showYaw =', showYaw);
 
     if (oldShowYaw !== showYaw) {
       // Update yaw visibility

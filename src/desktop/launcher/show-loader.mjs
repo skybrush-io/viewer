@@ -1,13 +1,15 @@
-const fs = require('node:fs').promises;
+import fs from 'node:fs/promises';
 
-const { get } = require('lodash');
+import { get } from 'lodash-es';
 
-const { loadCompiledShow } = require('@skybrush/show-format');
+import showFormat from '@skybrush/show-format';
 
-const { getUrlToAudioBuffer, setAudioBuffer } = require('./media-buffers');
-const { setTitle } = require('./window-title');
+import { getUrlToAudioBuffer, setAudioBuffer } from './media-buffers.mjs';
+import { setTitle } from './window-title.mjs';
 
-const getShowAsObjectFromLocalFile = async (filename, window) => {
+const { loadCompiledShow } = showFormat;
+
+export const getShowAsObjectFromLocalFile = async (filename, window) => {
   const contents = await fs.readFile(filename);
 
   // don't pass 'window' to getShowAsObjectFromBuffer(), we don't want it to modify the
@@ -22,7 +24,7 @@ const getShowAsObjectFromLocalFile = async (filename, window) => {
   return showSpec;
 };
 
-const getShowAsObjectFromBuffer = async (buffer, window) => {
+export const getShowAsObjectFromBuffer = async (buffer, window) => {
   const showSpec = await loadCompiledShow(buffer, { assets: true });
 
   if (showSpec) {
@@ -51,9 +53,4 @@ const getShowAsObjectFromBuffer = async (buffer, window) => {
   }
 
   return showSpec;
-};
-
-module.exports = {
-  getShowAsObjectFromBuffer,
-  getShowAsObjectFromLocalFile,
 };

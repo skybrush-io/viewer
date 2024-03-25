@@ -1,13 +1,15 @@
-const path = require('node:path');
+import path from 'node:path';
+import { isNil } from 'lodash-es';
 
-const { isNil } = require('lodash');
-
-const { isRunningOnMac } = require('./utils');
+import { isRunningOnMac } from './utils.mjs';
 
 const appNames = new WeakMap();
 const representedFiles = new WeakMap();
 
-const setTitle = (window, { appName, representedFile, alternateFile }) => {
+export const setTitle = (
+  window,
+  { appName, representedFile, alternateFile }
+) => {
   if (appName !== undefined) {
     appNames.set(window, isNil(appName) ? '' : String(appName));
   }
@@ -44,6 +46,4 @@ const setTitle = (window, { appName, representedFile, alternateFile }) => {
   }
 };
 
-module.exports = {
-  setTitle,
-};
+export default setTitle;

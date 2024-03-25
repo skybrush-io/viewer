@@ -1,13 +1,13 @@
 /* eslint-disable unicorn/prevent-abbreviations */
-const { createSocket } = require('node:dgram');
-const http = require('node:http');
-const { networkInterfaces } = require('node:os');
-const process = require('node:process');
+import { createSocket } from 'node:dgram';
+import http from 'node:http';
+import { networkInterfaces } from 'node:os';
+import process from 'node:process';
 
-const express = require('express');
-const SSDPServer = require('node-ssdp').Server;
+import express from 'express';
+import { Server as SSDPServer } from 'node-ssdp';
 
-const apiV1 = require('./api-v1');
+import apiV1 from './api-v1.mjs';
 
 function isOwnIPAddress(address) {
   const nets = networkInterfaces();
@@ -95,7 +95,7 @@ const setupSSDPDiscovery = async (port) => {
   }
 };
 
-const setupHttpServer = async ({ port = 0 } = {}) => {
+export const setupHttpServer = async ({ port = 0 } = {}) => {
   const app = express();
   const server = http.createServer(app).listen({ port });
 
@@ -122,4 +122,4 @@ const setupHttpServer = async ({ port = 0 } = {}) => {
   });
 };
 
-module.exports = setupHttpServer;
+export default setupHttpServer;

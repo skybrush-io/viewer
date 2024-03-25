@@ -1,12 +1,12 @@
 /* eslint-disable unicorn/prevent-abbreviations, new-cap */
-const { setTimeout } = require('node:timers/promises');
+import { setTimeout } from 'node:timers/promises';
 
-const { ipcMain: ipc } = require('electron-better-ipc');
-const express = require('express');
+import { ipcMain as ipc } from 'electron-better-ipc';
+import express from 'express';
 
-const { getShowAsObjectFromBuffer } = require('./show-loader');
-const { getFirstMainWindow } = require('./utils');
-const { setTitle } = require('./window-title');
+import { getShowAsObjectFromBuffer } from './show-loader.mjs';
+import { getFirstMainWindow } from './utils.mjs';
+import { setTitle } from './window-title.mjs';
 
 const router = express.Router();
 
@@ -64,4 +64,4 @@ router.get('/ping', (_req, res) => {
   res.json({ result: true });
 });
 
-module.exports = router;
+export default router;

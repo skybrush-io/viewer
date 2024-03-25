@@ -1,7 +1,7 @@
-const { URL } = require('node:url');
-const { protocol } = require('electron');
+import { URL } from 'node:url';
+import { protocol } from 'electron';
 
-const { getAudioBuffer } = require('./media-buffers');
+import { getAudioBuffer } from './media-buffers.mjs';
 
 /**
  * Registers an Electron protocol handler for the media:// URI scheme that is
@@ -32,4 +32,4 @@ const registerMediaProtocol = () => {
   });
 };
 
-module.exports = registerMediaProtocol;
+export default registerMediaProtocol;

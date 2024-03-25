@@ -12,7 +12,7 @@ const plugins = [
 ];
 
 module.exports = merge(baseConfig, {
-  entry: './launcher.js',
+  entry: './launcher.mjs',
   output: {
     filename: 'launcher.bundle.js',
   },

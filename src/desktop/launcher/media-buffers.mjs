@@ -1,5 +1,5 @@
-const fs = require('node:fs').promises;
-const tmp = require('tmp-promise');
+import fs from 'node:fs/promises';
+import tmp from 'tmp-promise';
 
 /**
  * Variable that holds the currently loaded audio data.
@@ -16,18 +16,18 @@ const loadedAudioBuffers = [];
 /**
  * Returns the contents of the audio buffer with the given index.
  */
-const getAudioBuffer = (index) => loadedAudioBuffers[index] || null;
+export const getAudioBuffer = (index) => loadedAudioBuffers[index] || null;
 
 /**
  * Returns the media:// URL to the audio buffer with the given index.
  */
-const getUrlToAudioBuffer = (index) =>
+export const getUrlToAudioBuffer = (index) =>
   index >= 0 ? `media://audio/${index}` : null;
 
 /**
  * Sets the contents of the audio buffer with the given index.
  */
-const setAudioBuffer = async (index, { data, mimeType }) => {
+export const setAudioBuffer = async (index, { data, mimeType }) => {
   clearAudioBuffer(index);
 
   const { path, cleanup } = await tmp.file();
@@ -39,7 +39,7 @@ const setAudioBuffer = async (index, { data, mimeType }) => {
 /**
  * Clears the contents of the audio buffer with the given index.
  */
-const clearAudioBuffer = (index) => {
+export const clearAudioBuffer = (index) => {
   const existingBuffer = getAudioBuffer(index);
 
   if (existingBuffer && existingBuffer.cleanup) {
@@ -47,11 +47,4 @@ const clearAudioBuffer = (index) => {
   }
 
   loadedAudioBuffers[index] = null;
-};
-
-module.exports = {
-  clearAudioBuffer,
-  getAudioBuffer,
-  getUrlToAudioBuffer,
-  setAudioBuffer,
 };

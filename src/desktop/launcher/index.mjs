@@ -1,20 +1,26 @@
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { app, protocol } from 'electron';
+import ElectronStore from 'electron-store';
+import tmp from 'tmp-promise';
+
+import { setupApp, setupCli } from '@skybrush/electron-app-framework';
+
+import createAppMenu from './app-menu.mjs';
+import setupFileOpener from './file-opener.mjs';
+import setupIpc from './ipc.mjs';
+import registerMediaProtocol from './media-protocol.mjs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // See webpack/launcher.config.js and https://github.com/visionmedia/debug/issues/467
 // for more information about why this is needed
 // eslint-disable-next-line camelcase
 global.__runtime_process_env = {
   DEBUG: false,
 };
-
-const { app, protocol } = require('electron');
-const ElectronStore = require('electron-store');
-const tmp = require('tmp-promise');
-
-const { setupApp, setupCli } = require('@skybrush/electron-app-framework');
-
-const createAppMenu = require('./app-menu');
-const setupFileOpener = require('./file-opener');
-const setupIpc = require('./ipc');
-const registerMediaProtocol = require('./media-protocol');
 
 const ENABLE_HTTP_SERVER = true;
 
@@ -34,7 +40,7 @@ async function run(filenames, options) {
   // Start an HTTP server in the background for processing incoming JSON show
   // data from the Blender plugin
   if (ENABLE_HTTP_SERVER) {
-    const setupHttpServer = require('./http-server');
+    const { setupHttpServer } = await import('./http-server.mjs');
     await setupHttpServer(options);
   }
 
@@ -69,7 +75,7 @@ async function run(filenames, options) {
   setupFileOpener(filenames);
 }
 
-module.exports = async () => {
+const main = async () => {
   const parser = setupCli();
 
   parser.option('-p, --port <number>', 'Start listener on a specific port');
@@ -77,3 +83,5 @@ module.exports = async () => {
 
   await run(parser.args, parser.opts());
 };
+
+export default main;

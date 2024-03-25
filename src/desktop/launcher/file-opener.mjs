@@ -1,9 +1,9 @@
-const { app } = require('electron');
-const { ipcMain: ipc } = require('electron-better-ipc');
+import { app } from 'electron';
+import { ipcMain as ipc } from 'electron-better-ipc';
 
-const { getFirstMainWindow } = require('./utils');
+import { getFirstMainWindow } from './utils.mjs';
 
-const handleFileOpeningRequestsWith = (func, options = {}) => {
+const handleFileOpeningRequestsWith = (function_, options = {}) => {
   const { async = false, filenames = [], maxCount = 1 } = options;
   const pendingFilesToOpen = [];
   const rendererIsReady = { value: false };
@@ -19,9 +19,9 @@ const handleFileOpeningRequestsWith = (func, options = {}) => {
     /* eslint-disable no-await-in-loop */
     for (const filename of filesToProcess) {
       if (async) {
-        await func(filename);
+        await function_(filename);
       } else {
-        func(filename);
+        function_(filename);
       }
     }
     /* eslint-enable no-await-in-loop */
@@ -61,7 +61,7 @@ const handleFileOpeningRequestsWith = (func, options = {}) => {
   });
 };
 
-module.exports = (filenames) => {
+const setupFileOpener = (filenames) => {
   handleFileOpeningRequestsWith(
     async (filename) => {
       const mainWindow = getFirstMainWindow();
@@ -80,3 +80,5 @@ module.exports = (filenames) => {
     }
   );
 };
+
+export default setupFileOpener;

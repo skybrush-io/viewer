@@ -1,6 +1,6 @@
-const { dialog } = require('electron');
+import { dialog } from 'electron';
 
-const selectLocalShowFileForOpening = async () => {
+export const selectLocalShowFileForOpening = async () => {
   const { filePaths } = await dialog.showOpenDialog({
     title: 'Open show file',
     properties: ['openFile'],
@@ -15,8 +15,4 @@ const selectLocalShowFileForOpening = async () => {
   }
 
   return undefined;
-};
-
-module.exports = {
-  selectLocalShowFileForOpening,
 };

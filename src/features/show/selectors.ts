@@ -318,9 +318,8 @@ export const getMarksFromShowCues = createSelector(getCues, (cues) =>
 export const getNamesOfDronesInShow = createSelector(
   getDroneSwarmSpecification,
   (swarm): string[] =>
-    swarm.map(
-      (drone, index) =>
-        String(get(drone, 'settings.name')) || `Drone ${index + 1}`
+    swarm.map((drone, index) =>
+      String(get(drone, 'settings.name') ?? `Drone ${index + 1}`)
     )
 );
 

@@ -1,6 +1,6 @@
 import { app, Menu, shell } from 'electron';
 import { is, openUrlMenuItem } from 'electron-util';
-import { aboutMenuItem, appMenu } from 'electron-util/main';
+import { isDev, aboutMenuItem, appMenu } from 'electron-util/main';
 
 const helpSubmenu = [
   openUrlMenuItem({
@@ -51,7 +51,7 @@ if (!is.macos) {
 
 const template = is.macos ? macOsMenuTemplate : linuxWindowsMenuTemplate;
 
-if (is.development) {
+if (isDev) {
   template.push({
     label: 'Debug',
     submenu: [

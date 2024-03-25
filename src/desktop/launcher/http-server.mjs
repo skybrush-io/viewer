@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/prevent-abbreviations */
 import { createSocket } from 'node:dgram';
 import http from 'node:http';
 import { networkInterfaces } from 'node:os';

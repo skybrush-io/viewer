@@ -227,8 +227,8 @@ const createOptions = ({
     typeof threshold === 'number'
       ? [threshold]
       : Array.isArray(threshold)
-      ? threshold
-      : [];
+        ? threshold
+        : [];
 
   const annotations = thresholds
     .filter(Number.isFinite)

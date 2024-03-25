@@ -256,6 +256,7 @@ export const getInitialCameraConfigurationOfShow = createSelector(
       }
     }
 
+    // eslint-disable-next-line logical-assignment-operators
     if (!selectedCamera) {
       // Assertion: first camera is always the "default camera" that was added
       // by us

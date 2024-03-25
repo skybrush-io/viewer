@@ -1,3 +1,4 @@
+/* eslint-disable import/no-duplicates */
 /**
  * @file Component that shows a three-dimensional view of the drone flock.
  */

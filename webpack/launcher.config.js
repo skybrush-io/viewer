@@ -17,9 +17,14 @@ module.exports = merge(baseConfig, {
     filename: 'launcher.bundle.js',
   },
 
-  node: {
-    __dirname: false,
-    __filename: false,
+  /* prevent evaluation of import.meta.url at build time in launcher and
+   * preloader */
+  module: {
+    parser: {
+      javascript: {
+        importMeta: false
+      }
+    }
   },
 
   plugins,

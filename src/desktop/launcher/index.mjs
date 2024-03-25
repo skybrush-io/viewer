@@ -12,8 +12,7 @@ import setupFileOpener from './file-opener.mjs';
 import setupIpc from './ipc.mjs';
 import registerMediaProtocol from './media-protocol.mjs';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const rootDir = path.dirname(fileURLToPath(import.meta.url));
 
 // See webpack/launcher.config.js and https://github.com/visionmedia/debug/issues/467
 // for more information about why this is needed
@@ -49,7 +48,7 @@ async function run(filenames, options) {
     mainWindow: {
       backgroundColor: '#20242a', // same as the background color of the cover page
       debug: options.debug,
-      rootDir: __dirname,
+      rootDir,
       showMenuBar: false,
       title: 'Skybrush Viewer',
       titleBarStyle: 'hiddenInset',

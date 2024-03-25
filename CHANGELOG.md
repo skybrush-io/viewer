@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Yaw markers can now be shown on the drones if the input .skyc file supports
+  yaw setpoints.
+
 ### Changed
 
 - Maximum drone count was bumped from 1000 to 5000.

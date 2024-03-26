@@ -205,7 +205,7 @@ const SidebarDrawer = ({
             checked={showYaw}
             onChange={onToggleYaw}
           />
-          <ListItemText primary='Show yaw' />
+          <ListItemText primary='Show yaw indicators' />
         </ListItem>
       </List>
 

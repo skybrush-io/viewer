@@ -144,11 +144,12 @@ AFrame.registerSystem('drone-flock', {
       radius: droneSize / 10,
       height: droneSize,
     });
-    cylinder.setAttribute('position', `0 ${droneSize} 0`);
+    cylinder.setAttribute('position', `${droneSize * 1.2} 0 0`);
     cylinder.setAttribute('material', {
       color: new THREE.Color('#ff0000'),
       shader: 'flat',
     });
+    cylinder.setAttribute('rotation', '0 0 90');
 
     yawElement.append(cylinder);
     yawElement.setAttribute('visible', showYaw ? 'true' : 'false');

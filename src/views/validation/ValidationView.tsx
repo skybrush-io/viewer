@@ -2,7 +2,9 @@ import React from 'react';
 
 import Box from '@mui/material/Box';
 
-import WindowDragMoveArea from '~/components/WindowDragMoveArea';
+import WindowDragMoveArea, {
+  WINDOW_DRAG_MOVE_AREA_HEIGHT,
+} from '~/components/WindowDragMoveArea';
 
 import ChartGrid from './ChartGrid';
 import ValidationHeader from './ValidationHeader';
@@ -24,7 +26,12 @@ const styles = {
 const ValidationView = () => (
   <Box sx={styles.root}>
     <WindowDragMoveArea />
-    <ValidationHeader style={{ paddingLeft: SIDEBAR_WIDTH }} />
+    <ValidationHeader
+      style={{
+        paddingLeft: SIDEBAR_WIDTH,
+        paddingTop: WINDOW_DRAG_MOVE_AREA_HEIGHT,
+      }}
+    />
     <Box flex={1} display='flex' flexDirection='row' overflow='hidden'>
       <ValidationSidebar width={SIDEBAR_WIDTH} />
       <ChartGrid flex={1} pb={2} pr={1} />

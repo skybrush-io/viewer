@@ -12,7 +12,10 @@ import setupFileOpener from './file-opener.mjs';
 import setupIpc from './ipc.mjs';
 import registerMediaProtocol from './media-protocol.mjs';
 
-const rootDir = path.dirname(fileURLToPath(import.meta.url));
+const rootDir =
+  typeof __dirname !== 'undefined'
+    ? __dirname
+    : path.dirname(fileURLToPath(import.meta.url));
 
 // See webpack/launcher.config.js and https://github.com/visionmedia/debug/issues/467
 // for more information about why this is needed

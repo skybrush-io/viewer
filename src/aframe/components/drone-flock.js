@@ -297,7 +297,9 @@ AFrame.registerSystem('drone-flock', {
   updateYawRotation(entity, rotation) {
     const yaw = getYawMarkerFromEntity(entity);
     if (yaw) {
-      yaw.object3D.rotation.copy(rotation);
+      /* Angle has to be inverted because Skybrush yaw angles increase in
+       * clockwise order */
+      yaw.object3D.rotation.z = -rotation.z;
     }
   },
 

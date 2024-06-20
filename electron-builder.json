@@ -4,30 +4,7 @@
 
   "artifactName": "${productName} ${version}.${ext}",
 
-  "files": [
-    {
-      "filter": ["assets/**/*", "!assets/shows/*", "!assets/models/*", "!node_modules"]
-    },
-    {
-      "from": "build",
-      "filter": [
-        "*.bundle.js",
-        "index.html",
-        "*.png",
-        "*.ttf",
-        "*.woff",
-        "*.woff2"
-      ]
-    },
-    {
-      "from": "build/fonts",
-      "to": "fonts",
-      "filter": [
-        "*.png",
-        "*.json"
-      ]
-    }
-  ],
+  "files": ["!**/*", "package.json", { "from": "build" }],
 
   "fileAssociations": [{
     "ext": "skyc",

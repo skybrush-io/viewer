@@ -61,7 +61,11 @@ module.exports = {
   resolve: {
     alias: {
       '~': path.resolve(projectRoot, 'src'),
-      config: path.resolve(projectRoot, 'config', 'default'),
+      config: path.resolve(
+        projectRoot,
+        'config',
+        process.env.SKYBRUSH_VARIANT ?? 'default'
+      ),
       'layout-bmfont-text': '@skybrush/layout-bmfont-text',
     },
     extensions: [

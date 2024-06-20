@@ -6,6 +6,9 @@
 import music from '~/../assets/shows/demo.mp3';
 
 const config = {
+  electronBuilder: {
+    productName: 'Skybrush Viewer Demo',
+  },
   buttons: {
     playbackHint: true,
   },

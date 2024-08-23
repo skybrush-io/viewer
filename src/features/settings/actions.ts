@@ -4,6 +4,12 @@ import type { AppThunk } from '~/store';
 
 import { updateAppSettings } from './slice';
 
+export const setDroneSize =
+  (event: Event, value: number): AppThunk =>
+  (dispatch) => {
+    dispatch(updateAppSettings('threeD', { droneSize: value }));
+  };
+
 export const setScenery =
   (event: ChangeEvent<HTMLInputElement>): AppThunk =>
   (dispatch) => {

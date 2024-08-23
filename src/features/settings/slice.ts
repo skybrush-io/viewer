@@ -3,6 +3,10 @@
  */
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import {
+  DEFAULT_DRONE_RADIUS,
+  INDOOR_DRONE_SIZE_SCALING_FACTOR,
+} from '~/constants';
 
 interface SettingsSliceState {
   threeD: {
@@ -14,6 +18,8 @@ interface SettingsSliceState {
     showLabels: boolean;
     showStatistics: boolean;
     showYaw: boolean;
+    droneSize?: number;
+    indoorDroneSizeScalingFactor?: number;
   };
 }
 
@@ -45,6 +51,12 @@ const initialState: SettingsSliceState = {
 
     // Whether to show yaw markers sitcking out of the drones in the 3D view
     showYaw: false,
+
+    // Size of drones for outdoor shows
+    droneSize: DEFAULT_DRONE_RADIUS,
+
+    // Multiplication factor for the drone size for indoor shows
+    indoorDroneSizeScalingFactor: INDOOR_DRONE_SIZE_SCALING_FACTOR,
   },
 };
 

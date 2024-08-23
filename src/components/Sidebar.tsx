@@ -10,6 +10,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import Slider from '@mui/material/Slider';
 import Switch from '@mui/material/Switch';
 import { type Theme } from '@mui/material/styles';
 
@@ -19,6 +20,7 @@ import { setPlaybackSpeed } from '~/features/playback/actions';
 import { getPlaybackSpeed } from '~/features/playback/selectors';
 import { closeSidebar } from '~/features/sidebar/slice';
 import {
+  setDroneSize,
   setScenery,
   toggleAxes,
   toggleGrid,
@@ -26,9 +28,11 @@ import {
   toggleScaleLabels,
   toggleYaw,
 } from '~/features/settings/actions';
+import { getDroneSize } from '~/features/settings/selectors';
 import type { RootState } from '~/store';
 
 import SkybrushLogo from './SkybrushLogo';
+import Typography from '@mui/material/Typography';
 
 const styles = {
   contents: {
@@ -70,6 +74,7 @@ const modalProps = {
 interface SidebarDrawerProps {
   readonly open: boolean;
   readonly onClose: () => void;
+  readonly onSetDroneSize: (event: Event, value: number) => void;
   readonly onSetScenery: (event: React.ChangeEvent<HTMLInputElement>) => void;
   readonly onSetPlaybackSpeed: (
     event: React.ChangeEvent<HTMLInputElement>
@@ -79,6 +84,7 @@ interface SidebarDrawerProps {
   readonly onToggleLabels: () => void;
   readonly onToggleScaleLabels: () => void;
   readonly onToggleYaw: () => void;
+  readonly droneSize: number;
   readonly scaleLabels: boolean;
   readonly scenery: 'disabled' | 'auto' | 'day' | 'night' | 'indoor';
   readonly showAxes: boolean;
@@ -94,6 +100,7 @@ interface SidebarDrawerProps {
 const SidebarDrawer = ({
   open,
   onClose,
+  onSetDroneSize,
   onSetPlaybackSpeed,
   onSetScenery,
   onToggleAxes,
@@ -101,6 +108,7 @@ const SidebarDrawer = ({
   onToggleLabels,
   onToggleScaleLabels,
   onToggleYaw,
+  droneSize,
   scaleLabels,
   scenery,
   showAxes,
@@ -154,6 +162,19 @@ const SidebarDrawer = ({
               <MenuItem value='10'>10x</MenuItem>
             </Select>
           </FormControl>
+        </Box>
+
+        <Box px={2} pt={2} pb={1}>
+          <Typography gutterBottom>Drone size</Typography>
+          <Slider
+            id='sidebar-drone-size'
+            value={droneSize}
+            valueLabelDisplay='auto'
+            min={0.1}
+            max={2}
+            step={0.05}
+            onChange={onSetDroneSize}
+          />
         </Box>
 
         <ListItem>
@@ -221,6 +242,7 @@ const SidebarDrawer = ({
 export default connect(
   // mapStateToProps
   (state: RootState) => ({
+    droneSize: getDroneSize(state),
     open: state.sidebar.open,
     scenery: state.settings.threeD.scenery,
     speed: getPlaybackSpeed(state),
@@ -233,6 +255,7 @@ export default connect(
   // mapDispatchToProps
   {
     onClose: closeSidebar,
+    onSetDroneSize: setDroneSize,
     onSetScenery: setScenery,
     onSetPlaybackSpeed: (event: React.ChangeEvent<HTMLInputElement>) =>
       setPlaybackSpeed(Number.parseFloat(event.target.value)),

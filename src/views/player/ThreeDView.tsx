@@ -17,8 +17,8 @@ import type {
 } from '@skybrush/aframe-components/lib/spatial';
 
 import {
+  getEffectiveDroneSize,
   getEffectiveScenery,
-  getPreferredDroneRadius,
 } from '~/features/three-d/selectors';
 import {
   getInitialCameraConfigurationOfShow,
@@ -179,7 +179,7 @@ export default connect(
   // mapStateToProps
   (state: RootState) => ({
     cameraConfiguration: getInitialCameraConfigurationOfShow(state),
-    droneSize: getPreferredDroneRadius(state),
+    droneSize: getEffectiveDroneSize(state),
     indoor: isShowIndoor(state),
     numDrones: getNumberOfDronesInShow(state),
     showId: getLoadedShowId(state),

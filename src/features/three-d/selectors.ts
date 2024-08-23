@@ -9,6 +9,7 @@ import {
   isShowIndoor,
 } from '~/features/show/selectors';
 import type { RootState } from '~/store';
+import { getDroneSize } from '../settings/selectors';
 
 /**
  * Returns the effective scenery to show, depending on the user's preference and
@@ -31,9 +32,8 @@ export const getEffectiveScenery = (
  * Selector that returns the radius that should be used for the drones in the
  * 3D view.
  */
-export const getPreferredDroneRadius = (state: RootState): number =>
-  DEFAULT_DRONE_RADIUS *
-  (isShowIndoor(state) ? INDOOR_DRONE_SIZE_SCALING_FACTOR : 1);
+export const getEffectiveDroneSize = (state: RootState): number =>
+  getDroneSize(state, isShowIndoor(state));
 
 /**
  * Selector that returns the index of the currently selected camera.

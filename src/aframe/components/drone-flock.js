@@ -87,7 +87,7 @@ AFrame.registerSystem('drone-flock', {
       this._createLabelEntity(label, showLabel, labelColor, indoor)
     );
     element.append(this._createGlowEntity(droneSize, showGlow));
-    element.append(this._createYawEntity(droneSize, showYaw));
+    element.append(this._createYawIndicatorEntity(droneSize, showYaw));
 
     return element;
   },
@@ -135,7 +135,7 @@ AFrame.registerSystem('drone-flock', {
     return labelElement;
   },
 
-  _createYawEntity(droneSize = 1, showYaw = false) {
+  _createYawIndicatorEntity(droneSize = 1, showYaw = false) {
     const yawElement = document.createElement('a-entity');
 
     const cylinder = document.createElement('a-entity');

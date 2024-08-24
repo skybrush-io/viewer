@@ -4,9 +4,12 @@
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import {
+  DEFAULT_DRONE_MODEL,
   DEFAULT_DRONE_RADIUS,
   INDOOR_DRONE_SIZE_SCALING_FACTOR,
 } from '~/constants';
+
+import type { DroneModelType } from './types';
 
 interface SettingsSliceState {
   threeD: {
@@ -20,6 +23,7 @@ interface SettingsSliceState {
     showYaw: boolean;
     droneRadius?: number;
     indoorDroneSizeScalingFactor?: number;
+    droneModel?: DroneModelType;
   };
 }
 
@@ -57,6 +61,9 @@ const initialState: SettingsSliceState = {
 
     // Multiplication factor for the drone size for indoor shows
     indoorDroneSizeScalingFactor: INDOOR_DRONE_SIZE_SCALING_FACTOR,
+
+    // Drone model to use in the 3D view
+    droneModel: DEFAULT_DRONE_MODEL,
   },
 };
 

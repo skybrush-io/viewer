@@ -16,6 +16,8 @@ import type {
   ThreeJsRotation,
 } from '@skybrush/aframe-components/lib/spatial';
 
+import { getDroneModel } from '~/features/settings/selectors';
+import type { DroneModelType } from '~/features/settings/types';
 import {
   getEffectiveDroneRadius,
   getEffectiveScenery,
@@ -33,6 +35,9 @@ import Scenery from './Scenery';
 import type { SceneryType } from './Scenery';
 
 import glow from '~/../assets/img/sphere-glow-hollow.png';
+import flapperDrone from '~/../assets/models/flapper-drone.obj';
+
+console.log(flapperDrone);
 
 type ThreeDViewProps = {
   readonly axes: boolean;
@@ -41,6 +46,7 @@ type ThreeDViewProps = {
     rotation: ThreeJsRotation;
   };
   readonly cameraRef: React.RefObject<HTMLElement>;
+  readonly droneModel: DroneModelType;
   readonly droneRadius: number;
   readonly indoor: boolean;
   readonly grid: boolean | string;
@@ -68,6 +74,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
     axes,
     cameraConfiguration = DEFAULT_CAMERA_CONFIGURATION,
     cameraRef,
+    droneModel,
     droneRadius,
     grid,
     indoor,
@@ -141,7 +148,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
     >
       <a-assets>
         <img crossOrigin='anonymous' id='glow-texture' src={glow} />
-        {/* <a-asset-item id="flapper" src={flapperDrone} /> */}
+        <a-asset-item id='flapper' src={flapperDrone} />
       </a-assets>
 
       <a-camera
@@ -157,6 +164,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
       <a-entity rotation='-90 0 90'>
         {axes && <CoordinateSystemAxes length={10} lineWidth={10} />}
         <a-drone-flock
+          drone-model={droneModel}
           drone-radius={droneRadius}
           label-color={isLightScenery ? 'black' : 'white'}
           indoor={indoor}
@@ -177,6 +185,7 @@ export default connect(
   // mapStateToProps
   (state: RootState) => ({
     cameraConfiguration: getInitialCameraConfigurationOfShow(state),
+    droneModel: getDroneModel(state),
     droneRadius: getEffectiveDroneRadius(state),
     indoor: isShowIndoor(state),
     numDrones: getNumberOfDronesInShow(state),

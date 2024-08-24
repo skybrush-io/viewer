@@ -11,6 +11,7 @@ AFrame.registerPrimitive('a-drone-flock', {
     'drone-flock': {},
   },
   mappings: {
+    'drone-model': 'drone-flock.droneModel',
     'drone-radius': 'drone-flock.droneRadius',
     indoor: 'drone-flock.indoor',
     'label-color': 'drone-flock.labelColor',
@@ -19,6 +20,5 @@ AFrame.registerPrimitive('a-drone-flock', {
     'show-labels': 'drone-flock.showLabels',
     'show-yaw': 'drone-flock.showYaw',
     size: 'drone-flock.size',
-    type: 'drone-flock.type',
   },
 });

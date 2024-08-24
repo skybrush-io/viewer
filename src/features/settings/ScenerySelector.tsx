@@ -6,6 +6,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 
 import { useAppDispatch, useAppSelector } from '~/hooks/store';
+import type { SceneryType } from '~/views/player/Scenery';
+
 import { getScenery } from './selectors';
 import { setScenery } from './actions';
 
@@ -17,13 +19,13 @@ const ScenerySelector = () => {
   const scenery = useAppSelector(getScenery);
   return (
     <FormControl fullWidth variant='filled'>
-      <InputLabel id='sidebar-environment-type-label'>Scenery</InputLabel>
+      <InputLabel id='sidebar-scenery-label'>Scenery</InputLabel>
       <Select
         labelId='sidebar-scenery-label'
-        id='sidebar-scenery-label'
+        id='sidebar-scenery'
         value={scenery}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          dispatch(setScenery(event));
+          dispatch(setScenery(event.target.value as any as SceneryType));
         }}
       >
         <MenuItem value='disabled'>Disabled</MenuItem>

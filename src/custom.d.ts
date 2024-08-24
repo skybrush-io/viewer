@@ -4,9 +4,16 @@ declare module '*.png' {
   export default value;
 }
 
+// Make .obj imports work nicely with Typescript
+declare module '*.obj' {
+  const value: string;
+  export default value;
+}
+
 // Custom elements used by A-Frame
 declare namespace JSX {
   interface IntrinsicElements {
+    'a-asset-item': any;
     'a-assets': any;
     'a-camera': any;
     'a-drone-flock': any;

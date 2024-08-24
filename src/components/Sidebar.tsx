@@ -8,6 +8,7 @@ import { type Theme } from '@mui/material/styles';
 import { isThemeDark } from '@skybrush/app-theme-mui';
 
 import { closeSidebar } from '~/features/sidebar/slice';
+import DroneModelSelector from '~/features/settings/DroneModelSelector';
 import DroneSizeSlider from '~/features/settings/DroneSizeSlider';
 import PlaybackSpeedSelector from '~/features/settings/PlaybackSpeedSelector';
 import ScenerySelector from '~/features/settings/ScenerySelector';
@@ -78,6 +79,10 @@ const SidebarDrawer = () => {
 
           <Box px={2} pt={2} pb={1}>
             <PlaybackSpeedSelector />
+          </Box>
+
+          <Box px={2} pt={2} pb={1}>
+            <DroneModelSelector />
           </Box>
 
           <Box px={2} pt={2} pb={1}>

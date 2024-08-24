@@ -1,8 +1,4 @@
 import get from 'lodash-es/get';
-import {
-  DEFAULT_DRONE_RADIUS,
-  INDOOR_DRONE_SIZE_SCALING_FACTOR,
-} from '~/constants';
 
 import {
   getPerspectiveCamerasAndDefaultCamera,

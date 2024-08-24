@@ -1,17 +1,19 @@
 import type { ChangeEvent } from 'react';
 
 import type { AppThunk } from '~/store';
+import type { SceneryType } from '~/views/player/Scenery';
 
 import { updateAppSettings } from './slice';
+import type { DroneModelType } from './types';
 
-export const setDroneRadius = (value: number) =>
-  updateAppSettings('threeD', { droneRadius: value });
+export const setDroneRadius = (droneRadius: number) =>
+  updateAppSettings('threeD', { droneRadius });
 
-export const setScenery =
-  (event: ChangeEvent<HTMLInputElement>): AppThunk =>
-  (dispatch) => {
-    dispatch(updateAppSettings('threeD', { scenery: event.target.value }));
-  };
+export const setDroneModel = (droneModel: DroneModelType) =>
+  updateAppSettings('threeD', { droneModel });
+
+export const setScenery = (scenery: SceneryType) =>
+  updateAppSettings('threeD', { scenery });
 
 export const toggleAxes = (): AppThunk => (dispatch, getState) => {
   const state = getState();

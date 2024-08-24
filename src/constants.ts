@@ -8,3 +8,8 @@ export const DEFAULT_DRONE_RADIUS = 0.75;
  * for an outdoor setting.
  */
 export const INDOOR_DRONE_SIZE_SCALING_FACTOR = 0.2;
+
+/**
+ * Default drone model to use in 3D views.
+ */
+export const DEFAULT_DRONE_MODEL = 'sphere';

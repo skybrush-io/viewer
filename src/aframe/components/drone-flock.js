@@ -7,7 +7,10 @@
 import watch from 'redux-watch';
 import AFrame from '@skybrush/aframe-components';
 
-import { INDOOR_DRONE_SIZE_SCALING_FACTOR } from '~/constants';
+import {
+  DEFAULT_DRONE_MODEL,
+  INDOOR_DRONE_SIZE_SCALING_FACTOR,
+} from '~/constants';
 import { getElapsedSecondsGetter } from '~/features/playback/selectors';
 import {
   getLightProgramPlayers,
@@ -39,7 +42,7 @@ function getLabelFromEntity(entity) {
   return entity.childNodes[0];
 }
 
-function getYawMarkerFromEntity(entity) {
+function getYawIndicatorFromEntity(entity) {
   // We assume that the yaw marker is the third child
   return entity.childNodes[2];
 }
@@ -70,8 +73,8 @@ AFrame.registerSystem('drone-flock', {
   },
 
   createNewUAVEntity({
-    type,
     indoor,
+    droneModel,
     droneRadius,
     label,
     labelColor,
@@ -80,7 +83,7 @@ AFrame.registerSystem('drone-flock', {
     showYaw,
   }) {
     const factory =
-      this._entityFactories[type] || this._entityFactories.default;
+      this._entityFactories[droneModel] ?? this._entityFactories.default;
     const element = factory(droneRadius);
 
     element.append(
@@ -141,15 +144,16 @@ AFrame.registerSystem('drone-flock', {
     const cylinder = document.createElement('a-entity');
     cylinder.setAttribute('geometry', {
       primitive: 'cylinder',
-      radius: droneRadius / 10,
-      height: droneRadius,
+      radius: 1 / 10,
+      height: 1,
     });
-    cylinder.setAttribute('position', `${droneRadius * 1.2} 0 0`);
     cylinder.setAttribute('material', {
       color: new THREE.Color('#ff0000'),
       shader: 'flat',
     });
     cylinder.setAttribute('rotation', '0 0 90');
+
+    this._updateYawIndicatorPositionAndSize(cylinder, droneRadius);
 
     yawElement.append(cylinder);
     yawElement.setAttribute('visible', showYaw ? 'true' : 'false');
@@ -184,9 +188,10 @@ AFrame.registerSystem('drone-flock', {
       shader: 'flat',
     });
     element.setAttribute('position', '0 0 0');
-    // el.setAttribute('rotation', '90 0 0');
-    // el.setAttribute('scale', '6 6 6');
+    element.setAttribute('rotation', '90 0 0');
+    element.setAttribute('scale', '6 6 6');
 
+    /*
     setTimeout(() => {
       element.setAttribute('glow', {
         c: 0.6,
@@ -197,6 +202,7 @@ AFrame.registerSystem('drone-flock', {
       });
     }, 1000);
     // el.append(this._createGlowEntity(1 / 3));
+    */
 
     return element;
   },
@@ -244,7 +250,7 @@ AFrame.registerSystem('drone-flock', {
     entity.object3D.position.copy(position);
 
     const mesh = entity.getObject3D('mesh');
-    if (mesh) {
+    if (mesh && mesh.material) {
       mesh.material.color.copy(color);
     } else {
       // TODO(ntamas): sometimes it happens that we get here earlier than the
@@ -271,6 +277,11 @@ AFrame.registerSystem('drone-flock', {
     if (glowMesh && glowMesh.scale) {
       glowMesh.scale.set(size * 4, size * 4, 1);
     }
+
+    const yawIndicator = getYawIndicatorFromEntity(entity);
+    if (yawIndicator) {
+      this._updateYawIndicatorPositionAndSize(yawIndicator, size);
+    }
   },
 
   updateGlowVisibility(entity, visible) {
@@ -294,8 +305,8 @@ AFrame.registerSystem('drone-flock', {
     }
   },
 
-  updateYawRotation(entity, rotation) {
-    const yaw = getYawMarkerFromEntity(entity);
+  updateYawIndicatorRotation(entity, rotation) {
+    const yaw = getYawIndicatorFromEntity(entity);
     if (yaw) {
       /* Angle has to be inverted because Skybrush yaw angles increase in
        * clockwise order */
@@ -303,16 +314,22 @@ AFrame.registerSystem('drone-flock', {
     }
   },
 
-  updateYawVisibility(entity, visible) {
-    const yaw = getYawMarkerFromEntity(entity);
+  updateYawIndicatorVisibility(entity, visible) {
+    const yaw = getYawIndicatorFromEntity(entity);
     if (yaw) {
       yaw.object3D.visible = visible;
     }
+  },
+
+  _updateYawIndicatorPositionAndSize(yawEntity, droneRadius) {
+    yawEntity.setAttribute('position', `${droneRadius * 1.2} 0 0`);
+    yawEntity.setAttribute('scale', String(droneRadius));
   },
 });
 
 AFrame.registerComponent('drone-flock', {
   schema: {
+    droneModel: { default: DEFAULT_DRONE_MODEL },
     droneRadius: { default: 1 },
     indoor: { default: false },
     labelColor: { default: 'white' },
@@ -321,7 +338,6 @@ AFrame.registerComponent('drone-flock', {
     showLabels: { default: false },
     showYaw: { default: false },
     size: { default: 0 },
-    type: { default: 'default' },
   },
 
   init() {
@@ -369,7 +385,7 @@ AFrame.registerComponent('drone-flock', {
       currentTime,
       rotateEntityLabelTowards,
       updateEntityPositionAndColor,
-      updateYawRotation,
+      updateYawIndicatorRotation,
     } = this.system;
     const vec = this._vec;
     const rot = this._rot;
@@ -414,15 +430,15 @@ AFrame.registerComponent('drone-flock', {
       }
 
       if (showYaw) {
-        updateYawRotation(entity, rot);
+        updateYawIndicatorRotation(entity, rot);
       }
     }
   },
 
   /* eslint-disable complexity */
   update(oldData) {
+    const oldDroneModel = oldData.droneModel ?? 'sphere';
     const oldDroneRadius = oldData.droneRadius || 0;
-    const oldSize = oldData.size || 0;
     const oldIndoor = Boolean(oldData.indoor ?? false);
     const oldShowGlow = Boolean(oldData.showGlow ?? true);
     const oldShowLabels = Boolean(oldData.showLabels);
@@ -430,6 +446,7 @@ AFrame.registerComponent('drone-flock', {
     const oldScaleLabels = Boolean(oldData.scaleLabels);
     const oldLabelColor = oldData.labelColor ?? '#888';
     const {
+      droneModel,
       droneRadius,
       indoor,
       labelColor,
@@ -438,8 +455,18 @@ AFrame.registerComponent('drone-flock', {
       showLabels,
       showYaw,
       size,
-      type,
     } = this.data;
+    let oldSize = oldData.size || 0;
+
+    if (oldDroneModel !== droneModel) {
+      // Remove all existing entities and pretend that we have none
+      for (let i = 0; i < oldSize; i++) {
+        const { entity } = this._drones.pop();
+        entity.remove();
+      }
+
+      oldSize = 0;
+    }
 
     // TODO: support changing types on the fly
 
@@ -447,7 +474,7 @@ AFrame.registerComponent('drone-flock', {
       // Add new drones
       for (let i = oldSize; i < size; i++) {
         const entity = this.system.createNewUAVEntity({
-          type,
+          droneModel,
           droneRadius,
           indoor,
           label: String(i + 1),
@@ -504,7 +531,7 @@ AFrame.registerComponent('drone-flock', {
       // Update yaw visibility
       for (const item of this._drones) {
         const { entity } = item;
-        this.system.updateYawVisibility(entity, showYaw);
+        this.system.updateYawIndicatorVisibility(entity, showYaw);
       }
     }
 

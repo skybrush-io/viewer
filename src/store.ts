@@ -77,3 +77,4 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   UnknownAction
 >;
 export type AppDispatch = Dispatch;
+export type AppStore = typeof store;

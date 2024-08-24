@@ -7,6 +7,7 @@ import type { RootState } from '~/store';
 
 export const shouldShowPlaybackHintButton = () => config.buttons.playbackHint;
 export const shouldUseWelcomeScreen = () => config.useWelcomeScreen;
+
 export const getDroneSize = (state: RootState, indoor = false) => {
   const settings = state.settings.threeD;
   return (
@@ -16,3 +17,5 @@ export const getDroneSize = (state: RootState, indoor = false) => {
       : 1) * (settings.droneSize ?? DEFAULT_DRONE_RADIUS)
   );
 };
+
+export const getScenery = (state: RootState) => state.settings.threeD.scenery;

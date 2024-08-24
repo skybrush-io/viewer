@@ -72,7 +72,7 @@ AFrame.registerSystem('drone-flock', {
   createNewUAVEntity({
     type,
     indoor,
-    droneSize,
+    droneRadius,
     label,
     labelColor,
     showGlow,
@@ -81,23 +81,23 @@ AFrame.registerSystem('drone-flock', {
   }) {
     const factory =
       this._entityFactories[type] || this._entityFactories.default;
-    const element = factory(droneSize);
+    const element = factory(droneRadius);
 
     element.append(
       this._createLabelEntity(label, showLabel, labelColor, indoor)
     );
-    element.append(this._createGlowEntity(droneSize, showGlow));
-    element.append(this._createYawIndicatorEntity(droneSize, showYaw));
+    element.append(this._createGlowEntity(droneRadius, showGlow));
+    element.append(this._createYawIndicatorEntity(droneRadius, showYaw));
 
     return element;
   },
 
-  _createGlowEntity(droneSize = 1, showGlow = true) {
+  _createGlowEntity(droneRadius = 1, showGlow = true) {
     const glowElement = document.createElement('a-entity');
     glowElement.setAttribute('sprite', {
       blending: 'additive',
       color: new THREE.Color('#ff8800'),
-      scale: `${droneSize * 4} ${droneSize * 4} 1`,
+      scale: `${droneRadius * 4} ${droneRadius * 4} 1`,
       src: '#glow-texture',
       transparent: true,
       visible: showGlow,
@@ -135,16 +135,16 @@ AFrame.registerSystem('drone-flock', {
     return labelElement;
   },
 
-  _createYawIndicatorEntity(droneSize = 1, showYaw = false) {
+  _createYawIndicatorEntity(droneRadius = 1, showYaw = false) {
     const yawElement = document.createElement('a-entity');
 
     const cylinder = document.createElement('a-entity');
     cylinder.setAttribute('geometry', {
       primitive: 'cylinder',
-      radius: droneSize / 10,
-      height: droneSize,
+      radius: droneRadius / 10,
+      height: droneRadius,
     });
-    cylinder.setAttribute('position', `${droneSize * 1.2} 0 0`);
+    cylinder.setAttribute('position', `${droneRadius * 1.2} 0 0`);
     cylinder.setAttribute('material', {
       color: new THREE.Color('#ff0000'),
       shader: 'flat',
@@ -157,11 +157,11 @@ AFrame.registerSystem('drone-flock', {
     return yawElement;
   },
 
-  _createDefaultUAVEntity(droneSize = 1) {
+  _createDefaultUAVEntity(droneRadius = 1) {
     const element = document.createElement('a-entity');
     element.setAttribute('geometry', {
       ...defaultGeometry,
-      radius: droneSize,
+      radius: droneRadius,
     });
     element.setAttribute('material', {
       color: new THREE.Color('#0088ff'),
@@ -222,7 +222,7 @@ AFrame.registerSystem('drone-flock', {
   },
 
   rotateEntityLabelTowards(entity, position, data) {
-    const { droneSize, scaleLabels } = data;
+    const { droneRadius, scaleLabels } = data;
     const label = getLabelFromEntity(entity);
     const indoor = Boolean(data.indoor ?? false);
     const scalingFactor = indoor ? INDOOR_DRONE_SIZE_SCALING_FACTOR : 1;
@@ -231,9 +231,9 @@ AFrame.registerSystem('drone-flock', {
       if (scaleLabels) {
         entity.object3D.getWorldPosition(this._vec);
         const distance = this._vec.distanceTo(position);
-        const scale = (distance * scalingFactor) / (20 * droneSize);
+        const scale = (distance * scalingFactor) / (20 * droneRadius);
         label.object3D.scale.set(scale, scale, scale);
-        label.object3D.position.z = scalingFactor + scale * (droneSize / 8);
+        label.object3D.position.z = scalingFactor + scale * (droneRadius / 8);
       }
 
       label.object3D.lookAt(position);
@@ -313,7 +313,7 @@ AFrame.registerSystem('drone-flock', {
 
 AFrame.registerComponent('drone-flock', {
   schema: {
-    droneSize: { default: 1 },
+    droneRadius: { default: 1 },
     indoor: { default: false },
     labelColor: { default: 'white' },
     scaleLabels: { default: false },
@@ -421,7 +421,7 @@ AFrame.registerComponent('drone-flock', {
 
   /* eslint-disable complexity */
   update(oldData) {
-    const oldDroneSize = oldData.droneSize || 0;
+    const oldDroneRadius = oldData.droneRadius || 0;
     const oldSize = oldData.size || 0;
     const oldIndoor = Boolean(oldData.indoor ?? false);
     const oldShowGlow = Boolean(oldData.showGlow ?? true);
@@ -430,7 +430,7 @@ AFrame.registerComponent('drone-flock', {
     const oldScaleLabels = Boolean(oldData.scaleLabels);
     const oldLabelColor = oldData.labelColor ?? '#888';
     const {
-      droneSize,
+      droneRadius,
       indoor,
       labelColor,
       scaleLabels,
@@ -448,7 +448,7 @@ AFrame.registerComponent('drone-flock', {
       for (let i = oldSize; i < size; i++) {
         const entity = this.system.createNewUAVEntity({
           type,
-          droneSize,
+          droneRadius,
           indoor,
           label: String(i + 1),
           labelColor,
@@ -468,11 +468,11 @@ AFrame.registerComponent('drone-flock', {
       }
     }
 
-    if (oldDroneSize !== droneSize) {
+    if (oldDroneRadius !== droneRadius) {
       // Update drone sizes
       for (const item of this._drones) {
         const { entity } = item;
-        this.system.updateEntitySize(entity, droneSize);
+        this.system.updateEntitySize(entity, droneRadius);
       }
     }
 

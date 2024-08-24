@@ -18,7 +18,7 @@ interface SettingsSliceState {
     showLabels: boolean;
     showStatistics: boolean;
     showYaw: boolean;
-    droneSize?: number;
+    droneRadius?: number;
     indoorDroneSizeScalingFactor?: number;
   };
 }
@@ -53,7 +53,7 @@ const initialState: SettingsSliceState = {
     showYaw: false,
 
     // Size of drones for outdoor shows
-    droneSize: DEFAULT_DRONE_RADIUS,
+    droneRadius: DEFAULT_DRONE_RADIUS,
 
     // Multiplication factor for the drone size for indoor shows
     indoorDroneSizeScalingFactor: INDOOR_DRONE_SIZE_SCALING_FACTOR,

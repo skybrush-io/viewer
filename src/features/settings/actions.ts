@@ -4,8 +4,8 @@ import type { AppThunk } from '~/store';
 
 import { updateAppSettings } from './slice';
 
-export const setDroneSize = (value: number) =>
-  updateAppSettings('threeD', { droneSize: value });
+export const setDroneRadius = (value: number) =>
+  updateAppSettings('threeD', { droneRadius: value });
 
 export const setScenery =
   (event: ChangeEvent<HTMLInputElement>): AppThunk =>

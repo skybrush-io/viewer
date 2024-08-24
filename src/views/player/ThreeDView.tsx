@@ -17,7 +17,7 @@ import type {
 } from '@skybrush/aframe-components/lib/spatial';
 
 import {
-  getEffectiveDroneSize,
+  getEffectiveDroneRadius,
   getEffectiveScenery,
 } from '~/features/three-d/selectors';
 import {
@@ -33,7 +33,6 @@ import Scenery from './Scenery';
 import type { SceneryType } from './Scenery';
 
 import glow from '~/../assets/img/sphere-glow-hollow.png';
-// const flapperDrone = require('~/../assets/models/flapper-drone.obj').default;
 
 type ThreeDViewProps = {
   readonly axes: boolean;
@@ -42,7 +41,7 @@ type ThreeDViewProps = {
     rotation: ThreeJsRotation;
   };
   readonly cameraRef: React.RefObject<HTMLElement>;
-  readonly droneSize: number;
+  readonly droneRadius: number;
   readonly indoor: boolean;
   readonly grid: boolean | string;
   readonly navigation: {
@@ -69,7 +68,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
     axes,
     cameraConfiguration = DEFAULT_CAMERA_CONFIGURATION,
     cameraRef,
-    droneSize,
+    droneRadius,
     grid,
     indoor,
     navigation,
@@ -84,7 +83,6 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
   } = props;
 
   const [cameraId, setCameraId] = useState(0);
-  const [sceneLoaded, setSceneLoaded] = useState(false);
 
   const extraCameraProps = {
     'look-controls': objectToString({
@@ -159,7 +157,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
       <a-entity rotation='-90 0 90'>
         {axes && <CoordinateSystemAxes length={10} lineWidth={10} />}
         <a-drone-flock
-          drone-size={droneSize}
+          drone-radius={droneRadius}
           label-color={isLightScenery ? 'black' : 'white'}
           indoor={indoor}
           scale-labels={scaleLabels}
@@ -179,7 +177,7 @@ export default connect(
   // mapStateToProps
   (state: RootState) => ({
     cameraConfiguration: getInitialCameraConfigurationOfShow(state),
-    droneSize: getEffectiveDroneSize(state),
+    droneRadius: getEffectiveDroneRadius(state),
     indoor: isShowIndoor(state),
     numDrones: getNumberOfDronesInShow(state),
     showId: getLoadedShowId(state),

@@ -77,11 +77,11 @@ const SidebarDrawer = () => {
             <ScenerySelector />
           </Box>
 
-          <Box px={2} pt={2} pb={1}>
+          <Box px={2} pt={2}>
             <PlaybackSpeedSelector />
           </Box>
 
-          <Box px={2} pt={2} pb={1}>
+          <Box px={2} pt={2}>
             <DroneModelSelector />
           </Box>
 

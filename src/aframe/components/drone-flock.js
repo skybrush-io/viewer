@@ -7,10 +7,7 @@
 import watch from 'redux-watch';
 import AFrame from '@skybrush/aframe-components';
 
-import {
-  DEFAULT_DRONE_MODEL,
-  INDOOR_DRONE_SIZE_SCALING_FACTOR,
-} from '~/constants';
+import { DEFAULT_DRONE_MODEL } from '~/constants';
 import { getElapsedSecondsGetter } from '~/features/playback/selectors';
 import {
   getLightProgramPlayers,
@@ -24,12 +21,12 @@ import fontImageUrl from '~/../assets/fonts/Roboto-msdf.png';
 
 const { THREE } = AFrame;
 
-const defaultGeometry = {
+const defaultGeometry = Object.freeze({
   primitive: 'sphere',
   radius: 1,
   segmentsHeight: 9,
   segmentsWidth: 18,
-};
+});
 
 function getGlowMeshFromEntity(entity) {
   // We assume that the glow is the second child
@@ -73,9 +70,7 @@ AFrame.registerSystem('drone-flock', {
   },
 
   createNewUAVEntity({
-    indoor,
     droneModel,
-    droneRadius,
     label,
     labelColor,
     showGlow,
@@ -84,23 +79,21 @@ AFrame.registerSystem('drone-flock', {
   }) {
     const factory =
       this._entityFactories[droneModel] ?? this._entityFactories.default;
-    const element = factory(droneRadius);
+    const element = factory();
 
-    element.append(
-      this._createLabelEntity(label, showLabel, labelColor, indoor)
-    );
-    element.append(this._createGlowEntity(droneRadius, showGlow));
-    element.append(this._createYawIndicatorEntity(droneRadius, showYaw));
+    element.append(this._createLabelEntity(label, showLabel, labelColor));
+    element.append(this._createGlowEntity(showGlow));
+    element.append(this._createYawIndicatorEntity(showYaw));
 
     return element;
   },
 
-  _createGlowEntity(droneRadius = 1, showGlow = true) {
+  _createGlowEntity(showGlow = true) {
     const glowElement = document.createElement('a-entity');
     glowElement.setAttribute('sprite', {
       blending: 'additive',
       color: new THREE.Color('#ff8800'),
-      scale: `${droneRadius * 4} ${droneRadius * 4} 1`,
+      scale: '4 4 1',
       src: '#glow-texture',
       transparent: true,
       visible: showGlow,
@@ -108,7 +101,7 @@ AFrame.registerSystem('drone-flock', {
     return glowElement;
   },
 
-  _createLabelEntity(label, visible, color = 'white', indoor = false) {
+  _createLabelEntity(label, visible, color = 'white') {
     const labelElement = document.createElement('a-entity');
     labelElement.setAttribute('text', {
       color,
@@ -124,9 +117,8 @@ AFrame.registerSystem('drone-flock', {
 
     /* Y coordinate is slightly offset from zero to prevent Z-fighting with the
      * glow sprite */
-    const scalingFactor = indoor ? INDOOR_DRONE_SIZE_SCALING_FACTOR : 1;
-    const labelScale = DEFAULT_LABEL_SCALE * scalingFactor;
-    const labelOffset = DEFAULT_LABEL_OFFSET * scalingFactor;
+    const labelScale = DEFAULT_LABEL_SCALE;
+    const labelOffset = DEFAULT_LABEL_OFFSET;
     labelElement.setAttribute('position', `0 -0.05 ${labelOffset}`);
     labelElement.setAttribute('rotation', '0 -90 -90');
     labelElement.setAttribute(
@@ -138,7 +130,7 @@ AFrame.registerSystem('drone-flock', {
     return labelElement;
   },
 
-  _createYawIndicatorEntity(droneRadius = 1, showYaw = false) {
+  _createYawIndicatorEntity(showYaw = false) {
     const yawElement = document.createElement('a-entity');
 
     const cylinder = document.createElement('a-entity');
@@ -152,8 +144,7 @@ AFrame.registerSystem('drone-flock', {
       shader: 'flat',
     });
     cylinder.setAttribute('rotation', '0 0 90');
-
-    this._updateYawIndicatorPositionAndSize(cylinder, droneRadius);
+    cylinder.setAttribute('position', '1.2 0 0');
 
     yawElement.append(cylinder);
     yawElement.setAttribute('visible', showYaw ? 'true' : 'false');
@@ -161,12 +152,9 @@ AFrame.registerSystem('drone-flock', {
     return yawElement;
   },
 
-  _createDefaultUAVEntity(droneRadius = 1) {
+  _createDefaultUAVEntity() {
     const element = document.createElement('a-entity');
-    element.setAttribute('geometry', {
-      ...defaultGeometry,
-      radius: droneRadius,
-    });
+    element.setAttribute('geometry', defaultGeometry);
     element.setAttribute('material', {
       color: new THREE.Color('#0088ff'),
       fog: false,
@@ -188,8 +176,6 @@ AFrame.registerSystem('drone-flock', {
       shader: 'flat',
     });
     element.setAttribute('position', '0 0 0');
-    element.setAttribute('rotation', '90 0 0');
-    element.setAttribute('scale', '6 6 6');
 
     /*
     setTimeout(() => {
@@ -201,7 +187,6 @@ AFrame.registerSystem('drone-flock', {
         side: 'back',
       });
     }, 1000);
-    // el.append(this._createGlowEntity(1 / 3));
     */
 
     return element;
@@ -215,12 +200,11 @@ AFrame.registerSystem('drone-flock', {
     this.currentTime = this._getElapsedSeconds();
   },
 
-  resetLabelScaleAndPosition(entity, indoor = false) {
+  resetLabelScaleAndPosition(entity) {
     const label = getLabelFromEntity(entity);
     if (label) {
-      const scalingFactor = indoor ? INDOOR_DRONE_SIZE_SCALING_FACTOR : 1;
-      const labelScale = DEFAULT_LABEL_SCALE * scalingFactor;
-      const labelOffset = DEFAULT_LABEL_OFFSET * scalingFactor;
+      const labelScale = DEFAULT_LABEL_SCALE;
+      const labelOffset = DEFAULT_LABEL_OFFSET;
 
       label.object3D.position.set(0, -0.05, labelOffset);
       label.object3D.scale.set(labelScale, labelScale, labelScale);
@@ -230,8 +214,7 @@ AFrame.registerSystem('drone-flock', {
   rotateEntityLabelTowards(entity, position, data) {
     const { droneRadius, scaleLabels } = data;
     const label = getLabelFromEntity(entity);
-    const indoor = Boolean(data.indoor ?? false);
-    const scalingFactor = indoor ? INDOOR_DRONE_SIZE_SCALING_FACTOR : 1;
+    const scalingFactor = 1;
 
     if (label) {
       if (scaleLabels) {
@@ -268,20 +251,7 @@ AFrame.registerSystem('drone-flock', {
   },
 
   updateEntitySize(entity, size) {
-    entity.setAttribute('geometry', {
-      ...defaultGeometry,
-      radius: size,
-    });
-
-    const glowMesh = getGlowMeshFromEntity(entity);
-    if (glowMesh && glowMesh.scale) {
-      glowMesh.scale.set(size * 4, size * 4, 1);
-    }
-
-    const yawIndicator = getYawIndicatorFromEntity(entity);
-    if (yawIndicator) {
-      this._updateYawIndicatorPositionAndSize(yawIndicator, size);
-    }
+    entity.object3D.scale.set(size, size, size);
   },
 
   updateGlowVisibility(entity, visible) {
@@ -320,18 +290,12 @@ AFrame.registerSystem('drone-flock', {
       yaw.object3D.visible = visible;
     }
   },
-
-  _updateYawIndicatorPositionAndSize(yawEntity, droneRadius) {
-    yawEntity.setAttribute('position', `${droneRadius * 1.2} 0 0`);
-    yawEntity.setAttribute('scale', String(droneRadius));
-  },
 });
 
 AFrame.registerComponent('drone-flock', {
   schema: {
     droneModel: { default: DEFAULT_DRONE_MODEL },
     droneRadius: { default: 1 },
-    indoor: { default: false },
     labelColor: { default: 'white' },
     scaleLabels: { default: false },
     showGlow: { default: true },
@@ -439,7 +403,6 @@ AFrame.registerComponent('drone-flock', {
   update(oldData) {
     const oldDroneModel = oldData.droneModel ?? 'sphere';
     const oldDroneRadius = oldData.droneRadius || 0;
-    const oldIndoor = Boolean(oldData.indoor ?? false);
     const oldShowGlow = Boolean(oldData.showGlow ?? true);
     const oldShowLabels = Boolean(oldData.showLabels);
     const oldShowYaw = Boolean(oldData.showYaw ?? false); // or no default?
@@ -448,7 +411,6 @@ AFrame.registerComponent('drone-flock', {
     const {
       droneModel,
       droneRadius,
-      indoor,
       labelColor,
       scaleLabels,
       showGlow,
@@ -457,10 +419,12 @@ AFrame.registerComponent('drone-flock', {
       size,
     } = this.data;
     let oldSize = oldData.size || 0;
+    let forceDroneSizeUpdate = false;
 
     if (oldDroneModel !== droneModel) {
-      // Remove all existing entities and pretend that we have none
-      for (let i = 0; i < oldSize; i++) {
+      // Remove all existing entities as we need to re-create all of them
+      // from scratch
+      while (this._drones.length > 0) {
         const { entity } = this._drones.pop();
         entity.remove();
       }
@@ -468,15 +432,11 @@ AFrame.registerComponent('drone-flock', {
       oldSize = 0;
     }
 
-    // TODO: support changing types on the fly
-
     if (size > oldSize) {
       // Add new drones
       for (let i = oldSize; i < size; i++) {
         const entity = this.system.createNewUAVEntity({
           droneModel,
-          droneRadius,
-          indoor,
           label: String(i + 1),
           labelColor,
           showGlow,
@@ -487,6 +447,8 @@ AFrame.registerComponent('drone-flock', {
 
         this._drones.push({ index: i, entity });
       }
+
+      forceDroneSizeUpdate = true;
     } else {
       // Remove unneeded drones
       for (let i = size; i < oldSize; i++) {
@@ -495,7 +457,7 @@ AFrame.registerComponent('drone-flock', {
       }
     }
 
-    if (oldDroneRadius !== droneRadius) {
+    if (oldDroneRadius !== droneRadius || forceDroneSizeUpdate) {
       // Update drone sizes
       for (const item of this._drones) {
         const { entity } = item;
@@ -535,14 +497,11 @@ AFrame.registerComponent('drone-flock', {
       }
     }
 
-    if (
-      oldIndoor !== indoor ||
-      (oldScaleLabels !== scaleLabels && !scaleLabels)
-    ) {
+    if (oldScaleLabels !== scaleLabels && !scaleLabels) {
       // Reset the scale and position of each label
       for (const item of this._drones) {
         const { entity } = item;
-        this.system.resetLabelScaleAndPosition(entity, indoor);
+        this.system.resetLabelScaleAndPosition(entity);
       }
     }
   },

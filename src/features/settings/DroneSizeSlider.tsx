@@ -18,7 +18,7 @@ const DroneSizeSlider = (props: DroneSizeSliderProps) => {
 
   return (
     <>
-      <Typography gutterBottom>Drone size</Typography>
+      <Typography gutterBottom>UAV size</Typography>
       <Slider
         id='sidebar-drone-radius'
         value={droneRadius}

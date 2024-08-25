@@ -18,7 +18,7 @@ const DroneModelSelector = () => {
   const scenery = useAppSelector(getDroneModel);
   return (
     <FormControl fullWidth variant='filled'>
-      <InputLabel id='sidebar-drone-model-label'>Scenery</InputLabel>
+      <InputLabel id='sidebar-drone-model-label'>UAV model</InputLabel>
       <Select
         labelId='sidebar-drone-model-label'
         id='sidebar-drone-model'

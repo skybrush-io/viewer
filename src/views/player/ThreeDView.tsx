@@ -26,7 +26,6 @@ import {
   getInitialCameraConfigurationOfShow,
   getLoadedShowId,
   getNumberOfDronesInShow,
-  isShowIndoor,
 } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 
@@ -37,8 +36,6 @@ import type { SceneryType } from './Scenery';
 import glow from '~/../assets/img/sphere-glow-hollow.png';
 import flapperDrone from '~/../assets/models/flapper-drone.obj';
 
-console.log(flapperDrone);
-
 type ThreeDViewProps = {
   readonly axes: boolean;
   readonly cameraConfiguration: {
@@ -48,7 +45,6 @@ type ThreeDViewProps = {
   readonly cameraRef: React.RefObject<HTMLElement>;
   readonly droneModel: DroneModelType;
   readonly droneRadius: number;
-  readonly indoor: boolean;
   readonly grid: boolean | string;
   readonly navigation: {
     mode: 'walk' | 'fly';
@@ -77,7 +73,6 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
     droneModel,
     droneRadius,
     grid,
-    indoor,
     navigation,
     numDrones,
     scaleLabels,
@@ -167,7 +162,6 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
           drone-model={droneModel}
           drone-radius={droneRadius}
           label-color={isLightScenery ? 'black' : 'white'}
-          indoor={indoor}
           scale-labels={scaleLabels}
           show-glow={!isLightScenery}
           show-labels={showLabels}
@@ -187,7 +181,6 @@ export default connect(
     cameraConfiguration: getInitialCameraConfigurationOfShow(state),
     droneModel: getDroneModel(state),
     droneRadius: getEffectiveDroneRadius(state),
-    indoor: isShowIndoor(state),
     numDrones: getNumberOfDronesInShow(state),
     showId: getLoadedShowId(state),
     ...state.settings.threeD,

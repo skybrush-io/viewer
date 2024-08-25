@@ -24,10 +24,10 @@ function deriveShowFileRootUrl(href?: string): URL | undefined {
   }
 
   const url = new URL(href);
-  const PATHNAME_REGEX = /^\/s\/(?<id>[-\w]+)\/?$/;
+  const PATHNAME_REGEX = /^\/s\/([-\w]+)\/?$/;
   const match = PATHNAME_REGEX.exec(url.pathname);
   if (match) {
-    return match.groups?.id === 'test'
+    return match[1] === 'test'
       ? new URL('https://share.skybrush.io/s/itu-2019/')
       : url;
   }

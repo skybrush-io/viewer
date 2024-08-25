@@ -1,8 +1,8 @@
 diff --git a/node_modules/aframe-environment-component/index.js b/node_modules/aframe-environment-component/index.js
-index 2d713e1..b1ca520 100644
+index 33781bf..778f3ce 100644
 --- a/node_modules/aframe-environment-component/index.js
 +++ b/node_modules/aframe-environment-component/index.js
-@@ -262,7 +262,6 @@ AFRAME.registerComponent('environment', {
+@@ -258,7 +258,6 @@ AFRAME.registerComponent('environment', {
        Object.assign(this.environmentData, this.data);
        Object.assign(this.environmentData, this.presets[this.data.preset]);
        Object.assign(this.environmentData, this.el.components.environment.attrValue);
@@ -10,7 +10,7 @@ index 2d713e1..b1ca520 100644
      }
  
      var skyType = this.environmentData.skyType;
-@@ -452,7 +451,6 @@ AFRAME.registerComponent('environment', {
+@@ -453,7 +452,6 @@ AFRAME.registerComponent('environment', {
        str += ', ';
      }
      str += '}';
@@ -18,7 +18,7 @@ index 2d713e1..b1ca520 100644
    },
  
    // dumps current component settings to console.
-@@ -496,7 +494,6 @@ AFRAME.registerComponent('environment', {
+@@ -497,7 +495,6 @@ AFRAME.registerComponent('environment', {
          }
        }
      }

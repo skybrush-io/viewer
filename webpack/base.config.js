@@ -18,6 +18,7 @@ module.exports = {
   output: {
     path: outputDir,
     filename: '[name].bundle.js',
+    clean: true,
   },
 
   devtool: enableSourceMap ? 'eval-cheap-module-source-map' : undefined,
@@ -28,12 +29,6 @@ module.exports = {
 
   plugins: [
     new webpack.NoEmitOnErrorsPlugin(),
-
-    // The next module is needed for golden-layout to work nicely
-    new webpack.ProvidePlugin({
-      ReactDOM: 'react-dom',
-      React: 'react',
-    }),
 
     // Resolve process.env in the code; the object below provides the
     // default values
@@ -66,7 +61,6 @@ module.exports = {
         'config',
         process.env.SKYBRUSH_VARIANT ?? 'default'
       ),
-      'layout-bmfont-text': '@skybrush/layout-bmfont-text',
     },
     extensions: [
       '.webpack.js',

@@ -9,7 +9,7 @@ export interface ShowLoadingRequest {
   audio?: string;
 
   /** The show to load */
-  show: ShowSpecification | PromiseLike<ShowSpecification>;
+  show: ShowSpecification | (() => Promise<ShowSpecification>);
 
   /**
    * Whether to keep the playhead of the playback window at its current

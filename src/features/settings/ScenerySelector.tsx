@@ -24,7 +24,7 @@ const ScenerySelector = () => {
         labelId='sidebar-scenery-label'
         id='sidebar-scenery'
         value={scenery}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+        onChange={(event) => {
           dispatch(setScenery(event.target.value as any as SceneryType));
         }}
       >

@@ -363,13 +363,19 @@ const getTrajectoryDuration = (trajectory: any): number => {
   return 0;
 };
 
+const EMPTY_TRAJECTORY: Readonly<Trajectory> = Object.freeze({
+  version: 1,
+  points: [],
+});
+
 /**
  * Returns an array containing trajectory player objects for all the
  * trajectories.
  */
 export const getTrajectoryPlayers = createSelector(
   getTrajectories,
-  (trajectories) => trajectories.map(createTrajectoryPlayer)
+  (trajectories) =>
+    trajectories.map((t) => createTrajectoryPlayer(t ?? EMPTY_TRAJECTORY))
 );
 
 /**

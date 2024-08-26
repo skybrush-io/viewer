@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import { blue, lightBlue, red } from '@mui/material/colors';
 
-import { createThemeProvider } from '@skybrush/app-theme-mui';
+import { createThemeProvider, ThemeType } from '@skybrush/app-theme-mui';
 
 /**
  * Specialized Material-UI theme provider that is aware about the user's
@@ -20,6 +20,6 @@ const DarkModeAwareThemeProvider = createThemeProvider({
 export default connect(
   // mapStateToProps
   () => ({
-    type: 'dark',
+    type: ThemeType.DARK,
   })
 )(DarkModeAwareThemeProvider);

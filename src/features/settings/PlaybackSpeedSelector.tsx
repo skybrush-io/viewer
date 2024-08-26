@@ -22,8 +22,8 @@ const PlaybackSpeedSelector = () => {
         labelId='sidebar-playback-speed-label'
         id='sidebar-playback-speed'
         value={speed}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          const speed = Number.parseFloat(event.target.value);
+        onChange={(event) => {
+          const speed = Number.parseFloat(String(event.target.value));
           dispatch(setPlaybackSpeed(speed));
         }}
       >

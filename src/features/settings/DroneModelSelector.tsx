@@ -23,7 +23,7 @@ const DroneModelSelector = () => {
         labelId='sidebar-drone-model-label'
         id='sidebar-drone-model'
         value={scenery}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+        onChange={(event) => {
           const type = event.target.value;
           if (isValidDroneModelType(type)) {
             dispatch(setDroneModel(type));

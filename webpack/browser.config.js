@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 // Webpack configuration for the output that is directly usable on
 // https://share.skybrush.io
 
@@ -9,7 +10,11 @@ const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 
 const baseConfig = require('./base.config.js');
-const { getHtmlMetaTags, projectRoot } = require('./helpers');
+const {
+  getHtmlMetaTags,
+  useAppConfiguration,
+  projectRoot,
+} = require('./helpers');
 
 module.exports = merge(baseConfig, {
   entry: {
@@ -17,15 +22,7 @@ module.exports = merge(baseConfig, {
     app: './src/index',
   },
 
-  resolve: {
-    alias: {
-      config: path.resolve(
-        projectRoot,
-        'config',
-        process.env.SKYBRUSH_VARIANT ?? 'webapp'
-      ),
-    },
-  },
+  ...useAppConfiguration(process.env.SKYBRUSH_VARIANT ?? 'webapp'),
 
   module: {
     rules: [

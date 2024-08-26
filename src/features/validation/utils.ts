@@ -10,18 +10,21 @@ import type { ValidationSliceState } from './slice';
 
 interface ChartPoint {
   x: number;
-  y: number;
+  y: number | null;
 }
 
 interface ChartPointWithTip extends ChartPoint {
-  tip?: string;
+  tip: string | null;
 }
 
-const createChartPoint = (x: number, y: number): ChartPoint => ({ x, y });
+const createChartPoint = (x: number, y: number | null): ChartPoint => ({
+  x,
+  y,
+});
 const createChartPointWithTip = (
   x: number,
-  y: number,
-  tip: string | undefined
+  y: number | null,
+  tip: string | null
 ): ChartPointWithTip => ({
   x,
   y,
@@ -101,6 +104,7 @@ export const createChartDataSelector = (
         minValues[frameIndex] = {
           x: time,
           y: minValue,
+          tip: null,
         };
         if (minIndex !== undefined) {
           minValues[frameIndex].tip = names[minIndex];
@@ -109,6 +113,7 @@ export const createChartDataSelector = (
         maxValues[frameIndex] = {
           x: time,
           y: maxValue,
+          tip: null,
         };
         if (maxIndex !== undefined) {
           maxValues[frameIndex].tip = names[maxIndex];

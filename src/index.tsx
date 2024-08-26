@@ -5,10 +5,13 @@
 
 import config from 'config';
 
+import { initI18N } from './i18n';
 import { SkybrushViewer } from './startup';
 
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
+
+await initI18N();
 
 if (config.startAutomatically) {
   // Start the app automatically but do not export it to the page

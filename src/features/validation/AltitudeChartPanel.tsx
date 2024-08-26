@@ -17,8 +17,8 @@ const getDataForAltitudeChart = createChartDataSelector(
 // Custom ranges to use for the chart panel. This prevents the annotations from
 // affecting the range chosen by Chart.js but it will still allow the data to
 // expand the range if needed.
-const Y_RANGE_INDOOR = [0, 2];
-const Y_RANGE_OUTDOOR = [0, 10];
+const Y_RANGE_INDOOR: [number, number] = [0, 2];
+const Y_RANGE_OUTDOOR: [number, number] = [0, 10];
 
 export default connect(
   // mapStateToProps

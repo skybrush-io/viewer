@@ -1,3 +1,9 @@
+// Make .mp3 imports work nicely with Typescript
+declare module '*.mp3' {
+  const value: string;
+  export default value;
+}
+
 // Make PNG imports work nicely with Typescript
 declare module '*.png' {
   const value: string;
@@ -20,30 +26,6 @@ declare namespace JSX {
     'a-entity': any;
     'a-scene': any;
   }
-}
-
-// Provide typings for configuration
-declare module 'config' {
-  const config: {
-    buttons: {
-      playbackHint?: boolean;
-    };
-    io: {
-      localFiles: boolean;
-    };
-    modes: {
-      player: boolean;
-      validation: boolean;
-      vr: boolean;
-    };
-    preloadedShow?: {
-      show: any;
-      audio: string;
-    };
-    startAutomatically: boolean;
-    useWelcomeScreen: boolean;
-  };
-  export default config;
 }
 
 // Provide typings for @skybrush/aframe-components

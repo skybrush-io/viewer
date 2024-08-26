@@ -36,7 +36,7 @@ export const getSidebarItemsForSingleDrones = createSelector(
   (names) =>
     orderBy(
       names.map((name, index) => ({
-        id: createItemIdForDroneIndex(index),
+        id: createItemIdForDroneIndex(index) ?? 'invalid',
         label: name,
       })),
       ['label']

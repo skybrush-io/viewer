@@ -23,7 +23,9 @@ const extractFileFromEvent = (event: DragEvent) => {
 
   // The requirement of the file.path property prevents this from working in
   // the browser, but that's exactly what we want
-  return file.name.endsWith('.skyc') && file.path ? file.path : undefined;
+  return file.name.endsWith('.skyc') && (file as any).path
+    ? ((file as any).path as string)
+    : undefined;
 };
 
 const onFileDragging = (event: DragEvent) => {

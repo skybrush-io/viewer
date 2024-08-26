@@ -254,11 +254,11 @@ interface ChartPanelProps {
   readonly data: Array<{
     values: Array<{
       x: number;
-      y: number;
-      tip: string;
+      y: number | null;
+      tip?: string | null;
     }>;
     label: string;
-    role: 'minimum' | 'maximum' | 'mean' | 'single';
+    role?: 'minimum' | 'maximum' | 'mean' | 'single';
   }>;
   readonly formatPlaybackTimestamp?: (value: number) => string;
   readonly height: number;
@@ -330,7 +330,7 @@ const ChartPanel = ({
 
   return (
     <StyledCard square height={height}>
-      <Scatter data={chartData} options={options} />
+      <Scatter data={chartData as any} options={options} />
       {title && (
         <Box left={8} top={4} position='absolute'>
           <Typography variant='button'>{title}</Typography>

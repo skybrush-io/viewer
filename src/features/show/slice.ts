@@ -45,7 +45,7 @@ const { actions, reducer } = createSlice({
 
   extraReducers(builder: ActionReducerMapBuilder<ShowSliceState>) {
     builder.addCase(_doLoadShow.fulfilled, (state, action) => {
-      state.data = action.payload as ShowSpecification;
+      state.data = action.payload;
       state.loading = false;
       state.error = null;
       state.id += 1;

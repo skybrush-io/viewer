@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 // Webpack configuration for the output that is directly usable on
 // https://share.skybrush.io
 
@@ -10,7 +11,11 @@ const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 
 const baseConfig = require('./base.config.js');
-const { getHtmlMetaTags, projectRoot } = require('./helpers');
+const {
+  getHtmlMetaTags,
+  projectRoot,
+  useAppConfiguration,
+} = require('./helpers');
 
 module.exports = merge(baseConfig, {
   // Make sure to use a _single_ entry point here; we want a single bundle.js
@@ -21,15 +26,7 @@ module.exports = merge(baseConfig, {
     publicPath: 'auto',
   },
 
-  resolve: {
-    alias: {
-      config: path.resolve(
-        projectRoot,
-        'config',
-        process.env.SKYBRUSH_VARIANT ?? 'webapp'
-      ),
-    },
-  },
+  ...useAppConfiguration(process.env.SKYBRUSH_VARIANT ?? 'webapp'),
 
   plugins: [
     // process and Buffer polyfills are needed for AFrame to work nicely as of

@@ -22,8 +22,17 @@ const getHtmlMetaTags = ({ disableCSP = false } = {}) => {
   return result;
 };
 
+const useAppConfiguration = (name = 'default') => ({
+  resolve: {
+    alias: {
+      'config-overrides': path.resolve(projectRoot, 'config', name),
+    },
+  },
+});
+
 module.exports = {
   getHtmlMetaTags,
   projectRoot,
   outputDir,
+  useAppConfiguration,
 };

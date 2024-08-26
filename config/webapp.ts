@@ -2,18 +2,20 @@
  * @file Default application configuration at startup when running as a web app.
  */
 
-const config = {
+import { type ConfigOverrides } from 'config-overrides';
+
+const overrides: ConfigOverrides = {
   buttons: {
     playbackHint: true,
   },
-  io: {},
+  io: {
+    localFiles: false,
+  },
   modes: {
-    player: true,
     validation: false,
-    vr: false, // advanced-camera-controls is not VR-friendly yet
   },
   startAutomatically: false,
   useWelcomeScreen: false,
 };
 
-export default config;
+export default overrides;

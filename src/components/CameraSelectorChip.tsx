@@ -7,6 +7,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { type Camera } from '@skybrush/show-format';
+import type { KeySequence } from 'react-hotkeys';
 
 function getLabelForCamera(camera: Camera, index: number): string {
   return camera.name ?? `Camera ${index}`;
@@ -14,7 +15,7 @@ function getLabelForCamera(camera: Camera, index: number): string {
 
 interface CameraSelectorChipProps extends ChipProps {
   readonly cameras: Camera[];
-  readonly hotkeys: string[];
+  readonly hotkeys: KeySequence[];
   readonly onCameraSelected: (index: number, camera: Camera) => void;
   readonly selectedCameraIndex: number;
 }
@@ -95,7 +96,7 @@ const CameraSelectorChip = ({
             <ListItemText>{getLabelForCamera(camera, index)}</ListItemText>
             {hotkeys[index] && (
               <Typography variant='body1' color='text.secondary' ml={2}>
-                {hotkeys[index]}
+                {String(hotkeys[index])}
               </Typography>
             )}
           </MenuItem>

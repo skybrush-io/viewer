@@ -1,20 +1,17 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
     "baseUrl": "./src",
     "jsx": "react",
     "outDir": "./dist/",
     "module": "esnext",
     "moduleResolution": "node",
-    "noImplicitAny": true,
-    "noImplicitThis": true,
     "paths": {
       "~/*": ["./*"]
     },
-    "sourceMap": true,
-    "strictNullChecks": true,
-    "target": "es6"
-  },
-  "include": ["./src/"]
+    "resolveJsonModule": true,
+    "strict": true,
+    "target": "esnext",
+    "typeRoots": ["./types", "./node_modules/@types"],
+    "allowSyntheticDefaultImports": true
+  }
 }

@@ -32,7 +32,11 @@ export default connect(
   }),
   // mapDispatchToProps
   {
-    onDragged: stripEvent(setPlaybackPosition),
-    onDragging: stripEvent(temporarilyOverridePlaybackPosition),
+    onDragged: (event: any, value: number | number[]) =>
+      setPlaybackPosition(Array.isArray(value) ? value[0] : value),
+    onDragging: (event: any, value: number | number[]) =>
+      temporarilyOverridePlaybackPosition(
+        Array.isArray(value) ? value[0] : value
+      ),
   }
 )(PlaybackSlider);

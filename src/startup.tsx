@@ -51,16 +51,17 @@ function createShowLoadingRequestFromRootUrl(
   return {
     audio: new URL(`music.mp3?t=${now}`, url).toString(),
     missingAudioIsOkay: true,
-    show: ky
-      .get(new URL(`show.json?t=${now}`, url).toString(), {
-        /* onDownloadProgress: (progress) => {
+    show: async () =>
+      ky
+        .get(new URL(`show.json?t=${now}`, url).toString(), {
+          /* onDownloadProgress: (progress) => {
             // TODO(ntamas): this is problematic because ky will report the
             // uncompressed size but the Content-Length header contains the
             // compressed size so we eventually run above 100%.
             // console.log(`${progress.percent * 100}% - ${progress.transferredBytes} of ${progress.totalBytes} bytes`);
           } */
-      })
-      .json(),
+        })
+        .json(),
   };
 }
 
@@ -100,7 +101,7 @@ async function createShowLoadingRequestFromManifestUrl(
   return {
     audio: manifest.audio,
     missingAudioIsOkay: true,
-    show: ky.get(manifest.show, {}).json(),
+    show: async () => ky.get(manifest.show, {}).json(),
   };
 }
 
@@ -116,7 +117,7 @@ function getInitialShowLoadingRequest(): ShowLoadingRequest | undefined {
   // just do nothing
   const hasPreloadedShow = Boolean(config.preloadedShow?.show);
   if (hasPreloadedShow) {
-    return config.preloadedShow! as ShowLoadingRequest;
+    return config.preloadedShow as ShowLoadingRequest;
   }
 }
 

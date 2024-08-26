@@ -22,7 +22,7 @@ import {
 import type { AppDispatch, RootState } from '~/store';
 
 interface SidebarListItemPresentationProps {
-  readonly chartIndex: number;
+  readonly chartIndex: number | undefined;
   readonly label?: string;
   readonly onToggleSelection: () => void;
   readonly style?: React.CSSProperties;

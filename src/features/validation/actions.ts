@@ -5,12 +5,12 @@ import { findPanelById, type ValidationPanel } from './panels';
 import { getSelection, getVisiblePanels } from './selectors';
 import { setSelection, setVisiblePanels } from './slice';
 
-function createItemToggler(
-  getter: (state: RootState) => string[],
-  setter: (selection: string[]) => PayloadAction<any>,
+function createItemToggler<T>(
+  getter: (state: RootState) => T[],
+  setter: (selection: T[]) => PayloadAction<any>,
   { sort = false }: { sort?: any } = {}
 ) {
-  return (itemId: string): AppThunk =>
+  return (itemId: T): AppThunk =>
     (dispatch, getState) => {
       const selection = getter(getState()) || [];
       const index = selection.indexOf(itemId);
@@ -26,6 +26,7 @@ function createItemToggler(
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             newSelection.sort(sort);
           } else {
+            // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
             newSelection.sort();
           }
         }

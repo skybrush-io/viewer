@@ -26,8 +26,11 @@ const DroneSizeSlider = (props: DroneSizeSliderProps) => {
         min={0.1}
         max={2}
         step={0.05}
-        onChange={(event, value: number) => {
-          dispatch(setDroneRadius(value));
+        onChange={(event, value: number | number[]) => {
+          const radius = Array.isArray(value) ? value[0] : value;
+          if (radius !== undefined) {
+            dispatch(setDroneRadius(radius));
+          }
         }}
       />
     </>

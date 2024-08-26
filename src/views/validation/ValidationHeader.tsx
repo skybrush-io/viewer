@@ -12,7 +12,7 @@ import {
 } from '~/features/show/selectors';
 import { clearLoadedShow } from '~/features/show/slice';
 import { togglePanelVisibility } from '~/features/validation/actions';
-import { PANELS } from '~/features/validation/panels';
+import { PANELS, type ValidationPanel } from '~/features/validation/panels';
 import { getVisiblePanels } from '~/features/validation/selectors';
 import { UIMode } from '~/features/ui/modes';
 import { setMode } from '~/features/ui/slice';
@@ -38,8 +38,8 @@ interface ValidationHeaderProps extends BoxProps {
   readonly hasLoadedShowFile: boolean;
   readonly onClearLoadedShow: () => void;
   readonly onReturnToViewer: () => void;
-  readonly onTogglePanel: (id: string) => void;
-  readonly visiblePanels: string[];
+  readonly onTogglePanel: (id: ValidationPanel) => void;
+  readonly visiblePanels: ValidationPanel[];
 }
 
 const ValidationHeader = ({
@@ -99,6 +99,6 @@ export default connect(
       dispatch(setMode(UIMode.PLAYER));
     },
     onReturnToViewer: () => setMode(UIMode.PLAYER),
-    onTogglePanel: (id: string) => togglePanelVisibility(id),
+    onTogglePanel: (id: ValidationPanel) => togglePanelVisibility(id),
   }
 )(ValidationHeader);

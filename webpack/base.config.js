@@ -61,7 +61,8 @@ module.exports = {
   resolve: {
     alias: {
       '~': path.resolve(projectRoot, 'src'),
-      config: path.resolve(
+      config: path.resolve(projectRoot, 'config'),
+      'config-overrides': path.resolve(
         projectRoot,
         'config',
         process.env.SKYBRUSH_VARIANT ?? 'default'

@@ -28,7 +28,7 @@ interface AudioControllerProps {
   readonly onSeeked: () => void;
   readonly onSeeking: () => void;
   readonly playing: boolean;
-  readonly url: string;
+  readonly url?: string;
 }
 
 const AudioController = ({

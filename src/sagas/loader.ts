@@ -25,9 +25,8 @@ function* loadShowFromRequestChannelSaga(
   chan: Channel<ShowLoadingRequest>
 ): Generator<any, void, any> {
   while (true) {
-    const { audio, keepPlayhead, missingAudioIsOkay, show } = (yield take(
-      chan
-    )) as ShowLoadingRequest;
+    const request = (yield take(chan)) as ShowLoadingRequest;
+    const { audio, keepPlayhead, missingAudioIsOkay, show } = request;
 
     try {
       let audioOkay = true;
@@ -42,11 +41,11 @@ function* loadShowFromRequestChannelSaga(
       }
 
       const { payload: showSpec } = yield putResolve(
-        _doLoadShow(freeze(show)) as any
+        _doLoadShow(freeze(request))
       );
       const audioInShowSpec = get(showSpec, 'media.audio.url');
       const audioUrl = isNil(audioInShowSpec) ? null : String(audioInShowSpec);
-      yield put(setAudioUrl(audioOkay ? audio ?? audioUrl : null));
+      yield put(setAudioUrl(audioOkay ? (audio ?? audioUrl) : null));
 
       if (!keepPlayhead) {
         yield put(rewind() as any);

@@ -27,6 +27,11 @@ module.exports = {
     hot: true,
   },
 
+  // AFrame places THREE in the global context so other packages that try to
+  // import 'three' can simply use window.THREE. This is needed to avoid
+  // warnings about THREE being imported multiple times
+  externals: { three: 'THREE' },
+
   plugins: [
     new webpack.NoEmitOnErrorsPlugin(),
 
@@ -76,7 +81,6 @@ module.exports = {
       http: require.resolve('stream-http'),
       https: require.resolve('https-browserify'),
       'process/browser': require.resolve('process/browser'),
-      three: require.resolve('super-three'), // AFrame 1.5.0 hackery
       util: require.resolve('util'),
     },
   },

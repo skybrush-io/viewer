@@ -89,7 +89,6 @@ export default connect(
     loading: isLoadingShowFile(state),
     visible:
       isLoadingShowFile(state) ||
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       (!userInteractedWithPlayback(state) && shouldShowPlaybackHintButton()) ||
       Boolean(state.show.error),
   }),

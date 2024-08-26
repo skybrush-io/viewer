@@ -16,8 +16,8 @@ export const getDroneRadius = (state: RootState, indoor = false) => {
   const settings = state.settings.threeD;
   return (
     (indoor
-      ? settings.indoorDroneSizeScalingFactor ??
-        INDOOR_DRONE_SIZE_SCALING_FACTOR
+      ? (settings.indoorDroneSizeScalingFactor ??
+        INDOOR_DRONE_SIZE_SCALING_FACTOR)
       : 1) * (settings.droneRadius ?? DEFAULT_DRONE_RADIUS)
   );
 };

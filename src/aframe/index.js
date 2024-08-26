@@ -2,9 +2,9 @@ import AFrame from '@skybrush/aframe-components';
 
 import 'aframe-environment-component';
 import 'aframe-look-at-component';
-// import 'aframe-meshline-component';
 
 import '@skybrush/aframe-components/advanced-camera-controls';
+import '@skybrush/aframe-components/meshline';
 import '@skybrush/aframe-components/sprite';
 import { createSyncPoseWithStoreComponent } from '@skybrush/aframe-components/factories';
 

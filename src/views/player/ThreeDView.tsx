@@ -108,7 +108,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
     extraSceneProps.stats = 'true';
   }
 
-  extraSceneProps['vr-mode-ui'] = config.modes.vr
+  extraSceneProps['xr-mode-ui'] = config.modes.vr
     ? 'enabled: true; enterVRButton: #vr-button'
     : 'enabled: false';
 
@@ -138,7 +138,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
       deallocate
       keyboard-shortcuts={objectToString({ enterVR: vrEnabled })}
       loading-screen='backgroundColor: #444; dotsColor: #888'
-      renderer='antialias: false'
+      renderer='antialias: false; colorManagement: true; physicallyCorrectLights: true'
       {...extraSceneProps}
     >
       <a-assets>

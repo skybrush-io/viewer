@@ -76,6 +76,7 @@ module.exports = {
       http: require.resolve('stream-http'),
       https: require.resolve('https-browserify'),
       'process/browser': require.resolve('process/browser'),
+      three: require.resolve('super-three'), // AFrame 1.5.0 hackery
       util: require.resolve('util'),
     },
   },

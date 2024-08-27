@@ -64,6 +64,7 @@ AFrame.registerSystem('drone-flock', {
     this._entityFactories = {
       default: this._createDefaultUAVEntity.bind(this),
       flapper: this._createFlapperDroneEntity.bind(this),
+      quad: this._createQuadcopterEntity.bind(this),
     };
 
     this.rotateEntityLabelTowards = this.rotateEntityLabelTowards.bind(this);
@@ -168,7 +169,7 @@ AFrame.registerSystem('drone-flock', {
   _createFlapperDroneEntity() {
     const element = document.createElement('a-entity');
     element.setAttribute('obj-model', {
-      obj: '#flapper',
+      obj: '#flapper-drone',
     });
     element.setAttribute('material', {
       color: new THREE.Color('#0088ff'),
@@ -176,19 +177,20 @@ AFrame.registerSystem('drone-flock', {
       shader: 'flat',
     });
     element.setAttribute('position', '0 0 0');
+    return element;
+  },
 
-    /*
-    setTimeout(() => {
-      element.setAttribute('glow', {
-        c: 0.6,
-        p: 6,
-        color: '#0088ff',
-        scale: 1.5,
-        side: 'back',
-      });
-    }, 1000);
-    */
-
+  _createQuadcopterEntity() {
+    const element = document.createElement('a-entity');
+    element.setAttribute('obj-model', {
+      obj: '#quadcopter',
+    });
+    element.setAttribute('material', {
+      color: new THREE.Color('#0088ff'),
+      fog: false,
+      shader: 'flat',
+    });
+    element.setAttribute('position', '0 0 0');
     return element;
   },
 

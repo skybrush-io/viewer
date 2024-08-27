@@ -31,6 +31,7 @@ const DroneModelSelector = () => {
         }}
       >
         <MenuItem value='sphere'>Sphere</MenuItem>
+        <MenuItem value='quad'>Quadcopter</MenuItem>
         <MenuItem value='flapper'>Flapper</MenuItem>
       </Select>
     </FormControl>

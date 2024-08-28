@@ -22,4 +22,7 @@ export const getDroneRadius = (state: RootState, indoor = false) => {
   );
 };
 
+export const getLanguage = (state: RootState) =>
+  state.settings.general?.language ?? config.language.default;
+
 export const getScenery = (state: RootState) => state.settings.threeD.scenery;

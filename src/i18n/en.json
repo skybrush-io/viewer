@@ -1,1 +1,21 @@
-{}
+{
+  "bottomOverlay": {
+    "leftText": "Use arrow keys to move around (Shift to run) and E/C to change altitude. Drag the scenery to look around. Scroll wheel or +/- to zoom.",
+    "rightText": "Skybrush © 2020-{{ year }} CollMot Robotics Ltd."
+  },
+  "buttons": {
+    "openShowFile": "Open show file",
+    "resetZoom": "Reset zoom",
+    "settings": "Settings",
+    "trackDrones": "Rotate camera towards drones"
+  },
+  "chartGrid": {
+    "noChartsHint": {
+      "header": "No charts selected",
+      "text": "Select one of the chart types with the buttons in the header"
+    }
+  },
+  "settings": {
+    "language": "Language"
+  }
+}

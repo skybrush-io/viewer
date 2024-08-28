@@ -1,0 +1,6 @@
+{
+  "input": ["src/**/*.{ts,tsx}"],
+  "locales": ["en", "hu"],
+  "sort": true,
+  "output": "src/i18n/$LOCALE.json"
+}

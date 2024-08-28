@@ -15,6 +15,7 @@ import {
 } from '~/features/validation/panels';
 import { getVisiblePanels } from '~/features/validation/selectors';
 import type { RootState } from '~/store';
+import { useTranslation } from 'react-i18next';
 
 const style = {
   display: 'grid',
@@ -34,6 +35,7 @@ interface ChartGridProps extends BoxProps {
 
 const ChartGrid = ({ visiblePanels, ...rest }: ChartGridProps) => {
   const { ref, height = 0 } = useResizeObserver();
+  const { t } = useTranslation();
 
   const panels: PanelSpecification[] = visiblePanels
     .map((panelId) => findPanelById(panelId))
@@ -82,8 +84,8 @@ const ChartGrid = ({ visiblePanels, ...rest }: ChartGridProps) => {
         children
       ) : (
         <BackgroundHint
-          header='No charts selected'
-          text='Select one of the chart types with the buttons in the header'
+          header={t('chartGrid.noChartsHint.header')}
+          text={t('chartGrid.noChartsHint.text')}
           icon={<ChartIcon />}
         />
       )}

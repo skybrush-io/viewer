@@ -24,6 +24,7 @@ import '~/../assets/css/aframe.less';
 
 import 'react-cover-page/themes/dark.css';
 import 'typeface-fira-sans';
+import LanguageWatcher from './i18n/LanguageWatcher';
 
 interface AppProps {
   readonly initialShow?: ShowLoadingRequest;
@@ -57,6 +58,7 @@ const App = ({ initialShow }: AppProps) => {
                   <SplashScreen visible={!bootstrapped} />
                   <DragDropHandler />
                   <WindowTitleManager appName='Skybrush Viewer' />
+                  <LanguageWatcher />
                   <CssBaseline />
                   <AppHotkeys>
                     <MainTopLevelView />

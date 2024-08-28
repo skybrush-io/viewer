@@ -16,6 +16,7 @@ import ThreeDViewSettingToggles from '~/features/settings/ThreeDViewSettingToggl
 import { useAppDispatch, useAppSelector } from '~/hooks/store';
 
 import SkybrushLogo from './SkybrushLogo';
+import LanguageSelector from '~/features/settings/LanguageSelector';
 
 const styles = {
   contents: {
@@ -74,6 +75,10 @@ const SidebarDrawer = () => {
       <Box sx={styles.contents}>
         <List sx={styles.list}>
           <Box px={2}>
+            <LanguageSelector />
+          </Box>
+
+          <Box px={2} pt={2}>
             <ScenerySelector />
           </Box>
 

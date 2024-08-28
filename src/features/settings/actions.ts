@@ -12,6 +12,9 @@ export const setDroneRadius = (droneRadius: number) =>
 export const setDroneModel = (droneModel: DroneModelType) =>
   updateAppSettings('threeD', { droneModel });
 
+export const setLanguage = (language: string) =>
+  updateAppSettings('general', { language });
+
 export const setScenery = (scenery: SceneryType) =>
   updateAppSettings('threeD', { scenery });
 

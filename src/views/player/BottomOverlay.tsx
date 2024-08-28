@@ -1,5 +1,5 @@
 import config from 'config';
-
+import { t } from 'i18next';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -138,6 +138,8 @@ const BottomOverlay = React.forwardRef(
   )
 );
 
+const CURRENT_YEAR = new Date().getFullYear();
+
 export default connect(
   // mapStateToProps
   (state: RootState) => ({
@@ -147,11 +149,10 @@ export default connect(
     formatPlaybackTimestamp: getTimestampFormatter(state),
     hasAudio: hasAudio(state),
     hasShow: hasLoadedShowFile(state),
-    leftText:
-      'Use arrow keys to move around (Shift to run) and E/C to change altitude. Drag the scenery to look around. Scroll wheel or +/- to zoom.',
+    leftText: t('bottomOverlay.leftText'),
     muted: isAudioMuted(state),
     playing: isPlaying(state),
-    rightText: 'Skybrush \u00A9 2020-2024 CollMot Robotics Ltd.',
+    rightText: t('bottomOverlay.rightText', { year: CURRENT_YEAR }),
   }),
   // mapDispatchToProps
   {

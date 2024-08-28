@@ -2,7 +2,9 @@
  * @file Slice of the state object that stores the settings of the viewer.
  */
 
+import config from 'config';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+
 import {
   DEFAULT_DRONE_MODEL,
   DEFAULT_DRONE_RADIUS,
@@ -12,6 +14,9 @@ import {
 import type { DroneModelType } from './types';
 
 interface SettingsSliceState {
+  general: {
+    language: string;
+  };
   threeD: {
     scenery: 'disabled' | 'auto' | 'day' | 'night' | 'indoor';
     axes: boolean;
@@ -28,6 +33,11 @@ interface SettingsSliceState {
 }
 
 const initialState: SettingsSliceState = {
+  general: {
+    // The current language of the app
+    language: config.language.default,
+  },
+
   threeD: {
     // Scenery to use in the 3D view
     scenery: 'auto',

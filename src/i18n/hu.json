@@ -1,1 +1,21 @@
-{}
+{
+  "bottomOverlay": {
+    "leftText": "Nyílbillentyűk: vízszintes mozgás (Shift = futás), E/C: függőleges mozgás. Húzza a nézetet az egérrel a körbenézéshez. Egér görgő vagy +/-: közelítés és távolítás.",
+    "rightText": "Skybrush © 2020-{{ year }} CollMot Kft."
+  },
+  "buttons": {
+    "openShowFile": "Show megnyitása",
+    "resetZoom": "Nagyítás alaphelyzetbe",
+    "settings": "Beállítások",
+    "trackDrones": "Kamera forgatása a drónok felé"
+  },
+  "chartGrid": {
+    "noChartsHint": {
+      "header": "Nincs kiválasztott grafikon",
+      "text": "Válasszon ki egy grafikont a fejlécben található gombokkal"
+    }
+  },
+  "settings": {
+    "language": "Nyelv"
+  }
+}

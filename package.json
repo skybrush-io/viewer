@@ -5,6 +5,7 @@
   "main": "launcher.bundle.js",
   "scripts": {
     "bundle": "rimraf build && cross-env NODE_ENV=production webpack --mode=production --progress --config webpack/dist.config.js",
+    "i18n": "i18next",
     "lint": "xo",
     "postinstall": "patch-package",
     "analyze": "webpack --config webpack/browser.config.js --progress --json >stats.json",
@@ -114,6 +115,7 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "git-revision-webpack-plugin": "^5.0.0",
     "html-webpack-plugin": "^5.6.0",
+    "i18next-parser": "^9.0.2",
     "less": "^4.2.0",
     "less-loader": "^12.2.0",
     "patch-package": "^8.0.0",

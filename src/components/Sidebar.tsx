@@ -10,13 +10,13 @@ import { isThemeDark } from '@skybrush/app-theme-mui';
 import { closeSidebar } from '~/features/sidebar/slice';
 import DroneModelSelector from '~/features/settings/DroneModelSelector';
 import DroneSizeSlider from '~/features/settings/DroneSizeSlider';
+import LanguageSelector from '~/features/settings/LanguageSelector';
 import PlaybackSpeedSelector from '~/features/settings/PlaybackSpeedSelector';
 import ScenerySelector from '~/features/settings/ScenerySelector';
 import ThreeDViewSettingToggles from '~/features/settings/ThreeDViewSettingToggles';
 import { useAppDispatch, useAppSelector } from '~/hooks/store';
 
 import SkybrushLogo from './SkybrushLogo';
-import LanguageSelector from '~/features/settings/LanguageSelector';
 
 const styles = {
   contents: {

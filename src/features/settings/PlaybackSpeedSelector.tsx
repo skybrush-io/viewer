@@ -8,6 +8,7 @@ import Select from '@mui/material/Select';
 import { setPlaybackSpeed } from '~/features/playback/actions';
 import { getPlaybackSpeed } from '~/features/playback/selectors';
 import { useAppDispatch, useAppSelector } from '~/hooks/store';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Component for selecting the playback speed.
@@ -15,9 +16,12 @@ import { useAppDispatch, useAppSelector } from '~/hooks/store';
 const PlaybackSpeedSelector = () => {
   const dispatch = useAppDispatch();
   const speed = useAppSelector(getPlaybackSpeed);
+  const { t } = useTranslation();
   return (
     <FormControl fullWidth variant='filled'>
-      <InputLabel id='sidebar-playback-speed-label'>Playback speed</InputLabel>
+      <InputLabel id='sidebar-playback-speed-label'>
+        {t('settings.playbackSpeed')}
+      </InputLabel>
       <Select
         labelId='sidebar-playback-speed-label'
         id='sidebar-playback-speed'

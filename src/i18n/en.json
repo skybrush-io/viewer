@@ -16,6 +16,27 @@
     }
   },
   "settings": {
-    "language": "Language"
+    "droneModel": {
+      "flapper": "Flapper",
+      "label": "UAV model",
+      "quad": "Quadcopter",
+      "sphere": "Sphere"
+    },
+    "droneRadius": "UAV size",
+    "language": "Language",
+    "playbackSpeed": "Playback speed",
+    "scaleLabels": "Equalize label sizes",
+    "scenery": {
+      "auto": "Automatic",
+      "day": "Day",
+      "disabled": "Disabled",
+      "indoor": "Indoor",
+      "label": "Scenery",
+      "night": "Night"
+    },
+    "showAxes": "Show axes",
+    "showGrid": "Show grid",
+    "showLabels": "Show labels",
+    "showYaw": "Show yaw indicators"
   }
 }

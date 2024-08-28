@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Slider, { type SliderProps } from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
@@ -15,10 +16,11 @@ type DroneSizeSliderProps = SliderProps;
 const DroneSizeSlider = (props: DroneSizeSliderProps) => {
   const droneRadius = useAppSelector(getDroneRadius);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   return (
     <>
-      <Typography gutterBottom>UAV size</Typography>
+      <Typography gutterBottom>{t('settings.droneRadius')}</Typography>
       <Slider
         id='sidebar-drone-radius'
         value={droneRadius}

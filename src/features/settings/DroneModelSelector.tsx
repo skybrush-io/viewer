@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -16,9 +17,12 @@ import { isValidDroneModelType } from './types';
 const DroneModelSelector = () => {
   const dispatch = useAppDispatch();
   const scenery = useAppSelector(getDroneModel);
+  const { t } = useTranslation();
   return (
     <FormControl fullWidth variant='filled'>
-      <InputLabel id='sidebar-drone-model-label'>UAV model</InputLabel>
+      <InputLabel id='sidebar-drone-model-label'>
+        {t('settings.droneModel.label')}
+      </InputLabel>
       <Select
         labelId='sidebar-drone-model-label'
         id='sidebar-drone-model'
@@ -30,9 +34,9 @@ const DroneModelSelector = () => {
           }
         }}
       >
-        <MenuItem value='sphere'>Sphere</MenuItem>
-        <MenuItem value='quad'>Quadcopter</MenuItem>
-        <MenuItem value='flapper'>Flapper</MenuItem>
+        <MenuItem value='sphere'>{t('settings.droneModel.sphere')}</MenuItem>
+        <MenuItem value='quad'>{t('settings.droneModel.quad')}</MenuItem>
+        <MenuItem value='flapper'>{t('settings.droneModel.flapper')}</MenuItem>
       </Select>
     </FormControl>
   );

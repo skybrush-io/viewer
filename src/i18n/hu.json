@@ -16,6 +16,27 @@
     }
   },
   "settings": {
-    "language": "Nyelv"
+    "droneModel": {
+      "flapper": "Flapper",
+      "label": "Drón modell",
+      "quad": "Kvadkopter",
+      "sphere": "Gömb"
+    },
+    "droneRadius": "Drón mérete",
+    "language": "Nyelv",
+    "playbackSpeed": "Lejátszás sebessége",
+    "scaleLabels": "Távolságfüggetlen címke méretek",
+    "scenery": {
+      "auto": "Automatikus",
+      "day": "Nappali",
+      "disabled": "Kikapcsolva",
+      "indoor": "Beltéri",
+      "label": "Környezet",
+      "night": "Éjszakai"
+    },
+    "showAxes": "Tengelyek mutatása",
+    "showGrid": "Rács mutatása",
+    "showLabels": "Címkék mutatása",
+    "showYaw": "Irányjelző mutatása"
   }
 }

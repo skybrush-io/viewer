@@ -13,6 +13,7 @@ import {
   toggleYaw,
 } from '~/features/settings/actions';
 import type { RootState } from '~/store';
+import { useTranslation } from 'react-i18next';
 
 interface ThreeDViewSettingTogglesProps {
   readonly onToggleAxes: () => void;
@@ -41,61 +42,64 @@ const ThreeDViewSettingToggles = ({
   showGrid,
   showLabels,
   showYaw,
-}: ThreeDViewSettingTogglesProps) => (
-  <>
-    <ListItem>
-      <Switch
-        color='primary'
-        edge='start'
-        checked={showAxes}
-        onChange={onToggleAxes}
-      />
-      <ListItemText primary='Show axes' />
-    </ListItem>
-
-    <ListItem>
-      <Switch
-        color='primary'
-        edge='start'
-        checked={showGrid}
-        onChange={onToggleGrid}
-      />
-      <ListItemText primary='Show grid' />
-    </ListItem>
-
-    <ListItem>
-      <Switch
-        color='primary'
-        edge='start'
-        checked={showLabels}
-        onChange={onToggleLabels}
-      />
-      <ListItemText primary='Show labels' />
-    </ListItem>
-
-    {showLabels && (
+}: ThreeDViewSettingTogglesProps) => {
+  const { t } = useTranslation();
+  return (
+    <>
       <ListItem>
         <Switch
           color='primary'
           edge='start'
-          checked={scaleLabels}
-          onChange={onToggleScaleLabels}
+          checked={showAxes}
+          onChange={onToggleAxes}
         />
-        <ListItemText primary='Equalize label sizes' />
+        <ListItemText primary={t('settings.showAxes')} />
       </ListItem>
-    )}
 
-    <ListItem>
-      <Switch
-        color='primary'
-        edge='start'
-        checked={showYaw}
-        onChange={onToggleYaw}
-      />
-      <ListItemText primary='Show yaw indicators' />
-    </ListItem>
-  </>
-);
+      <ListItem>
+        <Switch
+          color='primary'
+          edge='start'
+          checked={showGrid}
+          onChange={onToggleGrid}
+        />
+        <ListItemText primary={t('settings.showGrid')} />
+      </ListItem>
+
+      <ListItem>
+        <Switch
+          color='primary'
+          edge='start'
+          checked={showLabels}
+          onChange={onToggleLabels}
+        />
+        <ListItemText primary={t('settings.showLabels')} />
+      </ListItem>
+
+      {showLabels && (
+        <ListItem>
+          <Switch
+            color='primary'
+            edge='start'
+            checked={scaleLabels}
+            onChange={onToggleScaleLabels}
+          />
+          <ListItemText primary={t('settings.scaleLabels')} />
+        </ListItem>
+      )}
+
+      <ListItem>
+        <Switch
+          color='primary'
+          edge='start'
+          checked={showYaw}
+          onChange={onToggleYaw}
+        />
+        <ListItemText primary={t('settings.showYaw')} />
+      </ListItem>
+    </>
+  );
+};
 
 export default connect(
   // mapStateToProps

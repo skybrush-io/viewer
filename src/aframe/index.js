@@ -13,6 +13,8 @@ import './components/drone-flock';
 
 import './primitives/drone-flock';
 
+import './shaders/glow';
+
 AFrame.registerComponent(
   'sync-pose-with-store',
   createSyncPoseWithStoreComponent({

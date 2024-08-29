@@ -41,6 +41,23 @@ function createFlatShadedMaterialProps() {
 }
 
 /**
+ * Convenience function to create the props of a glowing material to use
+ * with drones.
+ *
+ * Does not work yet; need to investigate why.
+ */
+function createGlowingMaterialProps() {
+  return {
+    blending: 'additive',
+    color: new THREE.Color('#0088ff'),
+    depthTest: false,
+    side: 'double',
+    shader: 'glow',
+    transparent: true,
+  };
+}
+
+/**
  * Convenience function to create an AFrame entity with attributes.
  */
 function createEntity(props = {}, children = []) {
@@ -371,7 +388,6 @@ AFrame.registerComponent('drone-flock', {
     const colorArray = this._colorArray;
     const camera = this.el.sceneEl.camera;
     const showLabels = this.data.showLabels;
-    const showYaw = this.data.showYaw;
 
     this._cameraPosition.setFromMatrixPosition(camera.matrixWorld);
 

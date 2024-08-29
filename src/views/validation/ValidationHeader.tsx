@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import Box, { type BoxProps } from '@mui/material/Box';
@@ -50,40 +51,44 @@ const ValidationHeader = ({
   onTogglePanel,
   visiblePanels,
   ...rest
-}: ValidationHeaderProps) => (
-  <Box sx={styles.root} {...rest}>
-    {PANELS.map(({ component, id, ...rest }) => {
-      return (
-        <PanelToggleChip
-          key={id}
-          selected={visiblePanels.includes(id)}
-          onClick={() => {
-            onTogglePanel(id);
-          }}
-          {...rest}
-        />
-      );
-    })}
-    <Box flex='1' />
-    {canLoadShowFromLocalFile && (
+}: ValidationHeaderProps) => {
+  const { t } = useTranslation();
+  return (
+    <Box sx={styles.root} {...rest}>
+      {PANELS.map(({ component, id, ...rest }) => {
+        return (
+          <PanelToggleChip
+            key={id}
+            label={t(`validation.${id}`)}
+            selected={visiblePanels.includes(id)}
+            onClick={() => {
+              onTogglePanel(id);
+            }}
+            {...rest}
+          />
+        );
+      })}
+      <Box flex='1' />
+      {canLoadShowFromLocalFile && (
+        <Button
+          color='inherit'
+          startIcon={<Close />}
+          disabled={!hasLoadedShowFile}
+          onClick={onClearLoadedShow}
+        >
+          {t('buttons.closeShow')}
+        </Button>
+      )}
       <Button
         color='inherit'
-        startIcon={<Close />}
-        disabled={!hasLoadedShowFile}
-        onClick={onClearLoadedShow}
+        endIcon={<ChevronRight />}
+        onClick={onReturnToViewer}
       >
-        Close show
+        {t('buttons.returnToViewer')}
       </Button>
-    )}
-    <Button
-      color='inherit'
-      endIcon={<ChevronRight />}
-      onClick={onReturnToViewer}
-    >
-      Return to viewer
-    </Button>
-  </Box>
-);
+    </Box>
+  );
+};
 
 export default connect(
   // mapStateToProps

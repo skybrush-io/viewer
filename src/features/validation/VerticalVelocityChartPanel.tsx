@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { connect } from 'react-redux';
 
 import { getTimestampFormatter } from '~/features/show/selectors';
@@ -30,8 +31,8 @@ export default connect(
       getVerticalVelocityThresholdUp(state),
       -getVerticalVelocityThresholdDown(state),
     ],
-    thresholdLabel: 'Z velocity threshold',
-    title: 'Vertical velocities',
+    thresholdLabel: t('validation.verticalVelocityThreshold'),
+    title: t('validation.verticalVelocity'),
     verticalUnit: ' m/s',
   }),
   // mapDispatchToProps

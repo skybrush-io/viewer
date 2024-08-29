@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
@@ -24,24 +25,27 @@ const ToggleValidationModeButton = ({
   trajectoriesValid,
   validationInProgress,
   ...rest
-}: ToggleValidationModeButtonProps) => (
-  <Tooltip content='Validate trajectories'>
-    <IconButton
-      disableRipple
-      onClick={onToggleValidationMode}
-      {...rest}
-      size='large'
-    >
-      {validationInProgress ? (
-        <Assignment />
-      ) : trajectoriesValid ? (
-        <AssignmentTurnedIn />
-      ) : (
-        <AssignmentLate />
-      )}
-    </IconButton>
-  </Tooltip>
-);
+}: ToggleValidationModeButtonProps) => {
+  const { t } = useTranslation();
+  return (
+    <Tooltip content={t('buttons.validateTrajectories')}>
+      <IconButton
+        disableRipple
+        onClick={onToggleValidationMode}
+        {...rest}
+        size='large'
+      >
+        {validationInProgress ? (
+          <Assignment />
+        ) : trajectoriesValid ? (
+          <AssignmentTurnedIn />
+        ) : (
+          <AssignmentLate />
+        )}
+      </IconButton>
+    </Tooltip>
+  );
+};
 
 export default connect(
   // mapStateToProps

@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { connect } from 'react-redux';
 
 import { getTimestampFormatter } from '~/features/show/selectors';
@@ -26,8 +27,8 @@ export default connect(
     formatPlaybackTimestamp: getTimestampFormatter(state),
     range: Y_RANGE,
     threshold: getHorizontalVelocityThreshold(state),
-    thresholdLabel: 'XY velocity threshold',
-    title: 'Horizontal velocities',
+    thresholdLabel: t('validation.horizontalVelocityThreshold'),
+    title: t('validation.horizontalVelocity'),
     verticalUnit: ' m/s',
   }),
   // mapDispatchToProps

@@ -4,10 +4,18 @@
     "rightText": "Skybrush © 2020-{{ year }} CollMot Kft."
   },
   "buttons": {
+    "closeShow": "Show bezárása",
     "openShowFile": "Show megnyitása",
     "resetZoom": "Nagyítás alaphelyzetbe",
+    "returnToViewer": "Vissza a megjelenítőbe",
     "settings": "Beállítások",
-    "trackDrones": "Kamera forgatása a drónok felé"
+    "trackDrones": "Kamera forgatása a drónok felé",
+    "validateTrajectories": "Útvonalak ellenőrzése"
+  },
+  "cameras": {
+    "default": "Alapértelmezett nézet",
+    "indexedLabel": "{{ index }}. kamera",
+    "noCamera": "Nincs kamera"
   },
   "chartGrid": {
     "noChartsHint": {
@@ -38,5 +46,17 @@
     "showGrid": "Rács mutatása",
     "showLabels": "Címkék mutatása",
     "showYaw": "Irányjelző mutatása"
+  },
+  "validation": {
+    "allDrones": "Minden drón",
+    "altitude": "Magasság",
+    "altitudeThreshold": "Magassági küszöb",
+    "distanceOfClosestDronePair": "Legközelebbi drónpár távolsága",
+    "distanceThreshold": "Távolsági küszöb",
+    "horizontalVelocity": "Vízszintes sebesség",
+    "horizontalVelocityThreshold": "XY sebességküszöb",
+    "proximity": "Távolság",
+    "verticalVelocity": "Függőleges sebesség",
+    "verticalVelocityThreshold": "Z sebességküszöb"
   }
 }

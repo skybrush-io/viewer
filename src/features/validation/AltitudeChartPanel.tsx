@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { connect } from 'react-redux';
 
 import { getTimestampFormatter, isShowIndoor } from '~/features/show/selectors';
@@ -27,8 +28,8 @@ export default connect(
     formatPlaybackTimestamp: getTimestampFormatter(state),
     range: isShowIndoor(state) ? Y_RANGE_INDOOR : Y_RANGE_OUTDOOR,
     threshold: getAltitudeWarningThreshold(state),
-    thresholdLabel: 'Altitude threshold',
-    title: 'Altitudes',
+    thresholdLabel: t('validation.altitudeThreshold'),
+    title: t('validation.altitude'),
     verticalUnit: ' m',
   }),
   // mapDispatchToProps

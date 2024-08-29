@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
 import Chip, { type ChipProps } from '@mui/material/Chip';
@@ -8,9 +9,16 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { type Camera } from '@skybrush/show-format';
 import type { KeySequence } from 'react-hotkeys';
+import { DEFAULT_CAMERA_NAME_PLACEHOLDER } from '~/constants';
 
-function getLabelForCamera(camera: Camera, index: number): string {
-  return camera.name ?? `Camera ${index}`;
+function getLabelForCamera(
+  camera: Camera,
+  index: number,
+  t: (code: string, args?: Record<string, any>) => string
+): string {
+  return camera.name === DEFAULT_CAMERA_NAME_PLACEHOLDER
+    ? t('cameras.default')
+    : (camera.name ?? t('cameras.indexedLabel', { index }));
 }
 
 interface CameraSelectorChipProps extends ChipProps {
@@ -31,6 +39,7 @@ const CameraSelectorChip = ({
   selectedCameraIndex,
   ...rest
 }: CameraSelectorChipProps) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const anchorRef = React.useRef<any>();
 
@@ -66,8 +75,8 @@ const CameraSelectorChip = ({
         variant='outlined'
         label={
           selectedCamera
-            ? getLabelForCamera(selectedCamera, selectedCameraIndex)
-            : 'No camera'
+            ? getLabelForCamera(selectedCamera, selectedCameraIndex, t)
+            : t('cameras.noCamera')
         }
         deleteIcon={needsMenu ? <ArrowDropDown /> : undefined}
         onClick={
@@ -93,7 +102,7 @@ const CameraSelectorChip = ({
               handleClose(index);
             }}
           >
-            <ListItemText>{getLabelForCamera(camera, index)}</ListItemText>
+            <ListItemText>{getLabelForCamera(camera, index, t)}</ListItemText>
             {hotkeys[index] && (
               <Typography variant='body1' color='text.secondary' ml={2}>
                 {String(hotkeys[index])}

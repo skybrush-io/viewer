@@ -12,7 +12,6 @@ export enum ValidationPanel {
 
 export interface PanelSpecification {
   id: ValidationPanel;
-  label: string;
   component: any;
   priority: number;
   height?: number;
@@ -21,25 +20,21 @@ export interface PanelSpecification {
 export const PANELS: PanelSpecification[] = [
   {
     id: ValidationPanel.ALTITUDE,
-    label: 'Altitudes',
     component: AltitudeChartPanel,
     priority: 0,
   },
   {
     id: ValidationPanel.HORIZONTAL_VELOCITY,
-    label: 'Horizontal velocities',
     component: HorizontalVelocityChartPanel,
     priority: 10,
   },
   {
     id: ValidationPanel.VERTICAL_VELOCITY,
-    label: 'Vertical velocities',
     component: VerticalVelocityChartPanel,
     priority: 20,
   },
   {
     id: ValidationPanel.PROXIMITY,
-    label: 'Proximity',
     component: ProximityChartPanel,
     priority: 30,
   },

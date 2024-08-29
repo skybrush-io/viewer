@@ -29,9 +29,10 @@ import {
   type YawControl,
   CameraType,
 } from '@skybrush/show-format';
-import { formatPlaybackTimestamp } from '~/utils/formatters';
 
+import { DEFAULT_CAMERA_NAME_PLACEHOLDER } from '~/constants';
 import type { RootState } from '~/store';
+import { formatPlaybackTimestamp } from '~/utils/formatters';
 
 export const canLoadShowFromLocalFile = (): boolean => config.io.localFiles;
 
@@ -47,7 +48,7 @@ const DEFAULT_CAMERAS: Record<string, Camera[]> = {
   // degrees.
   indoor: [
     {
-      name: 'Default view',
+      name: DEFAULT_CAMERA_NAME_PLACEHOLDER,
       position: [-10, 0, 2], // [0, 2, 10]
       orientation: DEFAULT_ORIENTATION,
       // don't set default: true here because then it would override the
@@ -57,7 +58,7 @@ const DEFAULT_CAMERAS: Record<string, Camera[]> = {
   ],
   outdoor: [
     {
-      name: 'Default view',
+      name: DEFAULT_CAMERA_NAME_PLACEHOLDER,
       position: [-50, 0, 20], // [0, 20, 50]
       orientation: DEFAULT_ORIENTATION,
     },

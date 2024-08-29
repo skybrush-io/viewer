@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import isNil from 'lodash-es/isNil';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -61,7 +62,7 @@ const ShowAllDronesListItem = connect(
   // mapStateToProps
   (state: RootState) => ({
     chartIndex: isSelectionEmpty(state) ? 0 : undefined,
-    label: 'All drones',
+    label: t('validation.allDrones'),
   }),
   {
     onToggleSelection: clearSelection,

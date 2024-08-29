@@ -1,6 +1,8 @@
+import { t } from 'i18next';
 import { connect } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 
+import { getLanguage } from '~/features/settings/selectors';
 import {
   getNamesOfDronesInShow,
   getTimestampFormatter,
@@ -17,15 +19,16 @@ import {
 import { createChartPointsWithTips } from './utils';
 
 const getDataForProximityChart = createSelector(
+  getLanguage,
   getSampledTimeInstants,
   getNearestNeighborsAndDistancesForFrames,
   getNamesOfDronesInShow,
-  (times, distancesAndIndices, names) => {
+  (_language, times, distancesAndIndices, names) => {
     const distances = distancesAndIndices[0];
     const indices = distancesAndIndices[1];
     return [
       {
-        label: 'Distance of closest drone pair',
+        label: t('validation.distanceOfClosestDronePair'),
         values: createChartPointsWithTips(
           times,
           distances,
@@ -46,8 +49,8 @@ export default connect(
     data: getDataForProximityChart(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
     threshold: getProximityWarningThreshold(state),
-    thresholdLabel: 'Distance threshold',
-    title: 'Proximity',
+    thresholdLabel: t('validation.distanceThreshold'),
+    title: t('validation.proximity'),
     verticalUnit: ' m',
   }),
   // mapDispatchToProps

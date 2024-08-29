@@ -4,10 +4,18 @@
     "rightText": "Skybrush © 2020-{{ year }} CollMot Robotics Ltd."
   },
   "buttons": {
+    "closeShow": "Close show",
     "openShowFile": "Open show file",
     "resetZoom": "Reset zoom",
+    "returnToViewer": "Return to viewer",
     "settings": "Settings",
-    "trackDrones": "Rotate camera towards drones"
+    "trackDrones": "Rotate camera towards drones",
+    "validateTrajectories": "Validate trajectories"
+  },
+  "cameras": {
+    "default": "Default view",
+    "indexedLabel": "Camera {{ index }}",
+    "noCamera": "No camera"
   },
   "chartGrid": {
     "noChartsHint": {
@@ -38,5 +46,17 @@
     "showGrid": "Show grid",
     "showLabels": "Show labels",
     "showYaw": "Show yaw indicators"
+  },
+  "validation": {
+    "allDrones": "All drones",
+    "altitude": "Altitudes",
+    "altitudeThreshold": "Altitude threshold",
+    "distanceOfClosestDronePair": "Distance of closest drone pair",
+    "distanceThreshold": "Distance threshold",
+    "horizontalVelocity": "Horizontal velocities",
+    "horizontalVelocityThreshold": "XY velocity threshold",
+    "proximity": "Proximity",
+    "verticalVelocity": "Vertical velocities",
+    "verticalVelocityThreshold": "Z velocity threshold"
   }
 }

@@ -28,20 +28,57 @@ const defaultGeometry = Object.freeze({
   segmentsWidth: 18,
 });
 
-function getGlowMeshFromEntity(entity) {
-  // We assume that the glow is the second child
-  const glowEntity = entity.childNodes[1];
-  return glowEntity ? glowEntity.getObject3D('mesh') : undefined;
+/**
+ * Convenience function to create the props of a flat-shaded material to use
+ * with drones.
+ */
+function createFlatShadedMaterialProps() {
+  return {
+    color: new THREE.Color('#0088ff'),
+    fog: false,
+    shader: 'flat',
+  };
 }
 
-function getLabelFromEntity(entity) {
-  // We assume that the label is the first child
+/**
+ * Convenience function to create an AFrame entity with attributes.
+ */
+function createEntity(props = {}, children = []) {
+  const element = document.createElement('a-entity');
+
+  for (const [name, value] of Object.entries(props)) {
+    element.setAttribute(name, value);
+  }
+
+  for (const child of children) {
+    element.append(child);
+  }
+
+  return element;
+}
+
+function getDroneFromEntity(entity) {
+  // We assume that the drone is the first child
   return entity.childNodes[0];
 }
 
+function getDroneMeshFromEntity(entity) {
+  return getDroneFromEntity(entity)?.getObject3D('mesh');
+}
+
+function getGlowMeshFromEntity(entity) {
+  // We assume that the glow is the third child
+  return entity.childNodes[2]?.getObject3D('mesh');
+}
+
+function getLabelFromEntity(entity) {
+  // We assume that the label is the second child
+  return entity.childNodes[1];
+}
+
 function getYawIndicatorFromEntity(entity) {
-  // We assume that the yaw marker is the third child
-  return entity.childNodes[2];
+  // We assume that the yaw marker is the first child of the drone
+  return getDroneFromEntity(entity)?.childNodes[0];
 }
 
 const DEFAULT_LABEL_SCALE = 3;
@@ -80,26 +117,30 @@ AFrame.registerSystem('drone-flock', {
   }) {
     const factory =
       this._entityFactories[droneModel] ?? this._entityFactories.default;
-    const element = factory();
+    const droneEntity = factory();
+    droneEntity.setAttribute('material', createFlatShadedMaterialProps());
+    droneEntity.append(this._createYawIndicatorEntity(showYaw));
 
-    element.append(this._createLabelEntity(label, showLabel, labelColor));
-    element.append(this._createGlowEntity(showGlow));
-    element.append(this._createYawIndicatorEntity(showYaw));
+    const labelEntity = this._createLabelEntity(label, showLabel, labelColor);
+    const children = [droneEntity, labelEntity];
 
-    return element;
+    if (showGlow && droneModel === 'sphere') {
+      children.push(this._createGlowEntity());
+    }
+
+    return createEntity({ position: '0 0 0' }, children);
   },
 
-  _createGlowEntity(showGlow = true) {
-    const glowElement = document.createElement('a-entity');
-    glowElement.setAttribute('sprite', {
-      blending: 'additive',
-      color: new THREE.Color('#ff8800'),
-      scale: '4 4 1',
-      src: '#glow-texture',
-      transparent: true,
-      visible: showGlow,
+  _createGlowEntity() {
+    return createEntity({
+      sprite: {
+        blending: 'additive',
+        color: new THREE.Color('#ff8800'),
+        scale: '4 4 1',
+        src: '#glow-texture',
+        transparent: true,
+      },
     });
-    return glowElement;
   },
 
   _createLabelEntity(label, visible, color = 'white') {
@@ -132,66 +173,48 @@ AFrame.registerSystem('drone-flock', {
   },
 
   _createYawIndicatorEntity(showYaw = false) {
-    const yawElement = document.createElement('a-entity');
-
-    const cylinder = document.createElement('a-entity');
-    cylinder.setAttribute('geometry', {
-      primitive: 'cylinder',
-      radius: 1 / 10,
-      height: 1,
+    const cylinder = createEntity({
+      geometry: {
+        primitive: 'cylinder',
+        radius: 1 / 10,
+        height: 1,
+      },
+      material: {
+        color: new THREE.Color('#ff0000'),
+        shader: 'flat',
+      },
+      rotation: '0 0 90',
+      position: '1.2 0 0',
     });
-    cylinder.setAttribute('material', {
-      color: new THREE.Color('#ff0000'),
-      shader: 'flat',
-    });
-    cylinder.setAttribute('rotation', '0 0 90');
-    cylinder.setAttribute('position', '1.2 0 0');
 
-    yawElement.append(cylinder);
-    yawElement.setAttribute('visible', showYaw ? 'true' : 'false');
-
-    return yawElement;
+    return createEntity(
+      {
+        visible: showYaw ? 'true' : false,
+      },
+      [cylinder]
+    );
   },
 
   _createDefaultUAVEntity() {
-    const element = document.createElement('a-entity');
-    element.setAttribute('geometry', defaultGeometry);
-    element.setAttribute('material', {
-      color: new THREE.Color('#0088ff'),
-      fog: false,
-      shader: 'flat',
+    return createEntity({
+      geometry: defaultGeometry,
     });
-    element.setAttribute('position', '0 0 0');
-
-    return element;
   },
 
   _createFlapperDroneEntity() {
-    const element = document.createElement('a-entity');
-    element.setAttribute('obj-model', {
-      obj: '#flapper-drone',
+    return createEntity({
+      'obj-model': {
+        obj: '#flapper-drone',
+      },
     });
-    element.setAttribute('material', {
-      color: new THREE.Color('#0088ff'),
-      fog: false,
-      shader: 'flat',
-    });
-    element.setAttribute('position', '0 0 0');
-    return element;
   },
 
   _createQuadcopterEntity() {
-    const element = document.createElement('a-entity');
-    element.setAttribute('obj-model', {
-      obj: '#quadcopter',
+    return createEntity({
+      'obj-model': {
+        obj: '#quadcopter',
+      },
     });
-    element.setAttribute('material', {
-      color: new THREE.Color('#0088ff'),
-      fog: false,
-      shader: 'flat',
-    });
-    element.setAttribute('position', '0 0 0');
-    return element;
   },
 
   createTrajectoryPlayerForIndex(index) {
@@ -231,25 +254,23 @@ AFrame.registerSystem('drone-flock', {
     }
   },
 
+  updateEntityPose(entity, rotation) {
+    const drone = getDroneFromEntity(entity);
+    if (drone) {
+      /* Angle has to be inverted because Skybrush yaw angles increase in
+       * clockwise order */
+      drone.object3D.rotation.z = -rotation.z;
+    }
+  },
+
   updateEntityPositionAndColor(entity, position, color) {
     entity.object3D.position.copy(position);
 
-    const mesh = entity.getObject3D('mesh');
-    if (mesh && mesh.material) {
-      mesh.material.color.copy(color);
-    } else {
-      // TODO(ntamas): sometimes it happens that we get here earlier than the
-      // mesh is ready (it's an async process). In this case we should store
-      // the color somewhere and attempt setting it again in case there will be
-      // no further updates from the UAV for a while
-    }
+    const droneMesh = getDroneMeshFromEntity(entity);
+    droneMesh?.material?.color.copy(color);
 
     const glowMesh = getGlowMeshFromEntity(entity);
-    if (glowMesh && glowMesh.material) {
-      glowMesh.material.color.copy(color);
-    }
-
-    // TODO: Change the color of the yaw marker when the base color is red?
+    glowMesh?.material?.color.copy(color);
   },
 
   updateEntitySize(entity, size) {
@@ -274,15 +295,6 @@ AFrame.registerSystem('drone-flock', {
     const label = getLabelFromEntity(entity);
     if (label) {
       label.object3D.visible = visible;
-    }
-  },
-
-  updateYawIndicatorRotation(entity, rotation) {
-    const yaw = getYawIndicatorFromEntity(entity);
-    if (yaw) {
-      /* Angle has to be inverted because Skybrush yaw angles increase in
-       * clockwise order */
-      yaw.object3D.rotation.z = -rotation.z;
     }
   },
 
@@ -351,7 +363,7 @@ AFrame.registerComponent('drone-flock', {
       currentTime,
       rotateEntityLabelTowards,
       updateEntityPositionAndColor,
-      updateYawIndicatorRotation,
+      updateEntityPose,
     } = this.system;
     const vec = this._vec;
     const rot = this._rot;
@@ -390,13 +402,10 @@ AFrame.registerComponent('drone-flock', {
       }
 
       updateEntityPositionAndColor(entity, vec, color);
+      updateEntityPose(entity, rot);
 
       if (showLabels) {
         rotateEntityLabelTowards(entity, this._cameraPosition, this.data);
-      }
-
-      if (showYaw) {
-        updateYawIndicatorRotation(entity, rot);
       }
     }
   },

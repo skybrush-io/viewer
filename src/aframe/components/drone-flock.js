@@ -48,12 +48,10 @@ function createFlatShadedMaterialProps() {
  */
 function createGlowingMaterialProps() {
   return {
-    blending: 'additive',
     color: new THREE.Color('#0088ff'),
-    depthTest: false,
-    side: 'double',
-    shader: 'glow',
-    transparent: true,
+    falloff: 1.5,
+    internalRadius: 5,
+    sharpness: 0,
   };
 }
 
@@ -136,12 +134,13 @@ AFrame.registerSystem('drone-flock', {
       this._entityFactories[droneModel] ?? this._entityFactories.default;
     const droneEntity = factory();
     droneEntity.setAttribute('material', createFlatShadedMaterialProps());
+
     droneEntity.append(this._createYawIndicatorEntity(showYaw));
 
     const labelEntity = this._createLabelEntity(label, showLabel, labelColor);
     const children = [droneEntity, labelEntity];
 
-    if (showGlow && droneModel === 'sphere') {
+    if (showGlow) {
       children.push(this._createGlowEntity());
     }
 
@@ -150,13 +149,9 @@ AFrame.registerSystem('drone-flock', {
 
   _createGlowEntity() {
     return createEntity({
-      sprite: {
-        blending: 'additive',
-        color: new THREE.Color('#ff8800'),
-        scale: '4 4 1',
-        src: '#glow-texture',
-        transparent: true,
-      },
+      geometry: defaultGeometry,
+      'glow-material': createGlowingMaterialProps(),
+      scale: '3 3 3',
     });
   },
 
@@ -174,11 +169,9 @@ AFrame.registerSystem('drone-flock', {
       width: 1,
     });
 
-    /* Y coordinate is slightly offset from zero to prevent Z-fighting with the
-     * glow sprite */
     const labelScale = DEFAULT_LABEL_SCALE;
     const labelOffset = DEFAULT_LABEL_OFFSET;
-    labelElement.setAttribute('position', `0 -0.05 ${labelOffset}`);
+    labelElement.setAttribute('position', `0 0 ${labelOffset}`);
     labelElement.setAttribute('rotation', '0 -90 -90');
     labelElement.setAttribute(
       'scale',

@@ -5,15 +5,13 @@ import 'aframe-look-at-component';
 
 import '@skybrush/aframe-components/advanced-camera-controls';
 import '@skybrush/aframe-components/meshline';
-import '@skybrush/aframe-components/sprite';
 import { createSyncPoseWithStoreComponent } from '@skybrush/aframe-components/factories';
 
 import './components/deallocate';
 import './components/drone-flock';
+import './components/glow-material';
 
 import './primitives/drone-flock';
-
-import './shaders/glow';
 
 AFrame.registerComponent(
   'sync-pose-with-store',

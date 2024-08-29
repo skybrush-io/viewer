@@ -25,6 +25,7 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@fontsource/fira-sans": "^5.0.21",
     "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.16.7",
     "@reduxjs/toolkit": "^2.2.7",
@@ -87,7 +88,6 @@
     "timsort": "^0.3.0",
     "tippy.js": "^6.3.7",
     "tmp-promise": "^3.0.3",
-    "typeface-fira-sans": "^1.1.13",
     "url": "^0.11.4",
     "use-resize-observer": "^9.1.0",
     "util": "^0.12.5",

@@ -22,7 +22,8 @@ import ThemeProvider from './theme';
 
 import '~/../assets/css/aframe.less';
 
-import '@fontsource/fira-sans';
+import '@fontsource/fira-sans/400.css';
+import '@fontsource/fira-sans/500.css';
 import 'react-cover-page/themes/dark.css';
 import LanguageWatcher from './i18n/LanguageWatcher';
 

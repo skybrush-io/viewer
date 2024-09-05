@@ -1,11 +1,16 @@
 import get from 'lodash-es/get';
 
 import {
+  INDOOR_DRONE_SIZE_SCALING_FACTOR,
+  OUTDOOR_DRONE_SIZE_SCALING_FACTOR,
+} from '~/constants';
+import {
   getPerspectiveCamerasAndDefaultCamera,
   isShowIndoor,
 } from '~/features/show/selectors';
 import type { RootState } from '~/store';
-import { getDroneRadius } from '../settings/selectors';
+import { getRawDroneRadiusSetting } from '../settings/selectors';
+import { createSelector } from '@reduxjs/toolkit';
 
 /**
  * Returns the effective scenery to show, depending on the user's preference and
@@ -28,8 +33,15 @@ export const getEffectiveScenery = (
  * Selector that returns the radius that should be used for the drones in the
  * 3D view.
  */
-export const getEffectiveDroneRadius = (state: RootState): number =>
-  getDroneRadius(state, isShowIndoor(state));
+export const getEffectiveDroneRadius = createSelector(
+  getRawDroneRadiusSetting,
+  isShowIndoor,
+  (rawRadius: number, indoor: boolean) =>
+    rawRadius *
+    (indoor
+      ? INDOOR_DRONE_SIZE_SCALING_FACTOR
+      : OUTDOOR_DRONE_SIZE_SCALING_FACTOR)
+);
 
 /**
  * Selector that returns the index of the currently selected camera.

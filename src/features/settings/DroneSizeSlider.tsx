@@ -1,20 +1,18 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Slider, { type SliderProps } from '@mui/material/Slider';
+import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 
 import { setDroneRadius } from '~/features/settings/actions';
-import { getDroneRadius } from '~/features/settings/selectors';
+import { getRawDroneRadiusSetting } from '~/features/settings/selectors';
 import { useAppDispatch, useAppSelector } from '~/hooks/store';
-
-type DroneSizeSliderProps = SliderProps;
 
 /**
  * Slider that allows the user to set the sizes of the drones on the UI.
  */
-const DroneSizeSlider = (props: DroneSizeSliderProps) => {
-  const droneRadius = useAppSelector(getDroneRadius);
+const DroneSizeSlider = () => {
+  const droneRadius = useAppSelector(getRawDroneRadiusSetting);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
 

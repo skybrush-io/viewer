@@ -181,12 +181,12 @@ export default connect(
   // mapStateToProps
   (state: RootState) => ({
     cameraConfiguration: getInitialCameraConfigurationOfShow(state),
-    droneModel: getDroneModel(state),
-    droneRadius: getEffectiveDroneRadius(state),
     numDrones: getNumberOfDronesInShow(state),
     showId: getLoadedShowId(state),
     ...state.settings.threeD,
     ...state.threeD,
+    droneModel: getDroneModel(state),
+    droneRadius: getEffectiveDroneRadius(state),
     scenery: getEffectiveScenery(state),
   }),
   // mapDispatchToProps

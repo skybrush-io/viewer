@@ -8,6 +8,8 @@ import { setDroneRadius } from '~/features/settings/actions';
 import { getRawDroneRadiusSetting } from '~/features/settings/selectors';
 import { useAppDispatch, useAppSelector } from '~/hooks/store';
 
+const labelFormatter = (value: number) => `${value}x`;
+
 /**
  * Slider that allows the user to set the sizes of the drones on the UI.
  */
@@ -23,6 +25,7 @@ const DroneSizeSlider = () => {
         id='sidebar-drone-radius'
         value={droneRadius}
         valueLabelDisplay='auto'
+        valueLabelFormat={labelFormatter}
         min={0.1}
         max={2}
         step={0.05}

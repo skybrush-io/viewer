@@ -30,6 +30,7 @@ const styles = {
 
   footer: {
     px: 2,
+    pt: 2,
     textAlign: 'center',
     opacity: 0.4,
   },
@@ -37,6 +38,7 @@ const styles = {
   list: {
     background: 'unset',
     flex: 1,
+    overflowX: 'hidden',
   },
 
   root: {

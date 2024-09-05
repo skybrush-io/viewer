@@ -9,8 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Drones can now be scaled in the 3D view with a slider in the settings sidebar.
+
 - Yaw markers can now be shown on the drones if the input .skyc file supports
   yaw setpoints.
+
+- Added language selector in the sidebar. Currently the app supports English and
+  Hungarian. See https://skybrush.io/blog/2024-01-18-help-us-translate-skybrush-live/
+  if you would like to help translating Viewer into your own language.
 
 ### Changed
 

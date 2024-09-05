@@ -88,10 +88,6 @@ const SidebarDrawer = () => {
             <PlaybackSpeedSelector />
           </Box>
 
-          <Box px={2} pt={2}>
-            <DroneModelSelector />
-          </Box>
-
           <Box px={2} pt={2} pb={1}>
             <DroneSizeSlider />
           </Box>

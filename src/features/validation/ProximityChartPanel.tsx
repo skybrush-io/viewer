@@ -43,11 +43,18 @@ const getDataForProximityChart = createSelector(
   }
 );
 
+// Custom range to use for the chart panel. This prevents the annotations from
+// affecting the range chosen by Chart.js but it will still allow the data to
+// expand the range if needed. A minimum value of zero is enforced to ensure that
+// the Y axis starts at zero.
+const Y_RANGE: [number, number] = [0, 1];
+
 export default connect(
   // mapStateToProps
   (state: RootState) => ({
     data: getDataForProximityChart(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
+    range: Y_RANGE,
     threshold: getProximityWarningThreshold(state),
     thresholdLabel: t('validation.distanceThreshold'),
     title: t('validation.proximity'),

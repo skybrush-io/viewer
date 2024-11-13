@@ -33,7 +33,6 @@ import CoordinateSystemAxes from './CoordinateSystemAxes';
 import Scenery from './Scenery';
 import type { SceneryType } from './Scenery';
 
-import glow from '~/../assets/img/sphere-glow-hollow.png';
 import flapperDroneModel from '~/../assets/models/flapper-drone.obj';
 import quadcopterModel from '~/../assets/models/quadcopter.obj';
 
@@ -143,7 +142,6 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
       {...extraSceneProps}
     >
       <a-assets>
-        <img crossOrigin='anonymous' id='glow-texture' src={glow} />
         <a-asset-item id='flapper-drone' src={flapperDroneModel} />
         <a-asset-item id='quadcopter' src={quadcopterModel} />
       </a-assets>

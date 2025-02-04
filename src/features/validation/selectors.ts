@@ -61,6 +61,13 @@ export const getHorizontalVelocityThreshold = (state: RootState) =>
   getValidationSettings(state).maxVelocityXY;
 
 /**
+ * Selector that selects the horizontal acceleration threshold from the show specification,
+ * falling back to a default if needed.
+ */
+export const getHorizontalAccelerationThreshold = (state: RootState) =>
+  getValidationSettings(state).maxAccelerationXY;
+
+/**
  * Selector that selects the proximity warning threshold from the show specification,
  * falling back to a default if needed.
  */
@@ -85,6 +92,26 @@ export const getVerticalVelocityThresholdUp = (state: RootState) => {
  */
 export const getVerticalVelocityThresholdDown = (state: RootState) =>
   getValidationSettings(state).maxVelocityZ;
+
+/**
+ * Selector that selects the upwards vertical acceleration threshold from the show specification,
+ * falling back to a default if needed.
+ */
+export const getVerticalAccelerationThresholdUp = (state: RootState) => {
+  const { maxAccelerationZ, maxAccelerationZUp } = getValidationSettings(state);
+  return typeof maxAccelerationZUp === 'number' &&
+    Number.isFinite(maxAccelerationZUp)
+    ? maxAccelerationZUp
+    : maxAccelerationZ;
+};
+
+/**
+ * Selector that selects the downwards vertical acceleration threshold from the
+ * show specification, falling back to a default if needed. Note that the return
+ * value is positive even though the vector points towards the negative Z axis.
+ */
+export const getVerticalAccelerationThresholdDown = (state: RootState) =>
+  getValidationSettings(state).maxAccelerationZ;
 
 /**
  * Returns whether there is at least one validation message in the message store.
@@ -167,15 +194,88 @@ export const getSampledVelocitiesForDrones = createSelector(
 );
 
 /**
+ * Projects a 3D vector to the XY plane and returns the length of the projected vector.
+ */
+const projectToXY = (coord: Vector3) => Math.hypot(coord.x, coord.y);
+
+/**
+ * Projects a 3D vector to the Z axis.
+ */
+const projectToZ = (coord: Vector3) => coord.z;
+
+/**
+ * Calculates the derivative of a vector of scalars where the derivative at
+ * index i is estimated from the values at indices (i-k) and (i+k), i.e. we
+ * are using the midpoint method with a step size of k.
+ */
+export function calculateScalarDerivative(
+  values: number[],
+  numSteps = 1,
+  dt = 1
+): number[] {
+  const n = values.length;
+  const result: number[] = Array.from({ length: n });
+  const scale = 2 * numSteps * dt;
+  for (let i = numSteps; i < n - numSteps; i++) {
+    result[i] = (values[i + numSteps] - values[i - numSteps]) / scale;
+  }
+
+  // Fill the endpoints
+  if (n >= 2 * numSteps + 1) {
+    for (let i = 0; i < numSteps; i++) {
+      result[i] = result[numSteps];
+      result[n - i - 1] = result[n - numSteps - 1];
+    }
+  } else {
+    result.fill(0);
+  }
+
+  return result;
+}
+
+/**
+ * Calculates the derivative of a vector of 3D vectors where the derivative at
+ * index i is estimated from the vectors at indices (i-k) and (i+k), i.e. we
+ * are using the midpoint method with a step size of k.
+ */
+export function calculateVectorDerivative(
+  values: Vector3[],
+  numSteps = 1,
+  dt = 1
+): Vector3[] {
+  const n = values.length;
+  const result: Vector3[] = Array.from({ length: n });
+  const scale = 2 * numSteps * dt;
+  for (let i = numSteps; i < n - numSteps; i++) {
+    result[i] = {
+      x: (values[i + numSteps].x - values[i - numSteps].x) / scale,
+      y: (values[i + numSteps].y - values[i - numSteps].y) / scale,
+      z: (values[i + numSteps].z - values[i - numSteps].z) / scale,
+    };
+  }
+
+  // Fill the endpoints
+  if (n >= 2 * numSteps + 1) {
+    for (let i = 0; i < numSteps; i++) {
+      result[i] = result[numSteps];
+      result[n - i - 1] = result[n - numSteps - 1];
+    }
+  } else {
+    const ZERO = { x: 0, y: 0, z: 0 };
+    result.fill(ZERO);
+  }
+
+  return result;
+}
+
+/**
  * Returns an array mapping drones to their altitudes, sampled at regular
  * intervals.
  */
 export const getSampledAltitudesForDrones = createSelector(
   getSampledPositionsForDrones,
   (positionsByDrones) => {
-    return positionsByDrones.map((positions) =>
-      positions.map((coord) => coord.z)
-    );
+    return positionsByDrones.map((positions) => positions.map(projectToZ));
   }
 );
 
@@ -186,9 +286,7 @@ export const getSampledAltitudesForDrones = createSelector(
 export const getSampledHorizontalVelocitiesForDrones = createSelector(
   getSampledVelocitiesForDrones,
   (velocitiesByDrones) => {
-    return velocitiesByDrones.map((velocities) =>
-      velocities.map((coord) => Math.hypot(coord.x, coord.y))
-    );
+    return velocitiesByDrones.map((velocities) => velocities.map(projectToXY));
   }
 );
 
@@ -199,8 +297,44 @@ export const getSampledHorizontalVelocitiesForDrones = createSelector(
 export const getSampledVerticalVelocitiesForDrones = createSelector(
   getSampledVelocitiesForDrones,
   (velocitiesByDrones) => {
+    return velocitiesByDrones.map((velocities) => velocities.map(projectToZ));
+  }
+);
+
+/**
+ * Returns an array mapping drones to their estimated horizontal accelerations,
+ * sampled at regular intervals.
+ *
+ * The accelerations are estimated from the velocities. In theory it would be
+ * better to derive them directly from the trajectory, but the result would be
+ * zero for linear segments and infinity at the points where segments join with
+ * discontinuous velocities, and this is not useful for the end user.
+ */
+export const getSampledHorizontalAccelerationsForDrones = createSelector(
+  getSampledVelocitiesForDrones,
+  (velocitiesByDrones) => {
+    const dt = 1 / SAMPLES_PER_SECOND;
+    return velocitiesByDrones.map((velocities) => {
+      return calculateVectorDerivative(velocities, 1, dt).map(projectToXY);
+    });
+  }
+);
+
+/**
+ * Returns an array mapping drones to their estimated vertical accelerations,
+ * sampled at regular intervals.
+ *
+ * The accelerations are estimated from the velocities. In theory it would be
+ * better to derive them directly from the trajectory, but the result would be
+ * zero for linear segments and infinity at the points where segments join with
+ * discontinuous velocities, and this is not useful for the end user.
+ */
+export const getSampledVerticalAccelerationsForDrones = createSelector(
+  getSampledVerticalVelocitiesForDrones,
+  (velocitiesByDrones) => {
+    const dt = 1 / SAMPLES_PER_SECOND;
     return velocitiesByDrones.map((velocities) =>
-      velocities.map((coord) => coord.z)
+      calculateScalarDerivative(velocities, 1, dt)
     );
   }
 );

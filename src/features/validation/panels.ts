@@ -1,12 +1,16 @@
 import AltitudeChartPanel from './AltitudeChartPanel';
+import HorizontalAccelerationChartPanel from './HorizontalAccelerationChartPanel';
 import HorizontalVelocityChartPanel from './HorizontalVelocityChartPanel';
 import ProximityChartPanel from './ProximityChartPanel';
+import VerticalAccelerationChartPanel from './VerticalAccelerationChartPanel';
 import VerticalVelocityChartPanel from './VerticalVelocityChartPanel';
 
 export enum ValidationPanel {
   ALTITUDE = 'altitude',
   HORIZONTAL_VELOCITY = 'horizontalVelocity',
   VERTICAL_VELOCITY = 'verticalVelocity',
+  HORIZONTAL_ACCELERATION = 'horizontalAcceleration',
+  VERTICAL_ACCELERATION = 'verticalAcceleration',
   PROXIMITY = 'proximity',
 }
 
@@ -33,10 +37,22 @@ export const PANELS: PanelSpecification[] = [
     component: VerticalVelocityChartPanel,
     priority: 20,
   },
+  /*
+  {
+    id: ValidationPanel.HORIZONTAL_ACCELERATION,
+    component: HorizontalAccelerationChartPanel,
+    priority: 40,
+  },
+  {
+    id: ValidationPanel.VERTICAL_ACCELERATION,
+    component: VerticalAccelerationChartPanel,
+    priority: 50,
+  },
+  */
   {
     id: ValidationPanel.PROXIMITY,
     component: ProximityChartPanel,
-    priority: 30,
+    priority: 60,
   },
 ];
 

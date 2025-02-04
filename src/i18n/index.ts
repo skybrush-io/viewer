@@ -15,11 +15,12 @@ import * as hu from './hu.json';
 // import * as ja from './ja.json';
 // import * as nl from './nl.json';
 // import * as ro from './ro.json';
-// import * as zhHans from './zh-Hans.json';
+import * as zhHans from './zh-Hans.json';
 
 const resources: Resource = {
   en: { translation: en },
   hu: { translation: hu },
+  'zh-Hans': { translation: zhHans },
 };
 
 /* Languages */
@@ -41,7 +42,7 @@ const availableLanguages: Language[] = [
   // { label: 'Nederlands', code: 'nl', translation: nl },
   // { label: 'Română', code: 'ro', translation: ro },
   // { label: '日本語', code: 'ja', translation: ja },
-  // { label: '中文', code: 'zh-Hans', translation: zhHans },
+  { label: '中文', code: 'zh-Hans', translation: zhHans },
 ];
 
 export const enabledLanguages = availableLanguages.filter(({ code }) =>
@@ -61,7 +62,7 @@ export const initI18N = async () =>
       fallbackLng: config.language.fallback,
       supportedLngs: config.language.enabled,
 
-      debug: false,
+      debug: true,
 
       // you can use the i18n.changeLanguage function to change the language manually: https://www.i18next.com/overview/api#changelanguage
       // if you're using a language detector, do not define the lng option

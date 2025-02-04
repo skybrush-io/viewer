@@ -6,10 +6,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Folder from '@mui/icons-material/Folder';
 
-import {
-  getLanguage,
-  shouldUseWelcomeScreen,
-} from '~/features/settings/selectors';
+import { shouldUseWelcomeScreen } from '~/features/settings/selectors';
 import { pickLocalFileAndLoadShow } from '~/features/show/actions';
 import {
   canLoadShowFromLocalFile,

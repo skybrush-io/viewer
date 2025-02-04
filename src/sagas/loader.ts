@@ -10,7 +10,7 @@ import { call, fork, put, putResolve, take } from 'redux-saga/effects';
 import { freeze } from '@reduxjs/toolkit';
 
 import { setAudioUrl } from '~/features/audio/slice';
-import { rewind } from '~/features/playback/actions';
+import { setPlaybackPosition } from '~/features/playback/actions';
 import { _doLoadShow } from '~/features/show/async';
 import { loadShowFromRequest } from '~/features/show/slice';
 import type { ShowLoadingRequest } from '~/features/show/types';
@@ -26,7 +26,8 @@ function* loadShowFromRequestChannelSaga(
 ): Generator<any, void, any> {
   while (true) {
     const request = (yield take(chan)) as ShowLoadingRequest;
-    const { audio, keepPlayhead, missingAudioIsOkay, show } = request;
+    const { audio, keepPlayhead, missingAudioIsOkay, initialSeekTime } =
+      request;
 
     try {
       let audioOkay = true;
@@ -48,7 +49,7 @@ function* loadShowFromRequestChannelSaga(
       yield put(setAudioUrl(audioOkay ? (audio ?? audioUrl) : null));
 
       if (!keepPlayhead) {
-        yield put(rewind() as any);
+        yield put(setPlaybackPosition(initialSeekTime ?? 0) as any);
       }
     } catch {
       console.error('Unexpected error while loading show');

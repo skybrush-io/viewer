@@ -22,4 +22,10 @@ export interface ShowLoadingRequest {
    * audio URL does not point anywhere).
    */
   missingAudioIsOkay?: boolean;
+
+  /**
+   * Specifies the timestamp to seek to when the show is loaded, in seconds.
+   * Ignored if `keepPlayhead` is `true`.
+   */
+  initialSeekTime?: number;
 }

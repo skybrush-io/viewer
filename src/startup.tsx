@@ -131,13 +131,46 @@ export class SkybrushViewer {
    * #root div on the page and inject Skybrush Viewer into it.
    */
   static run() {
-    new SkybrushViewer().render('#root');
+    new SkybrushViewer().handleBrowserLocation().render('#root');
   }
 
   private _initialShow: ShowLoadingRequest | undefined = undefined;
+  private readonly _initialShowExtra: Partial<ShowLoadingRequest> = {};
 
   configure(request: ShowLoadingRequest) {
     this._initialShow = request;
+  }
+
+  /**
+   * Handles query arguments from the current location of the browser to
+   * facilitate seeking to a known timestamp and other tricks that are achievable
+   * via URL parameters.
+   */
+  handleBrowserLocation(location: string = window.location.href) {
+    let url;
+
+    if (!location) {
+      return this;
+    }
+
+    try {
+      url = new URL(location);
+    } catch {
+      console.warn('Failed to parse browser location:', location);
+      return this;
+    }
+
+    const params = new URLSearchParams(url.search);
+    for (const [key, value] of params.entries()) {
+      if (key === 't') {
+        const time = Number.parseFloat(value);
+        if (time >= 0 && Number.isFinite(time)) {
+          this._initialShowExtra.initialSeekTime = time;
+        }
+      }
+    }
+
+    return this;
   }
 
   async loadFromManifestUrl(url: string | URL) {
@@ -152,7 +185,13 @@ export class SkybrushViewer {
     const element = document.querySelector(selector);
     const root = createRoot(element!);
     const initialShow = this._initialShow ?? getInitialShowLoadingRequest();
+
+    if (initialShow) {
+      Object.assign(initialShow, this._initialShowExtra);
+    }
+
     root.render(<App initialShow={initialShow} />);
+
     return root.unmount;
   }
 }

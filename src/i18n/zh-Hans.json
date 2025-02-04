@@ -1,0 +1,62 @@
+{
+    "settings": {
+        "droneRadius": "无人机尺寸",
+        "droneModel": {
+            "label": "无人机模型",
+            "quad": "四旋翼飞机",
+            "flapper": "拍翼机",
+            "sphere": "球体"
+        },
+        "scenery": {
+            "auto": "自动",
+            "indoor": "室内",
+            "disabled": "已禁用",
+            "day": "白天",
+            "night": "夜晚",
+            "label": "场景"
+        },
+        "showAxes": "显示坐标轴",
+        "language": "语言",
+        "showGrid": "显示网格",
+        "scaleLabels": "均衡标签大小",
+        "showLabels": "显示标签",
+        "showYaw": "显示偏航指示",
+        "playbackSpeed": "播放速度"
+    },
+    "chartGrid": {
+        "noChartsHint": {
+            "header": "未选择图表",
+            "text": "请使用标题中的按钮选择一种图表类型"
+        }
+    },
+    "buttons": {
+        "resetZoom": "重置缩放",
+        "settings": "设置",
+        "trackDrones": "旋转相机朝向无人机",
+        "returnToViewer": "重置缩放",
+        "closeShow": "关闭显示",
+        "validateTrajectories": "验证轨迹",
+        "openShowFile": "打开表演文件"
+    },
+    "validation": {
+        "altitudeThreshold": "所有无人机",
+        "horizontalVelocityThreshold": "XY 速度阈值",
+        "allDrones": "所有无人机",
+        "altitude": "所有无人机",
+        "verticalVelocityThreshold": "Z 速度阈值",
+        "distanceThreshold": "距离阈值",
+        "proximity": "接近度",
+        "verticalVelocity": "垂直速度",
+        "horizontalVelocity": "水平速度",
+        "distanceOfClosestDronePair": "最近无人机对之间的距离"
+    },
+    "cameras": {
+        "noCamera": "无相机",
+        "default": "默认视图",
+        "indexedLabel": "相机 {{ index }}"
+    },
+    "bottomOverlay": {
+        "rightText": "Skybrush © 2020-{{ year }} CollMot Robotics 有限公司。",
+        "leftText": "使用方向键移动（按住 Shift 键可加速），按 E/C 键可改变高度。拖动场景查看四周，滚轮或 +/- 键可缩放视角。"
+    }
+}

@@ -125,7 +125,7 @@ const createOptions = ({
 }: {
   formatPlaybackTimestamp?: (value: number) => string;
   range?: [number, number];
-  threshold?: number | number[];
+  threshold?: number | undefined | Array<number | undefined>;
   thresholdLabel?: string;
   verticalUnit?: string;
 } = {}): ChartOptionsWithAnnotation => {
@@ -223,7 +223,7 @@ const createOptions = ({
     },
   };
 
-  const thresholds: number[] =
+  const thresholds: Array<number | undefined> =
     typeof threshold === 'number'
       ? [threshold]
       : Array.isArray(threshold)
@@ -231,8 +231,8 @@ const createOptions = ({
         : [];
 
   const annotations = thresholds
-    .filter(Number.isFinite)
-    .map((threshold) => createThresholdAnnotation(threshold, thresholdLabel));
+    .filter((x) => typeof x === 'number' && Number.isFinite)
+    .map((threshold) => createThresholdAnnotation(threshold!, thresholdLabel));
   if (annotations.length > 0) {
     options.annotation = { annotations };
   }
@@ -263,7 +263,7 @@ interface ChartPanelProps {
   readonly formatPlaybackTimestamp?: (value: number) => string;
   readonly height: number;
   readonly range: [number, number];
-  readonly threshold?: number | number[];
+  readonly threshold?: number | undefined | Array<number | undefined>;
   readonly thresholdLabel?: string;
   readonly title?: string;
   readonly verticalUnit?: string;

@@ -127,7 +127,6 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
   // separate cameraId and sceneLoaded state
   useEffect(() => {
     if (showId !== cameraId && (cameraRef.current as any)?.sceneEl?.hasLoaded) {
-      console.log('Updating camera ID to', showId);
       setCameraId(showId);
     }
   }, [cameraId, cameraRef, showId]);

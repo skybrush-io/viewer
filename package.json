@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@git.collmot.com:collmot/skybrush-viewer.git"
+    "url": "git@github.com:skybrush-io/viewer.git"
   },
   "keywords": [],
   "author": "CollMot Robotics Ltd",

@@ -7,7 +7,7 @@ import useResizeObserver from 'use-resize-observer';
 
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
-import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 
 import {
@@ -35,14 +35,14 @@ const SidebarListItemPresentation = ({
   onToggleSelection,
   style,
 }: SidebarListItemPresentationProps) => (
-  <ListItem button dense style={style} onClick={onToggleSelection}>
+  <ListItemButton dense style={style} onClick={onToggleSelection}>
     <Checkbox
       checked={!isNil(chartIndex)}
       size='small'
       style={{ color: chartIndex ? CHART_COLORS[chartIndex] : undefined }}
     />
     <ListItemText primary={label} />
-  </ListItem>
+  </ListItemButton>
 );
 
 const SidebarListItem = connect(

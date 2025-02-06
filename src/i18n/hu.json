@@ -9,13 +9,15 @@
     "resetZoom": "Nagyítás alaphelyzetbe",
     "returnToViewer": "Vissza a megjelenítőbe",
     "settings": "Beállítások",
+    "shareLink": "Link megosztása",
     "trackDrones": "Kamera forgatása a drónok felé",
     "validateTrajectories": "Útvonalak ellenőrzése"
   },
   "cameras": {
     "default": "Alapértelmezett nézet",
     "indexedLabel": "{{ index }}. kamera",
-    "noCamera": "Nincs kamera"
+    "noCamera": "Nincs kamera",
+    "shared": "Megosztott nézet"
   },
   "chartGrid": {
     "noChartsHint": {

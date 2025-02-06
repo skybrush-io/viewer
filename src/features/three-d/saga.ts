@@ -4,20 +4,26 @@ import { select, take } from 'redux-saga/effects';
 import {
   skybrushToThreeJsPosition,
   skybrushToThreeJsQuaternion,
-  type ThreeJsPosition,
-  type ThreeJsQuaternion,
+  type Pose,
+  type ThreeJsPositionTuple,
+  type ThreeJsQuaternionTuple,
 } from '@skybrush/aframe-components/lib/spatial';
 import type { Camera, Vector3Tuple } from '@skybrush/show-format';
 
 import { getSelectedCamera } from './selectors';
-import { resetZoom, rotateViewTowards, switchToSelectedCamera } from './slice';
+import {
+  resetZoom,
+  rotateViewTowards,
+  switchToCameraPose,
+  switchToSelectedCamera,
+} from './slice';
 
 export const cameraRef = React.createRef<any>();
 
 interface CameraTarget {
-  lookAt?: ThreeJsPosition;
-  position?: ThreeJsPosition;
-  quaternion?: ThreeJsQuaternion;
+  lookAt?: ThreeJsPositionTuple;
+  position?: ThreeJsPositionTuple;
+  quaternion?: ThreeJsQuaternionTuple;
 }
 
 interface CameraController {
@@ -32,12 +38,14 @@ interface CameraController {
 function* cameraAnimatorSaga(): Generator<any, void, any> {
   const RESET_ZOOM = resetZoom.toString();
   const ROTATE_VIEW_TOWARDS = rotateViewTowards.toString();
+  const SWITCH_TO_CAMERA_POSE = switchToCameraPose.toString();
   const SWITCH_TO_SELECTED_CAMERA = switchToSelectedCamera.toString();
 
   while (true) {
     const action = yield take([
       RESET_ZOOM,
       ROTATE_VIEW_TOWARDS,
+      SWITCH_TO_CAMERA_POSE,
       SWITCH_TO_SELECTED_CAMERA,
     ]);
     const controller = getCameraController();
@@ -47,6 +55,10 @@ function* cameraAnimatorSaga(): Generator<any, void, any> {
       switch (action.type) {
         case RESET_ZOOM:
           handleResetZoom(controller);
+          break;
+
+        case SWITCH_TO_CAMERA_POSE:
+          handleCameraSwitch(controller, action.payload as Pose);
           break;
 
         case SWITCH_TO_SELECTED_CAMERA:
@@ -82,10 +94,10 @@ function getCameraController(): CameraController | undefined {
 
 function handleCameraSwitch(
   controller: CameraController,
-  camera: Camera | undefined
+  pose: Pose | Camera | undefined
 ) {
-  if (camera) {
-    const { position, orientation } = camera;
+  if (pose) {
+    const { position, orientation } = pose;
 
     if (Array.isArray(position) && position.length >= 3) {
       const target: CameraTarget = {

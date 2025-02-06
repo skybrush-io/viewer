@@ -1,7 +1,10 @@
 import config from 'config';
+import { Base64 } from 'js-base64';
 import ky from 'ky';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+
+import type { Pose } from '@skybrush/aframe-components/lib/spatial';
 
 import type { ShowLoadingRequest } from './features/show/types';
 
@@ -121,6 +124,35 @@ function getInitialShowLoadingRequest(): ShowLoadingRequest | undefined {
   }
 }
 
+function parsePoseFromURLParam(value: string): Pose | null {
+  let pose;
+
+  try {
+    pose = JSON.parse(Base64.decode(value));
+  } catch {
+    return null;
+  }
+
+  if (
+    typeof pose === 'object' &&
+    pose.p &&
+    pose.q &&
+    Array.isArray(pose.p) &&
+    Array.isArray(pose.q) &&
+    pose.p.length === 3 &&
+    pose.q.length === 4 &&
+    pose.p.every((x: any) => typeof x === 'number') &&
+    pose.q.every((x: any) => typeof x === 'number')
+  ) {
+    return {
+      position: pose.p,
+      orientation: pose.q,
+    };
+  }
+
+  return null;
+}
+
 /**
  * The main class exported from the bundle to let the hosting page decide
  * how it should interact with the application itself.
@@ -166,6 +198,13 @@ export class SkybrushViewer {
         const time = Number.parseFloat(value);
         if (time >= 0 && Number.isFinite(time)) {
           this._initialShowExtra.initialSeekTime = time;
+        }
+      }
+
+      if (key === 'p') {
+        const pose = parsePoseFromURLParam(value);
+        if (pose) {
+          this._initialShowExtra.initialCameraPose = pose;
         }
       }
     }

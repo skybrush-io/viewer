@@ -1,3 +1,4 @@
+import type { Pose } from '@skybrush/aframe-components/lib/spatial';
 import type { ShowSpecification } from '@skybrush/show-format';
 
 /**
@@ -28,4 +29,10 @@ export interface ShowLoadingRequest {
    * Ignored if `keepPlayhead` is `true`.
    */
   initialSeekTime?: number;
+
+  /**
+   * Specifies the initial pose of the camera, overriding the default camera
+   * in the show.
+   */
+  initialCameraPose?: Pose;
 }

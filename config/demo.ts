@@ -23,6 +23,7 @@ const overrides: ConfigOverrides = {
     localFiles: false,
   },
   modes: {
+    deepLinking: true,
     validation: false,
   },
   preloadedShow: {

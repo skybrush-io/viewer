@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 
 import PlaybackSlider from '@skybrush/mui-components/lib/PlaybackSlider';
-import { stripEvent } from '@skybrush/redux-toolkit';
 
 import {
   setPlaybackPosition,

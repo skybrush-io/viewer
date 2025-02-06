@@ -15,6 +15,7 @@ import { hasAudio, isAudioMuted } from '~/features/audio/selectors';
 import { toggleMuted } from '~/features/audio/slice';
 import { togglePlayback } from '~/features/playback/actions';
 import { canTogglePlayback, isPlaying } from '~/features/playback/selectors';
+import ShareButton from '~/features/sharing/ShareButton';
 import { pickLocalFileAndLoadShow } from '~/features/show/actions';
 import {
   canLoadShowFromLocalFile,
@@ -107,6 +108,7 @@ const BottomOverlay = React.forwardRef(
           {formatPlaybackTimestamp(duration)}
         </Box>
         <Box px={1}>
+          {config.modes.deepLinking && <ShareButton />}
           {config.modes.vr && (
             <IconButton id='vr-button' size='large'>
               <VirtualReality />

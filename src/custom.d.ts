@@ -38,20 +38,38 @@ declare module '@skybrush/aframe-components/lib/spatial' {
   type EulerRotation = [number, number, number];
   type Position = [number, number, number];
   type Quaternion = [number, number, number, number];
-  type ThreeJsPosition = [number, number, number];
-  type ThreeJsQuaternion = [number, number, number, number];
-  type ThreeJsRotation = [number, number, number];
+  type Pose = {
+    position: Position;
+    orientation: Quaternion;
+  };
+
+  type ThreeJsPositionTuple = [number, number, number];
+  type ThreeJsQuaternionTuple = [number, number, number, number];
+  type ThreeJsRotationTuple = [number, number, number];
+  type ThreeJsPose = {
+    position: ThreeJsPositionTuple;
+    rotation: ThreeJsRotationTuple;
+  };
 
   export function skybrushRotationToQuaternion(
     rotation: EulerRotation
   ): Quaternion;
   export function skybrushQuaternionToThreeJsRotation(
     quaternion: Quaternion
-  ): ThreeJsRotation;
+  ): ThreeJsRotationTuple;
+  export function skybrushToThreeJsPose(pose: Pose): ThreeJsPose;
   export function skybrushToThreeJsPosition(
     position: Position
-  ): ThreeJsPosition;
+  ): ThreeJsPositionTuple;
   export function skybrushToThreeJsQuaternion(
     quaternion: Quaternion
-  ): ThreeJsQuaternion;
+  ): ThreeJsQuaternionTuple;
+
+  export function threeJsToSkybrushPose(pose: ThreeJsPose): Pose;
+  export function threeJsToSkybrushPosition(
+    position: ThreeJsPositionTuple
+  ): Position;
+  export function threeJsToSkybrushQuaternion(
+    quaternion: ThreeJsQuaternionTuple
+  ): Quaternion;
 }

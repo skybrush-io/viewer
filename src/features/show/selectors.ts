@@ -9,9 +9,8 @@ import uniq from 'lodash-es/uniq';
 import { createSelector } from '@reduxjs/toolkit';
 
 import {
-  skybrushRotationToQuaternion,
-  skybrushQuaternionToThreeJsRotation,
-  skybrushToThreeJsPosition,
+  type ThreeJsPose,
+  skybrushToThreeJsPose,
 } from '@skybrush/aframe-components/lib/spatial';
 import {
   createLightProgramPlayer,
@@ -33,12 +32,12 @@ import {
 import { DEFAULT_CAMERA_NAME_PLACEHOLDER } from '~/constants';
 import type { RootState } from '~/store';
 import { formatPlaybackTimestamp } from '~/utils/formatters';
+import { DEFAULT_CAMERA_ORIENTATION, getCameraPose } from './utils';
 
 export const canLoadShowFromLocalFile = (): boolean => config.io.localFiles;
 
 const EMPTY_ARRAY = Object.freeze([]);
 const EMPTY_OBJECT = Object.freeze({});
-const DEFAULT_ORIENTATION = skybrushRotationToQuaternion([90, 0, -90]);
 const DEFAULT_CAMERAS: Record<string, Camera[]> = {
   // Skybrush coordinate system: X points forward, Y points left, Z points up.
   // [0, 0, 0] rotation is when the camera points downwards (negative Z) and the
@@ -50,7 +49,7 @@ const DEFAULT_CAMERAS: Record<string, Camera[]> = {
     {
       name: DEFAULT_CAMERA_NAME_PLACEHOLDER,
       position: [-10, 0, 2], // [0, 2, 10]
-      orientation: DEFAULT_ORIENTATION,
+      orientation: DEFAULT_CAMERA_ORIENTATION,
       // don't set default: true here because then it would override the
       // cameras in the .skyc file if the .skyc file does not designate any
       // of the cameras as default
@@ -60,7 +59,7 @@ const DEFAULT_CAMERAS: Record<string, Camera[]> = {
     {
       name: DEFAULT_CAMERA_NAME_PLACEHOLDER,
       position: [-50, 0, 20], // [0, 20, 50]
-      orientation: DEFAULT_ORIENTATION,
+      orientation: DEFAULT_CAMERA_ORIENTATION,
     },
   ],
 };
@@ -203,28 +202,45 @@ export const getCameras = createSelector(
 );
 
 /**
+ * Returns true if the camera is likely to be a perspective camera. Cameras
+ * without a type are considered to be perspective cameras for sake of backward
+ * compatibility.
+ */
+const isProbablyPerspectiveCamera = (camera: Camera | undefined): boolean =>
+  camera ? !camera.type || camera.type === CameraType.PERSPECTIVE : false;
+
+/**
+ * Snaps the camera position to be above ground at a minimum height.
+ */
+const ensureHeightAboveGround = (camera: Camera, minHeight = 1): Camera =>
+  Array.isArray(camera.position) && camera.position[2] < minHeight
+    ? {
+        ...camera,
+        position: [camera.position[0], camera.position[1], minHeight],
+      }
+    : camera;
+
+/**
+ * Picks a default camera from an array of cameras, or undefined if there is
+ * no default camera candidate in the array.
+ */
+const getDefaultCamera = (cameras: Camera[]): Camera | undefined => {
+  for (const camera of cameras) {
+    if (camera.default) {
+      return camera;
+    }
+  }
+
+  return undefined;
+};
+
+/**
  * Returns an array containing all the perspective cameras from the show file,
  * or an empty array if the show has no perspective cameras.
  */
 export const getPerspectiveCameras = createSelector(getCameras, (cameras) =>
   cameras && cameras.length > 0
-    ? cameras
-        .filter(
-          (camera) =>
-            camera && (!camera.type || camera.type === CameraType.PERSPECTIVE)
-        )
-        .map(
-          (camera: Camera): Camera =>
-            // Make sure that the camera has a minimum height of 1m otherwise it
-            // would be placed below the ground if it is far from the center
-            // (as we have hills in the scenery there)
-            Array.isArray(camera.position) && camera.position[2] < 1
-              ? {
-                  ...camera,
-                  position: [camera.position[0], camera.position[1], 1],
-                }
-              : camera
-        )
+    ? cameras.filter(isProbablyPerspectiveCamera).map(ensureHeightAboveGround)
     : (EMPTY_ARRAY as any as Camera[])
 );
 
@@ -236,40 +252,21 @@ export const getPerspectiveCamerasAndDefaultCamera = createSelector(
   getPerspectiveCameras,
   getShowEnvironmentType,
   (cameras, type) => {
-    const hasDefaultCamera = cameras.some((camera) => camera.default);
+    const hasDefaultCamera = Boolean(getDefaultCamera(cameras));
     return hasDefaultCamera ? cameras : [...DEFAULT_CAMERAS[type], ...cameras];
   }
 );
 
 /**
- * Returns the initial configuration of the camera in the drone show.
+ * Returns the initial configuration of the camera in the drone show, in
+ * Three.js conventions.
  */
-export const getInitialCameraConfigurationOfShow = createSelector(
+export const getInitialThreeJsCameraConfigurationOfShow = createSelector(
   getPerspectiveCamerasAndDefaultCamera,
-  (cameras) => {
-    let selectedCamera;
-
+  (cameras): ThreeJsPose => {
     // Assertion: cameras.length > 0
-    for (const camera of cameras) {
-      if (camera.default) {
-        selectedCamera = camera;
-        break;
-      }
-    }
-
-    // eslint-disable-next-line logical-assignment-operators
-    if (!selectedCamera) {
-      // Assertion: first camera is always the "default camera" that was added
-      // by us
-      selectedCamera = cameras[0];
-    }
-
-    return {
-      position: skybrushToThreeJsPosition(selectedCamera.position ?? [0, 0, 0]),
-      rotation: skybrushQuaternionToThreeJsRotation(
-        selectedCamera.orientation ?? DEFAULT_ORIENTATION
-      ),
-    };
+    const selectedCamera = getDefaultCamera(cameras) ?? cameras[0];
+    return skybrushToThreeJsPose(getCameraPose(selectedCamera));
   }
 );
 

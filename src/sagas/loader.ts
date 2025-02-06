@@ -14,6 +14,7 @@ import { setPlaybackPosition } from '~/features/playback/actions';
 import { _doLoadShow } from '~/features/show/async';
 import { loadShowFromRequest } from '~/features/show/slice';
 import type { ShowLoadingRequest } from '~/features/show/types';
+import { switchToCameraPose } from '~/features/three-d/slice';
 
 /**
  * Saga that watches a channel where it receives data sources to load a drone

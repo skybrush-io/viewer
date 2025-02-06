@@ -12,8 +12,8 @@ import '~/aframe';
 
 import { objectToString } from '@skybrush/aframe-components';
 import type {
-  ThreeJsPosition,
-  ThreeJsRotation,
+  ThreeJsPositionTuple,
+  ThreeJsRotationTuple,
 } from '@skybrush/aframe-components/lib/spatial';
 
 import { getDroneModel } from '~/features/settings/selectors';
@@ -23,12 +23,13 @@ import {
   getEffectiveScenery,
 } from '~/features/three-d/selectors';
 import {
-  getInitialCameraConfigurationOfShow,
+  getInitialThreeJsCameraConfigurationOfShow,
   getLoadedShowId,
   getNumberOfDronesInShow,
 } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 
+import { SCENE_CAMERA_ID } from './constants';
 import CoordinateSystemAxes from './CoordinateSystemAxes';
 import Scenery from './Scenery';
 import type { SceneryType } from './Scenery';
@@ -39,8 +40,8 @@ import quadcopterModel from '~/../assets/models/quadcopter.obj';
 type ThreeDViewProps = {
   readonly axes: boolean;
   readonly cameraConfiguration: {
-    position: ThreeJsPosition;
-    rotation: ThreeJsRotation;
+    position: ThreeJsPositionTuple;
+    rotation: ThreeJsRotationTuple;
   };
   readonly cameraRef: React.RefObject<HTMLElement>;
   readonly droneModel: DroneModelType;
@@ -149,7 +150,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
         key={`camera-${cameraId}`}
         ref={cameraRef}
         sync-pose-with-store=''
-        id='three-d-camera'
+        id={SCENE_CAMERA_ID}
         position={cameraConfiguration.position.join(' ')}
         rotation={cameraConfiguration.rotation.join(' ')}
         {...extraCameraProps}
@@ -177,7 +178,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
 export default connect(
   // mapStateToProps
   (state: RootState) => ({
-    cameraConfiguration: getInitialCameraConfigurationOfShow(state),
+    cameraConfiguration: getInitialThreeJsCameraConfigurationOfShow(state),
     numDrones: getNumberOfDronesInShow(state),
     showId: getLoadedShowId(state),
     ...state.settings.threeD,

@@ -24,6 +24,13 @@ export const OUTDOOR_DRONE_SIZE_SCALING_FACTOR = 0.75;
 export const DEFAULT_CAMERA_NAME_PLACEHOLDER = '$DEFAULT';
 
 /**
+ * Placeholder to use for the label of the camera that originates from a
+ * sharing request where the URL includes a camera pose. Will be replaced
+ * when the camera label is formatted to use an appropriate localized label.
+ */
+export const SHARED_CAMERA_NAME_PLACEHOLDER = '$SHARED';
+
+/**
  * Default drone model to use in 3D views.
  */
 export const DEFAULT_DRONE_MODEL = 'sphere';

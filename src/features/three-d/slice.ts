@@ -3,6 +3,7 @@
  */
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { Pose } from '@skybrush/aframe-components/lib/spatial';
 import type { Vector3Tuple } from '@skybrush/show-format';
 
 type NavigationMode = 'walk' | 'fly';
@@ -95,6 +96,10 @@ const { actions, reducer } = createSlice({
       }
     },
 
+    switchToCameraPose(_state, _action: PayloadAction<Pose>) {
+      /* nop, the saga handles it */
+    },
+
     switchToSelectedCamera() {
       /* nop, the saga handles it */
     },
@@ -108,6 +113,7 @@ export const {
   setNavigationMode,
   setOverlayVisibility,
   setSelectedCameraIndex,
+  switchToCameraPose,
   switchToSelectedCamera,
 } = actions;
 

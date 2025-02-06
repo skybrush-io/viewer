@@ -38,6 +38,9 @@ declare module 'config' {
 
       /** Specifies whether the user is allowed to use the VR mode */
       vr: boolean;
+
+      /** Whether the user is allowed to share a deep link to the show */
+      deepLinking: boolean;
     };
 
     preloadedShow: {

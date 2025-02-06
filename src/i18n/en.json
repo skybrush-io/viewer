@@ -9,13 +9,15 @@
     "resetZoom": "Reset zoom",
     "returnToViewer": "Return to viewer",
     "settings": "Settings",
+    "shareLink": "Share link to show",
     "trackDrones": "Rotate camera towards drones",
     "validateTrajectories": "Validate trajectories"
   },
   "cameras": {
     "default": "Default view",
     "indexedLabel": "Camera {{ index }}",
-    "noCamera": "No camera"
+    "noCamera": "No camera",
+    "shared": "Shared view"
   },
   "chartGrid": {
     "noChartsHint": {

@@ -9,7 +9,10 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { type Camera } from '@skybrush/show-format';
 import type { KeySequence } from 'react-hotkeys';
-import { DEFAULT_CAMERA_NAME_PLACEHOLDER } from '~/constants';
+import {
+  DEFAULT_CAMERA_NAME_PLACEHOLDER,
+  SHARED_CAMERA_NAME_PLACEHOLDER,
+} from '~/constants';
 
 function getLabelForCamera(
   camera: Camera,
@@ -18,7 +21,9 @@ function getLabelForCamera(
 ): string {
   return camera.name === DEFAULT_CAMERA_NAME_PLACEHOLDER
     ? t('cameras.default')
-    : (camera.name ?? t('cameras.indexedLabel', { index }));
+    : camera.name === SHARED_CAMERA_NAME_PLACEHOLDER
+      ? t('cameras.shared')
+      : (camera.name ?? t('cameras.indexedLabel', { index }));
 }
 
 interface CameraSelectorChipProps extends ChipProps {

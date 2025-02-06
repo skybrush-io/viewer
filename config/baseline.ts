@@ -17,6 +17,7 @@ const baseline: Config = {
     fallback: 'en',
   },
   modes: {
+    deepLinking: false,
     player: true,
     validation: true,
     vr: false,

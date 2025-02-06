@@ -29,7 +29,7 @@
     "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.16.7",
     "@reduxjs/toolkit": "^2.2.7",
-    "@skybrush/aframe-components": "file:../skybrush.js/packages/aframe-components/skybrush-aframe-components-1.11.1.tgz",
+    "@skybrush/aframe-components": "^1.12.0",
     "@skybrush/app-theme-mui": "^2.2.0",
     "@skybrush/electron-app-framework": "^2.5.0",
     "@skybrush/mui-components": "^3.3.5",

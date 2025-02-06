@@ -11,8 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added Chinese localization.
 
-- The web-based Viewer version can now deeplink into an exact timestamp with
-  the `t=...` URL parameter.
+- The web-based Viewer version now has a "Share" button in the playback bar
+  that can be used to create a link to an exact timestamp and camera position
+  of the show.
 
 ## [2.4.1] - 2024-11-13
 

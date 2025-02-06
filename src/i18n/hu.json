@@ -49,6 +49,13 @@
     "showLabels": "Címkék mutatása",
     "showYaw": "Irányjelző mutatása"
   },
+  "sharing": {
+    "copyLinkToClipboard": {
+      "error": "Megosztási link másolása a vágólapra sikertelen",
+      "loading": "Megosztási link készítése folyamatban...",
+      "success": "Megosztási link a vágólapra másolva"
+    }
+  },
   "validation": {
     "allDrones": "Minden drón",
     "altitude": "Magasság",

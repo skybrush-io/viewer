@@ -49,6 +49,13 @@
     "showLabels": "Show labels",
     "showYaw": "Show yaw indicators"
   },
+  "sharing": {
+    "copyLinkToClipboard": {
+      "error": "Failed to copy link to clipboard",
+      "loading": "Copying link to clipboard...",
+      "success": "Link copied to clipboard"
+    }
+  },
   "validation": {
     "allDrones": "All drones",
     "altitude": "Altitudes",

@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { Base64 } from 'js-base64';
 import toast from 'react-hot-toast';
 
@@ -15,7 +16,7 @@ import { findSceneCamera } from '~/views/player/utils';
 const toWXYZ = (xyzw: number[]): number[] => [xyzw[3], ...xyzw.slice(0, 3)];
 
 export function getSharingLink(): AppThunk {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const state = getState();
     const playbackPosition = getElapsedSeconds(state);
     const url = new URL(window.location.href);
@@ -48,8 +49,16 @@ export function getSharingLink(): AppThunk {
       );
     }
 
-    console.log(url.toString());
-
-    toast.success('Link copied to clipboard', { duration: 3000 });
+    await toast.promise(
+      navigator.clipboard.writeText(url.toString()),
+      {
+        loading: t('sharing.copyLinkToClipboard.loading'),
+        success: t('sharing.copyLinkToClipboard.success'),
+        error: t('sharing.copyLinkToClipboard.error'),
+      },
+      {
+        duration: 3000,
+      }
+    );
   };
 }

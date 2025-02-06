@@ -4,8 +4,8 @@
  */
 
 import React, { useCallback, useEffect, useRef } from 'react';
+import toast from 'react-hot-toast';
 import { connect } from 'react-redux';
-import { useToasts } from 'react-toast-notifications';
 
 import {
   notifyAudioCanPlay,
@@ -42,16 +42,13 @@ const AudioController = ({
   url,
 }: AudioControllerProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const { addToast } = useToasts();
   const onError = useCallback(() => {
-    addToast('Error while playing audio; playback stopped.', {
-      appearance: 'error',
-    });
+    toast.error('Error while playing audio; playback stopped.');
 
     if (audioRef?.current) {
       console.error(audioRef.current.error);
     }
-  }, [addToast, audioRef]);
+  }, [audioRef]);
 
   // Effect that takes care of stopping / starting the audio and re-syncing the
   // playback position when needed

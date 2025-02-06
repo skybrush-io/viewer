@@ -1,4 +1,5 @@
 import { Base64 } from 'js-base64';
+import toast from 'react-hot-toast';
 
 import {
   threeJsToSkybrushPosition,
@@ -36,11 +37,6 @@ export function getSharingLink(): AppThunk {
         ),
       };
 
-      // [0, 0, 0, 1] in default config
-      console.log(camera.quaternion.toArray());
-      // [-0.5, 0.5, 0.5, -0.5] in default config
-      console.log(pose.orientation);
-
       url.searchParams.set(
         'p',
         Base64.encodeURI(
@@ -53,5 +49,7 @@ export function getSharingLink(): AppThunk {
     }
 
     console.log(url.toString());
+
+    toast.success('Link copied to clipboard', { duration: 3000 });
   };
 }

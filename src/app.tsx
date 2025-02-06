@@ -1,7 +1,7 @@
 import delay from 'delay';
 import React from 'react';
+import { Toaster } from 'react-hot-toast';
 import { Provider as StoreProvider } from 'react-redux';
-import { ToastProvider } from 'react-toast-notifications';
 import { PersistGate } from 'redux-persist/es/integration/react';
 
 import CssBaseline from '@mui/material/CssBaseline';
@@ -18,7 +18,7 @@ import { type ShowLoadingRequest } from './features/show/types';
 import AppHotkeys from './hotkeys';
 import rootSaga from './sagas';
 import { persistor, store } from './store';
-import ThemeProvider from './theme';
+import ThemeProvider, { toastOptions } from './theme';
 
 import '~/../assets/css/aframe.less';
 
@@ -49,26 +49,22 @@ const App = ({ initialShow }: AppProps) => {
     <StoreProvider store={store}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider>
-          <ToastProvider placement='top-center'>
-            <PersistGate
-              persistor={persistor}
-              onBeforeLift={waitForTopLevelView}
-            >
-              {(bootstrapped) => (
-                <>
-                  <SplashScreen visible={!bootstrapped} />
-                  <DragDropHandler />
-                  <WindowTitleManager appName='Skybrush Viewer' />
-                  <LanguageWatcher />
-                  <CssBaseline />
-                  <AppHotkeys>
-                    <MainTopLevelView />
-                  </AppHotkeys>
-                  <Sidebar />
-                </>
-              )}
-            </PersistGate>
-          </ToastProvider>
+          <PersistGate persistor={persistor} onBeforeLift={waitForTopLevelView}>
+            {(bootstrapped) => (
+              <>
+                <SplashScreen visible={!bootstrapped} />
+                <DragDropHandler />
+                <WindowTitleManager appName='Skybrush Viewer' />
+                <LanguageWatcher />
+                <CssBaseline />
+                <AppHotkeys>
+                  <MainTopLevelView />
+                </AppHotkeys>
+                <Sidebar />
+                <Toaster toastOptions={toastOptions} />
+              </>
+            )}
+          </PersistGate>
         </ThemeProvider>
       </StyledEngineProvider>
     </StoreProvider>

@@ -42,7 +42,7 @@
         "altitudeThreshold": "所有无人机",
         "horizontalVelocityThreshold": "XY 速度阈值",
         "allDrones": "所有无人机",
-        "altitude": "所有无人机",
+        "altitude": "所有无人机的高度分布",
         "verticalVelocityThreshold": "Z 速度阈值",
         "distanceThreshold": "距离阈值",
         "proximity": "接近度",

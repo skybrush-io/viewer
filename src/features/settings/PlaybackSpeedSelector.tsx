@@ -31,6 +31,8 @@ const PlaybackSpeedSelector = () => {
           dispatch(setPlaybackSpeed(speed));
         }}
       >
+        <MenuItem value='0.25'>0.25x</MenuItem>
+        <MenuItem value='0.5'>0.5x</MenuItem>
         <MenuItem value='1'>1x</MenuItem>
         <MenuItem value='2'>2x</MenuItem>
         <MenuItem value='3'>3x</MenuItem>

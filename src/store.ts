@@ -4,8 +4,8 @@
 
 import {
   bindActionCreators,
-  type Dispatch,
   type ThunkAction,
+  type ThunkDispatch,
   type UnknownAction,
 } from '@reduxjs/toolkit';
 import { configureStoreAndPersistence } from '@skybrush/redux-toolkit';
@@ -76,5 +76,5 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   unknown,
   UnknownAction
 >;
-export type AppDispatch = Dispatch;
+export type AppDispatch = ThunkDispatch<RootState, unknown, UnknownAction>;
 export type AppStore = typeof store;

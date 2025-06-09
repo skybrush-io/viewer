@@ -13,9 +13,9 @@ import Sidebar from './components/Sidebar';
 import SplashScreen from './components/SplashScreen';
 import WindowTitleManager from './components/WindowTitleManager';
 
+import AppHotkeys from './features/hotkeys/AppHotkeys';
 import { loadShowFromRequest } from './features/show/slice';
 import { type ShowLoadingRequest } from './features/show/types';
-import AppHotkeys from './hotkeys';
 import rootSaga from './sagas';
 import { persistor, store } from './store';
 import ThemeProvider, { toastOptions } from './theme';
@@ -57,9 +57,8 @@ const App = ({ initialShow }: AppProps) => {
                 <DragDropHandler />
                 <WindowTitleManager appName='Skybrush Viewer' />
                 <CssBaseline />
-                <AppHotkeys>
-                  <MainTopLevelView />
-                </AppHotkeys>
+                <AppHotkeys />
+                <MainTopLevelView />
                 <Sidebar />
                 <Toaster toastOptions={toastOptions} />
               </>

@@ -30,6 +30,7 @@ import VirtualReality from '~/icons/VirtualReality';
 import type { RootState } from '~/store';
 
 import PlaybackSlider from './PlaybackSlider';
+import ShowHotkeysDialogButton from '~/features/hotkeys/ShowHotkeysDialogButton';
 
 const style = {
   background: 'linear-gradient(transparent 0px, rgba(0, 0, 0, 0.6) 48px)',
@@ -117,6 +118,7 @@ const BottomOverlay = React.forwardRef(
           {config.modes.validation && (
             <ToggleValidationModeButton disabled={!hasShow} />
           )}
+          <ShowHotkeysDialogButton />
           <SettingsButton />
         </Box>
       </Box>

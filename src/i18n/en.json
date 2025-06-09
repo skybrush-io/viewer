@@ -10,6 +10,7 @@
     "returnToViewer": "Return to viewer",
     "settings": "Settings",
     "shareLink": "Share link to show",
+    "showHotkeysDialog": "Show hotkeys",
     "trackDrones": "Rotate camera towards drones",
     "validateTrajectories": "Validate trajectories"
   },

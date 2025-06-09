@@ -18,6 +18,7 @@ import {
 } from '~/features/show/selectors';
 
 import type { RootState } from '~/store';
+import { PLAYBACK_FPS } from '~/constants';
 
 export default connect(
   // mapStateToProps
@@ -28,8 +29,8 @@ export default connect(
     getElapsedSeconds: getElapsedSecondsGetter(state),
     marks: getMarksFromShowCues(state),
     playing: isPlaying(state),
-    step: 0.04, // 25 fps
-    shiftStep: 0.04, // 25 fps
+    step: 1 / PLAYBACK_FPS,
+    shiftStep: 1 / PLAYBACK_FPS,
   }),
   // mapDispatchToProps
   {

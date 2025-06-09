@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Playback speed can now be set to 0.5x and 0.25x
 
+### Changed
+
+- The current position on the playhead can now be adjusted with a 25 fps
+  granularity.
+
 ## [2.5.0] - 2025-02-06
 
 ### Added

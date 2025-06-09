@@ -45,7 +45,7 @@ export const getElapsedSecondsGetter = createSelector(
   ) =>
     (timestamp: number | null = null) => {
       if (!isNil(adjustedTo)) {
-        return adjustedTo;
+        return adjustedTo / 1000;
       }
 
       if (timestamp === null) {

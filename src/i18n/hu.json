@@ -25,6 +25,20 @@
       "text": "Válasszon ki egy grafikont a fejlécben található gombokkal"
     }
   },
+  "hotkeys": {
+    "cueBackward": "Visszatekerés (Shift = 10x, Alt = képkockánként)",
+    "cueForward": "Előretekerés (Shift = 10x, Alt = képkockánként)",
+    "dialogTitle": "Gyorsbillentyűk",
+    "rewind": "Visszatekerés a kezdéshez",
+    "selectDefaultCamera": "Alapértelmezett kamera kiválasztása",
+    "selectFifthCamera": "Ötödik kamera kiválasztása",
+    "selectFirstCamera": "Első kamera kiválasztása",
+    "selectFourthCamera": "Negyedik kamera kiválasztása",
+    "selectSecondCamera": "Második kamera kiválasztása",
+    "selectThirdCamera": "Harmadik kamera kiválasztása",
+    "toggleMuted": "Hangerő némítása vagy visszaállítása",
+    "togglePlayback": "Lejátszás indítása vagy leállítása"
+  },
   "settings": {
     "droneModel": {
       "flapper": "Flapper",

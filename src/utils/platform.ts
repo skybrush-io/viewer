@@ -8,3 +8,9 @@
  * otherwise.
  */
 export const isRunningOnMac: boolean = navigator.platform.includes('Mac');
+
+/**
+ * Constant that evaluates to the name of the platform-specific hotkey
+ * modifier: <code>Ctrl</code> on Windows and <code>Cmd</code> on Mac.
+ */
+export const platformModifierKey = isRunningOnMac ? 'Cmd' : 'Ctrl';

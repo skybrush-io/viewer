@@ -25,6 +25,20 @@
       "text": "Select one of the chart types with the buttons in the header"
     }
   },
+  "hotkeys": {
+    "cueBackward": "Cue backward (Shift = 10x, Alt = by frames)",
+    "cueForward": "Cue forward (Shift = 10x, Alt = by frames)",
+    "dialogTitle": "Hotkeys",
+    "rewind": "Rewind to start",
+    "selectDefaultCamera": "Select default camera",
+    "selectFifthCamera": "Select fifth camera",
+    "selectFirstCamera": "Select first camera",
+    "selectFourthCamera": "Select fourth camera",
+    "selectSecondCamera": "Select second camera",
+    "selectThirdCamera": "Select third camera",
+    "toggleMuted": "Mute or unmute sound",
+    "togglePlayback": "Start or stop playback"
+  },
   "settings": {
     "droneModel": {
       "flapper": "Flapper",

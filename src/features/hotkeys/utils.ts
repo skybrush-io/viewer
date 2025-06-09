@@ -4,6 +4,7 @@ import { type Dispatch, type UnknownAction } from 'redux';
 import { isRunningOnMac } from '~/utils/platform';
 
 import type { HotkeyHandler, KeyMap } from './types';
+import type { Scope } from 'eslint';
 
 export function bindHotkeyHandlers<D extends Dispatch<UnknownAction>>(
   reduxHandlers: Record<
@@ -69,4 +70,20 @@ export function onlyWhenNoButtonIsFocused<
   return (...args: T) => {
     return !isButtonFocused() ? actionFactory(...args) : null;
   };
+}
+
+/**
+ * Returns a function that filters a keymap to include only those keys that
+ * are  valid for the given scope.
+ *
+ * @param keyMap  the keymap to filter
+ * @param scope   the scope to filter by
+ */
+export function filterKeyMapByScope<ScopeType>(
+  keyMap: KeyMap<unknown, ScopeType>,
+  scope: ScopeType
+) {
+  return Object.fromEntries(
+    Object.entries(keyMap).filter(([, value]) => value.scopes.includes(scope))
+  );
 }

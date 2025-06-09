@@ -28,6 +28,8 @@ export default connect(
     getElapsedSeconds: getElapsedSecondsGetter(state),
     marks: getMarksFromShowCues(state),
     playing: isPlaying(state),
+    step: 0.04, // 25 fps
+    shiftStep: 0.04, // 25 fps
   }),
   // mapDispatchToProps
   {

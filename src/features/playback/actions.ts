@@ -7,9 +7,7 @@ import {
   getPlaybackSpeed,
   isPlaying,
 } from './selectors';
-import { setStartStopTimeAndSpeed } from './slice';
-
-export { temporarilyOverridePlaybackPosition } from './slice';
+import { setAdjustedTo, setStartStopTimeAndSpeed } from './slice';
 
 export const rewind = (): AppThunk => (dispatch) => {
   dispatch(setPlaybackPosition(0));
@@ -58,6 +56,9 @@ export const setPlaybackPosition =
 
     dispatch(setStartStopTimeAndSpeed({ start, stop }));
   };
+
+export const temporarilyOverridePlaybackPosition = (seconds: number) =>
+  setAdjustedTo(seconds * 1000);
 
 export const adjustPlaybackPositionBy =
   (delta: number): AppThunk =>

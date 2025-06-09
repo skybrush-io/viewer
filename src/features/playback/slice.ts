@@ -94,7 +94,7 @@ const { actions, reducer } = createSlice({
       state.adjustedTo = null;
     },
 
-    temporarilyOverridePlaybackPosition(state, action: PayloadAction<number>) {
+    setAdjustedTo(state, action: PayloadAction<number>) {
       const value = Number(action.payload);
 
       state.adjustedTo = !Number.isNaN(value) && value >= 0 ? value : null;
@@ -102,7 +102,6 @@ const { actions, reducer } = createSlice({
   },
 });
 
-export const { setStartStopTimeAndSpeed, temporarilyOverridePlaybackPosition } =
-  actions;
+export const { setStartStopTimeAndSpeed, setAdjustedTo } = actions;
 
 export default reducer;

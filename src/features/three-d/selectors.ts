@@ -1,16 +1,16 @@
+import { createSelector } from '@reduxjs/toolkit';
 import get from 'lodash-es/get';
 
 import {
   INDOOR_DRONE_SIZE_SCALING_FACTOR,
   OUTDOOR_DRONE_SIZE_SCALING_FACTOR,
 } from '~/constants';
+import { getRawDroneRadiusSetting } from '~/features/settings/selectors';
 import {
   getPerspectiveCamerasAndDefaultCamera,
   isShowIndoor,
 } from '~/features/show/selectors';
 import type { RootState } from '~/store';
-import { getRawDroneRadiusSetting } from '../settings/selectors';
-import { createSelector } from '@reduxjs/toolkit';
 
 /**
  * Returns the effective scenery to show, depending on the user's preference and

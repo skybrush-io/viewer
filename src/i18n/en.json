@@ -4,6 +4,7 @@
     "rightText": "Skybrush © 2020-{{ year }} CollMot Robotics Ltd."
   },
   "buttons": {
+    "close": "Close",
     "closeShow": "Close show",
     "openShowFile": "Open show file",
     "resetZoom": "Reset zoom",

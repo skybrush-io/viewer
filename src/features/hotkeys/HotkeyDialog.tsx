@@ -123,7 +123,7 @@ const HotkeyDialog = ({ onClose, open }: HotkeyDialogProps) => {
 
       <DialogActions>
         <Button color='primary' onClick={onClose}>
-          Close
+          {t('buttons.close')}
         </Button>
       </DialogActions>
     </DraggableDialog>

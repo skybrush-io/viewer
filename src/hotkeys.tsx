@@ -16,6 +16,7 @@ import {
 import { switchToCameraByIndex } from '~/features/three-d/actions';
 
 import { type AppThunk } from './store';
+import { PLAYBACK_FPS } from './constants';
 
 configureHotkeys({
   // Uncomment the next line for debugging problems with hotkeys
@@ -24,9 +25,21 @@ configureHotkeys({
 
 // Create the default keymap mapping keys to actions
 export const keyMap: KeyMap = {
+  // Cue action hotkey modifiers are modelled based on Inkscape's move operator:
+  // Alt forces the base distance to the smallest movement possible, while
+  // Shift multiplies the distance by 10. The default nudge distance is 1 second.
   CUE_FORWARD: 'l',
+  CUE_FORWARD_FINE: 'alt+l',
+  CUE_FORWARD_LARGE: 'shift+l',
+  CUE_FORWARD_LARGE_FINE: 'shift+alt+l',
+
   CUE_BACKWARD: 'j',
+  CUE_BACKWARD_FINE: 'alt+j',
+  CUE_BACKWARD_LARGE: 'shift+j',
+  CUE_BACKWARD_LARGE_FINE: 'shift+alt+j',
+
   REWIND: 'home',
+
   TOGGLE_MUTED: 'p',
   TOGGLE_PLAYBACK: ['space', 'k'],
 
@@ -59,8 +72,7 @@ function onlyWhenNoButtonIsFocused<T extends any[], A extends Action>(
 }
 
 interface AppHotkeysProps {
-  readonly cueForward: () => void;
-  readonly cueBackward: () => void;
+  readonly adjustPlaybackPositionBy: (by: number) => void;
   readonly rewind: () => void;
   readonly switchToCameraByIndex: (index: number) => void;
   readonly toggleMuted: () => void;
@@ -68,9 +80,12 @@ interface AppHotkeysProps {
   readonly children: React.ReactNode;
 }
 
+const CUE_STEP = 1; // seconds
+const FINE_CUE_STEP = 1 / PLAYBACK_FPS; // seconds
+const LARGE_MULTIPLIER = 10; // for large cue steps
+
 const AppHotkeys = ({
-  cueForward,
-  cueBackward,
+  adjustPlaybackPositionBy,
   rewind,
   switchToCameraByIndex,
   toggleMuted,
@@ -78,12 +93,37 @@ const AppHotkeys = ({
   children,
 }: AppHotkeysProps) => {
   const handlers = {
-    CUE_FORWARD: cueForward,
-    CUE_BACKWARD: cueBackward,
+    CUE_BACKWARD() {
+      adjustPlaybackPositionBy(-CUE_STEP);
+    },
+    CUE_BACKWARD_FINE() {
+      adjustPlaybackPositionBy(-FINE_CUE_STEP);
+    },
+    CUE_BACKWARD_LARGE() {
+      adjustPlaybackPositionBy(-CUE_STEP * LARGE_MULTIPLIER);
+    },
+    CUE_BACKWARD_LARGE_FINE() {
+      adjustPlaybackPositionBy(-FINE_CUE_STEP * LARGE_MULTIPLIER);
+    },
+    CUE_FORWARD() {
+      adjustPlaybackPositionBy(CUE_STEP);
+    },
+    CUE_FORWARD_FINE() {
+      adjustPlaybackPositionBy(FINE_CUE_STEP);
+    },
+    CUE_FORWARD_LARGE() {
+      adjustPlaybackPositionBy(CUE_STEP * LARGE_MULTIPLIER);
+    },
+    CUE_FORWARD_LARGE_FINE() {
+      adjustPlaybackPositionBy(FINE_CUE_STEP * LARGE_MULTIPLIER);
+    },
+
     REWIND: rewind,
+
     // Full-screen does not work yet; the OverlayVisibilityHandler stops working
     // and I don't have time to debug it.
     // TOGGLE_FULLSCREEN: toggleFullScreen,
+
     SELECT_DEFAULT_CAMERA() {
       switchToCameraByIndex(0);
     },
@@ -102,6 +142,7 @@ const AppHotkeys = ({
     SELECT_FIFTH_CAMERA() {
       switchToCameraByIndex(5);
     },
+
     TOGGLE_MUTED: toggleMuted,
     TOGGLE_PLAYBACK: togglePlayback,
   };
@@ -118,11 +159,10 @@ export default connect(
   () => ({}),
   // mapDispatchToProps
   {
-    cueBackward: () => adjustPlaybackPositionBy(-10),
-    cueForward: () => adjustPlaybackPositionBy(10),
+    adjustPlaybackPositionBy,
     rewind,
     switchToCameraByIndex,
-    toggleMuted: toggleMuted as any,
+    toggleMuted,
     togglePlayback: onlyWhenNoButtonIsFocused(togglePlayback),
   }
 )(AppHotkeys);

@@ -27,11 +27,6 @@ module.exports = {
     hot: true,
   },
 
-  // AFrame places THREE in the global context so other packages that try to
-  // import 'three' can simply use window.THREE. This is needed to avoid
-  // warnings about THREE being imported multiple times
-  externals: { three: 'THREE' },
-
   plugins: [
     new webpack.NoEmitOnErrorsPlugin(),
 

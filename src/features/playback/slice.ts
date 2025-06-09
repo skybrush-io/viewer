@@ -18,9 +18,32 @@ const validateTimestamp = (timestamp: number | null | undefined) => {
 };
 
 interface PlaybackSliceState {
+  /**
+   * Timestamp that the playhead was explicitly adjusted to, in milliseconds.
+   * Used only when the user is dragging the playhead. null if the
+   * playhead is not currently being adjusted. This value is used to override
+   * the normal playback position calculation, which is based on the startedAt
+   * and stoppedAt timestamps.
+   */
   adjustedTo: number | null;
+
+  /**
+   * Timestamp when the playback started, in milliseconds. null if the playback
+   * was never started. Rounded to the nearest millisecond.
+   */
   startedAt: number | null;
+
+  /**
+   * Timestamp when the playback stopped, in milliseconds. null if the playback
+   * was never stopped (which does not mean it is currently playing). Rounded
+   * to the nearest millisecond.
+   */
   stoppedAt: number | null;
+
+  /**
+   * Multiplier for the playback speed. 1 means normal speed, 2 means double
+   * speed, 0.5 means half speed, etc. Must be a positive number.
+   */
   speed: number;
 }
 

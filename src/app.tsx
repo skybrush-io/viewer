@@ -49,13 +49,13 @@ const App = ({ initialShow }: AppProps) => {
     <StoreProvider store={store}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider>
+          <LanguageWatcher />
           <PersistGate persistor={persistor} onBeforeLift={waitForTopLevelView}>
             {(bootstrapped) => (
               <>
                 <SplashScreen visible={!bootstrapped} />
                 <DragDropHandler />
                 <WindowTitleManager appName='Skybrush Viewer' />
-                <LanguageWatcher />
                 <CssBaseline />
                 <AppHotkeys>
                   <MainTopLevelView />

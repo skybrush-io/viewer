@@ -18,20 +18,23 @@ import {
 } from '~/features/show/selectors';
 
 import type { RootState } from '~/store';
-import { PLAYBACK_FPS } from '~/constants';
+import { getPlaybackSliderStepSize } from '~/features/settings/selectors';
 
 export default connect(
   // mapStateToProps
-  (state: RootState) => ({
-    dragging: isAdjustingPlaybackPosition(state),
-    duration: getShowDuration(state),
-    formatPlaybackTimestamp: getTimestampFormatter(state),
-    getElapsedSeconds: getElapsedSecondsGetter(state),
-    marks: getMarksFromShowCues(state),
-    playing: isPlaying(state),
-    step: 1 / PLAYBACK_FPS,
-    shiftStep: 1 / PLAYBACK_FPS,
-  }),
+  (state: RootState) => {
+    const step = getPlaybackSliderStepSize(state);
+    return {
+      dragging: isAdjustingPlaybackPosition(state),
+      duration: getShowDuration(state),
+      formatPlaybackTimestamp: getTimestampFormatter(state),
+      getElapsedSeconds: getElapsedSecondsGetter(state),
+      marks: getMarksFromShowCues(state),
+      playing: isPlaying(state),
+      step,
+      shiftStep: step,
+    };
+  },
   // mapDispatchToProps
   {
     onDragged: (event: any, value: number | number[]) =>

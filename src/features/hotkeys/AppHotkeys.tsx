@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { configure as configureHotkeys, GlobalHotKeys } from 'react-hotkeys';
 
-import { PLAYBACK_FPS } from '~/constants';
+import { DEFAULT_PLAYBACK_FPS } from '~/constants';
 import { toggleMuted } from '~/features/audio/slice';
 import {
   adjustPlaybackPositionBy,
@@ -45,25 +45,13 @@ const AppHotkeys = ({ activeHotkeyScope, handlers }: AppHotkeysProps) => {
   );
 };
 
-const CUE_STEP = 1; // seconds
-const FINE_CUE_STEP = 1 / PLAYBACK_FPS; // seconds
-const LARGE_MULTIPLIER = 10; // for large cue steps
-
-const isFineAdjustment = (event?: KeyboardEvent) => {
-  return event?.altKey;
-};
-
-const isLargeAdjustment = (event?: KeyboardEvent) => {
-  return event?.shiftKey;
-};
-
-const getCueStep = (event?: KeyboardEvent) => {
+const getCueStepAndUnit = (
+  event?: KeyboardEvent
+): [number, 'frames' | 'seconds'] => {
   // Logic is modelled based on Inkscape's move operator:
   // Alt forces the base distance to the smallest movement possible, while
   // Shift multiplies the distance by 10. The default nudge distance is 1 second.
-
-  const base = isFineAdjustment(event) ? FINE_CUE_STEP : CUE_STEP;
-  return isLargeAdjustment(event) ? base * LARGE_MULTIPLIER : base;
+  return [event?.shiftKey ? 10 : 1, event?.altKey ? 'frames' : 'seconds'];
 };
 
 export default connect(
@@ -75,10 +63,14 @@ export default connect(
   (dispatch: AppDispatch) => ({
     handlers: bindHotkeyHandlers(
       {
-        CUE_BACKWARD: (event?: KeyboardEvent) =>
-          adjustPlaybackPositionBy(-getCueStep(event)),
-        CUE_FORWARD: (event?: KeyboardEvent) =>
-          adjustPlaybackPositionBy(getCueStep(event)),
+        CUE_BACKWARD: (event?: KeyboardEvent) => {
+          const [delta, unit] = getCueStepAndUnit(event);
+          return adjustPlaybackPositionBy(-delta, unit);
+        },
+        CUE_FORWARD: (event?: KeyboardEvent) => {
+          const [delta, unit] = getCueStepAndUnit(event);
+          return adjustPlaybackPositionBy(delta, unit);
+        },
         REWIND: rewind,
         SELECT_DEFAULT_CAMERA: () => switchToCameraByIndex(0),
         SELECT_FIRST_CAMERA: () => switchToCameraByIndex(1),

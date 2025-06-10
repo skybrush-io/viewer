@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -8,7 +9,6 @@ import Select from '@mui/material/Select';
 import { setPlaybackSpeed } from '~/features/playback/actions';
 import { getPlaybackSpeed } from '~/features/playback/selectors';
 import { useAppDispatch, useAppSelector } from '~/hooks/store';
-import { useTranslation } from 'react-i18next';
 
 /**
  * Component for selecting the playback speed.

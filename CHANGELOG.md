@@ -15,8 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- The current position on the playhead can now be adjusted with a 25 fps
-  granularity.
+- The current position on the playhead can now be adjusted with smaller
+  granularity. The assumed frame rate (for stepping through the show by
+  frames) can be set in the settings.
 
 ## [2.5.0] - 2025-02-06
 

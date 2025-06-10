@@ -1,5 +1,5 @@
-import type { ChangeEvent } from 'react';
-
+import { DEFAULT_PLAYBACK_FPS } from '~/constants';
+import { isSupportedFrameRate } from '~/features/playback/types';
 import type { AppThunk } from '~/store';
 import type { SceneryType } from '~/views/player/Scenery';
 
@@ -17,6 +17,11 @@ export const setLanguage = (language: string) =>
 
 export const setScenery = (scenery: SceneryType) =>
   updateAppSettings('threeD', { scenery });
+
+export const setSimulatedPlaybackFrameRate = (fps: number) =>
+  updateAppSettings('playback', {
+    fps: isSupportedFrameRate(fps) ? fps : DEFAULT_PLAYBACK_FPS,
+  });
 
 export const toggleAxes = (): AppThunk => (dispatch, getState) => {
   const state = getState();

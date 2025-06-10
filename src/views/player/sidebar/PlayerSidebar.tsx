@@ -8,11 +8,11 @@ import { isThemeDark } from '@skybrush/app-theme-mui';
 
 import SkybrushLogo from '~/components/SkybrushLogo';
 import { closeSidebar } from '~/features/sidebar/slice';
+import { getActiveSidebarTab } from '~/features/sidebar/selectors';
+import { SidebarTab } from '~/features/sidebar/types';
 import { useAppDispatch, useAppSelector } from '~/hooks/store';
 
 import PlayerSidebarTabs from './PlayerSidebarTabs';
-import { getActiveSidebarTab } from '~/features/sidebar/selectors';
-import { SidebarTab } from '~/features/sidebar/types';
 import SettingsTab from './SettingsTab';
 
 const styles = {

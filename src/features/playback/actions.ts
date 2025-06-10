@@ -1,3 +1,4 @@
+import { getSimulatedPlaybackFrameRate } from '~/features/settings/selectors';
 import { getShowDuration } from '~/features/show/selectors';
 import type { AppThunk } from '~/store';
 
@@ -61,7 +62,7 @@ export const temporarilyOverridePlaybackPosition = (seconds: number) =>
   setAdjustedTo(seconds * 1000);
 
 export const adjustPlaybackPositionBy =
-  (delta: number): AppThunk =>
+  (delta: number, unit: 'seconds' | 'frames'): AppThunk =>
   (dispatch, getState) => {
     if (!Number.isFinite(delta)) {
       return;
@@ -69,10 +70,18 @@ export const adjustPlaybackPositionBy =
 
     const state = getState();
     const seconds = getElapsedSeconds(state);
+
+    if (unit === 'frames') {
+      const fps = getSimulatedPlaybackFrameRate(state);
+      delta = delta / fps;
+    }
+
     const newPosition = Math.min(
       Math.max(0, seconds + delta),
       getShowDuration(state)
     );
+    console.log(newPosition);
+
     dispatch(setPlaybackPosition(newPosition));
   };
 

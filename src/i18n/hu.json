@@ -52,6 +52,7 @@
     },
     "droneRadius": "Drón mérete",
     "language": "Nyelv",
+    "playbackFrameRate": "Képkockák száma / másodperc",
     "playbackSpeed": "Lejátszás sebessége",
     "scaleLabels": "Távolságfüggetlen címke méretek",
     "scenery": {

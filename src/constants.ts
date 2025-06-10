@@ -1,11 +1,12 @@
 /**
- * Number of frames per second to use for the playback slider.
+ * Default number of frames per second to use for the playback slider when the
+ * settings slice does not contain a value for it.
  *
  * Note that the .skyc format itself does not have a concept of "frames". This
  * is just a convenience constant for the playback slider and it also defines
  * the smallest possible adjustment to the playback position.
  */
-export const PLAYBACK_FPS = 25;
+export const DEFAULT_PLAYBACK_FPS = 25;
 
 /**
  * Downscaling factor for indoor drones.

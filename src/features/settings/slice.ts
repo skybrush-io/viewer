@@ -5,13 +5,16 @@
 import config from 'config';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import { DEFAULT_DRONE_MODEL } from '~/constants';
+import { DEFAULT_DRONE_MODEL, DEFAULT_PLAYBACK_FPS } from '~/constants';
 
 import type { DroneModelType } from './types';
 
 interface SettingsSliceState {
   general: {
     language: string;
+  };
+  playback: {
+    fps: number;
   };
   threeD: {
     scenery: 'disabled' | 'auto' | 'day' | 'night' | 'indoor';
@@ -31,6 +34,11 @@ const initialState: SettingsSliceState = {
   general: {
     // The current language of the app
     language: config.language.default,
+  },
+
+  playback: {
+    // Simulated number of frames per second to use for the playback slider.
+    fps: DEFAULT_PLAYBACK_FPS,
   },
 
   threeD: {

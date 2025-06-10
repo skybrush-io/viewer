@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 
 import DroneSizeSlider from '~/features/settings/DroneSizeSlider';
+import FrameRateSelector from '~/features/settings/FrameRateSelector';
 import LanguageSelector from '~/features/settings/LanguageSelector';
 import PlaybackSpeedSelector from '~/features/settings/PlaybackSpeedSelector';
 import ScenerySelector from '~/features/settings/ScenerySelector';
@@ -24,6 +25,10 @@ const SettingsTab = () => (
 
     <Box px={2} pt={2}>
       <PlaybackSpeedSelector />
+    </Box>
+
+    <Box px={2} pt={2}>
+      <FrameRateSelector />
     </Box>
 
     <Box px={2} pt={2} pb={1}>

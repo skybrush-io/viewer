@@ -52,6 +52,7 @@
     },
     "droneRadius": "UAV size",
     "language": "Language",
+    "playbackFrameRate": "Frame count per second",
     "playbackSpeed": "Playback speed",
     "scaleLabels": "Equalize label sizes",
     "scenery": {

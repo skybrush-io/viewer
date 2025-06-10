@@ -6,12 +6,14 @@
   "buttons": {
     "close": "Close",
     "closeShow": "Close show",
+    "inspector": "Inspector",
     "openShowFile": "Open show file",
     "resetZoom": "Reset zoom",
     "returnToViewer": "Return to viewer",
     "settings": "Settings",
     "shareLink": "Share link to show",
     "showHotkeysDialog": "Show hotkeys",
+    "toggleSidebar": "Toggle sidebar",
     "trackDrones": "Rotate camera towards drones",
     "validateTrajectories": "Validate trajectories"
   },

@@ -2,21 +2,18 @@ import React from 'react';
 
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
 import { type Theme } from '@mui/material/styles';
 
 import { isThemeDark } from '@skybrush/app-theme-mui';
 
+import SkybrushLogo from '~/components/SkybrushLogo';
 import { closeSidebar } from '~/features/sidebar/slice';
-import DroneModelSelector from '~/features/settings/DroneModelSelector';
-import DroneSizeSlider from '~/features/settings/DroneSizeSlider';
-import LanguageSelector from '~/features/settings/LanguageSelector';
-import PlaybackSpeedSelector from '~/features/settings/PlaybackSpeedSelector';
-import ScenerySelector from '~/features/settings/ScenerySelector';
-import ThreeDViewSettingToggles from '~/features/settings/ThreeDViewSettingToggles';
 import { useAppDispatch, useAppSelector } from '~/hooks/store';
 
-import SkybrushLogo from './SkybrushLogo';
+import PlayerSidebarTabs from './PlayerSidebarTabs';
+import { getActiveSidebarTab } from '~/features/sidebar/selectors';
+import { SidebarTab } from '~/features/sidebar/types';
+import SettingsTab from './SettingsTab';
 
 const styles = {
   contents: {
@@ -35,17 +32,17 @@ const styles = {
     opacity: 0.4,
   },
 
-  list: {
-    background: 'unset',
+  main: {
     flex: 1,
     overflowX: 'hidden',
   },
 
   root: {
     '& .MuiDrawer-paper': {
+      backdropFilter: 'blur(24px)',
       background: (theme: Theme) =>
         isThemeDark(theme)
-          ? 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) 80%, black)'
+          ? 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) 80%, rgba(0, 0, 0, 0.75))'
           : 'rgba(255, 255, 255, 0.7)',
     },
   },
@@ -60,9 +57,10 @@ const modalProps = {
 /**
  * Sidebar drawer component for the application.
  */
-const SidebarDrawer = () => {
+const PlayerSidebar = () => {
   const dispatch = useAppDispatch();
   const open = useAppSelector((state) => state.sidebar.open);
+  const activeTab = useAppSelector(getActiveSidebarTab);
 
   return (
     <Drawer
@@ -74,27 +72,12 @@ const SidebarDrawer = () => {
         dispatch(closeSidebar());
       }}
     >
+      <PlayerSidebarTabs />
       <Box sx={styles.contents}>
-        <List sx={styles.list}>
-          <Box px={2}>
-            <LanguageSelector />
-          </Box>
-
-          <Box px={2} pt={2}>
-            <ScenerySelector />
-          </Box>
-
-          <Box px={2} pt={2}>
-            <PlaybackSpeedSelector />
-          </Box>
-
-          <Box px={2} pt={2} pb={1}>
-            <DroneSizeSlider />
-          </Box>
-
-          <ThreeDViewSettingToggles />
-        </List>
-
+        <Box sx={styles.main}>
+          {activeTab === SidebarTab.INSPECTOR && <div />}
+          {activeTab === SidebarTab.SETTINGS && <SettingsTab />}
+        </Box>
         <Box sx={styles.footer}>
           <a href='https://skybrush.io'>
             <SkybrushLogo />
@@ -105,4 +88,4 @@ const SidebarDrawer = () => {
   );
 };
 
-export default SidebarDrawer;
+export default PlayerSidebar;

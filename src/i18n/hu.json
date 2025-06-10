@@ -6,12 +6,14 @@
   "buttons": {
     "close": "Bezárás",
     "closeShow": "Show bezárása",
+    "inspector": "Vizsgálat",
     "openShowFile": "Show megnyitása",
     "resetZoom": "Nagyítás alaphelyzetbe",
     "returnToViewer": "Vissza a megjelenítőbe",
     "settings": "Beállítások",
     "shareLink": "Link megosztása",
     "showHotkeysDialog": "Gyorsbillentyűk megjelenítése",
+    "toggleSidebar": "Oldalsáv megjelenítése",
     "trackDrones": "Kamera forgatása a drónok felé",
     "validateTrajectories": "Útvonalak ellenőrzése"
   },

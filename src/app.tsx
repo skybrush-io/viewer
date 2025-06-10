@@ -9,13 +9,13 @@ import { StyledEngineProvider } from '@mui/material/styles';
 
 import DragDropHandler from './components/DragDropHandler';
 import MainTopLevelView from './components/MainTopLevelView';
-import Sidebar from './components/Sidebar';
 import SplashScreen from './components/SplashScreen';
 import WindowTitleManager from './components/WindowTitleManager';
 
 import AppHotkeys from './features/hotkeys/AppHotkeys';
 import { loadShowFromRequest } from './features/show/slice';
 import { type ShowLoadingRequest } from './features/show/types';
+
 import rootSaga from './sagas';
 import { persistor, store } from './store';
 import ThemeProvider, { toastOptions } from './theme';
@@ -61,7 +61,6 @@ const App = ({ initialShow }: AppProps) => {
                 <CssBaseline />
                 <AppHotkeys />
                 <MainTopLevelView />
-                <Sidebar />
                 <HotkeyDialog />
                 <Toaster toastOptions={toastOptions} />
               </>

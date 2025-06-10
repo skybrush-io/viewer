@@ -9,7 +9,7 @@ import MuteButton from '@skybrush/mui-components/lib/MuteButton';
 import PlayStopButton from '@skybrush/mui-components/lib/PlayStopButton';
 
 import OpenButton from '~/components/buttons/OpenButton';
-import SettingsButton from '~/components/buttons/SettingsButton';
+import ToggleSidebarButton from '~/components/buttons/ToggleSidebarButton';
 
 import { hasAudio, isAudioMuted } from '~/features/audio/selectors';
 import { toggleMuted } from '~/features/audio/slice';
@@ -119,7 +119,7 @@ const BottomOverlay = React.forwardRef(
             <ToggleValidationModeButton disabled={!hasShow} />
           )}
           <ShowHotkeysDialogButton />
-          <SettingsButton />
+          <ToggleSidebarButton />
         </Box>
       </Box>
 

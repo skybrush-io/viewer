@@ -13,6 +13,7 @@ import { cameraRef } from '~/features/three-d/saga';
 
 import Overlays from './Overlays';
 import OverlayVisibilityController from './OverlayVisibilityController';
+import PlayerSidebar from './sidebar';
 import ThreeDView from './ThreeDView';
 
 const PlayerView = ({
@@ -28,6 +29,7 @@ const PlayerView = ({
       <LoadingScreen />
     </Box>
 
+    <PlayerSidebar />
     <AudioController />
     <OverlayVisibilityController areaRef={screenRef} />
   </>

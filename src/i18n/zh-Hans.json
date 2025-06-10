@@ -36,13 +36,14 @@
         "returnToViewer": "重置缩放",
         "closeShow": "关闭显示",
         "validateTrajectories": "验证轨迹",
-        "openShowFile": "打开表演文件"
+        "openShowFile": "打开表演文件",
+        "shareLink": "分享链接以展示"
     },
     "validation": {
         "altitudeThreshold": "所有无人机",
         "horizontalVelocityThreshold": "XY 速度阈值",
         "allDrones": "所有无人机",
-        "altitude": "所有无人机",
+        "altitude": "所有无人机的高度分布",
         "verticalVelocityThreshold": "Z 速度阈值",
         "distanceThreshold": "距离阈值",
         "proximity": "接近度",
@@ -53,10 +54,18 @@
     "cameras": {
         "noCamera": "无相机",
         "default": "默认视图",
-        "indexedLabel": "相机 {{ index }}"
+        "indexedLabel": "相机 {{ index }}",
+        "shared": "共享视图"
     },
     "bottomOverlay": {
         "rightText": "Skybrush © 2020-{{ year }} CollMot Robotics 有限公司。",
         "leftText": "使用方向键移动（按住 Shift 键可加速），按 E/C 键可改变高度。拖动场景查看四周，滚轮或 +/- 键可缩放视角。"
+    },
+    "sharing": {
+        "copyLinkToClipboard": {
+            "loading": "正在复制链接…",
+            "success": "链接已复制到剪贴板",
+            "error": "无法将链接复制到剪贴板"
+        }
     }
 }

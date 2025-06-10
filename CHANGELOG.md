@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added Chinese translation of the user interface. Many thanks to our contributors!
+
 - Playback speed can now be set to 0.5x and 0.25x
 
 - Pressing `?` now shows a dialog summarizing the available hotkeys.
@@ -45,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   yaw setpoints.
 
 - Added language selector in the sidebar. Currently the app supports English and
-  Hungarian. See https://skybrush.io/blog/2024-01-18-help-us-translate-skybrush-live/
+  Hungarian. See <https://skybrush.io/blog/2024-01-18-help-us-translate-skybrush-live/>
   if you would like to help translating Viewer into your own language.
 
 ### Changed

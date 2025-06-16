@@ -10,6 +10,7 @@ import { type Theme } from '@mui/material/styles';
 import { isThemeDark } from '@skybrush/app-theme-mui';
 
 import SkybrushLogo from '~/components/SkybrushLogo';
+import { PLAYER_SIDEBAR_WIDTH } from '~/constants';
 import { closeSidebar, isSidebarOpen } from '~/features/sidebar/slice';
 import { getActiveSidebarTab } from '~/features/sidebar/selectors';
 import { SidebarTab } from '~/features/sidebar/types';
@@ -22,7 +23,6 @@ import InspectorTab from './InspectorTab';
 const styles = {
   contents: {
     height: '100%',
-    width: 300,
     display: 'flex',
     flexDirection: 'column',
     pt: 1,
@@ -62,7 +62,6 @@ const modalProps = {
  * Sidebar drawer component for the application.
  */
 const PlayerSidebar = () => {
-  const dispatch = useAppDispatch();
   const open = useAppSelector(isSidebarOpen);
   const activeTab = useAppSelector(getActiveSidebarTab);
 
@@ -74,32 +73,26 @@ const PlayerSidebar = () => {
       ModalProps={modalProps}
       variant='persistent'
     >
-      <Stack direction='row' sx={{ height: '100%' }}>
-        <IconButton
-          disableRipple
-          size='small'
-          sx={{ p: 0 }}
-          onClick={() => {
-            dispatch(closeSidebar());
-          }}
-        >
-          <ChevronRight />
-        </IconButton>
-        <Box sx={{ position: 'relative' }}>
-          <PlayerSidebarTabs />
-          <Box sx={styles.contents}>
-            <Box sx={styles.main}>
-              {activeTab === SidebarTab.INSPECTOR && <InspectorTab />}
-              {activeTab === SidebarTab.SETTINGS && <SettingsTab />}
-            </Box>
-            <Box sx={styles.footer}>
-              <a href='https://skybrush.io'>
-                <SkybrushLogo />
-              </a>
-            </Box>
+      <Box
+        sx={{
+          position: 'relative',
+          width: PLAYER_SIDEBAR_WIDTH,
+          height: '100%',
+        }}
+      >
+        <PlayerSidebarTabs />
+        <Box sx={styles.contents}>
+          <Box sx={styles.main}>
+            {activeTab === SidebarTab.INSPECTOR && <InspectorTab />}
+            {activeTab === SidebarTab.SETTINGS && <SettingsTab />}
+          </Box>
+          <Box sx={styles.footer}>
+            <a href='https://skybrush.io'>
+              <SkybrushLogo />
+            </a>
           </Box>
         </Box>
-      </Stack>
+      </Box>
     </Drawer>
   );
 };

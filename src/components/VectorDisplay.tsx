@@ -1,7 +1,6 @@
 import clsx from 'clsx';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { styled } from '@mui/material';
-import { text } from 'express';
 
 type Vector3DProps = {
   value: number[];
@@ -86,9 +85,8 @@ export default function VectorDisplay({
   return (
     <StyledBox minValueWidth={minValueWidth} minUnitWidth={minUnitWidth}>
       {value.map((v, i) => (
-        <>
+        <Fragment key={i}>
           <div
-            key={i}
             className={clsx(
               'Vector3D-label',
               colored ? COLOR_CLASSES[i] : 'Vector3D-gray'
@@ -97,7 +95,7 @@ export default function VectorDisplay({
             {labels[i]}
           </div>
           <div className='Vector3D-value'>{v.toFixed(digits)}</div>
-        </>
+        </Fragment>
       ))}
       {unit && <div className='Vector3D-unit'>{unit}</div>}
     </StyledBox>

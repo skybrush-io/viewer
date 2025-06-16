@@ -19,6 +19,7 @@ declare module '*.obj' {
 // Custom elements used by A-Frame
 declare namespace JSX {
   interface IntrinsicElements {
+    'a-arrow': any;
     'a-asset-item': any;
     'a-assets': any;
     'a-camera': any;

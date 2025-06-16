@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import Box from '@mui/material/Box';
 
 import { Accordion, AccordionSummary, AccordionDetails } from './Accordion';
 import CueListAccordion from './CueListAccordion';
@@ -13,7 +14,7 @@ const InspectorTab = () => {
   const { t } = useTranslation();
 
   return (
-    <>
+    <Box sx={{ px: 2 }}>
       <Accordion defaultExpanded>
         <AccordionSummary>{t('inspector.metadata.summary')}</AccordionSummary>
         <AccordionDetails>
@@ -23,7 +24,7 @@ const InspectorTab = () => {
 
       <CueListAccordion />
       <SelectedDroneAccordions />
-    </>
+    </Box>
   );
 };
 

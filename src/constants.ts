@@ -44,3 +44,8 @@ export const SHARED_CAMERA_NAME_PLACEHOLDER = '$SHARED';
  * Default drone model to use in 3D views.
  */
 export const DEFAULT_DRONE_MODEL = 'sphere';
+
+/**
+ * Width of the sidebar on the player UI.
+ */
+export const PLAYER_SIDEBAR_WIDTH = 320;

@@ -29,8 +29,7 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
   flexDirection: 'row-reverse',
   fontSize: theme.typography.body1.fontSize,
   minHeight: theme.spacing(4),
-  padding: 0,
-  margin: theme.spacing(0, 0, 0, -1),
+  margin: theme.spacing(0, 0, 0, -2.5),
   [`& .${accordionSummaryClasses.expandIconWrapper}.${accordionSummaryClasses.expanded}`]:
     {
       transform: 'rotate(90deg)',
@@ -44,7 +43,7 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
 const AccordionDetails = styled((props: AccordionDetailsProps) => (
   <MuiAccordionDetails {...props} />
 ))(({ theme }) => ({
-  padding: theme.spacing(0, 2, 2, 0),
+  padding: theme.spacing(0, 0, 2, 0),
 }));
 
 export { Accordion, AccordionSummary, AccordionDetails };

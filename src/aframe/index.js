@@ -8,9 +8,11 @@ import '@skybrush/aframe-components/deallocate';
 import '@skybrush/aframe-components/meshline';
 import { createSyncPoseWithStoreComponent } from '@skybrush/aframe-components/factories';
 
+import './components/arrow';
 import './components/drone-flock';
 import './components/glow-material';
 
+import './primitives/arrow';
 import './primitives/drone-flock';
 
 AFrame.registerComponent(

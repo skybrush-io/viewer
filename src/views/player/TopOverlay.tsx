@@ -29,6 +29,7 @@ const style = {
   minHeight: 48,
   position: 'absolute',
   textAlign: 'center',
+  pointerEvents: 'initial',
 };
 
 const buttonBarStyle = {

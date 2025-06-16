@@ -32,7 +32,7 @@ import type { RootState } from '~/store';
 import { SCENE_CAMERA_ID, SELECTABLE_OBJECT_CLASS } from './constants';
 import CoordinateSystemAxes from './CoordinateSystemAxes';
 import Scenery, { type SceneryType } from './Scenery';
-import VelocityArrows from './VelocityArrows';
+import SelectionMarkers from './SelectionMarkers';
 
 import flapperDroneModel from '~/../assets/models/flapper-drone.obj';
 import quadcopterModel from '~/../assets/models/quadcopter.obj';
@@ -173,6 +173,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
           show-yaw={showYaw}
           size={numDrones}
         />
+        <SelectionMarkers />
         {/* <VelocityArrows /> */}
       </a-entity>
 

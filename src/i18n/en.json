@@ -64,7 +64,11 @@
       "yawControl": "Yaw control"
     },
     "selectedDrones": {
-      "hint": "Click on drones in the main view to inspect them",
+      "hint": "Click on drones in the main view to inspect them.",
+      "hintMultiple": {
+        "mac": "Hold Cmd to select multiple drones.",
+        "other": "Hold Ctrl to select multiple drones."
+      },
       "unnamed": "Drone {{ index }}"
     }
   },

@@ -13,19 +13,19 @@ import type { RootState } from '~/store';
 import BottomOverlay from './BottomOverlay';
 import TopOverlay from './TopOverlay';
 
-const OverlayContainer = styled(Box)<{ sidebarOpen: boolean }>(
-  ({ sidebarOpen, theme }) => ({
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: sidebarOpen ? PLAYER_SIDEBAR_WIDTH : 0,
-    bottom: 0,
-    transition: theme.transitions.create(['right'], {
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    pointerEvents: 'none',
-  })
-);
+const OverlayContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'sidebarOpen',
+})<{ sidebarOpen: boolean }>(({ sidebarOpen, theme }) => ({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: sidebarOpen ? PLAYER_SIDEBAR_WIDTH : 0,
+  bottom: 0,
+  transition: theme.transitions.create(['right'], {
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  pointerEvents: 'none',
+}));
 
 const Overlays = ({ visible = false }: { readonly visible: boolean }) => {
   const sidebarOpen = useAppSelector(isSidebarOpen);

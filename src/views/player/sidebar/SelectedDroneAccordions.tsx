@@ -10,6 +10,7 @@ import {
 } from '~/features/show/selectors';
 import { Accordion, AccordionSummary, AccordionDetails } from './Accordion';
 import DroneInspectorSection from './DroneInspectorSection';
+import { isRunningOnMac } from '~/utils/platform';
 
 export default function SelectedDroneAccordions() {
   const { t } = useTranslation();
@@ -21,7 +22,11 @@ export default function SelectedDroneAccordions() {
   if (selection.length === 0) {
     return (
       <Box sx={{ textAlign: 'center', py: 2, pr: 2, color: 'text.secondary' }}>
-        {t('inspector.selectedDrones.hint')}
+        {t('inspector.selectedDrones.hint') +
+          ' ' +
+          t(
+            `inspector.selectedDrones.hintMultiple.${isRunningOnMac ? 'mac' : 'other'}`
+          )}
       </Box>
     );
   } else {

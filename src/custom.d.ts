@@ -22,6 +22,7 @@ declare namespace JSX {
     'a-arrow': any;
     'a-asset-item': any;
     'a-assets': any;
+    'a-box': any;
     'a-camera': any;
     'a-drone-flock': any;
     'a-entity': any;

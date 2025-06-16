@@ -65,6 +65,10 @@
     },
     "selectedDrones": {
       "hint": "Kattintson egy drónra a 3D nézetben a kiválasztáshoz",
+      "hintMultiple": {
+        "mac": "Tartsa nyomva a Cmd billentyűt több drón kiválasztásához.",
+        "other": "Tartsa nyomva a Ctrl billentyűt több drón kiválasztásához."
+      },
       "unnamed": "Névtelen drón"
     }
   },

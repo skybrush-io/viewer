@@ -11,6 +11,7 @@ import { createSyncPoseWithStoreComponent } from '@skybrush/aframe-components/fa
 import './components/arrow';
 import './components/drone-flock';
 import './components/glow-material';
+import './components/modifier-keys';
 
 import './primitives/arrow';
 import './primitives/drone-flock';

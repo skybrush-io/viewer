@@ -477,6 +477,7 @@ AFrame.registerComponent('drone-flock', {
         const droneEntity = getDroneFromEntity(entity);
         droneEntity.className = SELECTABLE_OBJECT_CLASS;
         droneEntity.addEventListener('click', (event) => {
+          this.el.sceneEl.systems['modifier-keys'].updateSyntheticEvent(event);
           store.dispatch(this.system._selectionThunk(i, event));
           event.stopPropagation();
         });

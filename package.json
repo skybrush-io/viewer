@@ -95,12 +95,14 @@
     "whatwg-fetch": "^3.6.20"
   },
   "devDependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.6.0",
     "@types/chart.js": "^2.9.41",
     "@types/color": "^4.2.0",
     "@types/lodash-es": "^4.17.12",
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
     "@types/react-window": "^1.8.8",
+    "@types/three": "^0.177.0",
     "@types/timsort": "^0.3.3",
     "compression-webpack-plugin": "^11.1.0",
     "cross-env": "^7.0.3",
@@ -120,6 +122,7 @@
     "less-loader": "^12.2.0",
     "patch-package": "^8.0.0",
     "prettier": "^3.4.2",
+    "react-refresh": "^0.17.0",
     "source-map-loader": "^5.0.0",
     "style-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.3.11",

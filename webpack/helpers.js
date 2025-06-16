@@ -3,6 +3,9 @@ const path = require('node:path');
 const projectRoot = path.resolve(__dirname, '..');
 const outputDir = path.resolve(projectRoot, 'build');
 
+const isDevelopment = process.env.NODE_ENV !== 'production';
+const useHotModuleReloading = isDevelopment && process.env.DEPLOYMENT !== '1';
+
 const getHtmlMetaTags = ({ disableCSP = false } = {}) => {
   const result = {
     // eslint-disable-next-line unicorn/text-encoding-identifier-case
@@ -32,7 +35,9 @@ const useAppConfiguration = (name = 'default') => ({
 
 module.exports = {
   getHtmlMetaTags,
+  isDevelopment,
   projectRoot,
   outputDir,
   useAppConfiguration,
+  useHotModuleReloading,
 };

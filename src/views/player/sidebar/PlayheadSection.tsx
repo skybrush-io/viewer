@@ -43,6 +43,7 @@ export default function PlayheadSection() {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
+        pb: 1,
       }}
     >
       <LCDText

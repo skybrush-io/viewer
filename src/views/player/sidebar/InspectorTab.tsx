@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 
 import { Accordion, AccordionSummary, AccordionDetails } from './Accordion';
-import CueListAccordion from './CueListAccordion';
+import CueSheetAccordion from './CueSheetAccordion';
 import MetadataSection from './MetadataSection';
 import SelectedDroneAccordions from './SelectedDroneAccordions';
 import PlayheadSection from './PlayheadSection';
@@ -25,7 +25,7 @@ const InspectorTab = () => {
         </AccordionDetails>
       </Accordion>
 
-      <CueListAccordion />
+      <CueSheetAccordion />
       <SelectedDroneAccordions />
     </Box>
   );

@@ -48,8 +48,8 @@
     "togglePlayback": "Lejátszás indítása vagy leállítása"
   },
   "inspector": {
-    "cueList": {
-      "summary": ""
+    "cueSheet": {
+      "summary": "Eseménylista"
     },
     "metadata": {
       "audio": "Hangsáv",

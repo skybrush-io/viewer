@@ -48,7 +48,7 @@
     "togglePlayback": "Start or stop playback"
   },
   "inspector": {
-    "cueList": {
+    "cueSheet": {
       "summary": "Cue list"
     },
     "metadata": {

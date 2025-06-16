@@ -19,6 +19,8 @@ import MiniList from '@skybrush/mui-components/lib/MiniList';
 import MiniListItem from '@skybrush/mui-components/lib/MiniListItem';
 import { ICON_STYLE } from './MetadataSection';
 import usePeriodicRefresh from '~/hooks/usePeriodicRefresh';
+import type { RootState } from '~/store';
+import { getValidationSettings } from '~/features/validation/selectors';
 
 type DroneInspectorSectionProps = Readonly<{
   index: number;
@@ -39,6 +41,7 @@ const createState = (): State => ({
 });
 
 const RGB_LABELS: [string, string, string] = ['R', 'G', 'B'];
+const EMPTY_ARRAY: number[] = [];
 
 export default function DroneInspectorSection({
   trajectoryPlayer,
@@ -46,6 +49,8 @@ export default function DroneInspectorSection({
 }: DroneInspectorSectionProps) {
   const shouldRefresh = useAppSelector(isPlaying);
   const getTimestamp = useAppSelector(getElapsedSecondsGetter);
+  const { maxAltitude, maxVelocityXY, maxVelocityZ, maxVelocityZUp } =
+    useAppSelector(getValidationSettings);
 
   usePeriodicRefresh(shouldRefresh ? 100 : null);
 
@@ -64,6 +69,22 @@ export default function DroneInspectorSection({
     .convertLinearToSRGB()
     .toArray();
 
+  const positionWarnings = position.z > maxAltitude ? [2] : EMPTY_ARRAY;
+  const velocityWarnings: number[] = [];
+  const velocityMagnitudeWarnings: number[] = [];
+  if (Math.hypot(velocity.x, velocity.y) > maxVelocityXY) {
+    velocityWarnings.push(0, 1);
+    velocityMagnitudeWarnings.push(0);
+  }
+  if (velocity.z < -maxVelocityZ) {
+    velocityWarnings.push(2);
+  } else if (
+    (maxVelocityZUp !== undefined && velocity.z < -maxVelocityZUp) ||
+    (maxVelocityZUp === undefined && velocity.z > maxVelocityZ)
+  ) {
+    velocityWarnings.push(2);
+  }
+
   return (
     <MiniList>
       <MiniListItem
@@ -72,6 +93,7 @@ export default function DroneInspectorSection({
             colored
             value={[position.x, position.y, position.z]}
             unit='m'
+            warnings={positionWarnings}
           />
         }
         icon={<LocationOn fontSize='small' sx={ICON_STYLE} />}
@@ -82,6 +104,7 @@ export default function DroneInspectorSection({
             colored
             value={[velocity.x, velocity.y, velocity.z]}
             unit='m/s'
+            warnings={velocityWarnings}
           />
         }
         icon={<NorthEast fontSize='small' sx={ICON_STYLE} />}
@@ -95,6 +118,7 @@ export default function DroneInspectorSection({
             ]}
             labels={['2D', '3D']}
             unit='m/s'
+            warnings={velocityMagnitudeWarnings}
           />
         }
         icon={

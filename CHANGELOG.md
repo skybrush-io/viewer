@@ -15,6 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Pressing `?` now shows a dialog summarizing the available hotkeys.
 
+- Drones can be selected by clicking on them. Multiple selection is possible by
+  holding down the Ctrl key (Cmd on macOS) while clicking.
+
+- The sidebar panel is now persistent and consists of two tabs: settings (as in
+  previous versions) and an inspector panel. The inspector panel shows the
+  current timestamp, metadata and the cue list of the show. It also shows the
+  positions, velocities and colors of selected drones.
+
 ### Changed
 
 - The current position on the playhead can now be adjusted with smaller

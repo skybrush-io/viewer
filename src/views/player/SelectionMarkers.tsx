@@ -13,7 +13,7 @@ import usePeriodicRefresh from '~/hooks/usePeriodicRefresh';
 type SelectionMarkerProps = {
   size: number;
   timestamp: number;
-  trajectoryPlayer: TrajectoryPlayer;
+  trajectoryPlayer?: TrajectoryPlayer;
 };
 
 type State = {
@@ -29,15 +29,19 @@ const SelectionMarker = ({
   trajectoryPlayer,
   timestamp,
 }: SelectionMarkerProps) => {
-  const { getPositionAt } = trajectoryPlayer;
-
   const state = useRef<State | null>(null);
   if (!state.current) {
     state.current = createState();
   }
 
   const { position } = state.current;
-  getPositionAt(timestamp, position);
+  if (trajectoryPlayer) {
+    trajectoryPlayer.getPositionAt(timestamp, position);
+  } else {
+    position.x = 0;
+    position.y = 0;
+    position.z = 0;
+  }
 
   return (
     <a-box

@@ -61,9 +61,26 @@ export default function DroneInspectorSection({
 
   const { position, velocity, color } = state.current;
   const timestamp = getTimestamp();
-  trajectoryPlayer.getPositionAt(timestamp, position);
-  trajectoryPlayer.getVelocityAt(timestamp, velocity);
-  lightProgramPlayer.evaluateColorAt(timestamp, color);
+
+  if (trajectoryPlayer) {
+    trajectoryPlayer.getPositionAt(timestamp, position);
+    trajectoryPlayer.getVelocityAt(timestamp, velocity);
+  } else {
+    position.x = 0;
+    position.y = 0;
+    position.z = 0;
+    velocity.x = 0;
+    velocity.y = 0;
+    velocity.z = 0;
+  }
+
+  if (lightProgramPlayer) {
+    lightProgramPlayer.evaluateColorAt(timestamp, color);
+  } else {
+    color[0] = 0;
+    color[1] = 0;
+    color[2] = 0;
+  }
 
   const srgbColor = new ThreeJsColor(color[0], color[1], color[2])
     .convertLinearToSRGB()

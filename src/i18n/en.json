@@ -30,8 +30,8 @@
     }
   },
   "generic": {
-    "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "yes": "Yes"
   },
   "hotkeys": {
     "cueBackward": "Cue backward (Shift = 10x, Alt = by frames)",
@@ -56,8 +56,8 @@
       "droneCount": "Drone count",
       "duration": "Duration",
       "environment": {
-        "label": "Environment",
         "indoor": "Indoor",
+        "label": "Environment",
         "outdoor": "Outdoor"
       },
       "summary": "Metadata",

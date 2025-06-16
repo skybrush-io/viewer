@@ -64,7 +64,7 @@ export default function MetadataSection() {
         />
         <MiniListItem
           primaryText={t('inspector.metadata.environment.label')}
-          secondaryText={environment}
+          secondaryText={t(`inspector.metadata.environment.${environment}`)}
           icon={<Landscape fontSize='small' sx={ICON_STYLE} />}
         />
         <MiniListItem

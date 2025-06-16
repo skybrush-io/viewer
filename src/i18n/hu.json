@@ -29,6 +29,10 @@
       "text": "Válasszon ki egy grafikont a fejlécben található gombokkal"
     }
   },
+  "generic": {
+    "no": "nem",
+    "yes": "igen"
+  },
   "hotkeys": {
     "cueBackward": "Visszatekerés (Shift = 10x, Alt = képkockánként)",
     "cueForward": "Előretekerés (Shift = 10x, Alt = képkockánként)",
@@ -42,6 +46,27 @@
     "selectThirdCamera": "Harmadik kamera kiválasztása",
     "toggleMuted": "Hangerő némítása vagy visszaállítása",
     "togglePlayback": "Lejátszás indítása vagy leállítása"
+  },
+  "inspector": {
+    "cueList": {
+      "summary": ""
+    },
+    "metadata": {
+      "audio": "Hangsáv",
+      "droneCount": "Drónok száma",
+      "duration": "Időtartam",
+      "environment": {
+        "indoor": "Kültér",
+        "label": "Környezet",
+        "outdoor": "Beltér"
+      },
+      "summary": "Metaadatok",
+      "yawControl": "Irányvezérlés"
+    },
+    "selectedDrones": {
+      "hint": "Kattintson egy drónra a 3D nézetben a kiválasztáshoz",
+      "unnamed": "Névtelen drón"
+    }
   },
   "settings": {
     "droneModel": {
@@ -81,13 +106,13 @@
     "altitudeThreshold": "Magassági küszöb",
     "distanceOfClosestDronePair": "Legközelebbi drónpár távolsága",
     "distanceThreshold": "Távolsági küszöb",
-    "horizontalAcceleration": "",
-    "horizontalAccelerationThreshold": "",
+    "horizontalAcceleration": "Vízszintes gyorsulás",
+    "horizontalAccelerationThreshold": "Vízszintes gyorsulás küszöb",
     "horizontalVelocity": "Vízszintes sebesség",
     "horizontalVelocityThreshold": "XY sebességküszöb",
     "proximity": "Távolság",
-    "verticalAcceleration": "",
-    "verticalAccelerationThreshold": "",
+    "verticalAcceleration": "Függőleges gyorsulás",
+    "verticalAccelerationThreshold": "Függőleges gyorsulás küszöb",
     "verticalVelocity": "Függőleges sebesség",
     "verticalVelocityThreshold": "Z sebességküszöb"
   }

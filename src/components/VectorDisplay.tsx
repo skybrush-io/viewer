@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import React, { Fragment } from 'react';
 import { styled } from '@mui/material';
 
-type Vector3DProps = {
+type Vector3DProps = Readonly<{
   value: number[];
   colored?: boolean;
   digits?: number;
@@ -10,7 +10,8 @@ type Vector3DProps = {
   minUnitWidth?: number;
   minValueWidth?: number;
   unit?: string;
-};
+  warnings?: number[];
+}>;
 
 type StyledBoxProps = Pick<Vector3DProps, 'minValueWidth' | 'minUnitWidth'>;
 
@@ -50,6 +51,12 @@ const StyledBox = styled('div')<StyledBoxProps>(
       color: '#ffffff',
     },
 
+    '& .Vector3D-warning': {
+      backgroundColor: '#ff8800',
+      color: '#ffffff',
+      textShadow: '0 1px 1px rgba(0, 0, 0, 0.5)',
+    },
+
     '& .Vector3D-value': {
       flex: 1,
       textAlign: 'right',
@@ -73,6 +80,8 @@ const COLOR_CLASSES = [
   'Vector3D-blue',
 ] as const;
 
+const EMPTY_ARRAY: number[] = [] as const;
+
 export default function VectorDisplay({
   value,
   colored = false,
@@ -81,6 +90,7 @@ export default function VectorDisplay({
   minValueWidth,
   minUnitWidth,
   unit = '',
+  warnings = EMPTY_ARRAY,
 }: Vector3DProps) {
   return (
     <StyledBox minValueWidth={minValueWidth} minUnitWidth={minUnitWidth}>
@@ -94,7 +104,14 @@ export default function VectorDisplay({
           >
             {labels[i]}
           </div>
-          <div className='Vector3D-value'>{v.toFixed(digits)}</div>
+          <div
+            className={clsx(
+              'Vector3D-value',
+              warnings.includes(i) && 'Vector3D-warning'
+            )}
+          >
+            {v.toFixed(digits)}
+          </div>
         </Fragment>
       ))}
       {unit && <div className='Vector3D-unit'>{unit}</div>}

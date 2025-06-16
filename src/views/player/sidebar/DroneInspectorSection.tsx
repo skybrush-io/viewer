@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import { useHarmonicIntervalFn } from 'react-use';
 import { Color as ThreeJsColor } from 'three';
 import Colorize from '@mui/icons-material/Colorize';
 import LocationOn from '@mui/icons-material/LocationOn';
@@ -12,7 +11,6 @@ import type {
 } from '@skybrush/show-format';
 import VectorDisplay from '~/components/VectorDisplay';
 import {
-  getElapsedSeconds,
   getElapsedSecondsGetter,
   isPlaying,
 } from '~/features/playback/selectors';
@@ -92,10 +90,10 @@ export default function DroneInspectorSection({
         primaryText={
           <VectorDisplay
             value={[
-              Math.hypot(velocity.x, velocity.y, velocity.z),
               Math.hypot(velocity.x, velocity.y),
+              Math.hypot(velocity.x, velocity.y, velocity.z),
             ]}
-            labels={['3D', '2D']}
+            labels={['2D', '3D']}
             unit='m/s'
           />
         }

@@ -1,13 +1,13 @@
+import clsx from 'clsx';
 import React from 'react';
 import { styled } from '@mui/material';
 import { text } from 'express';
 
 type Vector3DProps = {
-  x: number;
-  y: number;
-  z: number;
+  value: number[];
+  colored?: boolean;
   digits?: number;
-  labels?: [string, string, string];
+  labels?: string[];
   minUnitWidth?: number;
   minValueWidth?: number;
   unit?: string;
@@ -46,6 +46,11 @@ const StyledBox = styled('div')<StyledBoxProps>(
       color: '#ffffff',
     },
 
+    '& .Vector3D-gray': {
+      backgroundColor: '#666666',
+      color: '#ffffff',
+    },
+
     '& .Vector3D-value': {
       flex: 1,
       textAlign: 'right',
@@ -56,18 +61,22 @@ const StyledBox = styled('div')<StyledBoxProps>(
 
     '& .Vector3D-unit': {
       color: theme.palette.text.secondary,
-      minWidth: minUnitWidth ?? 40,
+      minWidth: minUnitWidth ?? 45,
       textAlign: 'right',
     },
   })
 );
 
 const DEFAULT_LABELS = ['X', 'Y', 'Z'] as [string, string, string];
+const COLOR_CLASSES = [
+  'Vector3D-red',
+  'Vector3D-green',
+  'Vector3D-blue',
+] as const;
 
-export default function Vector3D({
-  x,
-  y,
-  z,
+export default function VectorDisplay({
+  value,
+  colored = false,
   digits = 2,
   labels = DEFAULT_LABELS,
   minValueWidth,
@@ -76,12 +85,20 @@ export default function Vector3D({
 }: Vector3DProps) {
   return (
     <StyledBox minValueWidth={minValueWidth} minUnitWidth={minUnitWidth}>
-      <div className='Vector3D-red Vector3D-label'>{labels[0]}</div>
-      <div className='Vector3D-value'>{x.toFixed(digits)}</div>
-      <div className='Vector3D-green Vector3D-label'>{labels[1]}</div>
-      <div className='Vector3D-value'>{y.toFixed(digits)}</div>
-      <div className='Vector3D-blue Vector3D-label'>{labels[2]}</div>
-      <div className='Vector3D-value'>{z.toFixed(digits)}</div>
+      {value.map((v, i) => (
+        <>
+          <div
+            key={i}
+            className={clsx(
+              'Vector3D-label',
+              colored ? COLOR_CLASSES[i] : 'Vector3D-gray'
+            )}
+          >
+            {labels[i]}
+          </div>
+          <div className='Vector3D-value'>{v.toFixed(digits)}</div>
+        </>
+      ))}
       {unit && <div className='Vector3D-unit'>{unit}</div>}
     </StyledBox>
   );

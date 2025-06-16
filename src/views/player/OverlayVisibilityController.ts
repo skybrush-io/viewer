@@ -1,4 +1,3 @@
-/* eslint-disable import/no-duplicates */
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
@@ -8,8 +7,6 @@ import {
   setOverlayHidden,
   setOverlayVisible,
 } from '~/features/three-d/actions';
-
-// import React from 'react';
 
 interface UseMouseMovingStateOptions {
   onStarted?: () => void;

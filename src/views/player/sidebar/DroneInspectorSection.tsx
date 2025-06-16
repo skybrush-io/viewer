@@ -1,20 +1,26 @@
 import React, { useRef } from 'react';
-import Box from '@mui/material/Box';
+import { useHarmonicIntervalFn } from 'react-use';
+import { Color as ThreeJsColor } from 'three';
 import Colorize from '@mui/icons-material/Colorize';
 import LocationOn from '@mui/icons-material/LocationOn';
-import NearMe from '@mui/icons-material/NearMe';
+import NorthEast from '@mui/icons-material/NorthEast';
 import type {
   Color,
   LightProgramPlayer,
   TrajectoryPlayer,
   Vector3,
 } from '@skybrush/show-format';
-import Vector3D from '~/components/Vector3D';
-import { getElapsedSeconds } from '~/features/playback/selectors';
+import VectorDisplay from '~/components/VectorDisplay';
+import {
+  getElapsedSeconds,
+  getElapsedSecondsGetter,
+  isPlaying,
+} from '~/features/playback/selectors';
 import { useAppSelector } from '~/hooks/store';
 import MiniList from '@skybrush/mui-components/lib/MiniList';
 import MiniListItem from '@skybrush/mui-components/lib/MiniListItem';
 import { ICON_STYLE } from './MetadataSection';
+import usePeriodicRefresh from '~/hooks/usePeriodicRefresh';
 
 type DroneInspectorSectionProps = Readonly<{
   index: number;
@@ -37,43 +43,99 @@ const createState = (): State => ({
 const RGB_LABELS: [string, string, string] = ['R', 'G', 'B'];
 
 export default function DroneInspectorSection({
-  index,
   trajectoryPlayer,
   lightProgramPlayer,
 }: DroneInspectorSectionProps) {
-  const timestamp = useAppSelector(getElapsedSeconds);
+  const shouldRefresh = useAppSelector(isPlaying);
+  const getTimestamp = useAppSelector(getElapsedSecondsGetter);
+
+  usePeriodicRefresh(shouldRefresh ? 100 : null);
+
   const state = useRef<State | null>(null);
   if (!state.current) {
     state.current = createState();
   }
 
   const { position, velocity, color } = state.current;
+  const timestamp = getTimestamp();
   trajectoryPlayer.getPositionAt(timestamp, position);
   trajectoryPlayer.getVelocityAt(timestamp, velocity);
   lightProgramPlayer.evaluateColorAt(timestamp, color);
 
+  const srgbColor = new ThreeJsColor(color[0], color[1], color[2])
+    .convertLinearToSRGB()
+    .toArray();
+
   return (
     <MiniList>
       <MiniListItem
-        primaryText={<Vector3D {...position} unit='m' />}
+        primaryText={
+          <VectorDisplay
+            colored
+            value={[position.x, position.y, position.z]}
+            unit='m'
+          />
+        }
         icon={<LocationOn fontSize='small' sx={ICON_STYLE} />}
       />
       <MiniListItem
-        primaryText={<Vector3D {...velocity} unit='m/s' />}
-        icon={<NearMe fontSize='small' sx={ICON_STYLE} />}
+        primaryText={
+          <VectorDisplay
+            colored
+            value={[velocity.x, velocity.y, velocity.z]}
+            unit='m/s'
+          />
+        }
+        icon={<NorthEast fontSize='small' sx={ICON_STYLE} />}
       />
       <MiniListItem
         primaryText={
-          <Vector3D
-            x={Math.round(color[0] * 255)}
-            y={Math.round(color[1] * 255)}
-            z={Math.round(color[2] * 255)}
+          <VectorDisplay
+            value={[
+              Math.hypot(velocity.x, velocity.y, velocity.z),
+              Math.hypot(velocity.x, velocity.y),
+            ]}
+            labels={['3D', '2D']}
+            unit='m/s'
+          />
+        }
+        icon={
+          <NorthEast fontSize='small' sx={ICON_STYLE} htmlColor='transparent' />
+        }
+      />
+      <MiniListItem
+        primaryText={
+          <VectorDisplay
+            colored
+            value={[
+              Math.round(color[0] * 255),
+              Math.round(color[1] * 255),
+              Math.round(color[2] * 255),
+            ]}
             digits={0}
             labels={RGB_LABELS}
-            unit='RGB'
+            unit='linear'
           />
         }
         icon={<Colorize fontSize='small' sx={ICON_STYLE} />}
+      />
+      <MiniListItem
+        primaryText={
+          <VectorDisplay
+            colored
+            value={[
+              Math.round(srgbColor[0] * 255),
+              Math.round(srgbColor[1] * 255),
+              Math.round(srgbColor[2] * 255),
+            ]}
+            digits={0}
+            labels={RGB_LABELS}
+            unit='sRGB'
+          />
+        }
+        icon={
+          <Colorize fontSize='small' sx={ICON_STYLE} htmlColor='transparent' />
+        }
       />
     </MiniList>
   );

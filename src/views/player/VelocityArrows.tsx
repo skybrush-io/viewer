@@ -2,10 +2,15 @@ import React, { useRef } from 'react';
 import type { TrajectoryPlayer, Vector3 } from '@skybrush/show-format';
 import { getTrajectoryPlayers } from '~/features/show/selectors';
 import { useAppSelector } from '~/hooks/store';
-import { getElapsedSecondsGetter } from '~/features/playback/selectors';
+import {
+  getElapsedSecondsGetter,
+  isPlaying,
+} from '~/features/playback/selectors';
 import { getSelectedDroneIndices } from '~/features/selection/selectors';
+import usePeriodicRefresh from '~/hooks/usePeriodicRefresh';
 
 type VelocityArrowProps = {
+  playing?: boolean;
   timestamp: number;
   trajectoryPlayer: TrajectoryPlayer;
 };
@@ -36,9 +41,9 @@ const VelocityArrow = ({ trajectoryPlayer, timestamp }: VelocityArrowProps) => {
 
   return (
     <a-arrow
-      position={position}
-      direction={velocity}
-      length={length}
+      position={`${position.x} ${position.y} ${position.z}`}
+      direction={`${velocity.x} ${velocity.y} ${velocity.z}`}
+      length={String(length)}
       color='#08f'
     />
   );
@@ -48,6 +53,10 @@ export default function VelocityArrows() {
   const selection = useAppSelector(getSelectedDroneIndices);
   const getTimestamp = useAppSelector(getElapsedSecondsGetter);
   const trajectoryPlayers = useAppSelector(getTrajectoryPlayers);
+  const playing = useAppSelector(isPlaying);
+
+  usePeriodicRefresh(playing ? 100 : null);
+
   const timestamp = getTimestamp();
 
   return (

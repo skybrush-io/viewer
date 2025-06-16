@@ -5,7 +5,7 @@ import {
   ShaderMaterial,
   Uniform,
   Color,
-  AdditiveBlending,
+  NormalBlending,
   DoubleSide,
 } from 'three';
 
@@ -130,7 +130,7 @@ class GlowingMaterial extends ShaderMaterial {
     this.blending =
       parameters.blendMode !== undefined
         ? parameters.blendMode
-        : AdditiveBlending;
+        : NormalBlending;
     this.transparent = true;
     this.side = parameters.side !== undefined ? parameters.side : DoubleSide;
   }

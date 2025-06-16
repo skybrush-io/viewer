@@ -173,7 +173,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
           show-yaw={showYaw}
           size={numDrones}
         />
-        <VelocityArrows />
+        {/* <VelocityArrows /> */}
       </a-entity>
 
       <Scenery type={scenery} grid={grid} />

@@ -29,7 +29,7 @@ import {
 } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 
-import { SCENE_CAMERA_ID } from './constants';
+import { SCENE_CAMERA_ID, SELECTABLE_OBJECT_CLASS } from './constants';
 import CoordinateSystemAxes from './CoordinateSystemAxes';
 import Scenery from './Scenery';
 import type { SceneryType } from './Scenery';
@@ -154,7 +154,12 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
         position={cameraConfiguration.position.join(' ')}
         rotation={cameraConfiguration.rotation.join(' ')}
         {...extraCameraProps}
-      />
+      >
+        <a-entity
+          cursor='rayOrigin: mouse'
+          raycaster={`objects: .${SELECTABLE_OBJECT_CLASS}; interval: 100`}
+        />
+      </a-camera>
 
       <a-entity rotation='-90 0 90'>
         {axes && <CoordinateSystemAxes length={10} lineWidth={10} />}

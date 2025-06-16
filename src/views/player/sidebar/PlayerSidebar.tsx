@@ -1,24 +1,28 @@
 import React from 'react';
 
+import ChevronRight from '@mui/icons-material/ChevronRight';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
 import { type Theme } from '@mui/material/styles';
 
 import { isThemeDark } from '@skybrush/app-theme-mui';
 
 import SkybrushLogo from '~/components/SkybrushLogo';
-import { closeSidebar } from '~/features/sidebar/slice';
+import { closeSidebar, isSidebarOpen } from '~/features/sidebar/slice';
 import { getActiveSidebarTab } from '~/features/sidebar/selectors';
 import { SidebarTab } from '~/features/sidebar/types';
 import { useAppDispatch, useAppSelector } from '~/hooks/store';
 
 import PlayerSidebarTabs from './PlayerSidebarTabs';
 import SettingsTab from './SettingsTab';
+import InspectorTab from './InspectorTab';
 
 const styles = {
   contents: {
     height: '100%',
-    width: 250,
+    width: 300,
     display: 'flex',
     flexDirection: 'column',
     pt: 1,
@@ -59,7 +63,7 @@ const modalProps = {
  */
 const PlayerSidebar = () => {
   const dispatch = useAppDispatch();
-  const open = useAppSelector((state) => state.sidebar.open);
+  const open = useAppSelector(isSidebarOpen);
   const activeTab = useAppSelector(getActiveSidebarTab);
 
   return (
@@ -68,22 +72,34 @@ const PlayerSidebar = () => {
       open={open}
       sx={styles.root}
       ModalProps={modalProps}
-      onClose={() => {
-        dispatch(closeSidebar());
-      }}
+      variant='persistent'
     >
-      <PlayerSidebarTabs />
-      <Box sx={styles.contents}>
-        <Box sx={styles.main}>
-          {activeTab === SidebarTab.INSPECTOR && <div />}
-          {activeTab === SidebarTab.SETTINGS && <SettingsTab />}
+      <Stack direction='row' sx={{ height: '100%' }}>
+        <IconButton
+          disableRipple
+          size='small'
+          sx={{ p: 0 }}
+          onClick={() => {
+            dispatch(closeSidebar());
+          }}
+        >
+          <ChevronRight />
+        </IconButton>
+        <Box sx={{ position: 'relative' }}>
+          <PlayerSidebarTabs />
+          <Box sx={styles.contents}>
+            <Box sx={styles.main}>
+              {activeTab === SidebarTab.INSPECTOR && <InspectorTab />}
+              {activeTab === SidebarTab.SETTINGS && <SettingsTab />}
+            </Box>
+            <Box sx={styles.footer}>
+              <a href='https://skybrush.io'>
+                <SkybrushLogo />
+              </a>
+            </Box>
+          </Box>
         </Box>
-        <Box sx={styles.footer}>
-          <a href='https://skybrush.io'>
-            <SkybrushLogo />
-          </a>
-        </Box>
-      </Box>
+      </Stack>
     </Drawer>
   );
 };

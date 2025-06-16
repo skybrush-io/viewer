@@ -37,7 +37,6 @@ export const PANELS: PanelSpecification[] = [
     component: VerticalVelocityChartPanel,
     priority: 20,
   },
-  /*
   {
     id: ValidationPanel.HORIZONTAL_ACCELERATION,
     component: HorizontalAccelerationChartPanel,
@@ -48,7 +47,6 @@ export const PANELS: PanelSpecification[] = [
     component: VerticalAccelerationChartPanel,
     priority: 50,
   },
-  */
   {
     id: ValidationPanel.PROXIMITY,
     component: ProximityChartPanel,

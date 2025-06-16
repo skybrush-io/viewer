@@ -16,7 +16,7 @@ const initialState: SidebarSliceState = {
   activeTab: SidebarTab.INSPECTOR,
 };
 
-const { actions, reducer } = createSlice({
+const { actions, reducer, selectors } = createSlice({
   name: 'sidebar',
   initialState,
   reducers: {
@@ -32,8 +32,12 @@ const { actions, reducer } = createSlice({
       state.activeTab = action.payload;
     },
   },
+  selectors: {
+    isSidebarOpen: (state: SidebarSliceState) => state.open,
+  },
 });
 
 export const { closeSidebar, setActiveSidebarTab, toggleSidebar } = actions;
+export const { isSidebarOpen } = selectors;
 
 export default reducer;

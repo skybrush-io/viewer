@@ -6,9 +6,12 @@
 
 import watch from 'redux-watch';
 import AFrame from '@skybrush/aframe-components';
+import { createSelectionHandlerThunk } from '@skybrush/redux-toolkit';
 
 import { DEFAULT_DRONE_MODEL } from '~/constants';
 import { getElapsedSecondsGetter } from '~/features/playback/selectors';
+import { getSelectedDroneIndices } from '~/features/selection/selectors';
+import { setSelectedDroneIndices } from '~/features/selection/slice';
 import {
   getLightProgramPlayers,
   getTrajectoryPlayers,
@@ -18,6 +21,7 @@ import store from '~/store';
 
 import fontUrl from '~/../assets/fonts/Roboto-msdf.json';
 import fontImageUrl from '~/../assets/fonts/Roboto-msdf.png';
+import { SELECTABLE_OBJECT_CLASS } from '~/views/player/constants';
 
 const { THREE } = AFrame;
 
@@ -108,6 +112,11 @@ AFrame.registerSystem('drone-flock', {
         this._getElapsedSeconds = newGetter;
       })
     );
+
+    this._selectionThunk = createSelectionHandlerThunk({
+      getSelection: getSelectedDroneIndices,
+      setSelection: setSelectedDroneIndices,
+    });
 
     this.currentTime = 0;
     this._getElapsedSeconds = boundGetElapsedSecodsGetter();
@@ -464,6 +473,13 @@ AFrame.registerComponent('drone-flock', {
           showYaw,
         });
         this.el.append(entity);
+
+        const droneEntity = getDroneFromEntity(entity);
+        droneEntity.className = SELECTABLE_OBJECT_CLASS;
+        droneEntity.addEventListener('click', (event) => {
+          store.dispatch(this.system._selectionThunk(i, event));
+          event.stopPropagation();
+        });
 
         this._drones.push({ index: i, entity });
       }

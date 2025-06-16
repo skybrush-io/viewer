@@ -81,9 +81,13 @@
     "altitudeThreshold": "Magassági küszöb",
     "distanceOfClosestDronePair": "Legközelebbi drónpár távolsága",
     "distanceThreshold": "Távolsági küszöb",
+    "horizontalAcceleration": "",
+    "horizontalAccelerationThreshold": "",
     "horizontalVelocity": "Vízszintes sebesség",
     "horizontalVelocityThreshold": "XY sebességküszöb",
     "proximity": "Távolság",
+    "verticalAcceleration": "",
+    "verticalAccelerationThreshold": "",
     "verticalVelocity": "Függőleges sebesség",
     "verticalVelocityThreshold": "Z sebességküszöb"
   }

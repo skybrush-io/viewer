@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import audioReducer from './audio/slice';
 import hotkeysReducer from './hotkeys/slice';
 import playbackReducer from './playback/slice';
+import selectionReducer from './selection/slice';
 import settingsReducer from './settings/slice';
 import showReducer from './show/slice';
 import sidebarReducer from './sidebar/slice';
@@ -14,6 +15,7 @@ export default combineReducers({
   audio: audioReducer,
   hotkeys: hotkeysReducer,
   playback: playbackReducer,
+  selection: selectionReducer,
   settings: settingsReducer,
   show: showReducer,
   sidebar: sidebarReducer,

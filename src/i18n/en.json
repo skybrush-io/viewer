@@ -29,6 +29,10 @@
       "text": "Select one of the chart types with the buttons in the header"
     }
   },
+  "generic": {
+    "yes": "Yes",
+    "no": "No"
+  },
   "hotkeys": {
     "cueBackward": "Cue backward (Shift = 10x, Alt = by frames)",
     "cueForward": "Cue forward (Shift = 10x, Alt = by frames)",
@@ -42,6 +46,27 @@
     "selectThirdCamera": "Select third camera",
     "toggleMuted": "Mute or unmute sound",
     "togglePlayback": "Start or stop playback"
+  },
+  "inspector": {
+    "cueList": {
+      "summary": "Cue list"
+    },
+    "metadata": {
+      "audio": "Audio track",
+      "droneCount": "Drone count",
+      "duration": "Duration",
+      "environment": {
+        "label": "Environment",
+        "indoor": "Indoor",
+        "outdoor": "Outdoor"
+      },
+      "summary": "Metadata",
+      "yawControl": "Yaw control"
+    },
+    "selectedDrones": {
+      "hint": "Click on drones in the main view to inspect them",
+      "unnamed": "Drone {{ index }}"
+    }
   },
   "settings": {
     "droneModel": {
@@ -81,9 +106,13 @@
     "altitudeThreshold": "Altitude threshold",
     "distanceOfClosestDronePair": "Distance of closest drone pair",
     "distanceThreshold": "Distance threshold",
+    "horizontalAcceleration": "Horizontal accelerations",
+    "horizontalAccelerationThreshold": "XY acceleration threshold",
     "horizontalVelocity": "Horizontal velocities",
     "horizontalVelocityThreshold": "XY velocity threshold",
     "proximity": "Proximity",
+    "verticalAcceleration": "Vertical accelerations",
+    "verticalAccelerationThreshold": "Z acceleration threshold",
     "verticalVelocity": "Vertical velocities",
     "verticalVelocityThreshold": "Z velocity threshold"
   }

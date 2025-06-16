@@ -20,13 +20,15 @@ import {
   validateTrajectory,
   validateYawControl,
   type Camera,
+  CameraType,
+  type Cue,
   type DroneSpecification,
   type ShowMetadata,
   type ShowSpecification,
   type Trajectory,
   type TrajectoryPlayer,
   type YawControl,
-  CameraType,
+  type ShowSettings,
 } from '@skybrush/show-format';
 
 import { DEFAULT_CAMERA_NAME_PLACEHOLDER } from '~/constants';
@@ -68,8 +70,18 @@ const DEFAULT_CAMERAS: Record<string, Camera[]> = {
  * Selector that returns the specification of the currently loaded show, or
  * undefined if no show is loaded.
  */
-export const getShowSpecification = (state: RootState): ShowSpecification =>
-  get(state, 'show.data');
+export const getShowSpecification = (
+  state: RootState
+): ShowSpecification | undefined => get(state, 'show.data');
+
+/**
+ * Returns the metadata of the show, if any.
+ */
+export const getShowMetadata = createSelector(
+  getShowSpecification,
+  (data): ShowMetadata =>
+    (data && typeof data.meta === 'object' ? data.meta : null) ?? EMPTY_OBJECT
+);
 
 /**
  * Selector that returns the timestamp offset of the show.
@@ -81,7 +93,7 @@ export const getShowSpecification = (state: RootState): ShowSpecification =>
  * is formatted on the UI.
  */
 export const getTimestampDisplayOffset = createSelector(
-  (state: RootState) => get(state, 'show.data.meta'),
+  getShowMetadata,
   (meta): number => {
     const offset = meta ? meta.timestampOffset : 0;
 
@@ -109,7 +121,7 @@ export const getTimestampFormatter = createSelector(
 );
 
 /**
- * Returns whether a trajectory object "looks like" a valid trajectory.
+ * Returns whether an object "looks like" a valid trajectory.
  */
 export const isValidTrajectory = (
   trajectory: any
@@ -123,7 +135,7 @@ export const isValidTrajectory = (
 };
 
 /**
- * Returns whether a trajectory object "looks like" a valid light program.
+ * Returns whether an object "looks like" a valid light program.
  */
 export const isValidLightProgram = (program: any): boolean =>
   typeof program === 'object' &&
@@ -131,7 +143,7 @@ export const isValidLightProgram = (program: any): boolean =>
   typeof program.data === 'string';
 
 /**
- * Returns whether a yaw control object "looks like" valid yaw control data.
+ * Returns whether an object "looks like" valid yaw control data.
  */
 export const isValidYawControl = (
   yawControl: any
@@ -148,10 +160,11 @@ export const isValidYawControl = (
  * Returns the common show settings that apply to all drones in the currently
  * loaded show.
  */
-export const getCommonShowSettings = (state: RootState) => {
-  const result = get(state, 'show.data.settings');
-  return typeof result === 'object' ? result : EMPTY_OBJECT;
-};
+export const getCommonShowSettings = createSelector(
+  getShowSpecification,
+  (spec?: ShowSpecification): ShowSettings =>
+    spec && typeof spec.settings === 'object' ? spec.settings : EMPTY_OBJECT
+);
 
 /**
  * Returns the specification of the drone swarm in the currently loaded show.
@@ -195,7 +208,7 @@ export const isShowOutdoor = (state: RootState) =>
  */
 export const getCameras = createSelector(
   getShowSpecification,
-  (spec: ShowSpecification): Camera[] =>
+  (spec?: ShowSpecification): Camera[] =>
     spec
       ? getCamerasFromShowSpecification(spec)
       : (EMPTY_ARRAY as any as Camera[])
@@ -274,10 +287,13 @@ export const getInitialThreeJsCameraConfigurationOfShow = createSelector(
  * Returns an array containing all the cues from the show file, or an empty
  * array if the show has no cues.
  */
-export const getCues = (state: RootState) => {
-  const cues = get(state, 'show.data.settings.cues.items');
-  return Array.isArray(cues) ? cues : EMPTY_ARRAY;
-};
+export const getCues = createSelector(
+  getCommonShowSettings,
+  (settings): readonly Cue[] => {
+    const cues = settings?.cues?.items;
+    return Array.isArray(cues) ? cues : EMPTY_ARRAY;
+  }
+);
 
 /**
  * Returns an array containing all the light programs. The array will contain
@@ -318,7 +334,7 @@ export const getNamesOfDronesInShow = createSelector(
   getDroneSwarmSpecification,
   (swarm): string[] =>
     swarm.map((drone, index) =>
-      String(get(drone, 'settings.name') ?? `Drone ${index + 1}`)
+      String(drone?.settings?.name ?? `Drone ${index + 1}`)
     )
 );
 
@@ -388,6 +404,14 @@ const getYawControls = createSelector(getDroneSwarmSpecification, (swarm) =>
 );
 
 /**
+ * Returns whether at least one drone in the currently loaded show
+ * has yaw control data.
+ */
+export const hasYawControl = createSelector(getYawControls, (yawControls) =>
+  yawControls.some((yc) => yc !== undefined)
+);
+
+/**
  * Returns an array containing yaw control player objects
  * for all the yaw controls.
  */
@@ -414,15 +438,6 @@ export const getShowDurationAsString = createSelector(
   getShowDuration,
   getTimestampFormatter,
   (duration, formatter) => formatter(duration)
-);
-
-/**
- * Returns the metadata of the show, if any.
- */
-export const getShowMetadata = createSelector(
-  (state: RootState) => state.show.data,
-  (data): ShowMetadata =>
-    (data && typeof data.meta === 'object' ? data.meta : null) ?? EMPTY_OBJECT
 );
 
 /**

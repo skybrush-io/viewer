@@ -23,3 +23,29 @@ export function formatPlaybackTimestamp(
     seconds < 10 ? `0${formattedSeconds}` : formattedSeconds
   }`;
 }
+
+/**
+ * Formats a timestamp expressed in seconds in a minutes:seconds+frames
+ * represetation.
+ */
+export function formatPlaybackTimestampAsFrames(
+  seconds: number,
+  fps: number
+): string {
+  if (!Number.isFinite(seconds) || fps <= 0) {
+    return '--:--+--';
+  }
+
+  if (seconds < 0) {
+    return `-${formatPlaybackTimestampAsFrames(-seconds, fps)}`;
+  }
+
+  const minutes = Math.floor(seconds / 60);
+  seconds -= minutes * 60;
+
+  const formattedSeconds = String(Math.floor(seconds)).padStart(2, '0');
+  const frames = String(
+    Math.floor((seconds - Math.floor(seconds)) * fps)
+  ).padStart(fps >= 10 ? 2 : 1, '0');
+  return `${minutes}:${formattedSeconds}+${frames}`;
+}

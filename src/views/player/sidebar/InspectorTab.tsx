@@ -6,6 +6,7 @@ import { Accordion, AccordionSummary, AccordionDetails } from './Accordion';
 import CueListAccordion from './CueListAccordion';
 import MetadataSection from './MetadataSection';
 import SelectedDroneAccordions from './SelectedDroneAccordions';
+import PlayheadSection from './PlayheadSection';
 
 /**
  * The inspector tab of the player sidebar.
@@ -15,6 +16,8 @@ const InspectorTab = () => {
 
   return (
     <Box sx={{ px: 2 }}>
+      <PlayheadSection />
+
       <Accordion defaultExpanded>
         <AccordionSummary>{t('inspector.metadata.summary')}</AccordionSummary>
         <AccordionDetails>

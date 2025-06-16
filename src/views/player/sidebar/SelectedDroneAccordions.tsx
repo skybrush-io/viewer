@@ -19,6 +19,9 @@ export default function SelectedDroneAccordions() {
   const trajectoryPlayers = useAppSelector(getTrajectoryPlayers);
   const lightProgramPlayers = useAppSelector(getLightProgramPlayers);
 
+  // t('inspector.selectedDrones.hintMultiple.mac')
+  // t('inspector.selectedDrones.hintMultiple.other')
+
   if (selection.length === 0) {
     return (
       <Box sx={{ textAlign: 'center', py: 2, pr: 2, color: 'text.secondary' }}>

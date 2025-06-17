@@ -1,123 +1,123 @@
 {
-  "bottomOverlay": {
-    "leftText": "Nyílbillentyűk: vízszintes mozgás (Shift = futás), E/C: függőleges mozgás. Húzza a nézetet az egérrel a körbenézéshez. Egér görgő vagy +/-: közelítés és távolítás.",
-    "rightText": "Skybrush © 2020-{{ year }} CollMot Kft."
-  },
-  "buttons": {
-    "close": "Bezárás",
-    "closeShow": "Show bezárása",
-    "inspector": "Vizsgálat",
-    "openShowFile": "Show megnyitása",
-    "resetZoom": "Nagyítás alaphelyzetbe",
-    "returnToViewer": "Vissza a megjelenítőbe",
-    "settings": "Beállítások",
-    "shareLink": "Link megosztása",
-    "showHotkeysDialog": "Gyorsbillentyűk megjelenítése",
-    "toggleSidebar": "Oldalsáv megjelenítése",
-    "trackDrones": "Kamera forgatása a drónok felé",
-    "validateTrajectories": "Útvonalak ellenőrzése"
-  },
-  "cameras": {
-    "default": "Alapértelmezett nézet",
-    "indexedLabel": "{{ index }}. kamera",
-    "noCamera": "Nincs kamera",
-    "shared": "Megosztott nézet"
-  },
-  "chartGrid": {
-    "noChartsHint": {
-      "header": "Nincs kiválasztott grafikon",
-      "text": "Válasszon ki egy grafikont a fejlécben található gombokkal"
+    "bottomOverlay": {
+        "leftText": "Nyílbillentyűk: vízszintes mozgás (Shift = futás), E/C: függőleges mozgás. Húzza a nézetet az egérrel a körbenézéshez. Egér görgő vagy +/-: közelítés és távolítás.",
+        "rightText": "Skybrush © 2020-{{ year }} CollMot Kft."
+    },
+    "buttons": {
+        "close": "Bezárás",
+        "closeShow": "Show bezárása",
+        "inspector": "Vizsgálat",
+        "openShowFile": "Show megnyitása",
+        "resetZoom": "Nagyítás alaphelyzetbe",
+        "returnToViewer": "Vissza a megjelenítőbe",
+        "settings": "Beállítások",
+        "shareLink": "Link megosztása",
+        "showHotkeysDialog": "Gyorsbillentyűk megjelenítése",
+        "toggleSidebar": "Oldalsáv megjelenítése",
+        "trackDrones": "Kamera forgatása a drónok felé",
+        "validateTrajectories": "Útvonalak ellenőrzése"
+    },
+    "cameras": {
+        "default": "Alapértelmezett nézet",
+        "indexedLabel": "{{ index }}. kamera",
+        "noCamera": "Nincs kamera",
+        "shared": "Megosztott nézet"
+    },
+    "chartGrid": {
+        "noChartsHint": {
+            "header": "Nincs kiválasztott grafikon",
+            "text": "Válasszon ki egy grafikont a fejlécben található gombokkal"
+        }
+    },
+    "generic": {
+        "no": "nem",
+        "yes": "igen"
+    },
+    "hotkeys": {
+        "cueBackward": "Visszatekerés (Shift = 10x, Alt = képkockánként)",
+        "cueForward": "Előretekerés (Shift = 10x, Alt = képkockánként)",
+        "dialogTitle": "Gyorsbillentyűk",
+        "rewind": "Visszatekerés a kezdéshez",
+        "selectDefaultCamera": "Alapértelmezett kamera kiválasztása",
+        "selectFifthCamera": "Ötödik kamera kiválasztása",
+        "selectFirstCamera": "Első kamera kiválasztása",
+        "selectFourthCamera": "Negyedik kamera kiválasztása",
+        "selectSecondCamera": "Második kamera kiválasztása",
+        "selectThirdCamera": "Harmadik kamera kiválasztása",
+        "toggleMuted": "Hangerő némítása vagy visszaállítása",
+        "togglePlayback": "Lejátszás indítása vagy leállítása"
+    },
+    "inspector": {
+        "cueSheet": {
+            "summary": "Eseménylista"
+        },
+        "metadata": {
+            "audio": "Hangsáv",
+            "droneCount": "Drónok száma",
+            "duration": "Időtartam",
+            "environment": {
+                "indoor": "Beltér",
+                "label": "Környezet",
+                "outdoor": "Kültér"
+            },
+            "summary": "Metaadatok",
+            "yawControl": "Irányvezérlés"
+        },
+        "selectedDrones": {
+            "hint": "Kattintson egy drónra a 3D nézetben a kiválasztáshoz.",
+            "hintMultiple": {
+                "mac": "Tartsa nyomva a Cmd billentyűt több drón kiválasztásához.",
+                "other": "Tartsa nyomva a Ctrl billentyűt több drón kiválasztásához."
+            },
+            "unnamed": "Drón {{ index }}"
+        }
+    },
+    "settings": {
+        "droneModel": {
+            "flapper": "Flapper",
+            "label": "Drón modell",
+            "quad": "Kvadkopter",
+            "sphere": "Gömb"
+        },
+        "droneRadius": "Drón mérete",
+        "language": "Nyelv",
+        "playbackFrameRate": "Képkockák száma / másodperc",
+        "playbackSpeed": "Lejátszás sebessége",
+        "scaleLabels": "Távolságfüggetlen címke méretek",
+        "scenery": {
+            "auto": "Automatikus",
+            "day": "Nappali",
+            "disabled": "Kikapcsolva",
+            "indoor": "Beltéri",
+            "label": "Környezet",
+            "night": "Éjszakai"
+        },
+        "showAxes": "Tengelyek mutatása",
+        "showGrid": "Rács mutatása",
+        "showLabels": "Címkék mutatása",
+        "showYaw": "Irányjelző mutatása"
+    },
+    "sharing": {
+        "copyLinkToClipboard": {
+            "error": "Megosztási link másolása a vágólapra sikertelen",
+            "loading": "Megosztási link készítése folyamatban…",
+            "success": "Megosztási link a vágólapra másolva"
+        }
+    },
+    "validation": {
+        "allDrones": "Minden drón",
+        "altitude": "Magasság",
+        "altitudeThreshold": "Magassági küszöb",
+        "distanceOfClosestDronePair": "Legközelebbi drónpár távolsága",
+        "distanceThreshold": "Távolsági küszöb",
+        "horizontalAcceleration": "Vízszintes gyorsulás",
+        "horizontalAccelerationThreshold": "Vízszintes gyorsulás küszöb",
+        "horizontalVelocity": "Vízszintes sebesség",
+        "horizontalVelocityThreshold": "XY sebességküszöb",
+        "proximity": "Távolság",
+        "verticalAcceleration": "Függőleges gyorsulás",
+        "verticalAccelerationThreshold": "Függőleges gyorsulás küszöb",
+        "verticalVelocity": "Függőleges sebesség",
+        "verticalVelocityThreshold": "Z sebességküszöb"
     }
-  },
-  "generic": {
-    "no": "nem",
-    "yes": "igen"
-  },
-  "hotkeys": {
-    "cueBackward": "Visszatekerés (Shift = 10x, Alt = képkockánként)",
-    "cueForward": "Előretekerés (Shift = 10x, Alt = képkockánként)",
-    "dialogTitle": "Gyorsbillentyűk",
-    "rewind": "Visszatekerés a kezdéshez",
-    "selectDefaultCamera": "Alapértelmezett kamera kiválasztása",
-    "selectFifthCamera": "Ötödik kamera kiválasztása",
-    "selectFirstCamera": "Első kamera kiválasztása",
-    "selectFourthCamera": "Negyedik kamera kiválasztása",
-    "selectSecondCamera": "Második kamera kiválasztása",
-    "selectThirdCamera": "Harmadik kamera kiválasztása",
-    "toggleMuted": "Hangerő némítása vagy visszaállítása",
-    "togglePlayback": "Lejátszás indítása vagy leállítása"
-  },
-  "inspector": {
-    "cueSheet": {
-      "summary": "Eseménylista"
-    },
-    "metadata": {
-      "audio": "Hangsáv",
-      "droneCount": "Drónok száma",
-      "duration": "Időtartam",
-      "environment": {
-        "indoor": "Kültér",
-        "label": "Környezet",
-        "outdoor": "Beltér"
-      },
-      "summary": "Metaadatok",
-      "yawControl": "Irányvezérlés"
-    },
-    "selectedDrones": {
-      "hint": "Kattintson egy drónra a 3D nézetben a kiválasztáshoz.",
-      "hintMultiple": {
-        "mac": "Tartsa nyomva a Cmd billentyűt több drón kiválasztásához.",
-        "other": "Tartsa nyomva a Ctrl billentyűt több drón kiválasztásához."
-      },
-      "unnamed": "Névtelen drón"
-    }
-  },
-  "settings": {
-    "droneModel": {
-      "flapper": "Flapper",
-      "label": "Drón modell",
-      "quad": "Kvadkopter",
-      "sphere": "Gömb"
-    },
-    "droneRadius": "Drón mérete",
-    "language": "Nyelv",
-    "playbackFrameRate": "Képkockák száma / másodperc",
-    "playbackSpeed": "Lejátszás sebessége",
-    "scaleLabels": "Távolságfüggetlen címke méretek",
-    "scenery": {
-      "auto": "Automatikus",
-      "day": "Nappali",
-      "disabled": "Kikapcsolva",
-      "indoor": "Beltéri",
-      "label": "Környezet",
-      "night": "Éjszakai"
-    },
-    "showAxes": "Tengelyek mutatása",
-    "showGrid": "Rács mutatása",
-    "showLabels": "Címkék mutatása",
-    "showYaw": "Irányjelző mutatása"
-  },
-  "sharing": {
-    "copyLinkToClipboard": {
-      "error": "Megosztási link másolása a vágólapra sikertelen",
-      "loading": "Megosztási link készítése folyamatban...",
-      "success": "Megosztási link a vágólapra másolva"
-    }
-  },
-  "validation": {
-    "allDrones": "Minden drón",
-    "altitude": "Magasság",
-    "altitudeThreshold": "Magassági küszöb",
-    "distanceOfClosestDronePair": "Legközelebbi drónpár távolsága",
-    "distanceThreshold": "Távolsági küszöb",
-    "horizontalAcceleration": "Vízszintes gyorsulás",
-    "horizontalAccelerationThreshold": "Vízszintes gyorsulás küszöb",
-    "horizontalVelocity": "Vízszintes sebesség",
-    "horizontalVelocityThreshold": "XY sebességküszöb",
-    "proximity": "Távolság",
-    "verticalAcceleration": "Függőleges gyorsulás",
-    "verticalAccelerationThreshold": "Függőleges gyorsulás küszöb",
-    "verticalVelocity": "Függőleges sebesség",
-    "verticalVelocityThreshold": "Z sebességküszöb"
-  }
 }

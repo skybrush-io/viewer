@@ -18,10 +18,11 @@ import {
   getYawControlPlayers,
 } from '~/features/show/selectors';
 import store from '~/store';
+import { formatDroneIndex } from '~/utils/formatters';
+import { SELECTABLE_OBJECT_CLASS } from '~/views/player/constants';
 
 import fontUrl from '~/../assets/fonts/Roboto-msdf.json';
 import fontImageUrl from '~/../assets/fonts/Roboto-msdf.png';
-import { SELECTABLE_OBJECT_CLASS } from '~/views/player/constants';
 
 const { THREE } = AFrame;
 
@@ -466,7 +467,7 @@ AFrame.registerComponent('drone-flock', {
       for (let i = oldSize; i < size; i++) {
         const entity = this.system.createNewUAVEntity({
           droneModel,
-          label: String(i + 1),
+          label: formatDroneIndex(i),
           labelColor,
           showGlow,
           showLabel: showLabels,

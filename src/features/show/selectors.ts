@@ -33,7 +33,7 @@ import {
 
 import { DEFAULT_CAMERA_NAME_PLACEHOLDER } from '~/constants';
 import type { RootState } from '~/store';
-import { formatPlaybackTimestamp } from '~/utils/formatters';
+import { formatDroneIndex, formatPlaybackTimestamp } from '~/utils/formatters';
 import { DEFAULT_CAMERA_ORIENTATION, getCameraPose } from './utils';
 
 export const canLoadShowFromLocalFile = (): boolean => config.io.localFiles;
@@ -334,7 +334,7 @@ export const getNamesOfDronesInShow = createSelector(
   getDroneSwarmSpecification,
   (swarm): string[] =>
     swarm.map((drone, index) =>
-      String(drone?.settings?.name ?? `Drone ${index + 1}`)
+      String(drone?.settings?.name ?? `Drone ${formatDroneIndex(index)}`)
     )
 );
 

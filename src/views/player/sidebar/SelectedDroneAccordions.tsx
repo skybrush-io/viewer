@@ -11,6 +11,7 @@ import {
 import { Accordion, AccordionSummary, AccordionDetails } from './Accordion';
 import DroneInspectorSection from './DroneInspectorSection';
 import { isRunningOnMac } from '~/utils/platform';
+import { formatDroneIndex } from '~/utils/formatters';
 
 export default function SelectedDroneAccordions() {
   const { t } = useTranslation();
@@ -39,7 +40,9 @@ export default function SelectedDroneAccordions() {
           <Accordion key={index} defaultExpanded>
             <AccordionSummary>
               {names[index] ??
-                t('inspector.selectedDrones.unnamed', { index: index + 1 })}
+                t('inspector.selectedDrones.unnamed', {
+                  index: formatDroneIndex(index),
+                })}
             </AccordionSummary>
             <AccordionDetails>
               <DroneInspectorSection

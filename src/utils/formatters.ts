@@ -1,4 +1,14 @@
 /**
+ * Formats a drone label given its index.
+ *
+ * This function is essentially used to declare that we are sticking to a 1-based
+ * indexing when showing drone labels.
+ */
+export function formatDroneIndex(index: number): string {
+  return String(index + 1);
+}
+
+/**
  * Formats a timestamp expressed in seconds in a way that is suitable as a
  * "playback timestamp" in the playback slider.
  */

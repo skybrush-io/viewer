@@ -9,8 +9,8 @@ import uniq from 'lodash-es/uniq';
 import { createSelector } from '@reduxjs/toolkit';
 
 import {
-  type ThreeJsPose,
   skybrushToThreeJsPose,
+  type Pose,
 } from '@skybrush/aframe-components/lib/spatial';
 import {
   createLightProgramPlayer,
@@ -50,7 +50,7 @@ const DEFAULT_CAMERAS: Record<string, Camera[]> = {
   indoor: [
     {
       name: DEFAULT_CAMERA_NAME_PLACEHOLDER,
-      position: [-10, 0, 2], // [0, 2, 10]
+      position: [-10, 0, 2], // [0, 2, 10] when converted to Three.js
       orientation: DEFAULT_CAMERA_ORIENTATION,
       // don't set default: true here because then it would override the
       // cameras in the .skyc file if the .skyc file does not designate any
@@ -60,7 +60,7 @@ const DEFAULT_CAMERAS: Record<string, Camera[]> = {
   outdoor: [
     {
       name: DEFAULT_CAMERA_NAME_PLACEHOLDER,
-      position: [-50, 0, 20], // [0, 20, 50]
+      position: [-50, 0, 20], // [0, 20, 50] when converted to Three.js
       orientation: DEFAULT_CAMERA_ORIENTATION,
     },
   ],
@@ -272,15 +272,24 @@ export const getPerspectiveCamerasAndDefaultCamera = createSelector(
 
 /**
  * Returns the initial configuration of the camera in the drone show, in
+ * Skybrush conventions.
+ */
+export const getInitialCameraConfigurationOfShow = createSelector(
+  getPerspectiveCamerasAndDefaultCamera,
+  (cameras): Pose => {
+    // Assertion: cameras.length > 0
+    const selectedCamera = getDefaultCamera(cameras) ?? cameras[0];
+    return getCameraPose(selectedCamera);
+  }
+);
+
+/**
+ * Returns the initial configuration of the camera in the drone show, in
  * Three.js conventions.
  */
 export const getInitialThreeJsCameraConfigurationOfShow = createSelector(
-  getPerspectiveCamerasAndDefaultCamera,
-  (cameras): ThreeJsPose => {
-    // Assertion: cameras.length > 0
-    const selectedCamera = getDefaultCamera(cameras) ?? cameras[0];
-    return skybrushToThreeJsPose(getCameraPose(selectedCamera));
-  }
+  getInitialCameraConfigurationOfShow,
+  skybrushToThreeJsPose
 );
 
 /**

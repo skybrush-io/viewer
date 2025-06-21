@@ -21,7 +21,7 @@ const { actions, reducer } = createSlice({
   name: 'ui',
   initialState,
   reducers: {
-    setMode(state, action: PayloadAction<UIMode>) {
+    _setMode(state, action: PayloadAction<UIMode>) {
       const { payload } = action;
 
       if (MODES.includes(payload) && config.modes[payload]) {
@@ -31,6 +31,6 @@ const { actions, reducer } = createSlice({
   },
 });
 
-export const { setMode } = actions;
+export const { _setMode } = actions;
 
 export default reducer;

@@ -9,8 +9,10 @@ export const DEFAULT_CAMERA_ORIENTATION = skybrushRotationToQuaternion([
 ]);
 
 /**
- * Returns the pose of a camera, replacing missing components with reasonable
- * defaults.
+ * Returns the pose of a Skybrush camera, replacing missing components with
+ * reasonable defaults.
+ *
+ * The result is returned in Skybrush conventions.
  */
 export function getCameraPose(camera: Camera): Pose {
   return {

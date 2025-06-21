@@ -17,7 +17,7 @@ import {
   loadShowFromObject,
 } from './features/show/actions';
 import { setOverlayVisibility } from './features/three-d/slice';
-import { setMode as setUIMode } from './features/ui/slice';
+import { setMode as setUIMode } from './features/ui/actions';
 import { isElectronWindow } from './window';
 
 /**

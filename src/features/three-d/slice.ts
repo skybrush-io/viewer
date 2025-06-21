@@ -10,8 +10,12 @@ type NavigationMode = 'walk' | 'fly';
 
 interface ThreeDSliceState {
   camera: {
-    position: Vector3Tuple | null;
-    rotation: Vector3Tuple | null;
+    /**
+     * Override the initial camera pose when the 3D view is mounted. Used to
+     * remember the camera pose when switching between the player and the
+     * validation view.
+     */
+    overriddenPose: Pose | null;
     selectedIndex: number;
   };
 
@@ -27,8 +31,7 @@ interface ThreeDSliceState {
 
 const initialState: ThreeDSliceState = {
   camera: {
-    position: null,
-    rotation: null,
+    overriddenPose: null,
     selectedIndex: 0,
   },
 
@@ -46,21 +49,24 @@ const { actions, reducer } = createSlice({
   name: 'threeD',
   initialState,
   reducers: {
+    clearCameraPoseOverride(state) {
+      state.camera.overriddenPose = null;
+    },
+
+    overrideCameraPose(state, action: PayloadAction<Pose>) {
+      state.camera.overriddenPose = action.payload;
+    },
+
+    rememberCameraPose() {
+      /* nop, the saga handles it */
+    },
+
     resetZoom() {
       /* nop, the saga handles it */
     },
 
     rotateViewTowards(_state, _action: PayloadAction<Vector3Tuple>) {
       /* nop, the saga handles it */
-    },
-
-    setCameraPose(
-      state,
-      action: PayloadAction<{ position: Vector3Tuple; rotation: Vector3Tuple }>
-    ) {
-      const { position, rotation } = action.payload;
-      state.camera.position = position;
-      state.camera.rotation = rotation;
     },
 
     setNavigationMode(
@@ -107,9 +113,11 @@ const { actions, reducer } = createSlice({
 });
 
 export const {
+  clearCameraPoseOverride,
+  rememberCameraPose,
   resetZoom,
   rotateViewTowards,
-  setCameraPose,
+  overrideCameraPose,
   setNavigationMode,
   setOverlayVisibility,
   setSelectedCameraIndex,

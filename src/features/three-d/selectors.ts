@@ -1,4 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
+import { skybrushToThreeJsPose } from '@skybrush/aframe-components/lib/spatial';
 import get from 'lodash-es/get';
 
 import {
@@ -7,10 +8,22 @@ import {
 } from '~/constants';
 import { getRawDroneRadiusSetting } from '~/features/settings/selectors';
 import {
+  getInitialCameraConfigurationOfShow,
   getPerspectiveCamerasAndDefaultCamera,
   isShowIndoor,
 } from '~/features/show/selectors';
 import type { RootState } from '~/store';
+
+/**
+ * Returns the stored camera pose of the 3D view, falling back to the initial
+ * configuration of the camera in the drone show, in Three.js conventions.
+ */
+export const getInitialThreeJsCameraConfiguration = createSelector(
+  getInitialCameraConfigurationOfShow,
+  (state: RootState) => state.threeD?.camera?.overriddenPose,
+  (initialConfiguration, poseOverride) =>
+    skybrushToThreeJsPose(poseOverride ?? initialConfiguration)
+);
 
 /**
  * Returns the effective scenery to show, depending on the user's preference and

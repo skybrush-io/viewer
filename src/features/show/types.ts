@@ -13,6 +13,15 @@ export interface ShowLoadingRequest {
   show: ShowSpecification | (() => Promise<ShowSpecification>);
 
   /**
+   * Whether to keep the current camera pose of the playback window. Useful
+   * when updating the show from the Blender plugin.
+   *
+   * When unspecified, it is synced with the value of the `keepPlayhead`
+   * property.
+   */
+  keepCameraPose?: boolean;
+
+  /**
    * Whether to keep the playhead of the playback window at its current
    * location. Useful when updating the show from the Blender plugin.
    */

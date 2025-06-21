@@ -1,9 +1,10 @@
 import React from 'react';
-import { select, take } from 'redux-saga/effects';
+import { put, select, take } from 'redux-saga/effects';
 
 import {
   skybrushToThreeJsPosition,
   skybrushToThreeJsQuaternion,
+  threeJsToSkybrushPose,
   type Pose,
   type ThreeJsPositionTuple,
   type ThreeJsQuaternionTuple,
@@ -12,6 +13,8 @@ import type { Camera, Vector3Tuple } from '@skybrush/show-format';
 
 import { getSelectedCamera } from './selectors';
 import {
+  overrideCameraPose,
+  rememberCameraPose,
   resetZoom,
   rotateViewTowards,
   switchToCameraPose,
@@ -36,6 +39,7 @@ interface CameraController {
  * to the appropriate camera.
  */
 function* cameraAnimatorSaga(): Generator<any, void, any> {
+  const REMEMBER_CAMERA_POSE = rememberCameraPose.toString();
   const RESET_ZOOM = resetZoom.toString();
   const ROTATE_VIEW_TOWARDS = rotateViewTowards.toString();
   const SWITCH_TO_CAMERA_POSE = switchToCameraPose.toString();
@@ -43,6 +47,7 @@ function* cameraAnimatorSaga(): Generator<any, void, any> {
 
   while (true) {
     const action = yield take([
+      REMEMBER_CAMERA_POSE,
       RESET_ZOOM,
       ROTATE_VIEW_TOWARDS,
       SWITCH_TO_CAMERA_POSE,
@@ -53,6 +58,13 @@ function* cameraAnimatorSaga(): Generator<any, void, any> {
 
     if (controller) {
       switch (action.type) {
+        case REMEMBER_CAMERA_POSE:
+          const response = handleRememberCameraPose(controller);
+          if (response) {
+            yield put(response as any);
+          }
+          break;
+
         case RESET_ZOOM:
           handleResetZoom(controller);
           break;
@@ -110,6 +122,24 @@ function handleCameraSwitch(
 
       controller.startTransitionTo(target);
     }
+  }
+}
+
+function handleRememberCameraPose(controller: CameraController) {
+  const cameraObj = cameraRef.current?.object3D;
+  if (cameraObj) {
+    return overrideCameraPose(
+      threeJsToSkybrushPose({
+        position: cameraObj.position.toArray(),
+        rotation: cameraObj.rotation
+          .reorder('YZX')
+          .toArray()
+          .slice(0, 3)
+          .map((x: number) => x * (180 / Math.PI)),
+      })
+    );
+  } else {
+    return undefined;
   }
 }
 

@@ -14,7 +14,7 @@ import { setPlaybackPosition } from '~/features/playback/actions';
 import { _doLoadShow } from '~/features/show/async';
 import { loadShowFromRequest } from '~/features/show/slice';
 import type { ShowLoadingRequest } from '~/features/show/types';
-import { switchToCameraPose } from '~/features/three-d/slice';
+import { clearCameraPoseOverride } from '~/features/three-d/slice';
 
 /**
  * Saga that watches a channel where it receives data sources to load a drone
@@ -27,8 +27,16 @@ function* loadShowFromRequestChannelSaga(
 ): Generator<any, void, any> {
   while (true) {
     const request = (yield take(chan)) as ShowLoadingRequest;
-    const { audio, keepPlayhead, missingAudioIsOkay, initialSeekTime } =
-      request;
+    const {
+      audio,
+      keepCameraPose,
+      keepPlayhead,
+      missingAudioIsOkay,
+      initialSeekTime,
+    } = request;
+
+    const effectiveKeepCameraPose =
+      keepCameraPose ?? request.keepPlayhead ?? false;
 
     try {
       let audioOkay = true;
@@ -48,6 +56,10 @@ function* loadShowFromRequestChannelSaga(
       const audioInShowSpec = get(showSpec, 'media.audio.url');
       const audioUrl = isNil(audioInShowSpec) ? null : String(audioInShowSpec);
       yield put(setAudioUrl(audioOkay ? (audio ?? audioUrl) : null));
+
+      if (!effectiveKeepCameraPose) {
+        yield put(clearCameraPoseOverride() as any);
+      }
 
       if (!keepPlayhead) {
         yield put(setPlaybackPosition(initialSeekTime ?? 0) as any);

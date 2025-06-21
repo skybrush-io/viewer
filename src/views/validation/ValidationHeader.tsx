@@ -15,8 +15,8 @@ import { clearLoadedShow } from '~/features/show/slice';
 import { togglePanelVisibility } from '~/features/validation/actions';
 import { PANELS, type ValidationPanel } from '~/features/validation/panels';
 import { getVisiblePanels } from '~/features/validation/selectors';
+import { setMode } from '~/features/ui/actions';
 import { UIMode } from '~/features/ui/modes';
-import { setMode } from '~/features/ui/slice';
 import type { AppThunk, RootState } from '~/store';
 
 import PanelToggleChip from './PanelToggleChip';

@@ -19,11 +19,11 @@ import type {
 import { getDroneModel } from '~/features/settings/selectors';
 import type { DroneModelType } from '~/features/settings/types';
 import {
+  getInitialThreeJsCameraConfiguration,
   getEffectiveDroneRadius,
   getEffectiveScenery,
 } from '~/features/three-d/selectors';
 import {
-  getInitialThreeJsCameraConfigurationOfShow,
   getLoadedShowId,
   getNumberOfDronesInShow,
 } from '~/features/show/selectors';
@@ -149,7 +149,6 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
       <a-camera
         key={`camera-${cameraId}`}
         ref={cameraRef}
-        sync-pose-with-store=''
         id={SCENE_CAMERA_ID}
         position={cameraConfiguration.position.join(' ')}
         rotation={cameraConfiguration.rotation.join(' ')}
@@ -185,7 +184,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
 export default connect(
   // mapStateToProps
   (state: RootState) => ({
-    cameraConfiguration: getInitialThreeJsCameraConfigurationOfShow(state),
+    cameraConfiguration: getInitialThreeJsCameraConfiguration(state),
     numDrones: getNumberOfDronesInShow(state),
     showId: getLoadedShowId(state),
     ...state.settings.threeD,

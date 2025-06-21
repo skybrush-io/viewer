@@ -59,13 +59,14 @@ class GlowingMaterial extends ShaderMaterial {
         if(!gl_FrontFacing)
             normal *= - 1.0;
         vec3 viewDirection = normalize(cameraPosition - vPosition);
+        float luminance = dot(glowColor, vec3(0.299, 0.587, 0.114));
         float fresnel = dot(viewDirection, normal);
         fresnel = pow(fresnel, glowInternalRadius + 0.1);
         float falloff = smoothstep(0., falloff, fresnel);
         float fakeGlow = fresnel;
         fakeGlow += fresnel * glowSharpness;
         fakeGlow *= falloff;
-        gl_FragColor = vec4(clamp(glowColor * fresnel, 0., 1.0), clamp(fakeGlow, 0., opacity));
+        gl_FragColor = vec4(clamp(glowColor * fresnel, 0., 1.0), clamp(fakeGlow, 0., opacity * pow(luminance, 0.3)));
 
         #include <tonemapping_fragment>
         #include <colorspace_fragment>

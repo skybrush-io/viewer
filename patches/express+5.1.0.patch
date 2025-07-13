@@ -1,5 +1,5 @@
 diff --git a/node_modules/express/lib/view.js b/node_modules/express/lib/view.js
-index c08ab4d..f49ddea 100644
+index d66b4a2..6d9a93e 100644
 --- a/node_modules/express/lib/view.js
 +++ b/node_modules/express/lib/view.js
 @@ -78,7 +78,7 @@ function View(name, options) {

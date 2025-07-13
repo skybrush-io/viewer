@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [main]
 
+### Added
+
+- Added a "Reload show" button to the playback bar and the validation view.
+
 ### Changed
 
 - The macOS version of the application now uses a title bar just like on other

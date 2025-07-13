@@ -3,10 +3,12 @@ import React from 'react';
 import Box, { type BoxProps } from '@mui/material/Box';
 import { systemFont } from '@skybrush/app-theme-mui';
 
-import { isElectronWindow } from '~/window';
 import { isRunningOnMac } from '~/utils/platform';
+import { isElectronWindow } from '~/window';
 
-const isShowingDragMoveArea = isElectronWindow(window) && isRunningOnMac;
+const isUsingNativeTitleBar = true;
+const isShowingDragMoveArea =
+  !isUsingNativeTitleBar && isElectronWindow(window) && isRunningOnMac;
 
 export const WINDOW_DRAG_MOVE_AREA_HEIGHT = isShowingDragMoveArea ? 36 : 0;
 

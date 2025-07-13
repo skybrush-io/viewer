@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [main]
+
+### Changed
+
+- The macOS version of the application now uses a title bar just like on other
+  platforms for sake of consistency.
+
+### Fixed
+
+- Prevented the glow shader from adding a halo effect to dark colors.
+
+- Camera pose is now remembered when entering and exiting validation view.
+
 ## [2.6.0] - 2025-06-17
 
 ### Added

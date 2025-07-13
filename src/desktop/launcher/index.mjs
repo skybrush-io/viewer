@@ -54,7 +54,7 @@ async function run(filenames, options) {
       rootDir,
       showMenuBar: false,
       title: 'Skybrush Viewer',
-      titleBarStyle: 'hiddenInset',
+      titleBarStyle: 'default', // 'hiddenInset' if we return to not showing the title bar on macOS
       webPreferences: {
         sandbox: false, // because we need Node.js modules from the preloader
       },

@@ -21,7 +21,8 @@
         "scaleLabels": "均衡标签大小",
         "showLabels": "显示标签",
         "showYaw": "显示偏航指示",
-        "playbackSpeed": "播放速度"
+        "playbackSpeed": "播放速度",
+        "playbackFrameRate": "每秒帧数"
     },
     "chartGrid": {
         "noChartsHint": {
@@ -37,7 +38,11 @@
         "closeShow": "关闭显示",
         "validateTrajectories": "验证轨迹",
         "openShowFile": "打开表演文件",
-        "shareLink": "分享链接以展示"
+        "shareLink": "分享链接以展示",
+        "toggleSidebar": "切换侧边栏",
+        "inspector": "检查器",
+        "showHotkeysDialog": "显示快捷键",
+        "close": "关闭"
     },
     "validation": {
         "altitudeThreshold": "所有无人机",
@@ -49,7 +54,11 @@
         "proximity": "接近度",
         "verticalVelocity": "垂直速度",
         "horizontalVelocity": "水平速度",
-        "distanceOfClosestDronePair": "最近无人机对之间的距离"
+        "distanceOfClosestDronePair": "最近无人机对之间的距离",
+        "horizontalAcceleration": "水平加速度",
+        "verticalAccelerationThreshold": "Z轴加速度阈值",
+        "verticalAcceleration": "垂直加速度",
+        "horizontalAccelerationThreshold": "XY轴加速度阈值"
     },
     "cameras": {
         "noCamera": "无相机",
@@ -67,5 +76,48 @@
             "success": "链接已复制到剪贴板",
             "error": "无法将链接复制到剪贴板"
         }
+    },
+    "inspector": {
+        "metadata": {
+            "yawControl": "偏航控制",
+            "summary": "元数据",
+            "environment": {
+                "indoor": "室内",
+                "outdoor": "室外",
+                "label": "环境"
+            },
+            "droneCount": "无人机数量",
+            "duration": "期间",
+            "audio": "音频轨道"
+        },
+        "selectedDrones": {
+            "unnamed": "无人机 {{ index }}",
+            "hintMultiple": {
+                "other": "按住 Ctrl 键可选择多架无人机。",
+                "mac": "按住Cmd键多选无人机。"
+            },
+            "hint": "在主视图中点击无人机以进行检视。"
+        },
+        "cueSheet": {
+            "summary": "提示列表"
+        }
+    },
+    "hotkeys": {
+        "selectFourthCamera": "选择第四台摄像机",
+        "rewind": "回到开头",
+        "selectFirstCamera": "选择第一个摄像头",
+        "togglePlayback": "播放/停止",
+        "cueBackward": "向后跳帧（按住 Shift = 10倍速,按住 Alt = 逐帧）",
+        "dialogTitle": "键盘快捷键",
+        "selectSecondCamera": "选择第二个摄像头",
+        "selectFifthCamera": "选择第五个摄像头",
+        "selectThirdCamera": "选择第三个摄像头",
+        "cueForward": "向前跳帧（按住 Shift = 10倍速,按住 Alt = 逐帧）",
+        "selectDefaultCamera": "选择默认镜头",
+        "toggleMuted": "静音或取消静音声音"
+    },
+    "generic": {
+        "no": "无",
+        "yes": "有"
     }
 }

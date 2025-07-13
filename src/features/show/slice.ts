@@ -11,18 +11,31 @@ import {
 import type { ShowSpecification } from '@skybrush/show-format';
 
 import { _doLoadShow, withProgressIndicator } from './async';
-import type { ShowLoadingRequest } from './types';
+import type { ShowDataSource, ShowLoadingRequest } from './types';
 
 interface ShowSliceState {
+  /// Unique identifier for the show, incremented each time a new show is loaded.
+  /// Used to allow 3D components to recognize when a new show is loaded.
   id: number;
+
+  /// The loaded show data, or null if no show is loaded.
   data: ShowSpecification | null;
+
+  /// The data source for the show, or null if no show is loaded. This can be
+  /// used to implement reloading the show from the same source.
+  source: ShowDataSource;
+
+  /// Whether the show is currently being loaded.
   loading: boolean;
+
+  /// Error that occurred while loading the show, or null if no error occurred.
   error: string | null;
 }
 
 const initialState: ShowSliceState = {
-  id: 0, // used to allow 3D components to recognize when a new show is loaded
+  id: 0,
   data: null,
+  source: { type: 'object' },
   loading: false,
   error: null,
 };
@@ -34,12 +47,17 @@ const { actions, reducer } = createSlice({
     clearLoadedShow(state) {
       state.data = null;
       state.error = null;
+      state.source = { type: 'object' };
       state.id = 0;
     },
 
     loadShowFromRequest(state, action: PayloadAction<ShowLoadingRequest>) {
       /* nothing to do, the loader saga will pick this up and take care of
        * everything */
+    },
+
+    setShowDataSource(state, action: PayloadAction<ShowDataSource>) {
+      state.source = action.payload;
     },
   },
 
@@ -76,6 +94,7 @@ const { actions, reducer } = createSlice({
   },
 });
 
-export const { clearLoadedShow, loadShowFromRequest } = actions;
+export const { clearLoadedShow, loadShowFromRequest, setShowDataSource } =
+  actions;
 
 export default reducer;

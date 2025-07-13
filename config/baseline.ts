@@ -7,6 +7,7 @@ import { type Config } from 'config';
 const baseline: Config = {
   buttons: {
     playbackHint: false,
+    reload: true,
   },
   io: {
     localFiles: true,

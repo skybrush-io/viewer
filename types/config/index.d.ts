@@ -8,6 +8,7 @@ declare module 'config' {
   export type Config = {
     buttons: {
       playbackHint: boolean;
+      reload: boolean;
     };
 
     electronBuilder?: {

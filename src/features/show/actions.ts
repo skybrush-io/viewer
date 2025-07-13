@@ -15,7 +15,9 @@ export const loadShowFromLocalFile =
         withProgressIndicator(getShowAsObjectFromLocalFile(filename))
       );
       const show: ShowSpecification = loadAction.payload as ShowSpecification;
-      dispatch(loadShowFromObject(show));
+      dispatch(
+        loadShowFromRequest({ show, source: { type: 'file', filename } })
+      );
     }
   };
 
@@ -34,5 +36,17 @@ export const pickLocalFileAndLoadShow = (): AppThunk => async (dispatch) => {
 export const loadShowFromObject =
   (show: ShowSpecification): AppThunk =>
   (dispatch) => {
-    dispatch(loadShowFromRequest({ show }));
+    dispatch(loadShowFromRequest({ show, source: { type: 'object' } }));
   };
+
+export const reloadShow = (): AppThunk => (dispatch, getState) => {
+  const state = getState();
+  const source = state.show.source;
+
+  if (source.type === 'file') {
+    dispatch(loadShowFromLocalFile(source.filename));
+  }
+
+  // We cannot reload from this source, so we just return.
+  console.warn(`Cannot reload show from source of type ${source.type}`);
+};

@@ -2,15 +2,39 @@ import type { Pose } from '@skybrush/aframe-components/lib/spatial';
 import type { ShowSpecification } from '@skybrush/show-format';
 
 /**
+ * Object encapsulating the data source of a show, used to implement
+ * reloading the show from the same source.
+ */
+export type ShowDataSource =
+  | {
+      type: 'url';
+      url: string;
+    }
+  | {
+      type: 'file';
+      filename: string;
+    }
+  | {
+      type: 'manifestUrl';
+      filename: string;
+    }
+  | {
+      type: 'object';
+    };
+
+/**
  * Request encapsulating all information needed to load a show from a
  * specification object, optionally accompanied with audio.
  */
 export interface ShowLoadingRequest {
-  /** URL of the audio corresponding to the show, if any */
-  audio?: string;
-
   /** The show to load */
   show: ShowSpecification | (() => Promise<ShowSpecification>);
+
+  /** The source where the show is being loaded from */
+  source: ShowDataSource;
+
+  /** URL of the audio corresponding to the show, if any */
+  audio?: string;
 
   /**
    * Whether to keep the current camera pose of the playback window. Useful

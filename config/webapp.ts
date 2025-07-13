@@ -7,6 +7,7 @@ import { type ConfigOverrides } from 'config-overrides';
 const overrides: ConfigOverrides = {
   buttons: {
     playbackHint: true,
+    reload: false,
   },
   io: {
     localFiles: false,

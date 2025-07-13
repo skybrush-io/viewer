@@ -12,7 +12,7 @@ import { freeze } from '@reduxjs/toolkit';
 import { setAudioUrl } from '~/features/audio/slice';
 import { setPlaybackPosition } from '~/features/playback/actions';
 import { _doLoadShow } from '~/features/show/async';
-import { loadShowFromRequest } from '~/features/show/slice';
+import { loadShowFromRequest, setShowDataSource } from '~/features/show/slice';
 import type { ShowLoadingRequest } from '~/features/show/types';
 import { clearCameraPoseOverride } from '~/features/three-d/slice';
 
@@ -33,13 +33,17 @@ function* loadShowFromRequestChannelSaga(
       keepPlayhead,
       missingAudioIsOkay,
       initialSeekTime,
+      source,
     } = request;
 
-    const effectiveKeepCameraPose =
-      keepCameraPose ?? request.keepPlayhead ?? false;
+    const effectiveKeepCameraPose = keepCameraPose ?? keepPlayhead ?? false;
 
     try {
       let audioOkay = true;
+
+      // Set the data source for the show before anything else so we can
+      // attempt a reload even if the show loading fails.
+      yield put(setShowDataSource(source));
 
       if (audio && missingAudioIsOkay) {
         try {

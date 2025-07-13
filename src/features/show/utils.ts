@@ -3,6 +3,7 @@ import {
   type Pose,
 } from '@skybrush/aframe-components/lib/spatial';
 import type { Camera } from '@skybrush/show-format';
+import type { ShowDataSource } from './types';
 
 export const DEFAULT_CAMERA_ORIENTATION = skybrushRotationToQuaternion([
   90, 0, -90,
@@ -19,4 +20,13 @@ export function getCameraPose(camera: Camera): Pose {
     position: camera.position ?? [0, 0, 0],
     orientation: camera.orientation ?? DEFAULT_CAMERA_ORIENTATION,
   };
+}
+
+/**
+ * Returns whether a show data source is reloadable.
+ */
+export function isShowDataSourceReloadable(
+  source: ShowDataSource | null | undefined
+): boolean {
+  return source?.type === 'file';
 }

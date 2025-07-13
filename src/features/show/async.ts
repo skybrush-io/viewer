@@ -1,5 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { CameraType, type Camera } from '@skybrush/show-format';
+import {
+  CameraType,
+  type Camera,
+  type ShowSpecification,
+} from '@skybrush/show-format';
 
 import { SHARED_CAMERA_NAME_PLACEHOLDER } from '~/constants';
 
@@ -7,7 +11,11 @@ import type { ShowLoadingRequest } from './types';
 
 export const _doLoadShow = createAsyncThunk(
   'show/load',
-  async ({ initialCameraPose, show }: ShowLoadingRequest) => {
+  async ({
+    initialCameraPose,
+    show,
+    source,
+  }: ShowLoadingRequest): Promise<ShowSpecification> => {
     if (typeof show === 'function') {
       show = await show();
     }

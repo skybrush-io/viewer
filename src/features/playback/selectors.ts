@@ -2,8 +2,18 @@ import isNil from 'lodash-es/isNil';
 import { createSelector } from '@reduxjs/toolkit';
 
 import { isAudioReadyToPlay } from '~/features/audio/selectors';
-import { hasLoadedShowFile } from '~/features/show/selectors';
+import {
+  getShowDataSource,
+  hasLoadedShowFile,
+} from '~/features/show/selectors';
 import type { RootState } from '~/store';
+import { isShowDataSourceReloadable } from '../show/utils';
+
+/**
+ * Returns whether the "reload show" action is available now.
+ */
+export const canReloadShow = (state: RootState): boolean =>
+  isShowDataSourceReloadable(getShowDataSource(state)) && !isPlaying(state);
 
 /**
  * Returns whether the "toggle playback" action is available now.

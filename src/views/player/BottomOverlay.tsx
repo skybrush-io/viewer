@@ -14,9 +14,13 @@ import ToggleSidebarButton from '~/components/buttons/ToggleSidebarButton';
 import { hasAudio, isAudioMuted } from '~/features/audio/selectors';
 import { toggleMuted } from '~/features/audio/slice';
 import { togglePlayback } from '~/features/playback/actions';
-import { canTogglePlayback, isPlaying } from '~/features/playback/selectors';
+import {
+  canReloadShow,
+  canTogglePlayback,
+  isPlaying,
+} from '~/features/playback/selectors';
 import ShareButton from '~/features/sharing/ShareButton';
-import { pickLocalFileAndLoadShow } from '~/features/show/actions';
+import { pickLocalFileAndLoadShow, reloadShow } from '~/features/show/actions';
 import {
   canLoadShowFromLocalFile,
   getShowDuration,
@@ -31,6 +35,7 @@ import type { RootState } from '~/store';
 
 import PlaybackSlider from './PlaybackSlider';
 import ShowHotkeysDialogButton from '~/features/hotkeys/ShowHotkeysDialogButton';
+import ReloadButton from '~/components/buttons/ReloadButton';
 
 const style = {
   background: 'linear-gradient(transparent 0px, rgba(0, 0, 0, 0.6) 48px)',
@@ -54,6 +59,7 @@ const noWrap = {
 
 interface BottomOverlayProps {
   readonly canLoadShowFromLocalFile: boolean;
+  readonly canReloadShow: boolean;
   readonly canTogglePlayback: boolean;
   readonly duration: number;
   readonly formatPlaybackTimestamp: (timestamp: number) => string;
@@ -64,6 +70,7 @@ interface BottomOverlayProps {
   readonly playing: boolean;
   readonly rightText: string;
   readonly onLoadShowFromLocalFile: () => void;
+  readonly onReloadShow: () => void;
   readonly onToggleMuted: () => void;
   readonly onTogglePlayback: () => void;
 }
@@ -72,6 +79,7 @@ const BottomOverlay = React.forwardRef(
   (
     {
       canLoadShowFromLocalFile,
+      canReloadShow,
       canTogglePlayback,
       duration,
       formatPlaybackTimestamp,
@@ -82,6 +90,7 @@ const BottomOverlay = React.forwardRef(
       playing,
       rightText,
       onLoadShowFromLocalFile,
+      onReloadShow,
       onToggleMuted,
       onTogglePlayback,
       ...rest
@@ -93,6 +102,11 @@ const BottomOverlay = React.forwardRef(
         {canLoadShowFromLocalFile && (
           <Box pl={1} mr={-1}>
             <OpenButton disabled={playing} onClick={onLoadShowFromLocalFile} />
+          </Box>
+        )}
+        {config.buttons.reload && (
+          <Box pl={1} mr={-1}>
+            <ReloadButton disabled={!canReloadShow} onClick={onReloadShow} />
           </Box>
         )}
         <Box px={2}>
@@ -150,6 +164,7 @@ export default connect(
   // mapStateToProps
   (state: RootState) => ({
     canLoadShowFromLocalFile: canLoadShowFromLocalFile(),
+    canReloadShow: canReloadShow(state),
     canTogglePlayback: canTogglePlayback(state),
     duration: getShowDuration(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
@@ -163,6 +178,7 @@ export default connect(
   // mapDispatchToProps
   {
     onLoadShowFromLocalFile: pickLocalFileAndLoadShow,
+    onReloadShow: reloadShow,
     onToggleMuted: toggleMuted,
     onTogglePlayback: togglePlayback,
   },

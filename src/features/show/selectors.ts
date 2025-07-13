@@ -35,6 +35,7 @@ import { DEFAULT_CAMERA_NAME_PLACEHOLDER } from '~/constants';
 import type { RootState } from '~/store';
 import { formatDroneIndex, formatPlaybackTimestamp } from '~/utils/formatters';
 import { DEFAULT_CAMERA_ORIENTATION, getCameraPose } from './utils';
+import type { ShowDataSource } from './types';
 
 export const canLoadShowFromLocalFile = (): boolean => config.io.localFiles;
 
@@ -65,6 +66,12 @@ const DEFAULT_CAMERAS: Record<string, Camera[]> = {
     },
   ],
 };
+
+/**
+ * Selector that returns the data source of the currently loaded show.
+ */
+export const getShowDataSource = (state: RootState): ShowDataSource =>
+  state.show.source ?? { type: 'object' };
 
 /**
  * Selector that returns the specification of the currently loaded show, or

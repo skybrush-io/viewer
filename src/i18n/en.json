@@ -1,123 +1,124 @@
 {
-    "bottomOverlay": {
-        "leftText": "Use arrow keys to move around (Shift to run) and E/C to change altitude. Drag the scenery to look around. Scroll wheel or +/- to zoom.",
-        "rightText": "Skybrush © 2020-{{ year }} CollMot Robotics Ltd."
-    },
-    "buttons": {
-        "close": "Close",
-        "closeShow": "Close show",
-        "inspector": "Inspector",
-        "openShowFile": "Open show file",
-        "resetZoom": "Reset zoom",
-        "returnToViewer": "Return to viewer",
-        "settings": "Settings",
-        "shareLink": "Share link to show",
-        "showHotkeysDialog": "Show hotkeys",
-        "toggleSidebar": "Toggle sidebar",
-        "trackDrones": "Rotate camera towards drones",
-        "validateTrajectories": "Validate trajectories"
-    },
-    "cameras": {
-        "default": "Default view",
-        "indexedLabel": "Camera {{ index }}",
-        "noCamera": "No camera",
-        "shared": "Shared view"
-    },
-    "chartGrid": {
-        "noChartsHint": {
-            "header": "No charts selected",
-            "text": "Select one of the chart types with the buttons in the header"
-        }
-    },
-    "generic": {
-        "no": "No",
-        "yes": "Yes"
-    },
-    "hotkeys": {
-        "cueBackward": "Cue backward (Shift = 10x, Alt = by frames)",
-        "cueForward": "Cue forward (Shift = 10x, Alt = by frames)",
-        "dialogTitle": "Hotkeys",
-        "rewind": "Rewind to start",
-        "selectDefaultCamera": "Select default camera",
-        "selectFifthCamera": "Select fifth camera",
-        "selectFirstCamera": "Select first camera",
-        "selectFourthCamera": "Select fourth camera",
-        "selectSecondCamera": "Select second camera",
-        "selectThirdCamera": "Select third camera",
-        "toggleMuted": "Mute or unmute sound",
-        "togglePlayback": "Start or stop playback"
-    },
-    "inspector": {
-        "cueSheet": {
-            "summary": "Cue list"
-        },
-        "metadata": {
-            "audio": "Audio track",
-            "droneCount": "Drone count",
-            "duration": "Duration",
-            "environment": {
-                "indoor": "Indoor",
-                "label": "Environment",
-                "outdoor": "Outdoor"
-            },
-            "summary": "Metadata",
-            "yawControl": "Yaw control"
-        },
-        "selectedDrones": {
-            "hint": "Click on drones in the main view to inspect them.",
-            "hintMultiple": {
-                "mac": "Hold Cmd to select multiple drones.",
-                "other": "Hold Ctrl to select multiple drones."
-            },
-            "unnamed": "Drone {{ index }}"
-        }
-    },
-    "settings": {
-        "droneModel": {
-            "flapper": "Flapper",
-            "label": "UAV model",
-            "quad": "Quadcopter",
-            "sphere": "Sphere"
-        },
-        "droneRadius": "UAV size",
-        "language": "Language",
-        "playbackFrameRate": "Frame count per second",
-        "playbackSpeed": "Playback speed",
-        "scaleLabels": "Equalize label sizes",
-        "scenery": {
-            "auto": "Automatic",
-            "day": "Day",
-            "disabled": "Disabled",
-            "indoor": "Indoor",
-            "label": "Scenery",
-            "night": "Night"
-        },
-        "showAxes": "Show axes",
-        "showGrid": "Show grid",
-        "showLabels": "Show labels",
-        "showYaw": "Show yaw indicators"
-    },
-    "sharing": {
-        "copyLinkToClipboard": {
-            "error": "Failed to copy link to clipboard",
-            "loading": "Copying link to clipboard…",
-            "success": "Link copied to clipboard"
-        }
-    },
-    "validation": {
-        "allDrones": "All drones",
-        "altitude": "Altitudes",
-        "altitudeThreshold": "Altitude threshold",
-        "distanceOfClosestDronePair": "Distance of closest drone pair",
-        "distanceThreshold": "Distance threshold",
-        "horizontalAcceleration": "Horizontal accelerations",
-        "horizontalAccelerationThreshold": "XY acceleration threshold",
-        "horizontalVelocity": "Horizontal velocities",
-        "horizontalVelocityThreshold": "XY velocity threshold",
-        "proximity": "Proximity",
-        "verticalAcceleration": "Vertical accelerations",
-        "verticalAccelerationThreshold": "Z acceleration threshold",
-        "verticalVelocity": "Vertical velocities",
-        "verticalVelocityThreshold": "Z velocity threshold"
+  "bottomOverlay": {
+    "leftText": "Use arrow keys to move around (Shift to run) and E/C to change altitude. Drag the scenery to look around. Scroll wheel or +/- to zoom.",
+    "rightText": "Skybrush © 2020-{{ year }} CollMot Robotics Ltd."
+  },
+  "buttons": {
+    "close": "Close",
+    "closeShow": "Close show",
+    "inspector": "Inspector",
+    "openShowFile": "Open show file",
+    "reloadShowFile": "Reload show file",
+    "resetZoom": "Reset zoom",
+    "returnToViewer": "Return to viewer",
+    "settings": "Settings",
+    "shareLink": "Share link to show",
+    "showHotkeysDialog": "Show hotkeys",
+    "toggleSidebar": "Toggle sidebar",
+    "trackDrones": "Rotate camera towards drones",
+    "validateTrajectories": "Validate trajectories"
+  },
+  "cameras": {
+    "default": "Default view",
+    "indexedLabel": "Camera {{ index }}",
+    "noCamera": "No camera",
+    "shared": "Shared view"
+  },
+  "chartGrid": {
+    "noChartsHint": {
+      "header": "No charts selected",
+      "text": "Select one of the chart types with the buttons in the header"
     }
+  },
+  "generic": {
+    "no": "No",
+    "yes": "Yes"
+  },
+  "hotkeys": {
+    "cueBackward": "Cue backward (Shift = 10x, Alt = by frames)",
+    "cueForward": "Cue forward (Shift = 10x, Alt = by frames)",
+    "dialogTitle": "Hotkeys",
+    "rewind": "Rewind to start",
+    "selectDefaultCamera": "Select default camera",
+    "selectFifthCamera": "Select fifth camera",
+    "selectFirstCamera": "Select first camera",
+    "selectFourthCamera": "Select fourth camera",
+    "selectSecondCamera": "Select second camera",
+    "selectThirdCamera": "Select third camera",
+    "toggleMuted": "Mute or unmute sound",
+    "togglePlayback": "Start or stop playback"
+  },
+  "inspector": {
+    "cueSheet": {
+      "summary": "Cue list"
+    },
+    "metadata": {
+      "audio": "Audio track",
+      "droneCount": "Drone count",
+      "duration": "Duration",
+      "environment": {
+        "indoor": "Indoor",
+        "label": "Environment",
+        "outdoor": "Outdoor"
+      },
+      "summary": "Metadata",
+      "yawControl": "Yaw control"
+    },
+    "selectedDrones": {
+      "hint": "Click on drones in the main view to inspect them.",
+      "hintMultiple": {
+        "mac": "Hold Cmd to select multiple drones.",
+        "other": "Hold Ctrl to select multiple drones."
+      },
+      "unnamed": "Drone {{ index }}"
+    }
+  },
+  "settings": {
+    "droneModel": {
+      "flapper": "Flapper",
+      "label": "UAV model",
+      "quad": "Quadcopter",
+      "sphere": "Sphere"
+    },
+    "droneRadius": "UAV size",
+    "language": "Language",
+    "playbackFrameRate": "Frame count per second",
+    "playbackSpeed": "Playback speed",
+    "scaleLabels": "Equalize label sizes",
+    "scenery": {
+      "auto": "Automatic",
+      "day": "Day",
+      "disabled": "Disabled",
+      "indoor": "Indoor",
+      "label": "Scenery",
+      "night": "Night"
+    },
+    "showAxes": "Show axes",
+    "showGrid": "Show grid",
+    "showLabels": "Show labels",
+    "showYaw": "Show yaw indicators"
+  },
+  "sharing": {
+    "copyLinkToClipboard": {
+      "error": "Failed to copy link to clipboard",
+      "loading": "Copying link to clipboard…",
+      "success": "Link copied to clipboard"
+    }
+  },
+  "validation": {
+    "allDrones": "All drones",
+    "altitude": "Altitudes",
+    "altitudeThreshold": "Altitude threshold",
+    "distanceOfClosestDronePair": "Distance of closest drone pair",
+    "distanceThreshold": "Distance threshold",
+    "horizontalAcceleration": "Horizontal accelerations",
+    "horizontalAccelerationThreshold": "XY acceleration threshold",
+    "horizontalVelocity": "Horizontal velocities",
+    "horizontalVelocityThreshold": "XY velocity threshold",
+    "proximity": "Proximity",
+    "verticalAcceleration": "Vertical accelerations",
+    "verticalAccelerationThreshold": "Z acceleration threshold",
+    "verticalVelocity": "Vertical velocities",
+    "verticalVelocityThreshold": "Z velocity threshold"
+  }
 }

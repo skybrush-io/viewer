@@ -6,7 +6,7 @@ import { createRoot } from 'react-dom/client';
 
 import type { Pose } from '@skybrush/aframe-components/lib/spatial';
 
-import type { ShowLoadingRequest } from './features/show/types';
+import type { ShowDataSource, ShowLoadingRequest } from './features/show/types';
 
 import App from './app';
 
@@ -65,6 +65,10 @@ function createShowLoadingRequestFromRootUrl(
           } */
         })
         .json(),
+    source: {
+      type: 'url',
+      url: new URL(url).toString(),
+    },
   };
 }
 
@@ -94,7 +98,6 @@ function isShowManifest(object: any): object is ShowManifest {
 async function createShowLoadingRequestFromManifestUrl(
   url: string | URL
 ): Promise<ShowLoadingRequest> {
-  const now = Date.now();
   const manifest = await ky.get(url).json();
 
   if (!isShowManifest(manifest)) {
@@ -105,6 +108,10 @@ async function createShowLoadingRequestFromManifestUrl(
     audio: manifest.audio,
     missingAudioIsOkay: true,
     show: async () => ky.get(manifest.show, {}).json(),
+    source: {
+      type: 'manifestUrl',
+      filename: new URL(url).toString(),
+    },
   };
 }
 

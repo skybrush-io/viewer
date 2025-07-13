@@ -4,13 +4,9 @@ import { connect } from 'react-redux';
 
 import Box, { type BoxProps } from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Close from '@mui/icons-material/Close';
 import ChevronRight from '@mui/icons-material/ChevronRight';
+import Refresh from '@mui/icons-material/Refresh';
 
-import {
-  canLoadShowFromLocalFile,
-  hasLoadedShowFile,
-} from '~/features/show/selectors';
 import { clearLoadedShow } from '~/features/show/slice';
 import { togglePanelVisibility } from '~/features/validation/actions';
 import { PANELS, type ValidationPanel } from '~/features/validation/panels';
@@ -19,11 +15,15 @@ import { setMode } from '~/features/ui/actions';
 import { UIMode } from '~/features/ui/modes';
 import type { AppThunk, RootState } from '~/store';
 
+import { canReloadShow } from '~/features/playback/selectors';
+import { reloadShow } from '~/features/show/actions';
+
 import PanelToggleChip from './PanelToggleChip';
 
 const styles = {
   root: {
     display: 'flex',
+    alignItems: 'baseline',
     py: 1,
     '& > div': {
       m: 0.5,
@@ -35,18 +35,16 @@ const styles = {
 } as const;
 
 interface ValidationHeaderProps extends BoxProps {
-  readonly canLoadShowFromLocalFile: boolean;
-  readonly hasLoadedShowFile: boolean;
-  readonly onClearLoadedShow: () => void;
+  readonly canReloadShow: boolean;
+  readonly onReloadShow: () => void;
   readonly onReturnToViewer: () => void;
   readonly onTogglePanel: (id: ValidationPanel) => void;
   readonly visiblePanels: ValidationPanel[];
 }
 
 const ValidationHeader = ({
-  canLoadShowFromLocalFile,
-  hasLoadedShowFile,
-  onClearLoadedShow,
+  canReloadShow,
+  onReloadShow,
   onReturnToViewer,
   onTogglePanel,
   visiblePanels,
@@ -69,14 +67,9 @@ const ValidationHeader = ({
         );
       })}
       <Box flex='1' />
-      {canLoadShowFromLocalFile && (
-        <Button
-          color='inherit'
-          startIcon={<Close />}
-          disabled={!hasLoadedShowFile}
-          onClick={onClearLoadedShow}
-        >
-          {t('buttons.closeShow')}
+      {canReloadShow && (
+        <Button color='inherit' onClick={onReloadShow}>
+          {t('buttons.reloadShow')}
         </Button>
       )}
       <Button
@@ -93,8 +86,7 @@ const ValidationHeader = ({
 export default connect(
   // mapStateToProps
   (state: RootState) => ({
-    canLoadShowFromLocalFile: canLoadShowFromLocalFile(),
-    hasLoadedShowFile: hasLoadedShowFile(state),
+    canReloadShow: canReloadShow(state),
     visiblePanels: getVisiblePanels(state),
   }),
   // mapDispatchToProps
@@ -103,6 +95,7 @@ export default connect(
       dispatch(clearLoadedShow());
       dispatch(setMode(UIMode.PLAYER));
     },
+    onReloadShow: reloadShow,
     onReturnToViewer: () => setMode(UIMode.PLAYER),
     onTogglePanel: (id: ValidationPanel) => togglePanelVisibility(id),
   }

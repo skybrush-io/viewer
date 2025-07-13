@@ -29,7 +29,6 @@ const ValidationView = () => (
     <ValidationHeader
       style={{
         paddingLeft: SIDEBAR_WIDTH,
-        paddingTop: WINDOW_DRAG_MOVE_AREA_HEIGHT,
       }}
     />
     <Box flex={1} display='flex' flexDirection='row' overflow='hidden'>

@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 const ReloadButton = (props: IconButtonProps) => {
   const { t } = useTranslation();
   return (
-    <Tooltip content={t('buttons.reloadShowFile')}>
+    <Tooltip content={t('buttons.reloadShow')}>
       <IconButton disableRipple {...props} size='large'>
         <Refresh />
       </IconButton>

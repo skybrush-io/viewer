@@ -12,6 +12,13 @@ import { getActiveSidebarTab } from '~/features/sidebar/selectors';
 import { SidebarTab } from '~/features/sidebar/types';
 import { setActiveSidebarTab } from '~/features/sidebar/slice';
 import { useAppDispatch, useAppSelector } from '~/hooks/store';
+import type { CSSProperties } from '@mui/material';
+
+/**
+ * For some reason, there is a yellow focus ring around the icons when
+ * clicked. This is a workaround to remove it.
+ */
+const NO_FOCUS: CSSProperties = { outline: 'none !important' };
 
 const PlayerSidebarTabs = () => {
   const { t } = useTranslation();
@@ -30,7 +37,7 @@ const PlayerSidebarTabs = () => {
       <Tab
         icon={
           <Tooltip content={t('buttons.inspector')}>
-            <Search />
+            <Search sx={NO_FOCUS} />
           </Tooltip>
         }
         value={SidebarTab.INSPECTOR}
@@ -38,7 +45,7 @@ const PlayerSidebarTabs = () => {
       <Tab
         icon={
           <Tooltip content={t('buttons.settings')}>
-            <Settings />
+            <Settings sx={NO_FOCUS} />
           </Tooltip>
         }
         value={SidebarTab.SETTINGS}

@@ -1,3 +1,4 @@
+import config from 'config';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
@@ -5,7 +6,6 @@ import { connect } from 'react-redux';
 import Box, { type BoxProps } from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ChevronRight from '@mui/icons-material/ChevronRight';
-import Refresh from '@mui/icons-material/Refresh';
 
 import { clearLoadedShow } from '~/features/show/slice';
 import { togglePanelVisibility } from '~/features/validation/actions';
@@ -19,6 +19,7 @@ import { canReloadShow } from '~/features/playback/selectors';
 import { reloadShow } from '~/features/show/actions';
 
 import PanelToggleChip from './PanelToggleChip';
+import { isLoadingShowFile } from '~/features/show/selectors';
 
 const styles = {
   root: {
@@ -36,6 +37,7 @@ const styles = {
 
 interface ValidationHeaderProps extends BoxProps {
   readonly canReloadShow: boolean;
+  readonly isLoadingShow: boolean;
   readonly onReloadShow: () => void;
   readonly onReturnToViewer: () => void;
   readonly onTogglePanel: (id: ValidationPanel) => void;
@@ -44,6 +46,7 @@ interface ValidationHeaderProps extends BoxProps {
 
 const ValidationHeader = ({
   canReloadShow,
+  isLoadingShow,
   onReloadShow,
   onReturnToViewer,
   onTogglePanel,
@@ -67,9 +70,13 @@ const ValidationHeader = ({
         );
       })}
       <Box flex='1' />
-      {canReloadShow && (
-        <Button color='inherit' onClick={onReloadShow}>
-          {t('buttons.reloadShow')}
+      {config.buttons.reload && (
+        <Button
+          color='inherit'
+          disabled={!canReloadShow}
+          onClick={onReloadShow}
+        >
+          {isLoadingShow ? t('generic.pleaseWait') : t('buttons.reloadShow')}
         </Button>
       )}
       <Button
@@ -87,6 +94,7 @@ export default connect(
   // mapStateToProps
   (state: RootState) => ({
     canReloadShow: canReloadShow(state),
+    isLoadingShow: isLoadingShowFile(state),
     visiblePanels: getVisiblePanels(state),
   }),
   // mapDispatchToProps

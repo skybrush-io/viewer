@@ -5,6 +5,7 @@ import { isAudioReadyToPlay } from '~/features/audio/selectors';
 import {
   getShowDataSource,
   hasLoadedShowFile,
+  isLoadingShowFile,
 } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 import { isShowDataSourceReloadable } from '../show/utils';
@@ -13,7 +14,9 @@ import { isShowDataSourceReloadable } from '../show/utils';
  * Returns whether the "reload show" action is available now.
  */
 export const canReloadShow = (state: RootState): boolean =>
-  isShowDataSourceReloadable(getShowDataSource(state)) && !isPlaying(state);
+  isShowDataSourceReloadable(getShowDataSource(state)) &&
+  !isPlaying(state) &&
+  !isLoadingShowFile(state);
 
 /**
  * Returns whether the "toggle playback" action is available now.

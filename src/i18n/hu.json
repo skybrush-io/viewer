@@ -32,7 +32,8 @@
   },
   "generic": {
     "no": "nem",
-    "yes": "igen"
+    "yes": "igen",
+    "pleaseWait": "Kérem várjon…"
   },
   "hotkeys": {
     "cueBackward": "Visszatekerés (Shift = 10x, Alt = képkockánként)",

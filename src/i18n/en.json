@@ -32,7 +32,8 @@
   },
   "generic": {
     "no": "No",
-    "yes": "Yes"
+    "yes": "Yes",
+    "pleaseWait": "Please wait…"
   },
   "hotkeys": {
     "cueBackward": "Cue backward (Shift = 10x, Alt = by frames)",

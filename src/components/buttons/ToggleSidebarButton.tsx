@@ -20,6 +20,7 @@ const ToggleSidebarButton = (props: IconButtonProps) => {
   return (
     <Tooltip content={t('buttons.toggleSidebar')}>
       <IconButton
+        disableRipple
         size='large'
         {...props}
         onClick={handleClick}

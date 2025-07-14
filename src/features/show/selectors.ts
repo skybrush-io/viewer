@@ -319,7 +319,7 @@ const getLightPrograms = createSelector(
   getDroneSwarmSpecification,
   (swarm: DroneSpecification[]) =>
     swarm.map((drone: DroneSpecification) => {
-      const program = get(drone, 'settings.lights');
+      const program = drone.settings.lights;
       return isValidLightProgram(program) ? program : undefined;
     })
 );
@@ -393,10 +393,11 @@ const getTrajectoryDuration = (trajectory: any): number => {
   return 0;
 };
 
+// TODO: The empty trajectory is no longer valid according to the schema.
 const EMPTY_TRAJECTORY: Readonly<Trajectory> = Object.freeze({
   version: 1,
   points: [],
-});
+}) as any as Trajectory;
 
 /**
  * Returns an array containing trajectory player objects for all the

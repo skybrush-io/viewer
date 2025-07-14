@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a "Reload show" button to the playback bar and the validation view.
 
+- Added info to the metadata listing of the show file about pyro control.
+
 ### Changed
 
 - The macOS version of the application now uses a title bar just like on other

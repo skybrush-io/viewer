@@ -150,6 +150,16 @@ export const isValidLightProgram = (program: any): boolean =>
   typeof program.data === 'string';
 
 /**
+ * Returns whether an object "looks like" a valid pyro program.
+ */
+export const isValidPyroProgram = (program: any): boolean =>
+  typeof program === 'object' &&
+  program.version === 1 &&
+  'events' in program &&
+  Array.isArray(program.events) &&
+  program.events.length > 0;
+
+/**
  * Returns whether an object "looks like" valid yaw control data.
  */
 export const isValidYawControl = (
@@ -410,6 +420,19 @@ export const getTrajectoryPlayers = createSelector(
 );
 
 /**
+ * Returns an array containing all the pyro programs. The array will contain
+ * undefined for all the drones that have no pyro control data in the mission.
+ */
+const getPyroPrograms = createSelector(
+  getDroneSwarmSpecification,
+  (swarm: DroneSpecification[]) =>
+    swarm.map((drone: DroneSpecification) => {
+      const program = drone.settings.pyro;
+      return isValidPyroProgram(program) ? program : undefined;
+    })
+);
+
+/**
  * Returns an array containing all the yaw controls. The array will contain
  * undefined for all the drones that have no yaw control data in the mission.
  */
@@ -419,6 +442,15 @@ const getYawControls = createSelector(getDroneSwarmSpecification, (swarm) =>
     return isValidYawControl(yawControl) ? yawControl : undefined;
   })
 );
+
+/**
+ * Returns whether at least one drone in the currently loaded show
+ * has pyro control data.
+ */
+export const hasPyroControl = createSelector(getPyroPrograms, (pyroPrograms) =>
+  pyroPrograms.some((pp) => pp !== undefined)
+);
+
 
 /**
  * Returns whether at least one drone in the currently loaded show

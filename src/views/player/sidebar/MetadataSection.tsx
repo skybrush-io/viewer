@@ -15,6 +15,7 @@ import {
   getShowDurationAsString,
   getShowEnvironmentType,
   getShowTitle,
+  hasPyroControl,
   hasYawControl,
 } from '~/features/show/selectors';
 import { useAppSelector } from '~/hooks/store';
@@ -37,6 +38,7 @@ export default function MetadataSection() {
   const environment = useAppSelector(getShowEnvironmentType);
   const hasAudioTrack = useAppSelector(hasAudio);
   const isYawControlled = useAppSelector(hasYawControl);
+  const isPyroControlled = useAppSelector(hasPyroControl);
 
   return (
     <>
@@ -75,6 +77,11 @@ export default function MetadataSection() {
         <MiniListItem
           primaryText={t('inspector.metadata.yawControl')}
           secondaryText={formatYesOrNo(isYawControlled, t)}
+          icon={<Explore fontSize='small' sx={ICON_STYLE} />}
+        />
+        <MiniListItem
+          primaryText={t('inspector.metadata.pyroControl')}
+          secondaryText={formatYesOrNo(isPyroControlled, t)}
           icon={<Explore fontSize='small' sx={ICON_STYLE} />}
         />
       </MiniList>

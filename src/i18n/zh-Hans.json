@@ -54,7 +54,7 @@
         "proximity": "接近度",
         "verticalVelocity": "垂直速度",
         "horizontalVelocity": "水平速度",
-        "distanceOfClosestDronePair": "最近无人机对之间的距离",
+        "distanceOfClosestDronePair": "最近的无人机间距",
         "horizontalAcceleration": "水平加速度",
         "verticalAccelerationThreshold": "Z轴加速度阈值",
         "verticalAcceleration": "垂直加速度",

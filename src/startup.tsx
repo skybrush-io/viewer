@@ -77,15 +77,15 @@ type ShowManifest = {
   audio?: string;
 };
 
-function isShowManifest(object: any): object is ShowManifest {
-  return (
-    typeof object === 'object' &&
-    typeof object.show === 'string' &&
-    (object.audio === undefined ||
-      object.audio === null ||
-      typeof object.audio === 'string')
-  );
-}
+const isShowManifest = (object: unknown): object is ShowManifest =>
+  typeof object === 'object' &&
+  object !== null &&
+  'show' in object &&
+  typeof object.show === 'string' &&
+  (!('audio' in object) ||
+    object.audio === undefined ||
+    object.audio === null ||
+    typeof object.audio === 'string');
 
 /**
  * Creates a show loading request to load a show from a URL pointing to a show

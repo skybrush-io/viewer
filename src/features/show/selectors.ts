@@ -131,7 +131,7 @@ export const getTimestampFormatter = createSelector(
  * Returns whether an object "looks like" a valid trajectory.
  */
 export const isValidTrajectory = (
-  trajectory: any
+  trajectory: unknown
 ): trajectory is Trajectory => {
   try {
     validateTrajectory(trajectory);
@@ -144,16 +144,21 @@ export const isValidTrajectory = (
 /**
  * Returns whether an object "looks like" a valid light program.
  */
-export const isValidLightProgram = (program: any): boolean =>
+export const isValidLightProgram = (program: unknown): boolean =>
   typeof program === 'object' &&
+  program !== null &&
+  'version' in program &&
   program.version === 1 &&
+  'data' in program &&
   typeof program.data === 'string';
 
 /**
  * Returns whether an object "looks like" a valid pyro program.
  */
-export const isValidPyroProgram = (program: any): boolean =>
+export const isValidPyroProgram = (program: unknown): boolean =>
   typeof program === 'object' &&
+  program !== null &&
+  'version' in program &&
   program.version === 1 &&
   'events' in program &&
   Array.isArray(program.events) &&
@@ -163,7 +168,7 @@ export const isValidPyroProgram = (program: any): boolean =>
  * Returns whether an object "looks like" valid yaw control data.
  */
 export const isValidYawControl = (
-  yawControl: any
+  yawControl: unknown
 ): yawControl is YawControl => {
   try {
     validateYawControl(yawControl);
@@ -386,7 +391,7 @@ const getTrajectories = createSelector(getDroneSwarmSpecification, (swarm) =>
 /**
  * Returns the duration of a single drone trajectory.
  */
-const getTrajectoryDuration = (trajectory: any): number => {
+const getTrajectoryDuration = (trajectory: unknown): number => {
   if (!isValidTrajectory(trajectory)) {
     return 0;
   }
@@ -450,7 +455,6 @@ const getYawControls = createSelector(getDroneSwarmSpecification, (swarm) =>
 export const hasPyroControl = createSelector(getPyroPrograms, (pyroPrograms) =>
   pyroPrograms.some((pp) => pp !== undefined)
 );
-
 
 /**
  * Returns whether at least one drone in the currently loaded show

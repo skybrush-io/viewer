@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Alarm from '@mui/icons-material/Alarm';
 import Explore from '@mui/icons-material/Explore';
+import Flare from '@mui/icons-material/Flare';
 import Landscape from '@mui/icons-material/Landscape';
 import VolumeUp from '@mui/icons-material/VolumeUp';
 import Tag from '@mui/icons-material/Tag';
@@ -82,7 +83,7 @@ export default function MetadataSection() {
         <MiniListItem
           primaryText={t('inspector.metadata.pyroControl')}
           secondaryText={formatYesOrNo(isPyroControlled, t)}
-          icon={<Explore fontSize='small' sx={ICON_STYLE} />}
+          icon={<Flare fontSize='small' sx={ICON_STYLE} />}
         />
       </MiniList>
     </>

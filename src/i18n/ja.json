@@ -1,1 +1,125 @@
-{}
+{
+    "inspector": {
+        "metadata": {
+            "yawControl": "ヨーコントロール",
+            "summary": "メタデータ",
+            "environment": {
+                "indoor": "屋内",
+                "outdoor": "屋外",
+                "label": "環境"
+            },
+            "droneCount": "ドローン数",
+            "duration": "上演時間",
+            "audio": "オーディオトラック"
+        },
+        "selectedDrones": {
+            "unnamed": "ドローン {{ index }}",
+            "hintMultiple": {
+                "other": "Ctrlキー同時押しでドローン複数選択",
+                "mac": "Cmdキー同時押しでドローン複数選択"
+            },
+            "hint": "ドローンを選択してステータスを確認"
+        },
+        "cueSheet": {
+            "summary": "キュー一覧"
+        }
+    },
+    "settings": {
+        "droneRadius": "UAVサイズ",
+        "droneModel": {
+            "label": "UAVモデル",
+            "quad": "クアッドコプター",
+            "flapper": "フラッパー",
+            "sphere": "球"
+        },
+        "scenery": {
+            "auto": "自動",
+            "indoor": "屋内",
+            "disabled": "なし",
+            "day": "日中",
+            "night": "夜中",
+            "label": "背景"
+        },
+        "showAxes": "座標軸を表示",
+        "language": "言語",
+        "showGrid": "格子を表示",
+        "scaleLabels": "ラベルの大きさを揃える",
+        "playbackFrameRate": "フレームレート",
+        "showLabels": "ラベルを表示",
+        "showYaw": "ヨーを表示",
+        "playbackSpeed": "再生速度"
+    },
+    "chartGrid": {
+        "noChartsHint": {
+            "header": "チャートが選択されていません",
+            "text": "ヘッダー内のボタンからチャートのタイプを選択してください"
+        }
+    },
+    "hotkeys": {
+        "selectFourthCamera": "カメラ4を選択",
+        "rewind": "はじめから見る",
+        "selectFirstCamera": "カメラ1を選択",
+        "togglePlayback": "再生/一時停止切り替え",
+        "cueBackward": "巻き戻し(Shiftキー=10x,Altキー=フレーム単位)",
+        "dialogTitle": "ショートカットキー",
+        "selectSecondCamera": "カメラ2を選択",
+        "selectFifthCamera": "カメラ5を選択",
+        "selectThirdCamera": "カメラ3を選択",
+        "cueForward": "早送り(Shiftキー=10x,Altキー=フレーム単位)",
+        "selectDefaultCamera": "デフォルトカメラを選択",
+        "toggleMuted": "ミュート切り替え"
+    },
+    "validation": {
+        "horizontalAcceleration": "水平加速度",
+        "altitudeThreshold": "高度しきい値",
+        "verticalAccelerationThreshold": "Z加速度しきい値",
+        "horizontalVelocityThreshold": "XY速度しきい値",
+        "allDrones": "すべてのドローン",
+        "altitude": "高度",
+        "verticalVelocityThreshold": "Z速度しきい値",
+        "distanceThreshold": "距離しきい値",
+        "verticalAcceleration": "垂直加速度",
+        "proximity": "近接",
+        "verticalVelocity": "垂直速度",
+        "horizontalAccelerationThreshold": "XY加速度しきい値",
+        "horizontalVelocity": "水平速度",
+        "distanceOfClosestDronePair": "最も近いドローンペアの距離"
+    },
+    "buttons": {
+        "resetZoom": "ズームのリセット",
+        "settings": "設定",
+        "toggleSidebar": "サイドバー表示切替",
+        "trackDrones": "カメラをドローンに向ける",
+        "inspector": "ステータス",
+        "reloadShow": "ショー設定ファイルを再読み込み",
+        "showHotkeysDialog": "ショートカットキー一覧",
+        "returnToViewer": "ビューワに戻る",
+        "shareLink": "ショーの共有リンクをコピー",
+        "close": "閉じる",
+        "closeShow": "ショーを閉じる",
+        "validateTrajectories": "軌道を確認する",
+        "openShowFile": "ショー設定ファイルを開く"
+    },
+    "sharing": {
+        "copyLinkToClipboard": {
+            "loading": "クリップボードに共有リンクをコピーしています…",
+            "success": "クリップボードに共有リンクをコピーしました",
+            "error": "クリップボードへの共有リンクのコピーに失敗しました"
+        }
+    },
+    "cameras": {
+        "noCamera": "カメラ無し",
+        "default": "デフォルトビュー",
+        "shared": "共有ビュー",
+        "indexedLabel": "カメラ {{ index }}"
+    },
+    "generic": {
+        "no": "いいえ",
+        "yes": "はい",
+        "pleaseWait": "しばらくお待ちください…"
+    },
+    "bottomOverlay": {
+        "rightText": "Skybrush © 2020-{{ year }} CollMot Robotics Ltd.",
+        "leftText": "方向キーで水平移動、E/Cキーで上下移動(Shiftキー同時で高速移動)。ドラッグで視点を操作。スクロールもしくは+/-でズーム。"
+    }
+}

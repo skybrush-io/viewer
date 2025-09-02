@@ -40,7 +40,7 @@ export const keyMap: AppKeyMap = {
 
   TOGGLE_MUTED: {
     name: 'toggleMuted',
-    sequence: 'p',
+    sequence: 'm',
     scopes: [HotkeyScope.PLAYER],
   },
   TOGGLE_PLAYBACK: {

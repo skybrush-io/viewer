@@ -131,7 +131,7 @@ export const getTimestampFormatter = createSelector(
  * Returns whether an object "looks like" a valid trajectory.
  */
 export const isValidTrajectory = (
-  trajectory: any
+  trajectory: unknown
 ): trajectory is Trajectory => {
   try {
     validateTrajectory(trajectory);
@@ -144,16 +144,31 @@ export const isValidTrajectory = (
 /**
  * Returns whether an object "looks like" a valid light program.
  */
-export const isValidLightProgram = (program: any): boolean =>
+export const isValidLightProgram = (program: unknown): boolean =>
   typeof program === 'object' &&
+  program !== null &&
+  'version' in program &&
   program.version === 1 &&
+  'data' in program &&
   typeof program.data === 'string';
+
+/**
+ * Returns whether an object "looks like" a valid pyro program.
+ */
+export const isValidPyroProgram = (program: unknown): boolean =>
+  typeof program === 'object' &&
+  program !== null &&
+  'version' in program &&
+  program.version === 1 &&
+  'events' in program &&
+  Array.isArray(program.events) &&
+  program.events.length > 0;
 
 /**
  * Returns whether an object "looks like" valid yaw control data.
  */
 export const isValidYawControl = (
-  yawControl: any
+  yawControl: unknown
 ): yawControl is YawControl => {
   try {
     validateYawControl(yawControl);
@@ -319,7 +334,7 @@ const getLightPrograms = createSelector(
   getDroneSwarmSpecification,
   (swarm: DroneSpecification[]) =>
     swarm.map((drone: DroneSpecification) => {
-      const program = get(drone, 'settings.lights');
+      const program = drone.settings.lights;
       return isValidLightProgram(program) ? program : undefined;
     })
 );
@@ -376,7 +391,7 @@ const getTrajectories = createSelector(getDroneSwarmSpecification, (swarm) =>
 /**
  * Returns the duration of a single drone trajectory.
  */
-const getTrajectoryDuration = (trajectory: any): number => {
+const getTrajectoryDuration = (trajectory: unknown): number => {
   if (!isValidTrajectory(trajectory)) {
     return 0;
   }
@@ -393,10 +408,11 @@ const getTrajectoryDuration = (trajectory: any): number => {
   return 0;
 };
 
+// TODO: The empty trajectory is no longer valid according to the schema.
 const EMPTY_TRAJECTORY: Readonly<Trajectory> = Object.freeze({
   version: 1,
   points: [],
-});
+}) as any as Trajectory;
 
 /**
  * Returns an array containing trajectory player objects for all the
@@ -409,6 +425,19 @@ export const getTrajectoryPlayers = createSelector(
 );
 
 /**
+ * Returns an array containing all the pyro programs. The array will contain
+ * undefined for all the drones that have no pyro control data in the mission.
+ */
+const getPyroPrograms = createSelector(
+  getDroneSwarmSpecification,
+  (swarm: DroneSpecification[]) =>
+    swarm.map((drone: DroneSpecification) => {
+      const program = drone.settings.pyro;
+      return isValidPyroProgram(program) ? program : undefined;
+    })
+);
+
+/**
  * Returns an array containing all the yaw controls. The array will contain
  * undefined for all the drones that have no yaw control data in the mission.
  */
@@ -417,6 +446,14 @@ const getYawControls = createSelector(getDroneSwarmSpecification, (swarm) =>
     const yawControl = get(drone, 'settings.yawControl');
     return isValidYawControl(yawControl) ? yawControl : undefined;
   })
+);
+
+/**
+ * Returns whether at least one drone in the currently loaded show
+ * has pyro control data.
+ */
+export const hasPyroControl = createSelector(getPyroPrograms, (pyroPrograms) =>
+  pyroPrograms.some((pp) => pp !== undefined)
 );
 
 /**

@@ -63,7 +63,8 @@
         "outdoor": "Outdoor"
       },
       "summary": "Metadata",
-      "yawControl": "Yaw control"
+      "yawControl": "Yaw control",
+      "pyroControl": "Pyro control"
     },
     "selectedDrones": {
       "hint": "Click on drones in the main view to inspect them.",

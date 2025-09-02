@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Alarm from '@mui/icons-material/Alarm';
 import Explore from '@mui/icons-material/Explore';
+import Flare from '@mui/icons-material/Flare';
 import Landscape from '@mui/icons-material/Landscape';
 import VolumeUp from '@mui/icons-material/VolumeUp';
 import Tag from '@mui/icons-material/Tag';
@@ -15,6 +16,7 @@ import {
   getShowDurationAsString,
   getShowEnvironmentType,
   getShowTitle,
+  hasPyroControl,
   hasYawControl,
 } from '~/features/show/selectors';
 import { useAppSelector } from '~/hooks/store';
@@ -37,6 +39,7 @@ export default function MetadataSection() {
   const environment = useAppSelector(getShowEnvironmentType);
   const hasAudioTrack = useAppSelector(hasAudio);
   const isYawControlled = useAppSelector(hasYawControl);
+  const isPyroControlled = useAppSelector(hasPyroControl);
 
   return (
     <>
@@ -76,6 +79,11 @@ export default function MetadataSection() {
           primaryText={t('inspector.metadata.yawControl')}
           secondaryText={formatYesOrNo(isYawControlled, t)}
           icon={<Explore fontSize='small' sx={ICON_STYLE} />}
+        />
+        <MiniListItem
+          primaryText={t('inspector.metadata.pyroControl')}
+          secondaryText={formatYesOrNo(isPyroControlled, t)}
+          icon={<Flare fontSize='small' sx={ICON_STYLE} />}
         />
       </MiniList>
     </>

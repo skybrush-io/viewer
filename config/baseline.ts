@@ -14,7 +14,7 @@ const baseline: Config = {
   },
   language: {
     default: 'en',
-    enabled: ['en', 'hu', 'zh-Hans'],
+    enabled: ['en', 'hu', 'ja', 'zh-Hans'],
     fallback: 'en',
   },
   modes: {

@@ -334,7 +334,7 @@ const getLightPrograms = createSelector(
   getDroneSwarmSpecification,
   (swarm: DroneSpecification[]) =>
     swarm.map((drone: DroneSpecification) => {
-      const program = drone.settings.lights;
+      const program = drone.settings?.lights;
       return isValidLightProgram(program) ? program : undefined;
     })
 );
@@ -432,7 +432,9 @@ const getPyroPrograms = createSelector(
   getDroneSwarmSpecification,
   (swarm: DroneSpecification[]) =>
     swarm.map((drone: DroneSpecification) => {
-      const program = drone.settings.pyro;
+      // TODO(ntamas): remove cast to any when we have updated @skybrush/show-format
+      // with the pyro property
+      const program = (drone.settings as any)?.pyro;
       return isValidPyroProgram(program) ? program : undefined;
     })
 );

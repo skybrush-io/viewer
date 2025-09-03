@@ -114,8 +114,8 @@
         "indexedLabel": "カメラ {{ index }}"
     },
     "generic": {
-        "no": "いいえ",
-        "yes": "はい",
+        "no": "なし",
+        "yes": "あり",
         "pleaseWait": "しばらくお待ちください…"
     },
     "bottomOverlay": {

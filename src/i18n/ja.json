@@ -10,7 +10,8 @@
             },
             "droneCount": "ドローン数",
             "duration": "上演時間",
-            "audio": "オーディオトラック"
+            "audio": "オーディオトラック",
+            "pyroControl": "パイロコントロール"
         },
         "selectedDrones": {
             "unnamed": "ドローン {{ index }}",

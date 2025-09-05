@@ -16,10 +16,10 @@
         "selectedDrones": {
             "unnamed": "ドローン {{ index }}",
             "hintMultiple": {
-                "other": "Ctrlキー同時押しでドローン複数選択",
-                "mac": "Cmdキー同時押しでドローン複数選択"
+                "other": "Ctrlキー同時押しでドローン複数選択できます。",
+                "mac": "Cmdキー同時押しでドローン複数選択できます。"
             },
-            "hint": "ドローンを選択してステータスを確認"
+            "hint": "ドローンを選択してステータスを確認します。"
         },
         "cueSheet": {
             "summary": "キュー一覧"
@@ -43,7 +43,7 @@
         },
         "showAxes": "座標軸を表示",
         "language": "言語",
-        "showGrid": "格子を表示",
+        "showGrid": "グリッドを表示",
         "scaleLabels": "ラベルの大きさを揃える",
         "playbackFrameRate": "フレームレート",
         "showLabels": "ラベルを表示",

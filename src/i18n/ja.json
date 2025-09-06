@@ -47,7 +47,7 @@
         "scaleLabels": "ラベルの大きさを揃える",
         "playbackFrameRate": "フレームレート",
         "showLabels": "ラベルを表示",
-        "showYaw": "ヨーを表示",
+        "showYaw": "ヨーインジケーターを表示",
         "playbackSpeed": "再生速度"
     },
     "chartGrid": {
@@ -92,14 +92,14 @@
         "toggleSidebar": "サイドバー表示切替",
         "trackDrones": "カメラをドローンに向ける",
         "inspector": "ステータス",
-        "reloadShow": "ショー設定ファイルを再読み込み",
+        "reloadShow": "ショーファイルを再読み込み",
         "showHotkeysDialog": "ショートカットキー一覧",
         "returnToViewer": "ビューワに戻る",
         "shareLink": "ショーの共有リンクをコピー",
         "close": "閉じる",
         "closeShow": "ショーを閉じる",
         "validateTrajectories": "軌道を確認する",
-        "openShowFile": "ショー設定ファイルを開く"
+        "openShowFile": "ショーファイルを開く"
     },
     "sharing": {
         "copyLinkToClipboard": {

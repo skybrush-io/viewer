@@ -46,7 +46,7 @@ const CameraSelectorChip = ({
 }: CameraSelectorChipProps) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const anchorRef = React.useRef<any>();
+  const anchorRef = React.useRef<any>(undefined);
 
   const cameraArray = Array.isArray(cameras) ? cameras : [];
   const selectedCamera =

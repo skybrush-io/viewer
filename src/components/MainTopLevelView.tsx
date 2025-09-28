@@ -2,7 +2,7 @@
  * @file Component that shows a three-dimensional view of the drone flock.
  */
 
-import React, { Suspense, useRef } from 'react';
+import React, { Suspense, useRef, type RefObject } from 'react';
 import { connect } from 'react-redux';
 
 import Box from '@mui/material/Box';
@@ -23,7 +23,7 @@ interface MainTopLevelViewProps {
 }
 
 const MainTopLevelView = ({ mode }: MainTopLevelViewProps) => {
-  const ref = useRef(null);
+  const ref: RefObject<Element> = useRef(null) as any;
 
   return (
     <Box ref={ref} display='flex' flexDirection='column' height='100vh'>

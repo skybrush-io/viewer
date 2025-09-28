@@ -134,7 +134,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
 
   return (
     <a-scene
-      ref={ref}
+      ref={ref as any}
       deallocate
       keyboard-shortcuts={objectToString({ enterVR: vrEnabled })}
       loading-screen='backgroundColor: #444; dotsColor: #888'

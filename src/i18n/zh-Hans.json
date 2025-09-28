@@ -42,7 +42,8 @@
         "toggleSidebar": "切换侧边栏",
         "inspector": "检查器",
         "showHotkeysDialog": "显示快捷键",
-        "close": "关闭"
+        "close": "关闭",
+        "reloadShow": "重新载入表演文件"
     },
     "validation": {
         "altitudeThreshold": "所有无人机",
@@ -88,7 +89,8 @@
             },
             "droneCount": "无人机数量",
             "duration": "期间",
-            "audio": "音频轨道"
+            "audio": "音频轨道",
+            "pyroControl": "烟花控制"
         },
         "selectedDrones": {
             "unnamed": "无人机 {{ index }}",
@@ -118,6 +120,7 @@
     },
     "generic": {
         "no": "无",
-        "yes": "有"
+        "yes": "有",
+        "pleaseWait": "请稍等…"
     }
 }

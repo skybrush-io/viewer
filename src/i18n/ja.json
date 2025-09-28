@@ -10,15 +10,16 @@
             },
             "droneCount": "ドローン数",
             "duration": "上演時間",
-            "audio": "オーディオトラック"
+            "audio": "オーディオトラック",
+            "pyroControl": "パイロコントロール"
         },
         "selectedDrones": {
             "unnamed": "ドローン {{ index }}",
             "hintMultiple": {
-                "other": "Ctrlキー同時押しでドローン複数選択",
-                "mac": "Cmdキー同時押しでドローン複数選択"
+                "other": "Ctrlキー同時押しでドローン複数選択できます。",
+                "mac": "Cmdキー同時押しでドローン複数選択できます。"
             },
-            "hint": "ドローンを選択してステータスを確認"
+            "hint": "ドローンを選択してステータスを確認します。"
         },
         "cueSheet": {
             "summary": "キュー一覧"
@@ -42,11 +43,11 @@
         },
         "showAxes": "座標軸を表示",
         "language": "言語",
-        "showGrid": "格子を表示",
+        "showGrid": "グリッドを表示",
         "scaleLabels": "ラベルの大きさを揃える",
         "playbackFrameRate": "フレームレート",
         "showLabels": "ラベルを表示",
-        "showYaw": "ヨーを表示",
+        "showYaw": "ヨーインジケーターを表示",
         "playbackSpeed": "再生速度"
     },
     "chartGrid": {
@@ -91,14 +92,14 @@
         "toggleSidebar": "サイドバー表示切替",
         "trackDrones": "カメラをドローンに向ける",
         "inspector": "ステータス",
-        "reloadShow": "ショー設定ファイルを再読み込み",
+        "reloadShow": "ショーファイルを再読み込み",
         "showHotkeysDialog": "ショートカットキー一覧",
         "returnToViewer": "ビューワに戻る",
         "shareLink": "ショーの共有リンクをコピー",
         "close": "閉じる",
         "closeShow": "ショーを閉じる",
         "validateTrajectories": "軌道を確認する",
-        "openShowFile": "ショー設定ファイルを開く"
+        "openShowFile": "ショーファイルを開く"
     },
     "sharing": {
         "copyLinkToClipboard": {
@@ -114,8 +115,8 @@
         "indexedLabel": "カメラ {{ index }}"
     },
     "generic": {
-        "no": "いいえ",
-        "yes": "はい",
+        "no": "なし",
+        "yes": "あり",
         "pleaseWait": "しばらくお待ちください…"
     },
     "bottomOverlay": {

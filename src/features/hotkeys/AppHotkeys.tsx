@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { configure as configureHotkeys, GlobalHotKeys } from 'react-hotkeys';
 
-import { DEFAULT_PLAYBACK_FPS } from '~/constants';
 import { toggleMuted } from '~/features/audio/slice';
 import {
   adjustPlaybackPositionBy,

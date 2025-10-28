@@ -2,9 +2,7 @@ import React from 'react';
 
 import Box from '@mui/material/Box';
 
-import WindowDragMoveArea, {
-  WINDOW_DRAG_MOVE_AREA_HEIGHT,
-} from '~/components/WindowDragMoveArea';
+import WindowDragMoveArea from '~/components/WindowDragMoveArea';
 
 import ChartGrid from './ChartGrid';
 import ValidationHeader from './ValidationHeader';

@@ -4,7 +4,6 @@ import { type Dispatch, type UnknownAction } from 'redux';
 import { isRunningOnMac } from '~/utils/platform';
 
 import type { HotkeyHandler, KeyMap } from './types';
-import type { Scope } from 'eslint';
 
 export function bindHotkeyHandlers<D extends Dispatch<UnknownAction>>(
   reduxHandlers: Record<

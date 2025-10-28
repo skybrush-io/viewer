@@ -1,10 +1,7 @@
 import React from 'react';
 
-import ChevronRight from '@mui/icons-material/ChevronRight';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import Stack from '@mui/material/Stack';
 import { type Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
@@ -12,10 +9,10 @@ import { isThemeDark } from '@skybrush/app-theme-mui';
 
 import SkybrushLogo from '~/components/SkybrushLogo';
 import { PLAYER_SIDEBAR_WIDTH } from '~/constants';
-import { closeSidebar, isSidebarOpen } from '~/features/sidebar/slice';
+import { isSidebarOpen } from '~/features/sidebar/slice';
 import { getActiveSidebarTab } from '~/features/sidebar/selectors';
 import { SidebarTab } from '~/features/sidebar/types';
-import { useAppDispatch, useAppSelector } from '~/hooks/store';
+import { useAppSelector } from '~/hooks/store';
 
 import PlayerSidebarTabs from './PlayerSidebarTabs';
 import SettingsTab from './SettingsTab';

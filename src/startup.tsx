@@ -6,7 +6,7 @@ import { createRoot } from 'react-dom/client';
 
 import type { Pose } from '@skybrush/aframe-components/lib/spatial';
 
-import type { ShowDataSource, ShowLoadingRequest } from './features/show/types';
+import type { ShowLoadingRequest } from './features/show/types';
 
 import App from './app';
 

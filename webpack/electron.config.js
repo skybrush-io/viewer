@@ -1,5 +1,4 @@
 const path = require('node:path');
-const process = require('node:process');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');

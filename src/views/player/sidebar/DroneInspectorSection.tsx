@@ -19,7 +19,6 @@ import MiniList from '@skybrush/mui-components/lib/MiniList';
 import MiniListItem from '@skybrush/mui-components/lib/MiniListItem';
 import { ICON_STYLE } from './MetadataSection';
 import usePeriodicRefresh from '~/hooks/usePeriodicRefresh';
-import type { RootState } from '~/store';
 import { getValidationSettings } from '~/features/validation/selectors';
 
 type DroneInspectorSectionProps = Readonly<{

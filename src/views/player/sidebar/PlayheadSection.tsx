@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 import LCDText from '~/components/LCDText';
@@ -8,16 +7,12 @@ import {
   isPlaying,
 } from '~/features/playback/selectors';
 import { useAppSelector } from '~/hooks/store';
-import {
-  formatPlaybackTimestamp,
-  formatPlaybackTimestampAsFrames,
-} from '~/utils/formatters';
+import { formatPlaybackTimestampAsFrames } from '~/utils/formatters';
 import usePeriodicRefresh from '~/hooks/usePeriodicRefresh';
 import { getSimulatedPlaybackFrameRate } from '~/features/settings/selectors';
 
 export default function PlayheadSection() {
   const theme = useTheme();
-  const { t } = useTranslation();
   const playing = useAppSelector(isPlaying);
   const fps = useAppSelector(getSimulatedPlaybackFrameRate);
   const getElapsedSeconds = useAppSelector(getElapsedSecondsGetter);

@@ -6,6 +6,7 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import { type Theme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
 import { isThemeDark } from '@skybrush/app-theme-mui';
 
@@ -22,11 +23,11 @@ import InspectorTab from './InspectorTab';
 
 const styles = {
   contents: {
-    height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    pt: 1,
-    pb: 2,
+    py: 1,
+    flex: 1,
+    minHeight: 0,
   },
 
   footer: {
@@ -78,6 +79,8 @@ const PlayerSidebar = () => {
           position: 'relative',
           width: PLAYER_SIDEBAR_WIDTH,
           height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
         <PlayerSidebarTabs />
@@ -90,6 +93,9 @@ const PlayerSidebar = () => {
             <a href='https://skybrush.io'>
               <SkybrushLogo />
             </a>
+            <Typography align='center' variant='caption' component='footer'>
+              {VERSION}
+            </Typography>
           </Box>
         </Box>
       </Box>

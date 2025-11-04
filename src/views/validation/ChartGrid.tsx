@@ -1,4 +1,5 @@
 import isNil from 'lodash-es/isNil';
+import omit from 'lodash-es/omit';
 import sumBy from 'lodash-es/sumBy';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -79,7 +80,7 @@ const ChartGrid = ({ visiblePanels, ...rest }: ChartGridProps) => {
       : [];
 
   return (
-    <Box ref={ref} sx={style} {...rest}>
+    <Box ref={ref} sx={style} {...omit(rest, 'ref')}>
       {children.length > 0 ? (
         children
       ) : (

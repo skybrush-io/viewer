@@ -60,12 +60,6 @@ export const PANELS: PanelSpecification[] = [
  * Returns the specification of the panel or undefined if there is no such
  * panel with the given ID.
  */
-export function findPanelById(
+export const findPanelById = (
   id: ValidationPanel
-): PanelSpecification | undefined {
-  for (const panel of PANELS) {
-    if (panel.id === id) {
-      return panel;
-    }
-  }
-}
+): PanelSpecification | undefined => PANELS.find((p) => p.id === id);

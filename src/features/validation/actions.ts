@@ -5,36 +5,26 @@ import { findPanelById, type ValidationPanel } from './panels';
 import { getSelection, getVisiblePanels } from './selectors';
 import { setSelection, setVisiblePanels } from './slice';
 
-function createItemToggler<T>(
-  getter: (state: RootState) => T[],
-  setter: (selection: T[]) => PayloadAction<any>,
-  { sort = false }: { sort?: any } = {}
-) {
-  return (itemId: T): AppThunk =>
-    (dispatch, getState) => {
-      const selection = getter(getState()) || [];
-      const index = selection.indexOf(itemId);
-      let newSelection;
+const createItemToggler =
+  <T>(
+    getter: (state: RootState) => T[],
+    setter: (selection: T[]) => PayloadAction<any>,
+    { sort = false }: { sort?: boolean | ((a: T, b: T) => number) } = {}
+  ) =>
+  (itemId: T): AppThunk =>
+  (dispatch, getState) => {
+    const selection = getter(getState()) || [];
 
-      if (index >= 0) {
-        newSelection = selection.concat();
-        newSelection.splice(index, 1);
-      } else {
-        newSelection = selection.concat([itemId]);
-        if (sort) {
-          if (typeof sort === 'function') {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            newSelection.sort(sort);
-          } else {
-            // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
-            newSelection.sort();
-          }
-        }
-      }
+    const newSelection = selection.includes(itemId)
+      ? selection.toSpliced(selection.indexOf(itemId), 1)
+      : sort
+        ? typeof sort === 'function'
+          ? [...selection, itemId].toSorted(sort)
+          : [...selection, itemId].toSorted()
+        : [...selection, itemId];
 
-      dispatch(setter(newSelection));
-    };
-}
+    dispatch(setter(newSelection));
+  };
 
 export const toggleItemInSelection = createItemToggler(
   getSelection,

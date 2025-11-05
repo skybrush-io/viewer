@@ -3,7 +3,8 @@ import isNil from 'lodash-es/isNil';
 import React from 'react';
 import { connect } from 'react-redux';
 import { FixedSizeList as List } from 'react-window';
-import useResizeObserver from 'use-resize-observer';
+
+import { useResizeObserver } from '@mantine/hooks';
 
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
@@ -86,7 +87,7 @@ const ValidationSidebar = ({
   singleDroneItems,
   width = 160,
 }: ValidationSidebarProps) => {
-  const { ref, height = 0 } = useResizeObserver();
+  const [ref, { height = 0 }] = useResizeObserver();
   return (
     <Box ref={ref} width={width} sx={style}>
       <List

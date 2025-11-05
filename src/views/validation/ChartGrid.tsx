@@ -2,11 +2,13 @@ import isNil from 'lodash-es/isNil';
 import omit from 'lodash-es/omit';
 import sumBy from 'lodash-es/sumBy';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import useResizeObserver from 'use-resize-observer';
 
-import Box, { type BoxProps } from '@mui/material/Box';
+import { useResizeObserver } from '@mantine/hooks';
+
 import ChartIcon from '@mui/icons-material/InsertChartOutlined';
+import Box, { type BoxProps } from '@mui/material/Box';
 import BackgroundHint from '@skybrush/mui-components/lib/BackgroundHint';
 
 import {
@@ -16,7 +18,6 @@ import {
 } from '~/features/validation/panels';
 import { getVisiblePanels } from '~/features/validation/selectors';
 import type { RootState } from '~/store';
-import { useTranslation } from 'react-i18next';
 
 const style = {
   display: 'grid',
@@ -35,7 +36,7 @@ interface ChartGridProps extends BoxProps {
 }
 
 const ChartGrid = ({ visiblePanels, ...rest }: ChartGridProps) => {
-  const { ref, height = 0 } = useResizeObserver();
+  const [ref, { height = 0 }] = useResizeObserver();
   const { t } = useTranslation();
 
   const panels: PanelSpecification[] = visiblePanels

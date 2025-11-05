@@ -26,6 +26,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@fontsource/fira-sans": "^5.2.7",
+    "@mantine/hooks": "^8.3.6",
     "@mui/icons-material": "^7.3.2",
     "@mui/material": "^7.3.2",
     "@reduxjs/toolkit": "^2.9.0",
@@ -89,7 +90,6 @@
     "tippy.js": "^6.3.7",
     "tmp-promise": "^3.0.3",
     "url": "^0.11.4",
-    "use-resize-observer": "^9.1.0",
     "util": "^0.12.5",
     "webpack-shell-plugin-next": "^2.3.3",
     "whatwg-fetch": "^3.6.20"

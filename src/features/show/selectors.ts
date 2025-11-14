@@ -344,13 +344,206 @@ export const getLightProgramPlayers = createSelector(
 );
 
 /**
+ * Returns an array containing all the pyro programs. The array will contain
+ * undefined for all the drones that have no pyro control data in the mission.
+ */
+export const getPyroPrograms = createSelector(
+  getDroneSwarmSpecification,
+  (swarm: readonly DroneSpecification[]) =>
+    swarm.map((drone: DroneSpecification) => {
+      const program = drone.settings?.pyro;
+      return isValidPyroProgram(program) ? program : undefined;
+    })
+);
+
+/**
+ * Type representing a grouped pyro cue with multiple drones at the same time.
+ */
+export type GroupedPyroCue = {
+  time: number;
+  droneIndices: number[];
+  events: any[];
+  payloadNames: string[];
+  channel?: number; // Channel number from event (second element in array format)
+};
+
+/**
+ * Returns an array containing all pyro cues grouped by timestamp.
+ * Each cue includes the timestamp, list of drone indices, and event data.
+ */
+export const getPyroCues = createSelector(
+  getPyroPrograms,
+  getDroneSwarmSpecification,
+  (pyroPrograms, swarm): readonly GroupedPyroCue[] => {
+    // First, collect all individual events with their metadata
+    interface EventData {
+      time: number;
+      droneIndex: number;
+      event: any;
+      payloadName?: string;
+      channel?: number;
+    }
+    
+    const allEvents: EventData[] = [];
+    const GROUPING_WINDOW = 10; // 10 seconds window for grouping
+
+    for (let droneIndex = 0; droneIndex < pyroPrograms.length; droneIndex++) {
+      const program = pyroPrograms[droneIndex];
+      if (!program) continue;
+      
+      // We now assume that pyro events are always provided as an array in the form:
+      //   [timeSeconds, channel, payloadId]
+      if (!Array.isArray(program.events)) {
+        continue;
+      }
+
+      for (const event of program.events) {
+        if (!Array.isArray(event) || event.length === 0) continue;
+
+        // Array format - first element is the time in seconds
+        const eventTime: number | undefined =
+          typeof event[0] === 'number' ? event[0] : undefined;
+
+        if (eventTime !== undefined) {
+          // Extract payload name and channel from event: [time, channel, payloadId]
+          let payloadName: string | undefined;
+          let channel: number | undefined;
+
+          if (event.length >= 2 && typeof event[1] === 'number') {
+            channel = event[1];
+          }
+          if (
+            event.length >= 3 &&
+            typeof event[2] === 'string' &&
+            program.payloads &&
+            typeof program.payloads === 'object'
+          ) {
+            const payloadId = event[2];
+            const payload = (program.payloads as any)[payloadId];
+            if (
+              payload &&
+              typeof payload === 'object' &&
+              typeof payload.name === 'string'
+            ) {
+              payloadName = payload.name;
+            }
+          }
+          
+          allEvents.push({
+            time: eventTime,
+            droneIndex,
+            event,
+            payloadName,
+            channel,
+          });
+        }
+      }
+    }
+
+    // Sort all events by time
+    allEvents.sort((a, b) => a.time - b.time);
+
+    // Group events within 10-second windows
+    const groupedCues: GroupedPyroCue[] = [];
+    
+    for (const eventData of allEvents) {
+      // Find if this event belongs to an existing group (within 10 seconds of the group's first event)
+      let addedToGroup = false;
+      for (const group of groupedCues) {
+        if (eventData.time <= group.time + GROUPING_WINDOW) {
+          // Add to existing group
+          if (!group.droneIndices.includes(eventData.droneIndex)) {
+            group.droneIndices.push(eventData.droneIndex);
+          }
+          group.events.push(eventData.event);
+          if (eventData.payloadName && !group.payloadNames.includes(eventData.payloadName)) {
+            group.payloadNames.push(eventData.payloadName);
+          }
+          // Set channel if not already set (use first channel found)
+          if (group.channel === undefined && eventData.channel !== undefined) {
+            group.channel = eventData.channel;
+          }
+          addedToGroup = true;
+          break;
+        }
+      }
+      
+      // If not added to any group, create a new group
+      if (!addedToGroup) {
+        groupedCues.push({
+          time: eventData.time,
+          droneIndices: [eventData.droneIndex],
+          events: [eventData.event],
+          payloadNames: eventData.payloadName ? [eventData.payloadName] : [],
+          channel: eventData.channel,
+        });
+      }
+    }
+    
+    return groupedCues;
+  }
+);
+
+/**
  * Returns an object that is suitable to be passed to the playback slider
  * component to mark the important cues in the currently loaded show.
  */
-export const getMarksFromShowCues = createSelector(getCues, (cues) =>
-  uniq(cues.map((cue) => cue.time)).map((value) => ({
-    value,
-  }))
+export const getMarksFromShowCues = createSelector(
+  getCues,
+  getPyroCues,
+  (cues, pyroCues) => {
+    const marks: Array<{ value: number; label?: string; alwaysVisible?: boolean }> = [];
+    
+    // Add regular cues with always-visible labels
+    const cuesByTime = new Map<number, Cue[]>();
+    cues.forEach((cue) => {
+      const time = cue.time;
+      if (!cuesByTime.has(time)) {
+        cuesByTime.set(time, []);
+      }
+      cuesByTime.get(time)!.push(cue);
+    });
+    
+    cuesByTime.forEach((cuesAtTime, time) => {
+      // Get the first cue name, or use a default
+      const cueName = cuesAtTime[0]?.name || 'Cue';
+      marks.push({
+        value: time,
+        label: cueName,
+        alwaysVisible: true,
+      });
+    });
+    
+    // Add pyro cues with hover-only labels
+    marks.push(
+      ...pyroCues.map((cue) => {
+        const channel = cue.channel !== undefined ? cue.channel + 1 : undefined;
+        const payloadNames = cue.payloadNames || [];
+        let payloadText = payloadNames.length > 0 ? payloadNames.join(', ') : '';
+        
+        // Truncate long payload names for timeline labels
+        if (payloadText.length > 25) {
+          payloadText = payloadText.substring(0, 22) + '...';
+        }
+        
+        // Build label: "Ch 6: 30s Gold Glittering Gerb" or "Ch 6"
+        let label = '';
+        if (channel !== undefined) {
+          label = payloadText ? `Ch ${channel}: ${payloadText}` : `Ch ${channel}`;
+        } else if (payloadText) {
+          label = payloadText;
+        }
+        
+        return {
+          value: cue.time,
+          label: label || undefined,
+          alwaysVisible: false,
+        };
+      })
+    );
+    
+    return marks;
+  }
 );
 
 /**
@@ -420,19 +613,6 @@ export const getTrajectoryPlayers = createSelector(
 );
 
 /**
- * Returns an array containing all the pyro programs. The array will contain
- * undefined for all the drones that have no pyro control data in the mission.
- */
-const getPyroPrograms = createSelector(
-  getDroneSwarmSpecification,
-  (swarm: readonly DroneSpecification[]) =>
-    swarm.map((drone: DroneSpecification) => {
-      const program = drone.settings?.pyro;
-      return isValidPyroProgram(program) ? program : undefined;
-    })
-);
-
-/**
  * Returns an array containing all the yaw controls. The array will contain
  * undefined for all the drones that have no yaw control data in the mission.
  */
@@ -458,6 +638,7 @@ export const hasPyroControl = createSelector(getPyroPrograms, (pyroPrograms) =>
 export const hasYawControl = createSelector(getYawControls, (yawControls) =>
   yawControls.some((yc) => yc !== undefined)
 );
+
 
 /**
  * Returns an array containing yaw control player objects

@@ -10,14 +10,18 @@ import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { hasAudio } from '~/features/audio/selectors';
 import {
+  getNamesOfDronesInShow,
   getNumberOfDronesInShow,
+  getPyroCues,
   getShowDurationAsString,
   getShowEnvironmentType,
   getShowTitle,
+  getTimestampFormatter,
   hasPyroControl,
   hasYawControl,
 } from '~/features/show/selectors';
 import { useAppSelector } from '~/hooks/store';
+import { formatDroneIndex } from '~/utils/formatters';
 
 // t('inspector.metadata.environment.indoor')
 // t('inspector.metadata.environment.outdoor')
@@ -38,6 +42,9 @@ export default function MetadataSection() {
   const hasAudioTrack = useAppSelector(hasAudio);
   const isYawControlled = useAppSelector(hasYawControl);
   const isPyroControlled = useAppSelector(hasPyroControl);
+  const pyroCues = useAppSelector(getPyroCues);
+  const formatTimestamp = useAppSelector(getTimestampFormatter);
+  const droneNames = useAppSelector(getNamesOfDronesInShow);
 
   return (
     <Box sx={{ px: 2 }}>
@@ -83,7 +90,65 @@ export default function MetadataSection() {
           secondaryText={formatYesOrNo(isPyroControlled, t)}
           icon={<Flare fontSize='small' sx={ICON_STYLE} />}
         />
+        {pyroCues.length > 0 && (
+          <MiniListItem
+            primaryText={t('inspector.metadata.pyroCues')}
+            secondaryText={t('inspector.metadata.pyroCuesCount', {
+              count: pyroCues.length,
+            })}
+            icon={<Flare fontSize='small' sx={ICON_STYLE} />}
+          />
+        )}
       </MiniList>
+      {pyroCues.length > 0 && (
+        <Box sx={{ mt: 2 }}>
+          <Box
+            sx={{
+              fontSize: '0.875rem',
+              fontWeight: 'bold',
+              mb: 1,
+            }}
+          >
+            {t('inspector.metadata.pyroCuesList')}
+          </Box>
+          <MiniList>
+            {pyroCues.map((cue, index) => {
+              const droneCount = cue.droneIndices.length;
+              // Use channel + 1 as channel number if available, otherwise fall back to index + 1
+              const channel = cue.channel !== undefined ? cue.channel + 1 : index + 1;
+              const payloadNames = cue.payloadNames || [];
+              
+              // Build primary text with payload name right after channel
+              const payloadText = payloadNames.length > 0 ? payloadNames.join(', ') : '';
+              // Truncate long payload names to fit better
+              const truncatedPayload = payloadText.length > 30 
+                ? payloadText.substring(0, 27) + '...' 
+                : payloadText;
+              const primaryText = truncatedPayload
+                ? t('inspector.metadata.pyroCueItemWithNumber', {
+                    channel,
+                    payloadName: truncatedPayload,
+                    count: droneCount,
+                  })
+                : t('inspector.metadata.pyroCueItemWithNumberNoPayload', {
+                    channel,
+                    count: droneCount,
+                  });
+              
+              // Build secondary text with timestamp
+              const secondaryText = formatTimestamp(cue.time);
+              
+              return (
+                <MiniListItem
+                  key={index}
+                  primaryText={primaryText}
+                  secondaryText={secondaryText}
+                />
+              );
+            })}
+          </MiniList>
+        </Box>
+      )}
     </Box>
   );
 }

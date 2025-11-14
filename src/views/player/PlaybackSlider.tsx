@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import PlaybackSlider from '@skybrush/mui-components/lib/PlaybackSlider';
+import PlaybackSliderBase from '@skybrush/mui-components/lib/PlaybackSlider';
 
 import {
   setPlaybackPosition,
@@ -44,4 +44,4 @@ export default connect(
         Array.isArray(value) ? value[0] : value
       ),
   }
-)(PlaybackSlider);
+)(PlaybackSliderBase);

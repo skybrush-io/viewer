@@ -349,13 +349,166 @@ export const getLightProgramPlayers = createSelector(
 );
 
 /**
+ * Returns an array containing all the pyro programs. The array will contain
+ * undefined for all the drones that have no pyro control data in the mission.
+ */
+export const getPyroPrograms = createSelector(
+  getDroneSwarmSpecification,
+  (swarm: DroneSpecification[]) =>
+    swarm.map((drone: DroneSpecification) => {
+      // TODO(ntamas): remove cast to any when we have updated @skybrush/show-format
+      // with the pyro property
+      const program = (drone.settings as any)?.pyro;
+      return isValidPyroProgram(program) ? program : undefined;
+    })
+);
+
+/**
+ * Type representing a grouped pyro cue with multiple drones at the same time.
+ */
+export type GroupedPyroCue = {
+  time: number;
+  droneIndices: number[];
+  events: any[];
+  payloadNames: string[];
+  channel?: number; // Channel number from event (second element in array format)
+};
+
+/**
+ * Returns an array containing all pyro cues grouped by timestamp.
+ * Each cue includes the timestamp, list of drone indices, and event data.
+ */
+export const getPyroCues = createSelector(
+  getPyroPrograms,
+  getDroneSwarmSpecification,
+  (pyroPrograms, swarm): readonly GroupedPyroCue[] => {
+    const cuesByTime = new Map<number, GroupedPyroCue>();
+
+    for (let droneIndex = 0; droneIndex < pyroPrograms.length; droneIndex++) {
+      const program = pyroPrograms[droneIndex];
+      if (!program) continue;
+      
+      // Handle events as array or object
+      let events: any[] = [];
+      if (Array.isArray(program.events)) {
+        events = program.events;
+      } else if (typeof program.events === 'object' && program.events !== null) {
+        // Events stored as object with keys - convert to array
+        events = Object.values(program.events);
+      }
+      
+      for (const event of events) {
+        if (!event) continue;
+
+        // Pyro events can be either:
+        // 1. Objects with a 'time' property: { time: 1.5, channel: 0, ... }
+        // 2. Objects with a 'frame' property: { frame: 3968, payload: {...}, ... }
+        // 3. Arrays where the first element is time: [1.5, 0, ...]
+        let eventTime: number | undefined;
+
+        if (typeof event === 'object' && !Array.isArray(event)) {
+          // Object format - check for time or frame
+          if (typeof event.time === 'number') {
+            eventTime = event.time;
+          } else if (typeof event.frame === 'number' && typeof program.fps === 'number' && program.fps > 0) {
+            // Convert frame to time using fps
+            eventTime = event.frame / program.fps;
+          }
+        } else if (Array.isArray(event) && event.length > 0) {
+          // Array format - first element is typically the time
+          if (typeof event[0] === 'number') {
+            eventTime = event[0];
+          }
+        }
+
+        if (eventTime !== undefined) {
+          // Group cues by time (round to avoid floating point issues)
+          const roundedTime = Math.round(eventTime * 1000) / 1000;
+          
+          // Extract payload name and channel from event
+          let payloadName: string | undefined;
+          let channel: number | undefined;
+          
+          if (Array.isArray(event) && event.length >= 3) {
+            // Array format: [time, channel, payloadId]
+            if (typeof event[1] === 'number') {
+              channel = event[1];
+            }
+            const payloadId = event[2];
+            if (typeof payloadId === 'string' && program.payloads && typeof program.payloads === 'object') {
+              const payload = (program.payloads as any)[payloadId];
+              if (payload && typeof payload === 'object' && typeof payload.name === 'string') {
+                payloadName = payload.name;
+              }
+            }
+          } else if (typeof event === 'object' && !Array.isArray(event)) {
+            // Object format - check for payload.name structure
+            if (typeof event.channel === 'number') {
+              channel = event.channel;
+            }
+            if (event.payload && typeof event.payload === 'object' && typeof event.payload.name === 'string') {
+              payloadName = event.payload.name;
+            } else if (typeof event.payloadId === 'string' && program.payloads && typeof program.payloads === 'object') {
+              // Check for payloadId that references payloads object
+              const payload = (program.payloads as any)[event.payloadId];
+              if (payload && typeof payload === 'object' && typeof payload.name === 'string') {
+                payloadName = payload.name;
+              }
+            }
+          }
+          
+          if (!cuesByTime.has(roundedTime)) {
+            cuesByTime.set(roundedTime, {
+              time: roundedTime,
+              droneIndices: [],
+              events: [],
+              payloadNames: [],
+              channel,
+            });
+          }
+          
+          const cue = cuesByTime.get(roundedTime)!;
+          if (!cue.droneIndices.includes(droneIndex)) {
+            cue.droneIndices.push(droneIndex);
+          }
+          cue.events.push(event);
+          if (payloadName && !cue.payloadNames.includes(payloadName)) {
+            cue.payloadNames.push(payloadName);
+          }
+          // Set channel if not already set (use first channel found)
+          if (cue.channel === undefined && channel !== undefined) {
+            cue.channel = channel;
+          }
+        }
+      }
+    }
+
+    // Convert to array and sort by time
+    const cues = Array.from(cuesByTime.values());
+    cues.sort((a, b) => a.time - b.time);
+    
+    return cues;
+  }
+);
+
+/**
  * Returns an object that is suitable to be passed to the playback slider
  * component to mark the important cues in the currently loaded show.
  */
-export const getMarksFromShowCues = createSelector(getCues, (cues) =>
-  uniq(cues.map((cue) => cue.time)).map((value) => ({
-    value,
-  }))
+export const getMarksFromShowCues = createSelector(
+  getCues,
+  (cues) => {
+    const marks: Array<{ value: number }> = [];
+    
+    // Add regular cues
+    marks.push(
+      ...uniq(cues.map((cue) => cue.time)).map((value) => ({
+        value,
+      }))
+    );
+    
+    return marks;
+  }
 );
 
 /**
@@ -425,21 +578,6 @@ export const getTrajectoryPlayers = createSelector(
 );
 
 /**
- * Returns an array containing all the pyro programs. The array will contain
- * undefined for all the drones that have no pyro control data in the mission.
- */
-const getPyroPrograms = createSelector(
-  getDroneSwarmSpecification,
-  (swarm: DroneSpecification[]) =>
-    swarm.map((drone: DroneSpecification) => {
-      // TODO(ntamas): remove cast to any when we have updated @skybrush/show-format
-      // with the pyro property
-      const program = (drone.settings as any)?.pyro;
-      return isValidPyroProgram(program) ? program : undefined;
-    })
-);
-
-/**
  * Returns an array containing all the yaw controls. The array will contain
  * undefined for all the drones that have no yaw control data in the mission.
  */
@@ -465,6 +603,7 @@ export const hasPyroControl = createSelector(getPyroPrograms, (pyroPrograms) =>
 export const hasYawControl = createSelector(getYawControls, (yawControls) =>
   yawControls.some((yc) => yc !== undefined)
 );
+
 
 /**
  * Returns an array containing yaw control player objects

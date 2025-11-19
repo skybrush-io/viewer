@@ -476,24 +476,66 @@ AFrame.registerComponent('drone-flock', {
 
       // Check if there's an active pyro event at the current time
       let hasActivePyro = false;
-      if (pyroProgram && Array.isArray(pyroProgram.events)) {
-        // Check if any pyro event is active within a time window (0.2 seconds for better visibility)
-        const PYRO_EFFECT_DURATION = 0.2;
-        for (const event of pyroProgram.events) {
+      if (pyroProgram) {
+        // Default duration if not specified in payload (0.5 seconds)
+        const DEFAULT_PYRO_DURATION = 0.5;
+        
+        // Handle events as array or object
+        let events = [];
+        if (Array.isArray(pyroProgram.events)) {
+          events = pyroProgram.events;
+        } else if (typeof pyroProgram.events === 'object' && pyroProgram.events !== null) {
+          // Events stored as object with keys - convert to array
+          events = Object.values(pyroProgram.events);
+        }
+        
+        for (const event of events) {
           if (!event) continue;
 
           // Pyro events can be either objects with a 'time' property or arrays
           let eventTime;
+          let eventDuration = DEFAULT_PYRO_DURATION;
+          
           if (typeof event === 'object' && !Array.isArray(event)) {
-            eventTime = event.time;
+            // Object format - check for time or frame
+            if (typeof event.time === 'number') {
+              eventTime = event.time;
+            } else if (typeof event.frame === 'number' && typeof pyroProgram.fps === 'number' && pyroProgram.fps > 0) {
+              // Convert frame to time using fps
+              eventTime = event.frame / pyroProgram.fps;
+            }
+            
+            // Try to get duration from event or payload
+            if (typeof event.duration === 'number' && event.duration > 0) {
+              eventDuration = event.duration;
+            } else if (event.payload && typeof event.payload === 'object' && typeof event.payload.duration === 'number' && event.payload.duration > 0) {
+              eventDuration = event.payload.duration;
+            } else if (typeof event.payloadId === 'string' && pyroProgram.payloads && typeof pyroProgram.payloads === 'object') {
+              const payload = pyroProgram.payloads[event.payloadId];
+              if (payload && typeof payload === 'object' && typeof payload.duration === 'number' && payload.duration > 0) {
+                eventDuration = payload.duration;
+              }
+            }
           } else if (Array.isArray(event) && event.length > 0) {
-            eventTime = event[0];
+            // Array format - first element is typically the time
+            if (typeof event[0] === 'number') {
+              eventTime = event[0];
+            }
+            
+            // For array format, try to get duration from payload if payloadId is provided
+            if (event.length >= 3 && typeof event[2] === 'string' && pyroProgram.payloads && typeof pyroProgram.payloads === 'object') {
+              const payloadId = event[2];
+              const payload = pyroProgram.payloads[payloadId];
+              if (payload && typeof payload === 'object' && typeof payload.duration === 'number' && payload.duration > 0) {
+                eventDuration = payload.duration;
+              }
+            }
           }
 
           if (
             typeof eventTime === 'number' &&
             currentTime >= eventTime &&
-            currentTime <= eventTime + PYRO_EFFECT_DURATION
+            currentTime <= eventTime + eventDuration
           ) {
             hasActivePyro = true;
             break;

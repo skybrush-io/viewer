@@ -382,7 +382,17 @@ export const getPyroCues = createSelector(
   getPyroPrograms,
   getDroneSwarmSpecification,
   (pyroPrograms, swarm): readonly GroupedPyroCue[] => {
-    const cuesByTime = new Map<number, GroupedPyroCue>();
+    // First, collect all individual events with their metadata
+    interface EventData {
+      time: number;
+      droneIndex: number;
+      event: any;
+      payloadName?: string;
+      channel?: number;
+    }
+    
+    const allEvents: EventData[] = [];
+    const GROUPING_WINDOW = 10; // 10 seconds window for grouping
 
     for (let droneIndex = 0; droneIndex < pyroPrograms.length; droneIndex++) {
       const program = pyroPrograms[droneIndex];
@@ -422,9 +432,6 @@ export const getPyroCues = createSelector(
         }
 
         if (eventTime !== undefined) {
-          // Group cues by time (round to avoid floating point issues)
-          const roundedTime = Math.round(eventTime * 1000) / 1000;
-          
           // Extract payload name and channel from event
           let payloadName: string | undefined;
           let channel: number | undefined;
@@ -457,37 +464,58 @@ export const getPyroCues = createSelector(
             }
           }
           
-          if (!cuesByTime.has(roundedTime)) {
-            cuesByTime.set(roundedTime, {
-              time: roundedTime,
-              droneIndices: [],
-              events: [],
-              payloadNames: [],
-              channel,
-            });
-          }
-          
-          const cue = cuesByTime.get(roundedTime)!;
-          if (!cue.droneIndices.includes(droneIndex)) {
-            cue.droneIndices.push(droneIndex);
-          }
-          cue.events.push(event);
-          if (payloadName && !cue.payloadNames.includes(payloadName)) {
-            cue.payloadNames.push(payloadName);
-          }
-          // Set channel if not already set (use first channel found)
-          if (cue.channel === undefined && channel !== undefined) {
-            cue.channel = channel;
-          }
+          allEvents.push({
+            time: eventTime,
+            droneIndex,
+            event,
+            payloadName,
+            channel,
+          });
         }
       }
     }
 
-    // Convert to array and sort by time
-    const cues = Array.from(cuesByTime.values());
-    cues.sort((a, b) => a.time - b.time);
+    // Sort all events by time
+    allEvents.sort((a, b) => a.time - b.time);
+
+    // Group events within 10-second windows
+    const groupedCues: GroupedPyroCue[] = [];
     
-    return cues;
+    for (const eventData of allEvents) {
+      // Find if this event belongs to an existing group (within 10 seconds of the group's first event)
+      let addedToGroup = false;
+      for (const group of groupedCues) {
+        if (eventData.time <= group.time + GROUPING_WINDOW) {
+          // Add to existing group
+          if (!group.droneIndices.includes(eventData.droneIndex)) {
+            group.droneIndices.push(eventData.droneIndex);
+          }
+          group.events.push(eventData.event);
+          if (eventData.payloadName && !group.payloadNames.includes(eventData.payloadName)) {
+            group.payloadNames.push(eventData.payloadName);
+          }
+          // Set channel if not already set (use first channel found)
+          if (group.channel === undefined && eventData.channel !== undefined) {
+            group.channel = eventData.channel;
+          }
+          addedToGroup = true;
+          break;
+        }
+      }
+      
+      // If not added to any group, create a new group
+      if (!addedToGroup) {
+        groupedCues.push({
+          time: eventData.time,
+          droneIndices: [eventData.droneIndex],
+          events: [eventData.event],
+          payloadNames: eventData.payloadName ? [eventData.payloadName] : [],
+          channel: eventData.channel,
+        });
+      }
+    }
+    
+    return groupedCues;
   }
 );
 
@@ -497,14 +525,56 @@ export const getPyroCues = createSelector(
  */
 export const getMarksFromShowCues = createSelector(
   getCues,
-  (cues) => {
-    const marks: Array<{ value: number }> = [];
+  getPyroCues,
+  (cues, pyroCues) => {
+    const marks: Array<{ value: number; label?: string; alwaysVisible?: boolean }> = [];
     
-    // Add regular cues
+    // Add regular cues with always-visible labels
+    const cuesByTime = new Map<number, Cue[]>();
+    cues.forEach((cue) => {
+      const time = cue.time;
+      if (!cuesByTime.has(time)) {
+        cuesByTime.set(time, []);
+      }
+      cuesByTime.get(time)!.push(cue);
+    });
+    
+    cuesByTime.forEach((cuesAtTime, time) => {
+      // Get the first cue name, or use a default
+      const cueName = cuesAtTime[0]?.name || 'Cue';
+      marks.push({
+        value: time,
+        label: cueName,
+        alwaysVisible: true,
+      });
+    });
+    
+    // Add pyro cues with hover-only labels
     marks.push(
-      ...uniq(cues.map((cue) => cue.time)).map((value) => ({
-        value,
-      }))
+      ...pyroCues.map((cue) => {
+        const channel = cue.channel !== undefined ? cue.channel + 1 : undefined;
+        const payloadNames = cue.payloadNames || [];
+        let payloadText = payloadNames.length > 0 ? payloadNames.join(', ') : '';
+        
+        // Truncate long payload names for timeline labels
+        if (payloadText.length > 25) {
+          payloadText = payloadText.substring(0, 22) + '...';
+        }
+        
+        // Build label: "Ch 6: 30s Gold Glittering Gerb" or "Ch 6"
+        let label = '';
+        if (channel !== undefined) {
+          label = payloadText ? `Ch ${channel}: ${payloadText}` : `Ch ${channel}`;
+        } else if (payloadText) {
+          label = payloadText;
+        }
+        
+        return {
+          value: cue.time,
+          label: label || undefined,
+          alwaysVisible: false,
+        };
+      })
     );
     
     return marks;

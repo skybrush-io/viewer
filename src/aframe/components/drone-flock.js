@@ -14,6 +14,7 @@ import { getSelectedDroneIndices } from '~/features/selection/selectors';
 import { setSelectedDroneIndices } from '~/features/selection/slice';
 import {
   getLightProgramPlayers,
+  getPyroPrograms,
   getTrajectoryPlayers,
   getYawControlPlayers,
 } from '~/features/show/selectors';
@@ -101,6 +102,17 @@ function getYawIndicatorFromEntity(entity) {
   return getDroneFromEntity(entity)?.childNodes[0];
 }
 
+function getPyroEffectFromEntity(entity) {
+  // Pyro effect is always the last child
+  // Structure: [drone, label, glow? (if showGlow), pyro]
+  const children = entity.childNodes;
+  if (children.length === 0) {
+    return null;
+  }
+  // Pyro is always the last child
+  return children[children.length - 1];
+}
+
 const DEFAULT_LABEL_SCALE = 3;
 const DEFAULT_LABEL_OFFSET = DEFAULT_LABEL_SCALE / 2;
 
@@ -154,6 +166,9 @@ AFrame.registerSystem('drone-flock', {
       children.push(this._createGlowEntity());
     }
 
+    // Always add pyro effect entity, visibility will be controlled dynamically
+    children.push(this._createPyroEffectEntity());
+
     return createEntity({ position: '0 0 0' }, children);
   },
 
@@ -162,6 +177,28 @@ AFrame.registerSystem('drone-flock', {
       geometry: defaultGeometry,
       'glow-material': createGlowingMaterialProps(),
       scale: '3 3 3',
+    });
+  },
+
+  _createPyroEffectEntity() {
+    // Create a bright orange/red glowing sphere for pyro effects
+    // Make it larger and position it to the side/above for better visibility
+    return createEntity({
+      geometry: {
+        primitive: 'sphere',
+        radius: 1.5,
+        segmentsHeight: 16,
+        segmentsWidth: 16,
+      },
+      material: {
+        color: new THREE.Color('#ff3300'),
+        shader: 'flat',
+        transparent: true,
+        opacity: 0.9,
+      },
+      scale: '4.0 4.0 4.0',
+      position: '0 0.5 0',
+      visible: false,
     });
   },
 
@@ -324,6 +361,13 @@ AFrame.registerSystem('drone-flock', {
       yaw.object3D.visible = visible;
     }
   },
+
+  updatePyroEffectVisibility(entity, visible) {
+    const pyroEffect = getPyroEffectFromEntity(entity);
+    if (pyroEffect) {
+      pyroEffect.object3D.visible = visible;
+    }
+  },
 });
 
 AFrame.registerComponent('drone-flock', {
@@ -371,9 +415,17 @@ AFrame.registerComponent('drone-flock', {
       })
     );
 
+    const boundGetPyroPrograms = () => getPyroPrograms(store.getState());
+    store.subscribe(
+      watch(boundGetPyroPrograms)((pyroPrograms) => {
+        this._pyroPrograms = pyroPrograms;
+      })
+    );
+
     this._lightProgramPlayers = boundGetLightProgramPlayers();
     this._trajectoryPlayers = boundGetTrajectoryPlayers();
     this._yawControlPlayers = boundGetYawControlPlayers();
+    this._pyroPrograms = boundGetPyroPrograms();
   },
 
   remove() {},
@@ -384,6 +436,7 @@ AFrame.registerComponent('drone-flock', {
       rotateEntityLabelTowards,
       updateEntityPositionAndColor,
       updateEntityPose,
+      updatePyroEffectVisibility,
     } = this.system;
     const vec = this._vec;
     const rot = this._rot;
@@ -400,6 +453,7 @@ AFrame.registerComponent('drone-flock', {
       const lightProgramPlayer = this._lightProgramPlayers[index];
       const trajectoryPlayer = this._trajectoryPlayers[index];
       const yawControlPlayer = this._yawControlPlayers[index];
+      const pyroProgram = this._pyroPrograms[index];
 
       if (trajectoryPlayer) {
         trajectoryPlayer.getPositionAt(currentTime, vec);
@@ -420,8 +474,78 @@ AFrame.registerComponent('drone-flock', {
         color.setScalar(0.5);
       }
 
+      // Check if there's an active pyro event at the current time
+      let hasActivePyro = false;
+      if (pyroProgram) {
+        // Default duration if not specified in payload (0.5 seconds)
+        const DEFAULT_PYRO_DURATION = 0.5;
+        
+        // Handle events as array or object
+        let events = [];
+        if (Array.isArray(pyroProgram.events)) {
+          events = pyroProgram.events;
+        } else if (typeof pyroProgram.events === 'object' && pyroProgram.events !== null) {
+          // Events stored as object with keys - convert to array
+          events = Object.values(pyroProgram.events);
+        }
+        
+        for (const event of events) {
+          if (!event) continue;
+
+          // Pyro events can be either objects with a 'time' property or arrays
+          let eventTime;
+          let eventDuration = DEFAULT_PYRO_DURATION;
+          
+          if (typeof event === 'object' && !Array.isArray(event)) {
+            // Object format - check for time or frame
+            if (typeof event.time === 'number') {
+              eventTime = event.time;
+            } else if (typeof event.frame === 'number' && typeof pyroProgram.fps === 'number' && pyroProgram.fps > 0) {
+              // Convert frame to time using fps
+              eventTime = event.frame / pyroProgram.fps;
+            }
+            
+            // Try to get duration from event or payload
+            if (typeof event.duration === 'number' && event.duration > 0) {
+              eventDuration = event.duration;
+            } else if (event.payload && typeof event.payload === 'object' && typeof event.payload.duration === 'number' && event.payload.duration > 0) {
+              eventDuration = event.payload.duration;
+            } else if (typeof event.payloadId === 'string' && pyroProgram.payloads && typeof pyroProgram.payloads === 'object') {
+              const payload = pyroProgram.payloads[event.payloadId];
+              if (payload && typeof payload === 'object' && typeof payload.duration === 'number' && payload.duration > 0) {
+                eventDuration = payload.duration;
+              }
+            }
+          } else if (Array.isArray(event) && event.length > 0) {
+            // Array format - first element is typically the time
+            if (typeof event[0] === 'number') {
+              eventTime = event[0];
+            }
+            
+            // For array format, try to get duration from payload if payloadId is provided
+            if (event.length >= 3 && typeof event[2] === 'string' && pyroProgram.payloads && typeof pyroProgram.payloads === 'object') {
+              const payloadId = event[2];
+              const payload = pyroProgram.payloads[payloadId];
+              if (payload && typeof payload === 'object' && typeof payload.duration === 'number' && payload.duration > 0) {
+                eventDuration = payload.duration;
+              }
+            }
+          }
+
+          if (
+            typeof eventTime === 'number' &&
+            currentTime >= eventTime &&
+            currentTime <= eventTime + eventDuration
+          ) {
+            hasActivePyro = true;
+            break;
+          }
+        }
+      }
+
       updateEntityPositionAndColor(entity, vec, color);
       updateEntityPose(entity, rot);
+      updatePyroEffectVisibility(entity, hasActivePyro);
 
       if (showLabels) {
         rotateEntityLabelTowards(entity, this._cameraPosition, this.data);

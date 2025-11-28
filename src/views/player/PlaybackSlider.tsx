@@ -23,6 +23,10 @@ import type { RootState } from '~/store';
 
 // Styled component to position mark labels above the timeline
 const StyledPlaybackSlider = styled(PlaybackSliderBase)`
+  & {
+    margin-bottom: 0;
+  }
+
   .MuiSlider-markLabel {
     top: -24px;
     bottom: auto;

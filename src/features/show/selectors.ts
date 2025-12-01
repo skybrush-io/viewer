@@ -398,69 +398,41 @@ export const getPyroCues = createSelector(
       const program = pyroPrograms[droneIndex];
       if (!program) continue;
       
-      // Handle events as array or object
-      let events: any[] = [];
-      if (Array.isArray(program.events)) {
-        events = program.events;
-      } else if (typeof program.events === 'object' && program.events !== null) {
-        // Events stored as object with keys - convert to array
-        events = Object.values(program.events);
+      // We now assume that pyro events are always provided as an array in the form:
+      //   [timeSeconds, channel, payloadId]
+      if (!Array.isArray(program.events)) {
+        continue;
       }
-      
-      for (const event of events) {
-        if (!event) continue;
 
-        // Pyro events can be either:
-        // 1. Objects with a 'time' property: { time: 1.5, channel: 0, ... }
-        // 2. Objects with a 'frame' property: { frame: 3968, payload: {...}, ... }
-        // 3. Arrays where the first element is time: [1.5, 0, ...]
-        let eventTime: number | undefined;
+      for (const event of program.events) {
+        if (!Array.isArray(event) || event.length === 0) continue;
 
-        if (typeof event === 'object' && !Array.isArray(event)) {
-          // Object format - check for time or frame
-          if (typeof event.time === 'number') {
-            eventTime = event.time;
-          } else if (typeof event.frame === 'number' && typeof program.fps === 'number' && program.fps > 0) {
-            // Convert frame to time using fps
-            eventTime = event.frame / program.fps;
-          }
-        } else if (Array.isArray(event) && event.length > 0) {
-          // Array format - first element is typically the time
-          if (typeof event[0] === 'number') {
-            eventTime = event[0];
-          }
-        }
+        // Array format - first element is the time in seconds
+        const eventTime: number | undefined =
+          typeof event[0] === 'number' ? event[0] : undefined;
 
         if (eventTime !== undefined) {
-          // Extract payload name and channel from event
+          // Extract payload name and channel from event: [time, channel, payloadId]
           let payloadName: string | undefined;
           let channel: number | undefined;
-          
-          if (Array.isArray(event) && event.length >= 3) {
-            // Array format: [time, channel, payloadId]
-            if (typeof event[1] === 'number') {
-              channel = event[1];
-            }
+
+          if (event.length >= 2 && typeof event[1] === 'number') {
+            channel = event[1];
+          }
+          if (
+            event.length >= 3 &&
+            typeof event[2] === 'string' &&
+            program.payloads &&
+            typeof program.payloads === 'object'
+          ) {
             const payloadId = event[2];
-            if (typeof payloadId === 'string' && program.payloads && typeof program.payloads === 'object') {
-              const payload = (program.payloads as any)[payloadId];
-              if (payload && typeof payload === 'object' && typeof payload.name === 'string') {
-                payloadName = payload.name;
-              }
-            }
-          } else if (typeof event === 'object' && !Array.isArray(event)) {
-            // Object format - check for payload.name structure
-            if (typeof event.channel === 'number') {
-              channel = event.channel;
-            }
-            if (event.payload && typeof event.payload === 'object' && typeof event.payload.name === 'string') {
-              payloadName = event.payload.name;
-            } else if (typeof event.payloadId === 'string' && program.payloads && typeof program.payloads === 'object') {
-              // Check for payloadId that references payloads object
-              const payload = (program.payloads as any)[event.payloadId];
-              if (payload && typeof payload === 'object' && typeof payload.name === 'string') {
-                payloadName = payload.name;
-              }
+            const payload = (program.payloads as any)[payloadId];
+            if (
+              payload &&
+              typeof payload === 'object' &&
+              typeof payload.name === 'string'
+            ) {
+              payloadName = payload.name;
             }
           }
           

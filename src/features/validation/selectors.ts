@@ -1,6 +1,6 @@
+import { createSelector } from '@reduxjs/toolkit';
 import get from 'lodash-es/get';
 import range from 'lodash-es/range';
-import { createSelector } from '@reduxjs/toolkit';
 
 import { type Vector3 } from '@skybrush/show-format';
 
@@ -339,6 +339,9 @@ export const getSampledVerticalAccelerationsForDrones = createSelector(
   }
 );
 
+const arePositionsEqual = (a: Vector3, b: Vector3 | undefined): boolean =>
+  b !== undefined && a.x === b.x && a.y === b.y && a.z === b.z;
+
 /**
  * Returns two arrays, one mapping frames to the distance of the closest drone
  * pair in that frame, and another mapping frames to the indices of the closts
@@ -360,20 +363,46 @@ export const getNearestNeighborsAndDistancesForFrames = createSelector(
     const indices: Array<[number, number] | null> = Array.from({
       length: frameCount,
     });
-    const positionsInCurrentFrame: Vector3[] = Array.from({
-      length: droneCount,
-    });
+    const indexMap: number[] = [];
+    const positionsInCurrentFrame: Vector3[] = [];
 
     for (let frameIndex = 0; frameIndex < frameCount; frameIndex++) {
+      // We collect only those drones that are not at their takeoff or landing
+      // positions. This is to provide sensible results for multi-stage shows
+      // where half of the fleet is idling on the ground while the other half is
+      // flying; in this case we are not interested in the minimum distance between
+      // the drones on the ground, only between the flying ones.
+      //
+      // So, positionsInCurrentFrame will contain only the positions of the active drones,
+      // and indexMap[i] contains the index of the i-th active drone.
+      indexMap.length = 0;
+      positionsInCurrentFrame.length = 0;
       for (let droneIndex = 0; droneIndex < droneCount; droneIndex++) {
-        positionsInCurrentFrame[droneIndex] =
-          positionsByDrones[droneIndex][frameIndex];
+        const pos = positionsByDrones[droneIndex];
+        if (
+          !arePositionsEqual(pos[frameIndex], pos.at(0)) &&
+          !arePositionsEqual(pos[frameIndex], pos.at(-1))
+        ) {
+          indexMap.push(droneIndex);
+          positionsInCurrentFrame.push(pos[frameIndex]);
+        }
+      }
+
+      // If all drones are idle, we can consider all of them for the closest pair calculation
+      if (positionsInCurrentFrame.length === 0) {
+        for (let droneIndex = 0; droneIndex < droneCount; droneIndex++) {
+          const pos = positionsByDrones[droneIndex];
+          indexMap.push(droneIndex);
+          positionsInCurrentFrame.push(pos[frameIndex]);
+        }
       }
 
       const closestPair = getClosestPair(positionsInCurrentFrame);
       if (closestPair) {
-        const firstIndex = positionsInCurrentFrame.indexOf(closestPair[0]);
-        const secondIndex = positionsInCurrentFrame.indexOf(closestPair[1]);
+        const firstIndex =
+          indexMap[positionsInCurrentFrame.indexOf(closestPair[0])];
+        const secondIndex =
+          indexMap[positionsInCurrentFrame.indexOf(closestPair[1])];
 
         distances[frameIndex] = Math.hypot(
           closestPair[0].x - closestPair[1].x,

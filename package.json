@@ -144,54 +144,5 @@
     "jsxSingleQuote": true,
     "singleQuote": true,
     "trailingComma": "es5"
-  },
-  "xo": {
-    "extends": "xo-react",
-    "space": true,
-    "prettier": true,
-    "env": [
-      "browser"
-    ],
-    "rules": {
-      "capitalized-comments": 0,
-      "import/extensions": 0,
-      "import/no-unassigned-import": 0,
-      "import/order": [
-        "error",
-        {
-          "pathGroups": [
-            {
-              "pattern": "~/**",
-              "group": "external"
-            }
-          ]
-        }
-      ],
-      "n/file-extension-in-import": 0,
-      "no-bitwise": 0,
-      "no-negated-condition": 0,
-      "no-warning-comments": 0,
-      "object-curly-spacing": [
-        "error",
-        "always"
-      ],
-      "react/boolean-prop-naming": 0,
-      "react/function-component-definition": 0,
-      "react/jsx-no-duplicate-props": 0,
-      "react/require-default-props": 0,
-      "unicorn/filename-case": 0,
-      "unicorn/no-array-callback-reference": 0,
-      "unicorn/no-fn-reference-in-iterator": 0,
-      "unicorn/no-negated-condition": 0,
-      "unicorn/numeric-separators-style": 0,
-      "unicorn/prefer-module": 0,
-      "unicorn/prevent-abbreviations": 0,
-      "unicorn/switch-case-braces": 0,
-      "@typescript-eslint/ban-types": 0,
-      "@typescript-eslint/consistent-type-definitions": 0,
-      "@typescript-eslint/naming-convention": 0,
-      "@typescript-eslint/no-unsafe-assignment": 0,
-      "@typescript-eslint/no-unsafe-call": 0
-    }
   }
 }

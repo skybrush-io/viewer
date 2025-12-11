@@ -339,8 +339,15 @@ export const getSampledVerticalAccelerationsForDrones = createSelector(
   }
 );
 
-const arePositionsEqual = (a: Vector3, b: Vector3 | undefined): boolean =>
-  b !== undefined && a.x === b.x && a.y === b.y && a.z === b.z;
+const arePositionsAlmostEqual = (
+  a: Vector3,
+  b: Vector3 | undefined,
+  eps = 0.05
+): boolean =>
+  b !== undefined &&
+  Math.abs(a.x - b.x) < eps &&
+  Math.abs(a.y - b.y) < eps &&
+  Math.abs(a.z - b.z) < eps;
 
 /**
  * Returns two arrays, one mapping frames to the distance of the closest drone
@@ -380,8 +387,8 @@ export const getNearestNeighborsAndDistancesForFrames = createSelector(
       for (let droneIndex = 0; droneIndex < droneCount; droneIndex++) {
         const pos = positionsByDrones[droneIndex];
         if (
-          !arePositionsEqual(pos[frameIndex], pos.at(0)) &&
-          !arePositionsEqual(pos[frameIndex], pos.at(-1))
+          !arePositionsAlmostEqual(pos[frameIndex], pos.at(0)) &&
+          !arePositionsAlmostEqual(pos[frameIndex], pos.at(-1))
         ) {
           indexMap.push(droneIndex);
           positionsInCurrentFrame.push(pos[frameIndex]);

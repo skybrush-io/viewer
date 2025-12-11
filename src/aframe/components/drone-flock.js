@@ -4,9 +4,9 @@
  * instance.
  */
 
-import watch from 'redux-watch';
 import AFrame from '@skybrush/aframe-components';
 import { createSelectionHandlerThunk } from '@skybrush/redux-toolkit';
+import watch from 'redux-watch';
 
 import { DEFAULT_DRONE_MODEL } from '~/constants';
 import { getElapsedSecondsGetter } from '~/features/playback/selectors';
@@ -376,7 +376,9 @@ AFrame.registerComponent('drone-flock', {
     this._yawControlPlayers = boundGetYawControlPlayers();
   },
 
-  remove() {},
+  remove() {
+    /* intentionally left empty */
+  },
 
   tick() {
     const {
@@ -429,7 +431,6 @@ AFrame.registerComponent('drone-flock', {
     }
   },
 
-  /* eslint-disable complexity */
   update(oldData) {
     const oldDroneModel = oldData.droneModel ?? 'sphere';
     const oldDroneRadius = oldData.droneRadius || 0;
@@ -543,5 +544,4 @@ AFrame.registerComponent('drone-flock', {
       }
     }
   },
-  /* eslint-enable complexity */
 });

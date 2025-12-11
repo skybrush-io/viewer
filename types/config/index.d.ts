@@ -1,10 +1,6 @@
 declare module 'config' {
   import type { ShowSpecification } from '@skybrush/show-format';
 
-  // NOTE: We do need to allow `null` here in order to enable the
-  //       "unsetting" of default values in configuration overrides.
-  type Nullable<T> = T | null;
-
   export type Config = {
     buttons: {
       playbackHint: boolean;

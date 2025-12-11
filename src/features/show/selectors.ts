@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* TODO(ntamas): remove it when we are done with TypeScript typing of shows */
-
 import config from 'config';
 import get from 'lodash-es/get';
 import maxBy from 'lodash-es/maxBy';
@@ -13,6 +10,7 @@ import {
   type Pose,
 } from '@skybrush/aframe-components/lib/spatial';
 import {
+  CameraType,
   createLightProgramPlayer,
   createTrajectoryPlayer,
   createYawControlPlayer,
@@ -20,22 +18,21 @@ import {
   validateTrajectory,
   validateYawControl,
   type Camera,
-  CameraType,
   type Cue,
   type DroneSpecification,
   type ShowMetadata,
+  type ShowSettings,
   type ShowSpecification,
   type Trajectory,
   type TrajectoryPlayer,
   type YawControl,
-  type ShowSettings,
 } from '@skybrush/show-format';
 
 import { DEFAULT_CAMERA_NAME_PLACEHOLDER } from '~/constants';
 import type { RootState } from '~/store';
 import { formatDroneIndex, formatPlaybackTimestamp } from '~/utils/formatters';
-import { DEFAULT_CAMERA_ORIENTATION, getCameraPose } from './utils';
 import type { ShowDataSource } from './types';
+import { DEFAULT_CAMERA_ORIENTATION, getCameraPose } from './utils';
 
 export const canLoadShowFromLocalFile = (): boolean => config.io.localFiles;
 

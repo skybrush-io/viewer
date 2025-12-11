@@ -8,7 +8,6 @@ const useHotModuleReloading = isDevelopment && process.env.DEPLOYMENT !== '1';
 
 const getHtmlMetaTags = ({ disableCSP = false } = {}) => {
   const result = {
-    // eslint-disable-next-line unicorn/text-encoding-identifier-case
     charset: 'utf-8',
     description:
       'Skybrush Viewer: The Next-generation Drone Light Show Software Suite',

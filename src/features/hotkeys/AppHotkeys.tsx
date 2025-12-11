@@ -32,10 +32,10 @@ configureHotkeys({
   // logLevel: 'debug',
 });
 
-interface AppHotkeysProps<ScopeType = string> {
+type AppHotkeysProps<ScopeType = string> = {
   readonly activeHotkeyScope: ScopeType;
   readonly handlers: Record<string, HotkeyHandler>;
-}
+};
 
 const AppHotkeys = ({ activeHotkeyScope, handlers }: AppHotkeysProps) => {
   const filteredKeyMap = filterKeyMapByScope(keyMap, activeHotkeyScope) as any;

@@ -3,7 +3,8 @@
 
 import * as React from 'react';
 
-type AnyKey = { [key: string]: any };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyKey = Record<string, any>;
 
 type CustomAFrameElement<T = AnyKey> = React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLElement>,
@@ -13,6 +14,7 @@ type CustomAFrameElement<T = AnyKey> = React.DetailedHTMLProps<
 
 declare module 'react' {
   namespace JSX {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
     interface IntrinsicElements {
       'a-arrow': CustomAFrameElement;
       'a-assets': CustomAFrameElement;

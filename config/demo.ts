@@ -10,7 +10,7 @@ import audio from '~/../assets/shows/demo.mp3';
 const show = async (): Promise<ShowSpecification> =>
   import(
     /* webpackChunkName: "show" */ '~/../assets/shows/demo.json'
-  ) as any as ShowSpecification;
+  ) as unknown as ShowSpecification;
 
 const overrides: ConfigOverrides = {
   buttons: {

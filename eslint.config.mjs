@@ -2,11 +2,63 @@
 
 import eslint from '@eslint/js';
 import { defineConfig, globalIgnores } from 'eslint/config';
+import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig(
   eslint.configs.recommended,
   tseslint.configs.strict,
   tseslint.configs.stylistic,
-  globalIgnores(['build'])
+  globalIgnores(['build']),
+
+  {
+    files: [
+      'src/desktop/launcher/*.{js,mjs}',
+      'src/desktop/preload/*.{js,mjs}',
+      'webpack/*.js',
+    ],
+    rules: {
+      // Allow require() imports in Webpack config files and Electron preload scripts
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+    languageOptions: {
+      globals: {
+        // We need to teach ESLint that we have the Node globals in Webpack
+        // config files
+        ...globals.node,
+      },
+    },
+  },
+
+  {
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+      },
+    },
+    rules: {
+      // Use Array<T> for more complex stuff but T[] for simple types.
+      // Improves readability in most cases.
+      '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
+
+      // Enforce using 'type' over 'interface' for type definitions.
+      // Common agreement within the team.
+      '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+
+      // Enable non-null assertions for now; we may want to revisit this later.
+      '@typescript-eslint/no-non-null-assertion': 'off',
+
+      // Allow unused variables in rest siblings (e.g. object destructuring).
+      // This is commonly used to omit certain properties from objects.
+      //
+      // Also allow a leading underscore to mark intentionally unused variables,
+      // which may be necessary sometimes to aid TypeScript with type inference
+      // (e.g., by specifying the type of an argument that we don't use if it
+      // influences the inferred type).
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { ignoreRestSiblings: true, argsIgnorePattern: '^_' },
+      ],
+    },
+  }
 );

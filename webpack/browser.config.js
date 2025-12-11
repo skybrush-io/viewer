@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 // Webpack configuration for the output that is directly usable on
 // https://share.skybrush.io
 

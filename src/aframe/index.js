@@ -15,5 +15,4 @@ import './components/modifier-keys';
 import './primitives/arrow';
 import './primitives/drone-flock';
 
-// eslint-disable-next-line unicorn/prefer-export-from
 export default AFrame;

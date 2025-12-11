@@ -86,8 +86,6 @@ const { actions, reducer } = createSlice({
 
       if (speed !== undefined) {
         const validatedSpeed = validatePlaybackSpeed(speed);
-
-        // eslint-disable-next-line unicorn/prefer-logical-operator-over-ternary
         state.speed = validatedSpeed ? validatedSpeed : 1;
       }
 

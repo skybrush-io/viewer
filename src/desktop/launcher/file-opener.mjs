@@ -16,7 +16,6 @@ const handleFileOpeningRequestsWith = (function_, options = {}) => {
     const filesToProcess = pendingFilesToOpen.concat();
     pendingFilesToOpen.length = 0;
 
-    /* eslint-disable no-await-in-loop */
     for (const filename of filesToProcess) {
       if (async) {
         await function_(filename);
@@ -24,7 +23,6 @@ const handleFileOpeningRequestsWith = (function_, options = {}) => {
         function_(filename);
       }
     }
-    /* eslint-enable no-await-in-loop */
   };
 
   const processFile = async (filename) => {

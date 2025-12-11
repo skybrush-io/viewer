@@ -1,4 +1,3 @@
-/* eslint-disable new-cap */
 import { setTimeout } from 'node:timers/promises';
 
 import { ipcMain as ipc } from 'electron-better-ipc';

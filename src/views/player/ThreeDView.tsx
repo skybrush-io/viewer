@@ -1,4 +1,3 @@
-/* eslint-disable import/no-duplicates */
 /**
  * @file Component that shows a three-dimensional view of the drone flock.
  */
@@ -19,14 +18,14 @@ import type {
 import { getDroneModel } from '~/features/settings/selectors';
 import type { DroneModelType } from '~/features/settings/types';
 import {
-  getInitialThreeJsCameraConfiguration,
-  getEffectiveDroneRadius,
-  getEffectiveScenery,
-} from '~/features/three-d/selectors';
-import {
   getLoadedShowId,
   getNumberOfDronesInShow,
 } from '~/features/show/selectors';
+import {
+  getEffectiveDroneRadius,
+  getEffectiveScenery,
+  getInitialThreeJsCameraConfiguration,
+} from '~/features/three-d/selectors';
 import type { RootState } from '~/store';
 
 import { SCENE_CAMERA_ID, SELECTABLE_OBJECT_CLASS } from './constants';

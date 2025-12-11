@@ -12,7 +12,9 @@ export type ElectronBridge = {
   getShowAsObjectFromLocalFile: (
     filename: string
   ) => Promise<ShowSpecification>;
-  provideActions: (actionCreators: Record<string, ActionCreator<any>>) => void;
+  provideActions: (
+    actionCreators: Record<string, ActionCreator<unknown>>
+  ) => void;
   selectLocalShowFileForOpening: () => Promise<string>;
   setTitle: (options: {
     appName?: string;
@@ -26,6 +28,7 @@ export type WindowWithBridge = Window & {
 };
 
 export function isElectronWindow(window: Window): window is WindowWithBridge {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const win: any = window;
   return (
     win.bridge !== undefined && (win as WindowWithBridge).bridge.isElectron

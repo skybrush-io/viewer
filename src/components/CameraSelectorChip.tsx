@@ -68,7 +68,6 @@ const CameraSelectorChip = ({
     setOpen(false);
   };
 
-  /* eslint-disable react/no-array-index-key */
   return (
     <div>
       <Chip
@@ -118,7 +117,6 @@ const CameraSelectorChip = ({
       </Menu>
     </div>
   );
-  /* eslint-enable react/no-array-index-key */
 };
 
 export default CameraSelectorChip;

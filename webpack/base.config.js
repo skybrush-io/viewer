@@ -147,7 +147,6 @@ module.exports = {
         /* Drop console.log() calls in production */
         terserOptions: {
           compress: {
-            // eslint-disable-next-line camelcase
             drop_console: true,
           },
           output: {
@@ -159,8 +158,6 @@ module.exports = {
             // contains fancy accented characters as keys in an object, and
             // the UTF-8 representations of these accented characters get parsed
             // as ASCII, leading to invalid JS code.
-            //
-            // eslint-disable-next-line camelcase
             ascii_only: true,
           },
         },

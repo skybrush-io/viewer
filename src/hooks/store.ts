@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-restricted-imports */
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import type { AppStore, RootState, store } from '~/store';
 

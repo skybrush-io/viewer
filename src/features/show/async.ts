@@ -14,7 +14,6 @@ export const _doLoadShow = createAsyncThunk(
   async ({
     initialCameraPose,
     show,
-    source,
   }: ShowLoadingRequest): Promise<ShowSpecification> => {
     if (typeof show === 'function') {
       show = await show();

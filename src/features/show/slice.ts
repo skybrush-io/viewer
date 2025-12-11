@@ -51,7 +51,7 @@ const { actions, reducer } = createSlice({
       state.id = 0;
     },
 
-    loadShowFromRequest(state, action: PayloadAction<ShowLoadingRequest>) {
+    loadShowFromRequest(_state, _action: PayloadAction<ShowLoadingRequest>) {
       /* nothing to do, the loader saga will pick this up and take care of
        * everything */
     },

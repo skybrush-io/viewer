@@ -1,4 +1,7 @@
+/* global AFRAME */
 import AFrame from '@skybrush/aframe-components';
+
+const { THREE } = AFrame;
 
 AFrame.registerComponent('arrow', {
   schema: {

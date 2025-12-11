@@ -116,7 +116,7 @@ const createThresholdAnnotation = (
 });
 
 type ChartOptionsWithAnnotation = Chart.ChartOptions & {
-  annotation?: {};
+  annotation?: object;
 };
 
 const createOptions = ({

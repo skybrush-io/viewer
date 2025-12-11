@@ -59,9 +59,11 @@ function* cameraAnimatorSaga(): Generator<any, void, any> {
     if (controller) {
       switch (action.type) {
         case REMEMBER_CAMERA_POSE:
-          const response = handleRememberCameraPose(controller);
-          if (response) {
-            yield put(response as any);
+          {
+            const response = handleRememberCameraPose(controller);
+            if (response) {
+              yield put(response as any);
+            }
           }
           break;
 
@@ -125,7 +127,7 @@ function handleCameraSwitch(
   }
 }
 
-function handleRememberCameraPose(controller: CameraController) {
+function handleRememberCameraPose(_controller: CameraController) {
   const cameraObj = cameraRef.current?.object3D;
   if (cameraObj) {
     return overrideCameraPose(

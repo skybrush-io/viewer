@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/prefer-export-from */
 import config from 'config';
 
 import i18n, { type Resource } from 'i18next';
@@ -53,7 +52,6 @@ export const enabledLanguages = availableLanguages.filter(({ code }) =>
 /* Instance */
 
 export const initI18N = async () =>
-  // eslint-disable-next-line import/no-named-as-default-member
   i18n
     .use(initReactI18next) // passes i18n down to react-i18next
     .init({

@@ -2,7 +2,9 @@ const { ipcRenderer: ipc } = require('electron-better-ipc');
 
 const actionsFromRenderer = {};
 
-const noop = () => {};
+const noop = () => {
+  /* intentionally left empty */
+};
 
 const getActionByName = (name) => {
   const func = actionsFromRenderer[name];

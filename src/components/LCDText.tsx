@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 
 import Box, { type BoxProps } from '@mui/material/Box';
 
-require('~/../assets/css/dseg.css');
+import '~/../assets/css/dseg.css';
 
 type LCDTextVariant = 'default' | '7segment' | '14segment';
 

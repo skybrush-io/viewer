@@ -7,11 +7,11 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 import config from 'config';
 
-import { UIMode, MODES } from './modes';
+import { MODES, UIMode } from './modes';
 
-interface UISliceState {
+type UISliceState = {
   mode: UIMode;
-}
+};
 
 const initialState: UISliceState = {
   mode: UIMode.PLAYER,

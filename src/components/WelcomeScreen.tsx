@@ -2,9 +2,9 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
+import Folder from '@mui/icons-material/Folder';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Folder from '@mui/icons-material/Folder';
 
 import { shouldUseWelcomeScreen } from '~/features/settings/selectors';
 import { pickLocalFileAndLoadShow } from '~/features/show/actions';
@@ -19,11 +19,11 @@ import type { RootState } from '~/store';
 import CentralHelperPanel from './CentralHelperPanel';
 import SkybrushLogo from './SkybrushLogo';
 
-interface WelcomeScreenProps {
+type WelcomeScreenProps = {
   readonly canLoadShowFromLocalFile: boolean;
   readonly onLoadShowFromLocalFile: () => void;
   readonly visible: boolean;
-}
+};
 
 const WelcomeScreen = ({
   canLoadShowFromLocalFile,

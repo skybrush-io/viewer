@@ -2,8 +2,8 @@
  * @file Slice of the state object that stores the state of the audio / video playback.
  */
 
-import isNil from 'lodash-es/isNil';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import isNil from 'lodash-es/isNil';
 
 const validatePlaybackSpeed = (speed: number | null | undefined) => {
   return isNil(speed) || Number.isNaN(speed) || speed <= 0 || speed >= 100
@@ -17,7 +17,7 @@ const validateTimestamp = (timestamp: number | null | undefined) => {
     : Math.round(timestamp);
 };
 
-interface PlaybackSliceState {
+type PlaybackSliceState = {
   /**
    * Timestamp that the playhead was explicitly adjusted to, in milliseconds.
    * Used only when the user is dragging the playhead. null if the
@@ -45,7 +45,7 @@ interface PlaybackSliceState {
    * speed, 0.5 means half speed, etc. Must be a positive number.
    */
   speed: number;
-}
+};
 
 const initialState: PlaybackSliceState = {
   adjustedTo: null,

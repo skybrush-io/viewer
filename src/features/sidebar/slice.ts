@@ -6,10 +6,10 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { noPayload } from '@skybrush/redux-toolkit';
 import { SidebarTab } from './types';
 
-interface SidebarSliceState {
+type SidebarSliceState = {
   open: boolean;
   activeTab: SidebarTab;
-}
+};
 
 const initialState: SidebarSliceState = {
   open: false,

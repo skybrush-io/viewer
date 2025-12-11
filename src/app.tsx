@@ -26,12 +26,12 @@ import '~/../assets/css/kbd.css';
 import '@fontsource/fira-sans/400.css';
 import '@fontsource/fira-sans/500.css';
 import 'react-cover-page/themes/dark.css';
-import LanguageWatcher from './i18n/LanguageWatcher';
 import HotkeyDialog from './features/hotkeys/HotkeyDialog';
+import LanguageWatcher from './i18n/LanguageWatcher';
 
-interface AppProps {
+type AppProps = {
   readonly initialShow?: ShowLoadingRequest;
-}
+};
 
 const App = ({ initialShow }: AppProps) => {
   const waitForTopLevelView = React.useCallback(async () => {

@@ -5,9 +5,9 @@
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-interface SelectionSliceState {
+type SelectionSliceState = {
   droneIndices: number[];
-}
+};
 
 const initialState: SelectionSliceState = {
   droneIndices: [],

@@ -26,7 +26,7 @@ export type ShowDataSource =
  * Request encapsulating all information needed to load a show from a
  * specification object, optionally accompanied with audio.
  */
-export interface ShowLoadingRequest {
+export type ShowLoadingRequest = {
   /** The show to load */
   show: ShowSpecification | (() => Promise<ShowSpecification>);
 

@@ -8,9 +8,9 @@ const style = {
   cursor: 'pointer',
 } as const;
 
-interface PanelToggleChipProps extends ChipProps {
+type PanelToggleChipProps = ChipProps & {
   readonly selected: boolean;
-}
+};
 
 const PanelToggleChip = ({ selected, ...rest }: PanelToggleChipProps) => (
   <Chip

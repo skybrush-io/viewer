@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
 
-import { hasLoadedShowFile, getShowTitle } from '~/features/show/selectors';
+import { getShowTitle, hasLoadedShowFile } from '~/features/show/selectors';
 import { isElectronWindow } from '~/window';
 
 import type { RootState } from '~/store';
 
-interface WindowTitleManagerProps {
+type WindowTitleManagerProps = {
   readonly appName: string;
   readonly showTitle: string;
-}
+};
 
 const WindowTitleManager = ({
   appName,

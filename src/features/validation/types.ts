@@ -1,4 +1,4 @@
-export interface ValidationSettings {
+export type ValidationSettings = {
   maxAccelerationXY?: number;
   maxAccelerationZ?: number;
   maxAccelerationZUp?: number;
@@ -7,4 +7,4 @@ export interface ValidationSettings {
   maxVelocityZ: number;
   maxVelocityZUp?: number;
   minDistance: number;
-}
+};

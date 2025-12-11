@@ -5,6 +5,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Switch from '@mui/material/Switch';
 
+import { useTranslation } from 'react-i18next';
 import {
   toggleAxes,
   toggleGrid,
@@ -13,9 +14,8 @@ import {
   toggleYaw,
 } from '~/features/settings/actions';
 import type { RootState } from '~/store';
-import { useTranslation } from 'react-i18next';
 
-interface ThreeDViewSettingTogglesProps {
+type ThreeDViewSettingTogglesProps = {
   readonly onToggleAxes: () => void;
   readonly onToggleGrid: () => void;
   readonly onToggleLabels: () => void;
@@ -26,7 +26,7 @@ interface ThreeDViewSettingTogglesProps {
   readonly showGrid: boolean;
   readonly showLabels: boolean;
   readonly showYaw: boolean;
-}
+};
 
 /**
  * Sidebar drawer component for the application.

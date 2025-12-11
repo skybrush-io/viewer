@@ -6,7 +6,7 @@ import type { ShowSpecification } from '@skybrush/show-format';
  * Type specification for the bridge that we inject into the window object
  * when running in Electron.
  */
-export interface ElectronBridge {
+export type ElectronBridge = {
   isElectron: boolean;
 
   getShowAsObjectFromLocalFile: (
@@ -19,11 +19,11 @@ export interface ElectronBridge {
     representedFile?: string;
     alternateFile?: string;
   }) => void;
-}
+};
 
-export interface WindowWithBridge extends Window {
+export type WindowWithBridge = Window & {
   bridge: ElectronBridge;
-}
+};
 
 export function isElectronWindow(window: Window): window is WindowWithBridge {
   const win: any = window;

@@ -20,15 +20,18 @@ import { CHART_COLORS } from './constants';
 import 'chartjs-plugin-annotation';
 import 'chartjs-plugin-crosshair';
 
-interface StyledCardProps extends CardProps {
+type StyledCardProps = CardProps & {
   height: number;
-}
+};
 
-const StyledCard = styled(Card)<StyledCardProps>(({ height, theme }) => {
+const StyledCard = styled((props: StyledCardProps) => <Card {...props} />)(({
+  height,
+  theme,
+}) => {
   const isDark = isThemeDark(theme);
 
   return {
-    ...createSecondaryAreaStyle(theme, {}),
+    ...(createSecondaryAreaStyle(theme, {}) as any),
 
     position: 'relative',
     height,
@@ -112,9 +115,9 @@ const createThresholdAnnotation = (
   },
 });
 
-interface ChartOptionsWithAnnotation extends Chart.ChartOptions {
+type ChartOptionsWithAnnotation = Chart.ChartOptions & {
   annotation?: {};
-}
+};
 
 const createOptions = ({
   formatPlaybackTimestamp,
@@ -250,7 +253,7 @@ const createOptions = ({
   return options;
 };
 
-interface ChartPanelProps {
+type ChartPanelProps = {
   readonly data: Array<{
     values: Array<{
       x: number;
@@ -267,7 +270,7 @@ interface ChartPanelProps {
   readonly thresholdLabel?: string;
   readonly title?: string;
   readonly verticalUnit?: string;
-}
+};
 
 const ChartPanel = ({
   data,

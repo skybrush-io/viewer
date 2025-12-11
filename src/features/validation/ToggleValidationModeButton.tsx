@@ -2,10 +2,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 import Assignment from '@mui/icons-material/Assignment';
 import AssignmentLate from '@mui/icons-material/AssignmentLate';
 import AssignmentTurnedIn from '@mui/icons-material/AssignmentTurnedIn';
+import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 import Tooltip from '@skybrush/mui-components/lib/Tooltip';
 
 import { toggleMode } from '~/features/ui/actions';
@@ -14,11 +14,11 @@ import type { RootState } from '~/store';
 
 import { hasValidationMessages } from './selectors';
 
-interface ToggleValidationModeButtonProps extends IconButtonProps {
+type ToggleValidationModeButtonProps = IconButtonProps & {
   readonly onToggleValidationMode?: () => void;
   readonly trajectoriesValid?: boolean;
   readonly validationInProgress?: boolean;
-}
+};
 
 const ToggleValidationModeButton = ({
   onToggleValidationMode,

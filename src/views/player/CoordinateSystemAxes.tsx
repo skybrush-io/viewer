@@ -6,11 +6,11 @@ const AxisColors = {
   z: '#06f',
 } as const;
 
-interface CoordinateSystemAxesProps {
+type CoordinateSystemAxesProps = {
   readonly leftHanded?: boolean;
   readonly length?: number;
   readonly lineWidth?: number;
-}
+};
 
 /**
  * Component that renders unit-length coordinate system axes at the origin.

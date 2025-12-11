@@ -3,23 +3,23 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
+import ChevronRight from '@mui/icons-material/ChevronRight';
 import Box, { type BoxProps } from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import ChevronRight from '@mui/icons-material/ChevronRight';
 
 import { clearLoadedShow } from '~/features/show/slice';
+import { setMode } from '~/features/ui/actions';
+import { UIMode } from '~/features/ui/modes';
 import { togglePanelVisibility } from '~/features/validation/actions';
 import { PANELS, type ValidationPanel } from '~/features/validation/panels';
 import { getVisiblePanels } from '~/features/validation/selectors';
-import { setMode } from '~/features/ui/actions';
-import { UIMode } from '~/features/ui/modes';
 import type { AppThunk, RootState } from '~/store';
 
 import { canReloadShow } from '~/features/playback/selectors';
 import { reloadShow } from '~/features/show/actions';
 
-import PanelToggleChip from './PanelToggleChip';
 import { isLoadingShowFile } from '~/features/show/selectors';
+import PanelToggleChip from './PanelToggleChip';
 
 const styles = {
   root: {
@@ -35,14 +35,14 @@ const styles = {
   },
 } as const;
 
-interface ValidationHeaderProps extends BoxProps {
+type ValidationHeaderProps = BoxProps & {
   readonly canReloadShow: boolean;
   readonly isLoadingShow: boolean;
   readonly onReloadShow: () => void;
   readonly onReturnToViewer: () => void;
   readonly onTogglePanel: (id: ValidationPanel) => void;
   readonly visiblePanels: ValidationPanel[];
-}
+};
 
 const ValidationHeader = ({
   canReloadShow,

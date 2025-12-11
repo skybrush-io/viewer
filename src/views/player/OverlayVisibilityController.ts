@@ -8,11 +8,11 @@ import {
   setOverlayVisible,
 } from '~/features/three-d/actions';
 
-interface UseMouseMovingStateOptions {
+type UseMouseMovingStateOptions = {
   onStarted?: () => void;
   onStopped?: () => void;
   timeout?: number;
-}
+};
 
 const useMouseMovingState = (
   areaRef: React.RefObject<Element>,
@@ -59,12 +59,12 @@ const useMouseMovingState = (
   return moving;
 };
 
-interface OverlayVisibilityControllerProps {
+type OverlayVisibilityControllerProps = {
   readonly areaRef: React.RefObject<Element>;
   readonly onHide?: () => void;
   readonly onShow?: () => void;
   readonly timeout?: number;
-}
+};
 
 /**
  * Component that renders nothing but tracks mouse movements within the given

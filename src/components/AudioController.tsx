@@ -20,7 +20,7 @@ import {
 } from '~/features/playback/selectors';
 import type { RootState } from '~/store';
 
-interface AudioControllerProps {
+type AudioControllerProps = {
   readonly elapsedSecondsGetter: () => number;
   readonly muted: boolean;
   readonly onCanPlay: () => void;
@@ -29,7 +29,7 @@ interface AudioControllerProps {
   readonly onSeeking: () => void;
   readonly playing: boolean;
   readonly url?: string;
-}
+};
 
 const AudioController = ({
   elapsedSecondsGetter,

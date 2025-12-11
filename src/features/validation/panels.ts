@@ -14,7 +14,7 @@ export enum ValidationPanel {
   PROXIMITY = 'proximity',
 }
 
-export interface PanelSpecification {
+export type PanelSpecification = {
   id: ValidationPanel;
   component: any;
   priority: number;

@@ -8,11 +8,11 @@ import Tooltip from '@skybrush/mui-components/lib/Tooltip';
 import { useAppDispatch } from '~/hooks/store';
 import { showHotkeyDialog } from './slice';
 
-interface ToggleValidationModeButtonProps extends IconButtonProps {
+type ToggleValidationModeButtonProps = IconButtonProps & {
   readonly onToggleValidationMode?: () => void;
   readonly trajectoriesValid?: boolean;
   readonly validationInProgress?: boolean;
-}
+};
 
 const ShowHotkeysDialogButton = ({
   onToggleValidationMode,

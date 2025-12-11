@@ -1,14 +1,14 @@
-import React from 'react';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import MuiAccordion, { type AccordionProps } from '@mui/material/Accordion';
+import MuiAccordionDetails, {
+  type AccordionDetailsProps,
+} from '@mui/material/AccordionDetails';
 import MuiAccordionSummary, {
   type AccordionSummaryProps,
   accordionSummaryClasses,
 } from '@mui/material/AccordionSummary';
-import MuiAccordionDetails, {
-  type AccordionDetailsProps,
-} from '@mui/material/AccordionDetails';
 import { styled } from '@mui/material/styles';
+import React from 'react';
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -46,4 +46,4 @@ const AccordionDetails = styled((props: AccordionDetailsProps) => (
   padding: theme.spacing(0, 0, 2, 0),
 }));
 
-export { Accordion, AccordionSummary, AccordionDetails };
+export { Accordion, AccordionDetails, AccordionSummary };

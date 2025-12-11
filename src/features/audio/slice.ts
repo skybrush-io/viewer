@@ -5,13 +5,13 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { noPayload } from '@skybrush/redux-toolkit';
 
-interface AudioSliceState {
+type AudioSliceState = {
   url: string | undefined;
   loading: boolean;
   seeking: boolean;
   muted: boolean;
   volume: number;
-}
+};
 
 const initialState: AudioSliceState = {
   url: undefined,

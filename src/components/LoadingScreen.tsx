@@ -1,19 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import PlayIcon from '@mui/icons-material/PlayArrow';
+import WarningIcon from '@mui/icons-material/Warning';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Fab from '@mui/material/Fab';
-import PlayIcon from '@mui/icons-material/PlayArrow';
-import WarningIcon from '@mui/icons-material/Warning';
 
 import { rewind, togglePlayback } from '~/features/playback/actions';
 import { userInteractedWithPlayback } from '~/features/playback/selectors';
+import { shouldShowPlaybackHintButton } from '~/features/settings/selectors';
 import {
   hasLoadedShowFile,
   isLoadingShowFile,
 } from '~/features/show/selectors';
-import { shouldShowPlaybackHintButton } from '~/features/settings/selectors';
 import type { RootState } from '~/store';
 
 import CentralHelperPanel from './CentralHelperPanel';
@@ -38,14 +38,14 @@ const styles = {
   },
 } as const;
 
-interface LoadingScreenProps {
+type LoadingScreenProps = {
   readonly canPlay: boolean;
   readonly error: string | null;
   readonly loading: boolean;
   readonly onDismiss: () => void;
   readonly onPlay: () => void;
   readonly visible: boolean;
-}
+};
 
 const LoadingScreen = ({
   canPlay,

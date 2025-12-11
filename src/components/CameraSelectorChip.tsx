@@ -26,12 +26,12 @@ function getLabelForCamera(
       : (camera.name ?? t('cameras.indexedLabel', { index }));
 }
 
-interface CameraSelectorChipProps extends ChipProps {
+type CameraSelectorChipProps = ChipProps & {
   readonly cameras: Camera[];
   readonly hotkeys: KeySequence[];
   readonly onCameraSelected: (index: number, camera: Camera) => void;
   readonly selectedCameraIndex: number;
-}
+};
 
 /**
  * Chip that allows the user to return to the view of the selected camera or to

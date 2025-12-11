@@ -1,11 +1,11 @@
 import Color from 'color';
 import React from 'react';
 
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Fade from '@mui/material/Fade';
-import { type Theme } from '@mui/material/styles';
 import Close from '@mui/icons-material/Close';
+import Box from '@mui/material/Box';
+import Fade from '@mui/material/Fade';
+import IconButton from '@mui/material/IconButton';
+import { type Theme } from '@mui/material/styles';
 
 import { isThemeDark } from '@skybrush/app-theme-mui';
 
@@ -41,12 +41,12 @@ const styles = {
   },
 };
 
-interface CentralHelperPanelProps {
+type CentralHelperPanelProps = {
   readonly canDismiss?: boolean;
   readonly children: React.ReactNode;
   readonly onDismiss?: () => void;
   readonly visible: boolean;
-}
+};
 
 const CentralHelperPanel = ({
   canDismiss,

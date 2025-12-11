@@ -23,16 +23,16 @@ import {
 
 export const cameraRef = React.createRef<any>();
 
-interface CameraTarget {
+type CameraTarget = {
   lookAt?: ThreeJsPositionTuple;
   position?: ThreeJsPositionTuple;
   quaternion?: ThreeJsQuaternionTuple;
-}
+};
 
-interface CameraController {
+type CameraController = {
   resetZoom: () => void;
   startTransitionTo: (target: CameraTarget) => void;
-}
+};
 
 /**
  * Saga that listens for switchToSelectedCamera actions and animates the 3D view

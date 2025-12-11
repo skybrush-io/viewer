@@ -23,12 +23,12 @@ import {
 } from '~/features/validation/selectors';
 import type { AppDispatch, RootState } from '~/store';
 
-interface SidebarListItemPresentationProps {
+type SidebarListItemPresentationProps = {
   readonly chartIndex: number | undefined;
   readonly label?: string;
   readonly onToggleSelection: () => void;
   readonly style?: React.CSSProperties;
-}
+};
 
 const SidebarListItemPresentation = ({
   chartIndex,
@@ -78,10 +78,10 @@ const style = {
   },
 };
 
-interface ValidationSidebarProps {
+type ValidationSidebarProps = {
   readonly singleDroneItems: Array<{ id: string; label: string }>;
   readonly width?: number;
-}
+};
 
 const ValidationSidebar = ({
   singleDroneItems,

@@ -13,7 +13,7 @@ import type { ShowSpecification } from '@skybrush/show-format';
 import { _doLoadShow, withProgressIndicator } from './async';
 import type { ShowDataSource, ShowLoadingRequest } from './types';
 
-interface ShowSliceState {
+type ShowSliceState = {
   /// Unique identifier for the show, incremented each time a new show is loaded.
   /// Used to allow 3D components to recognize when a new show is loaded.
   id: number;
@@ -30,7 +30,7 @@ interface ShowSliceState {
 
   /// Error that occurred while loading the show, or null if no error occurred.
   error: string | null;
-}
+};
 
 const initialState: ShowSliceState = {
   id: 0,

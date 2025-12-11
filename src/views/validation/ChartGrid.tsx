@@ -31,9 +31,9 @@ const isPanelHeightValid = (panel: PanelSpecification): boolean =>
   Number.isFinite(panel.height) &&
   panel.height > 0;
 
-interface ChartGridProps extends BoxProps {
+type ChartGridProps = BoxProps & {
   readonly visiblePanels: ValidationPanel[];
-}
+};
 
 const ChartGrid = ({ visiblePanels, ...rest }: ChartGridProps) => {
   const [ref, { height = 0 }] = useResizeObserver();

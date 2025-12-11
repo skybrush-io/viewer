@@ -2,14 +2,14 @@
  * @file Slice of the state object that stores the settings of the viewer.
  */
 
-import config from 'config';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import config from 'config';
 
 import { DEFAULT_DRONE_MODEL, DEFAULT_PLAYBACK_FPS } from '~/constants';
 
 import type { DroneModelType } from './types';
 
-interface SettingsSliceState {
+type SettingsSliceState = {
   general: {
     language: string;
   };
@@ -28,7 +28,7 @@ interface SettingsSliceState {
     droneRadius?: number;
     droneModel?: DroneModelType;
   };
-}
+};
 
 const initialState: SettingsSliceState = {
   general: {

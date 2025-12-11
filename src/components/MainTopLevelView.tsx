@@ -18,9 +18,9 @@ const LazyValidationView = React.lazy(
   async () => import(/* webpackChunkName: "validation" */ '~/views/validation')
 );
 
-interface MainTopLevelViewProps {
+type MainTopLevelViewProps = {
   readonly mode: UIMode;
-}
+};
 
 const MainTopLevelView = ({ mode }: MainTopLevelViewProps) => {
   const ref: RefObject<Element> = useRef(null) as any;

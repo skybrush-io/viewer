@@ -33,9 +33,9 @@ const onFileDragging = (event: DragEvent) => {
   event.preventDefault();
 };
 
-interface DragDropHandlerProps {
+type DragDropHandlerProps = {
   readonly onFileDropped: (filename: string) => void;
-}
+};
 
 const DragDropHandler = ({ onFileDropped }: DragDropHandlerProps) => {
   const handleDrop = useCallback(

@@ -16,20 +16,6 @@ declare module '*.obj' {
   export default value;
 }
 
-// Custom elements used by A-Frame
-declare namespace JSX {
-  interface IntrinsicElements {
-    'a-arrow': any;
-    'a-asset-item': any;
-    'a-assets': any;
-    'a-box': any;
-    'a-camera': any;
-    'a-drone-flock': any;
-    'a-entity': any;
-    'a-scene': any;
-  }
-}
-
 // Provide typings for @skybrush/aframe-components
 declare module '@skybrush/aframe-components' {
   export function objectToString(object: any): string;

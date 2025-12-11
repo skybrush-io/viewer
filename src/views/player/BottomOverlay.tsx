@@ -33,9 +33,9 @@ import VirtualReality from '~/icons/VirtualReality';
 
 import type { RootState } from '~/store';
 
-import PlaybackSlider from './PlaybackSlider';
-import ShowHotkeysDialogButton from '~/features/hotkeys/ShowHotkeysDialogButton';
 import ReloadButton from '~/components/buttons/ReloadButton';
+import ShowHotkeysDialogButton from '~/features/hotkeys/ShowHotkeysDialogButton';
+import PlaybackSlider from './PlaybackSlider';
 
 const style = {
   background: 'linear-gradient(transparent 0px, rgba(0, 0, 0, 0.6) 48px)',
@@ -57,7 +57,7 @@ const noWrap = {
   whiteSpace: 'nowrap',
 } as const;
 
-interface BottomOverlayProps {
+type BottomOverlayProps = {
   readonly canLoadShowFromLocalFile: boolean;
   readonly canReloadShow: boolean;
   readonly canTogglePlayback: boolean;
@@ -73,7 +73,7 @@ interface BottomOverlayProps {
   readonly onReloadShow: () => void;
   readonly onToggleMuted: () => void;
   readonly onTogglePlayback: () => void;
-}
+};
 
 const BottomOverlay = React.forwardRef(
   (

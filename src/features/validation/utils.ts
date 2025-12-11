@@ -1,5 +1,5 @@
-import zipWith from 'lodash-es/zipWith';
 import { createSelector } from '@reduxjs/toolkit';
+import zipWith from 'lodash-es/zipWith';
 
 import { getNamesOfDronesInShow } from '~/features/show/selectors';
 import type { RootState } from '~/store';
@@ -8,14 +8,14 @@ import { getIndicesOfSelectedDrones } from './items';
 import { getSampledTimeInstants, isSelectionEmpty } from './selectors';
 import type { ValidationSliceState } from './slice';
 
-interface ChartPoint {
+type ChartPoint = {
   x: number;
   y: number | null;
-}
+};
 
-interface ChartPointWithTip extends ChartPoint {
+type ChartPointWithTip = ChartPoint & {
   tip: string | null;
-}
+};
 
 const createChartPoint = (x: number, y: number | null): ChartPoint => ({
   x,

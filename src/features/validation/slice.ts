@@ -14,7 +14,7 @@ import { clearLoadedShow } from '~/features/show/slice';
 import type { ValidationPanel } from './panels';
 import { removeAllMessages } from './utils';
 
-export interface ValidationSliceState {
+export type ValidationSliceState = {
   messages: {
     byId: Record<string, string>;
     order: string[];
@@ -30,7 +30,7 @@ export interface ValidationSliceState {
   disabledValidators: string[];
   selection: string[];
   visiblePanels: ValidationPanel[];
-}
+};
 
 const initialState: ValidationSliceState = {
   messages: {

@@ -38,11 +38,11 @@ const buttonBarStyle = {
   WebkitAppRegion: 'no-drag',
 };
 
-interface TopOverlayProps extends BoxProps {
+type TopOverlayProps = BoxProps & {
   readonly hasShow: boolean;
   readonly onRotateViewToDrones: () => void;
   readonly onResetZoom: () => void;
-}
+};
 
 /**
  * Overlay at the top of the window that acts as a draggable area on macOS

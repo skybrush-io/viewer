@@ -6,10 +6,10 @@ import minBy from 'lodash-es/minBy';
 // the benchmark every now and then.
 import { sort } from 'timsort';
 
-interface OrderedPoints {
+type OrderedPoints = {
   orderedByX: Vector3[];
   orderedByY: Vector3[];
-}
+};
 
 function getDistanceSquared(pair: [Vector3, Vector3]) {
   return (

@@ -8,7 +8,7 @@ import type { Vector3Tuple } from '@skybrush/show-format';
 
 type NavigationMode = 'walk' | 'fly';
 
-interface ThreeDSliceState {
+type ThreeDSliceState = {
   camera: {
     /**
      * Override the initial camera pose when the 3D view is mounted. Used to
@@ -27,7 +27,7 @@ interface ThreeDSliceState {
   overlays: {
     visible: boolean;
   };
-}
+};
 
 const initialState: ThreeDSliceState = {
   camera: {

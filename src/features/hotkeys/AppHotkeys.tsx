@@ -1,6 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { configure as configureHotkeys, GlobalHotKeys } from 'react-hotkeys';
+import { connect } from 'react-redux';
 
 import { toggleMuted } from '~/features/audio/slice';
 import {
@@ -12,14 +12,14 @@ import { switchToCameraByIndex } from '~/features/three-d/actions';
 import type { AppDispatch, RootState } from '~/store';
 
 import { keyMap } from './keymap';
+import { getActiveHotkeyScope } from './selectors';
+import { showHotkeyDialog } from './slice';
+import type { HotkeyHandler } from './types';
 import {
   bindHotkeyHandlers,
   filterKeyMapByScope,
   onlyWhenNoButtonIsFocused,
 } from './utils';
-import type { HotkeyHandler } from './types';
-import { getActiveHotkeyScope } from './selectors';
-import { showHotkeyDialog } from './slice';
 
 configureHotkeys({
   // Needed to match '?' when it is actually 'Shift+?' (as it requires Shift
@@ -64,11 +64,11 @@ export default connect(
       {
         CUE_BACKWARD: (event?: KeyboardEvent) => {
           const [delta, unit] = getCueStepAndUnit(event);
-          return adjustPlaybackPositionBy(-delta, unit);
+          return adjustPlaybackPositionBy(-delta, unit, { snapToFrames: true });
         },
         CUE_FORWARD: (event?: KeyboardEvent) => {
           const [delta, unit] = getCueStepAndUnit(event);
-          return adjustPlaybackPositionBy(delta, unit);
+          return adjustPlaybackPositionBy(delta, unit, { snapToFrames: true });
         },
         REWIND: rewind,
         SELECT_DEFAULT_CAMERA: () => switchToCameraByIndex(0),

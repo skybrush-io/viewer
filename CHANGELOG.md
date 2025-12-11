@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the ground from proximity calculations in multi-stage shows. When all the drones
   are at their takeoff or landing positions, proximity is calculated normally.
 
+### Fixed
+
+- When cueing the show using hotkeys, snap the displayed timestamp to the nearest
+  frame (even though Skybrush shows are technically not based on frames).
+
 ## [2.7.0] - 2025-09-02
 
 ### Added

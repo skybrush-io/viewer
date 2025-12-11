@@ -55,7 +55,7 @@ export function formatPlaybackTimestampAsFrames(
 
   const formattedSeconds = String(Math.floor(seconds)).padStart(2, '0');
   const frames = String(
-    Math.floor((seconds - Math.floor(seconds)) * fps)
+    Math.round((seconds - Math.floor(seconds)) * fps)
   ).padStart(fps >= 10 ? 2 : 1, '0');
   return `${minutes}:${formattedSeconds}+${frames}`;
 }

@@ -61,8 +61,17 @@ export const setPlaybackPosition =
 export const temporarilyOverridePlaybackPosition = (seconds: number) =>
   setAdjustedTo(seconds * 1000);
 
+type AdjustmentOptions = {
+  // Whether to snap the adjusted timestamp to the nearest frame boundary
+  snapToFrames?: boolean;
+};
+
 export const adjustPlaybackPositionBy =
-  (delta: number, unit: 'seconds' | 'frames'): AppThunk =>
+  (
+    delta: number,
+    unit: 'seconds' | 'frames',
+    options: AdjustmentOptions = {}
+  ): AppThunk =>
   (dispatch, getState) => {
     if (!Number.isFinite(delta)) {
       return;
@@ -70,17 +79,21 @@ export const adjustPlaybackPositionBy =
 
     const state = getState();
     const seconds = getElapsedSeconds(state);
+    const fps = getSimulatedPlaybackFrameRate(state);
+    const { snapToFrames = false } = options;
 
     if (unit === 'frames') {
-      const fps = getSimulatedPlaybackFrameRate(state);
       delta = delta / fps;
     }
 
+    const newSeconds = seconds + delta;
     const newPosition = Math.min(
-      Math.max(0, seconds + delta),
+      Math.max(
+        0,
+        snapToFrames ? Math.round(newSeconds * fps) / fps : newSeconds
+      ),
       getShowDuration(state)
     );
-    console.log(newPosition);
 
     dispatch(setPlaybackPosition(newPosition));
   };

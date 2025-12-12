@@ -6,16 +6,18 @@
 
   "files": ["!**/*", "package.json", { "from": "build" }],
 
-  "fileAssociations": [{
-    "ext": "skyc",
-    "description": "Skybrush compiled show file",
-    "role": "Viewer"
-  }],
+  "fileAssociations": [
+    {
+      "ext": "skyc",
+      "description": "Skybrush compiled show file",
+      "role": "Viewer"
+    }
+  ],
 
   "linux": {
     "category": "Utility",
     "target": {
-      "target": "AppImage",
+      "target": "deb",
       "arch": "x64"
     }
   },

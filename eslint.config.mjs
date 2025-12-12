@@ -50,6 +50,13 @@ export default defineConfig(
       // imports in certain cases.
       '@typescript-eslint/consistent-type-imports': 'error',
 
+      // Disable the rule that bans the use of the 'any' type.
+      // We want to be able to use 'any' in certain cases, especially
+      // when dealing with third-party libraries without proper typings.
+      // Also, let's be pragmatic: spending 30+ mins on getting the typing of
+      // an obscure utility function right is probably not worth it.
+      '@typescript-eslint/no-explicit-any': 'off',
+
       // Enable non-null assertions for now; we may want to revisit this later.
       '@typescript-eslint/no-non-null-assertion': 'off',
 

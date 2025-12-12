@@ -3,7 +3,6 @@
 
 import type * as React from 'react';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyKey = Record<string, any>;
 
 type CustomAFrameElement<T = AnyKey> = React.DetailedHTMLProps<

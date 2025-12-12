@@ -1,7 +1,7 @@
 // This file is needed to allow custom A-Frame elements like <a-entity />
 // to be used in TSX files without type errors.
 
-import * as React from 'react';
+import type * as React from 'react';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyKey = Record<string, any>;

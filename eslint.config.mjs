@@ -45,6 +45,11 @@ export default defineConfig(
       // Common agreement within the team.
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
 
+      // Check whether imports are used only as types and enforce using
+      // type-only imports in such cases. This aids with preventing circular
+      // imports in certain cases.
+      '@typescript-eslint/consistent-type-imports': 'error',
+
       // Enable non-null assertions for now; we may want to revisit this later.
       '@typescript-eslint/no-non-null-assertion': 'off',
 

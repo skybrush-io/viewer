@@ -68,4 +68,4 @@ export type ShowLoadingRequest = {
    * in the show.
    */
   initialCameraPose?: Pose;
-}
+};

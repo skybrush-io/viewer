@@ -19,7 +19,7 @@ export type PanelSpecification = {
   component: any;
   priority: number;
   height?: number;
-}
+};
 
 export const PANELS: PanelSpecification[] = [
   {

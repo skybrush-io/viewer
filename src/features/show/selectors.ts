@@ -383,14 +383,14 @@ export const getPyroCues = createSelector(
       payloadName?: string;
       channel?: number;
     }
-    
+
     const allEvents: EventData[] = [];
     const GROUPING_WINDOW = 10; // 10 seconds window for grouping
 
     for (let droneIndex = 0; droneIndex < pyroPrograms.length; droneIndex++) {
       const program = pyroPrograms[droneIndex];
       if (!program) continue;
-      
+
       // We now assume that pyro events are always provided as an array in the form:
       //   [timeSeconds, channel, payloadId]
       if (!Array.isArray(program.events)) {
@@ -428,7 +428,7 @@ export const getPyroCues = createSelector(
               payloadName = payload.name;
             }
           }
-          
+
           allEvents.push({
             time: eventTime,
             droneIndex,
@@ -445,7 +445,7 @@ export const getPyroCues = createSelector(
 
     // Group events within 10-second windows
     const groupedCues: GroupedPyroCue[] = [];
-    
+
     for (const eventData of allEvents) {
       // Find if this event belongs to an existing group (within 10 seconds of the group's first event)
       let addedToGroup = false;
@@ -456,7 +456,10 @@ export const getPyroCues = createSelector(
             group.droneIndices.push(eventData.droneIndex);
           }
           group.events.push(eventData.event);
-          if (eventData.payloadName && !group.payloadNames.includes(eventData.payloadName)) {
+          if (
+            eventData.payloadName &&
+            !group.payloadNames.includes(eventData.payloadName)
+          ) {
             group.payloadNames.push(eventData.payloadName);
           }
           // Set channel if not already set (use first channel found)
@@ -467,7 +470,7 @@ export const getPyroCues = createSelector(
           break;
         }
       }
-      
+
       // If not added to any group, create a new group
       if (!addedToGroup) {
         groupedCues.push({
@@ -479,7 +482,7 @@ export const getPyroCues = createSelector(
         });
       }
     }
-    
+
     return groupedCues;
   }
 );
@@ -492,8 +495,12 @@ export const getMarksFromShowCues = createSelector(
   getCues,
   getPyroCues,
   (cues, pyroCues) => {
-    const marks: Array<{ value: number; label?: string; alwaysVisible?: boolean }> = [];
-    
+    const marks: Array<{
+      value: number;
+      label?: string;
+      alwaysVisible?: boolean;
+    }> = [];
+
     // Add regular cues with always-visible labels
     const cuesByTime = new Map<number, Cue[]>();
     cues.forEach((cue) => {
@@ -503,7 +510,7 @@ export const getMarksFromShowCues = createSelector(
       }
       cuesByTime.get(time)!.push(cue);
     });
-    
+
     cuesByTime.forEach((cuesAtTime, time) => {
       // Get the first cue name, or use a default
       const cueName = cuesAtTime[0]?.name || 'Cue';
@@ -513,27 +520,30 @@ export const getMarksFromShowCues = createSelector(
         alwaysVisible: true,
       });
     });
-    
+
     // Add pyro cues with hover-only labels
     marks.push(
       ...pyroCues.map((cue) => {
         const channel = cue.channel !== undefined ? cue.channel + 1 : undefined;
         const payloadNames = cue.payloadNames || [];
-        let payloadText = payloadNames.length > 0 ? payloadNames.join(', ') : '';
-        
+        let payloadText =
+          payloadNames.length > 0 ? payloadNames.join(', ') : '';
+
         // Truncate long payload names for timeline labels
         if (payloadText.length > 25) {
           payloadText = payloadText.substring(0, 22) + '...';
         }
-        
+
         // Build label: "Ch 6: 30s Gold Glittering Gerb" or "Ch 6"
         let label = '';
         if (channel !== undefined) {
-          label = payloadText ? `Ch ${channel}: ${payloadText}` : `Ch ${channel}`;
+          label = payloadText
+            ? `Ch ${channel}: ${payloadText}`
+            : `Ch ${channel}`;
         } else if (payloadText) {
           label = payloadText;
         }
-        
+
         return {
           value: cue.time,
           label: label || undefined,
@@ -541,7 +551,7 @@ export const getMarksFromShowCues = createSelector(
         };
       })
     );
-    
+
     return marks;
   }
 );
@@ -638,7 +648,6 @@ export const hasPyroControl = createSelector(getPyroPrograms, (pyroPrograms) =>
 export const hasYawControl = createSelector(getYawControls, (yawControls) =>
   yawControls.some((yc) => yc !== undefined)
 );
-
 
 /**
  * Returns an array containing yaw control player objects

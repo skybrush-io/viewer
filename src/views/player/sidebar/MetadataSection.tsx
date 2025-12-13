@@ -115,15 +115,18 @@ export default function MetadataSection() {
             {pyroCues.map((cue, index) => {
               const droneCount = cue.droneIndices.length;
               // Use channel + 1 as channel number if available, otherwise fall back to index + 1
-              const channel = cue.channel !== undefined ? cue.channel + 1 : index + 1;
+              const channel =
+                cue.channel !== undefined ? cue.channel + 1 : index + 1;
               const payloadNames = cue.payloadNames || [];
-              
+
               // Build primary text with payload name right after channel
-              const payloadText = payloadNames.length > 0 ? payloadNames.join(', ') : '';
+              const payloadText =
+                payloadNames.length > 0 ? payloadNames.join(', ') : '';
               // Truncate long payload names to fit better
-              const truncatedPayload = payloadText.length > 30 
-                ? payloadText.substring(0, 27) + '...' 
-                : payloadText;
+              const truncatedPayload =
+                payloadText.length > 30
+                  ? payloadText.substring(0, 27) + '...'
+                  : payloadText;
               const primaryText = truncatedPayload
                 ? t('inspector.metadata.pyroCueItemWithNumber', {
                     channel,
@@ -134,10 +137,10 @@ export default function MetadataSection() {
                     channel,
                     count: droneCount,
                   });
-              
+
               // Build secondary text with timestamp
               const secondaryText = formatTimestamp(cue.time);
-              
+
               return (
                 <MiniListItem
                   key={index}

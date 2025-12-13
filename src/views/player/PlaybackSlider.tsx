@@ -32,15 +32,16 @@ const StyledPlaybackSlider = styled(PlaybackSliderBase)`
     pointer-events: none;
     transition: opacity 0.2s ease-in-out;
   }
-  
+
   /* Always visible labels for regular cues */
   .MuiSlider-markLabel[data-always-visible='true'] {
     opacity: 1;
     pointer-events: auto;
   }
-  
+
   /* Hover-only labels for pyro cues */
-  .MuiSlider-mark:hover + .MuiSlider-markLabel:not([data-always-visible='true']),
+  .MuiSlider-mark:hover
+    + .MuiSlider-markLabel:not([data-always-visible='true']),
   .MuiSlider-markLabel:not([data-always-visible='true']):hover {
     opacity: 1;
     pointer-events: auto;
@@ -67,7 +68,8 @@ const PlaybackSliderWithLabelAttributes = (props: any) => {
 
       // Match labels to marks by their value
       marks.forEach((mark) => {
-        const valueAttr = mark.getAttribute('aria-valuenow') || mark.getAttribute('data-value');
+        const valueAttr =
+          mark.getAttribute('aria-valuenow') || mark.getAttribute('data-value');
         if (valueAttr) {
           const value = parseFloat(valueAttr);
           const markData = markDataMap.get(value);

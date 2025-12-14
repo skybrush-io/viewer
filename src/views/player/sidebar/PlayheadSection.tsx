@@ -1,4 +1,3 @@
-import React from 'react';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 import LCDText from '~/components/LCDText';
@@ -6,10 +5,10 @@ import {
   getElapsedSecondsGetter,
   isPlaying,
 } from '~/features/playback/selectors';
-import { useAppSelector } from '~/hooks/store';
-import { formatPlaybackTimestampAsFrames } from '~/utils/formatters';
-import usePeriodicRefresh from '~/hooks/usePeriodicRefresh';
 import { getSimulatedPlaybackFrameRate } from '~/features/settings/selectors';
+import { useAppSelector } from '~/hooks/store';
+import usePeriodicRefresh from '~/hooks/usePeriodicRefresh';
+import { formatPlaybackTimestampAsFrames } from '~/utils/formatters';
 
 export default function PlayheadSection() {
   const theme = useTheme();

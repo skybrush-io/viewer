@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import { type Theme } from '@mui/material/styles';
@@ -9,14 +7,14 @@ import { isThemeDark } from '@skybrush/app-theme-mui';
 
 import SkybrushLogo from '~/components/SkybrushLogo';
 import { PLAYER_SIDEBAR_WIDTH } from '~/constants';
-import { isSidebarOpen } from '~/features/sidebar/slice';
 import { getActiveSidebarTab } from '~/features/sidebar/selectors';
+import { isSidebarOpen } from '~/features/sidebar/slice';
 import { SidebarTab } from '~/features/sidebar/types';
 import { useAppSelector } from '~/hooks/store';
 
+import InspectorTab from './InspectorTab';
 import PlayerSidebarTabs from './PlayerSidebarTabs';
 import SettingsTab from './SettingsTab';
-import InspectorTab from './InspectorTab';
 
 const styles = {
   contents: {

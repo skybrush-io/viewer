@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 
 import Box, { type BoxProps } from '@mui/material/Box';
@@ -48,22 +47,22 @@ type TopOverlayProps = BoxProps & {
  * Overlay at the top of the window that acts as a draggable area on macOS
  * to allow the window to be moved around.
  */
-const TopOverlay = React.forwardRef(
-  (
-    { hasShow, onRotateViewToDrones, onResetZoom, ...rest }: TopOverlayProps,
-    ref
-  ) => (
-    <Box ref={ref} sx={style} {...rest}>
-      <WindowDragMoveArea />
-      {hasShow && (
-        <Box sx={buttonBarStyle}>
-          <ZoomOutButton onClick={onResetZoom} />
-          <CameraSelectorChip />
-          <TrackDronesButton onClick={onRotateViewToDrones} />
-        </Box>
-      )}
-    </Box>
-  )
+const TopOverlay = ({
+  hasShow,
+  onRotateViewToDrones,
+  onResetZoom,
+  ...rest
+}: TopOverlayProps) => (
+  <Box sx={style} {...rest}>
+    <WindowDragMoveArea />
+    {hasShow && (
+      <Box sx={buttonBarStyle}>
+        <ZoomOutButton onClick={onResetZoom} />
+        <CameraSelectorChip />
+        <TrackDronesButton onClick={onRotateViewToDrones} />
+      </Box>
+    )}
+  </Box>
 );
 
 export default connect(

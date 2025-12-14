@@ -1,15 +1,14 @@
-import type { TFunction } from 'i18next';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import Box from '@mui/material/Box';
 import Alarm from '@mui/icons-material/Alarm';
 import Explore from '@mui/icons-material/Explore';
 import Flare from '@mui/icons-material/Flare';
 import Landscape from '@mui/icons-material/Landscape';
-import VolumeUp from '@mui/icons-material/VolumeUp';
 import Tag from '@mui/icons-material/Tag';
+import VolumeUp from '@mui/icons-material/VolumeUp';
+import Box from '@mui/material/Box';
 import MiniList from '@skybrush/mui-components/lib/MiniList';
 import MiniListItem from '@skybrush/mui-components/lib/MiniListItem';
+import type { TFunction } from 'i18next';
+import { useTranslation } from 'react-i18next';
 import { hasAudio } from '~/features/audio/selectors';
 import {
   getNumberOfDronesInShow,

@@ -1,9 +1,8 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 import Share from '@mui/icons-material/Share';
+import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 import Tooltip from '@skybrush/mui-components/lib/Tooltip';
 
 import { hasLoadedShowFile } from '~/features/show/selectors';

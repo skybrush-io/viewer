@@ -1,5 +1,5 @@
 import Color from 'color';
-import React from 'react';
+import type React from 'react';
 
 import Close from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';

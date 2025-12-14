@@ -1,8 +1,7 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 import CenterFocusStrong from '@mui/icons-material/CenterFocusStrong';
+import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 import Tooltip from '@skybrush/mui-components/lib/Tooltip';
 
 const TrackDronesButton = (props: IconButtonProps) => {

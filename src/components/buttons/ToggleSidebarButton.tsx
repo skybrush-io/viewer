@@ -1,9 +1,8 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 
-import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 import MenuOpen from '@mui/icons-material/MenuOpen';
+import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 import Tooltip from '@skybrush/mui-components/lib/Tooltip';
 
 import { isSidebarOpen, toggleSidebar } from '~/features/sidebar/slice';

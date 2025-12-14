@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 import isNil from 'lodash-es/isNil';
-import React from 'react';
+import type React from 'react';
 import { connect } from 'react-redux';
 import { FixedSizeList as List } from 'react-window';
 

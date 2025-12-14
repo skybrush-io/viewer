@@ -1,25 +1,25 @@
-import React, { useRef } from 'react';
-import { Color as ThreeJsColor } from 'three';
 import Colorize from '@mui/icons-material/Colorize';
 import LocationOn from '@mui/icons-material/LocationOn';
 import NorthEast from '@mui/icons-material/NorthEast';
+import MiniList from '@skybrush/mui-components/lib/MiniList';
+import MiniListItem from '@skybrush/mui-components/lib/MiniListItem';
 import type {
   Color,
   LightProgramPlayer,
   TrajectoryPlayer,
   Vector3,
 } from '@skybrush/show-format';
+import { useRef } from 'react';
+import { Color as ThreeJsColor } from 'three';
 import VectorDisplay from '~/components/VectorDisplay';
 import {
   getElapsedSecondsGetter,
   isPlaying,
 } from '~/features/playback/selectors';
-import { useAppSelector } from '~/hooks/store';
-import MiniList from '@skybrush/mui-components/lib/MiniList';
-import MiniListItem from '@skybrush/mui-components/lib/MiniListItem';
-import { ICON_STYLE } from './MetadataSection';
-import usePeriodicRefresh from '~/hooks/usePeriodicRefresh';
 import { getValidationSettings } from '~/features/validation/selectors';
+import { useAppSelector } from '~/hooks/store';
+import usePeriodicRefresh from '~/hooks/usePeriodicRefresh';
+import { ICON_STYLE } from './MetadataSection';
 
 type DroneInspectorSectionProps = Readonly<{
   index: number;

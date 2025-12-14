@@ -4,7 +4,8 @@
 
 import config from 'config';
 
-import React, { useEffect, useState } from 'react';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import '~/aframe';
@@ -51,6 +52,7 @@ type ThreeDViewProps = {
     parameters: any;
   };
   readonly numDrones: number;
+  readonly ref: React.Ref<HTMLElement>;
   readonly scaleLabels: boolean;
   readonly scenery: SceneryType;
   readonly showId: number;
@@ -65,7 +67,7 @@ const DEFAULT_CAMERA_CONFIGURATION = {
   rotation: [0, 0, 0],
 };
 
-const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
+const ThreeDView = (props: ThreeDViewProps) => {
   const {
     axes,
     cameraConfiguration = DEFAULT_CAMERA_CONFIGURATION,
@@ -75,6 +77,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
     grid,
     navigation,
     numDrones,
+    ref,
     scaleLabels,
     scenery,
     showId,
@@ -133,7 +136,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
 
   return (
     <a-scene
-      ref={ref as any}
+      ref={ref}
       deallocate
       keyboard-shortcuts={objectToString({ enterVR: vrEnabled })}
       loading-screen='backgroundColor: #444; dotsColor: #888'
@@ -178,7 +181,7 @@ const ThreeDView = React.forwardRef((props: ThreeDViewProps, ref) => {
       <Scenery type={scenery} grid={grid} />
     </a-scene>
   );
-});
+};
 
 export default connect(
   // mapStateToProps

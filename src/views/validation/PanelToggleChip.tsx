@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Chip, { type ChipProps } from '@mui/material/Chip';
 
 const style = {

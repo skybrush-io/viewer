@@ -1,7 +1,5 @@
-import React from 'react';
-
-import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 import Refresh from '@mui/icons-material/Refresh';
+import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 import Tooltip from '@skybrush/mui-components/lib/Tooltip';
 import { useTranslation } from 'react-i18next';
 

@@ -1,9 +1,8 @@
 import config from 'config';
 import { t } from 'i18next';
-import React from 'react';
 import { connect } from 'react-redux';
 
-import Box from '@mui/material/Box';
+import Box, { type BoxProps } from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import MuteButton from '@skybrush/mui-components/lib/MuteButton';
 import PlayStopButton from '@skybrush/mui-components/lib/PlayStopButton';
@@ -73,89 +72,84 @@ type BottomOverlayProps = {
   readonly onReloadShow: () => void;
   readonly onToggleMuted: () => void;
   readonly onTogglePlayback: () => void;
-};
+} & Pick<BoxProps, 'ref'>;
 
-const BottomOverlay = React.forwardRef(
-  (
-    {
-      canLoadShowFromLocalFile,
-      canReloadShow,
-      canTogglePlayback,
-      duration,
-      formatPlaybackTimestamp,
-      hasAudio,
-      hasShow,
-      leftText,
-      muted,
-      playing,
-      rightText,
-      onLoadShowFromLocalFile,
-      onReloadShow,
-      onToggleMuted,
-      onTogglePlayback,
-      ...rest
-    }: BottomOverlayProps,
-    ref
-  ) => (
-    <Box ref={ref} sx={style} {...rest}>
-      <Box display='flex' alignItems='center'>
-        {canLoadShowFromLocalFile && (
-          <Box pl={1} mr={-1}>
-            <OpenButton disabled={playing} onClick={onLoadShowFromLocalFile} />
-          </Box>
+const BottomOverlay = ({
+  canLoadShowFromLocalFile,
+  canReloadShow,
+  canTogglePlayback,
+  duration,
+  formatPlaybackTimestamp,
+  hasAudio,
+  hasShow,
+  leftText,
+  muted,
+  playing,
+  rightText,
+  onLoadShowFromLocalFile,
+  onReloadShow,
+  onToggleMuted,
+  onTogglePlayback,
+  ...rest
+}: BottomOverlayProps) => (
+  <Box sx={style} {...rest}>
+    <Box display='flex' alignItems='center'>
+      {canLoadShowFromLocalFile && (
+        <Box pl={1} mr={-1}>
+          <OpenButton disabled={playing} onClick={onLoadShowFromLocalFile} />
+        </Box>
+      )}
+      {config.buttons.reload && (
+        <Box pl={1} mr={-1}>
+          <ReloadButton disabled={!canReloadShow} onClick={onReloadShow} />
+        </Box>
+      )}
+      <Box px={2}>
+        <PlayStopButton
+          edge='start'
+          disabled={!canTogglePlayback}
+          playing={playing}
+          onClick={onTogglePlayback}
+        />
+        {hasAudio && <MuteButton muted={muted} onClick={onToggleMuted} />}
+      </Box>
+      <Box flex={1} textAlign='center' pt={0.5}>
+        <PlaybackSlider />
+      </Box>
+      <Box textAlign='right' pl={2}>
+        {formatPlaybackTimestamp(duration)}
+      </Box>
+      <Box px={1}>
+        {config.modes.deepLinking && <ShareButton />}
+        {config.modes.vr && (
+          <IconButton id='vr-button' size='large'>
+            <VirtualReality />
+          </IconButton>
         )}
-        {config.buttons.reload && (
-          <Box pl={1} mr={-1}>
-            <ReloadButton disabled={!canReloadShow} onClick={onReloadShow} />
-          </Box>
+        {config.modes.validation && (
+          <ToggleValidationModeButton disabled={!hasShow} />
         )}
-        <Box px={2}>
-          <PlayStopButton
-            edge='start'
-            disabled={!canTogglePlayback}
-            playing={playing}
-            onClick={onTogglePlayback}
-          />
-          {hasAudio && <MuteButton muted={muted} onClick={onToggleMuted} />}
-        </Box>
-        <Box flex={1} textAlign='center' pt={0.5}>
-          <PlaybackSlider />
-        </Box>
-        <Box textAlign='right' pl={2}>
-          {formatPlaybackTimestamp(duration)}
-        </Box>
-        <Box px={1}>
-          {config.modes.deepLinking && <ShareButton />}
-          {config.modes.vr && (
-            <IconButton id='vr-button' size='large'>
-              <VirtualReality />
-            </IconButton>
-          )}
-          {config.modes.validation && (
-            <ToggleValidationModeButton disabled={!hasShow} />
-          )}
-          <ShowHotkeysDialogButton />
-          <ToggleSidebarButton />
+        <ShowHotkeysDialogButton />
+        <ToggleSidebarButton />
+      </Box>
+    </Box>
+
+    {leftText || rightText ? (
+      <Box
+        display='flex'
+        alignItems='center'
+        maxWidth='100%'
+        minHeight={24}
+        px={2}
+      >
+        <Box style={noWrap}>{leftText}</Box>
+        <Box flex={1}> </Box>
+        <Box style={{ ...noWrap, opacity: 0.5 }} textAlign='right'>
+          {rightText}
         </Box>
       </Box>
-
-      {leftText || rightText ? (
-        <Box
-          display='flex'
-          alignItems='center'
-          maxWidth='100%'
-          minHeight={24}
-          px={2}
-        >
-          <Box style={noWrap}>{leftText}</Box>
-          <Box flex={1}> </Box>
-          <Box style={{ ...noWrap, opacity: 0.5 }} textAlign='right'>
-            {rightText}
-          </Box>
-        </Box>
-      ) : null}
-    </Box>
-  )
+    ) : null}
+  </Box>
 );
 
 const CURRENT_YEAR = new Date().getFullYear();

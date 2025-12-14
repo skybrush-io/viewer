@@ -1,18 +1,17 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
 import Search from '@mui/icons-material/Search';
 import Settings from '@mui/icons-material/Settings';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 
 import Tooltip from '@skybrush/mui-components/lib/Tooltip';
 
-import { getActiveSidebarTab } from '~/features/sidebar/selectors';
-import { SidebarTab } from '~/features/sidebar/types';
-import { setActiveSidebarTab } from '~/features/sidebar/slice';
-import { useAppDispatch, useAppSelector } from '~/hooks/store';
 import type { CSSProperties } from '@mui/material';
+import { getActiveSidebarTab } from '~/features/sidebar/selectors';
+import { setActiveSidebarTab } from '~/features/sidebar/slice';
+import { SidebarTab } from '~/features/sidebar/types';
+import { useAppDispatch, useAppSelector } from '~/hooks/store';
 
 /**
  * For some reason, there is a yellow focus ring around the icons when

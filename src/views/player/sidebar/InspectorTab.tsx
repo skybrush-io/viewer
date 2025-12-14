@@ -1,12 +1,11 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
+import { useTranslation } from 'react-i18next';
 
-import { Accordion, AccordionSummary, AccordionDetails } from './Accordion';
+import { Accordion, AccordionDetails, AccordionSummary } from './Accordion';
 import CueSheetAccordion from './CueSheetAccordion';
 import MetadataSection from './MetadataSection';
-import SelectedDroneAccordions from './SelectedDroneAccordions';
 import PlayheadSection from './PlayheadSection';
+import SelectedDroneAccordions from './SelectedDroneAccordions';
 
 /**
  * The inspector tab of the player sidebar.

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import FormControl from '@mui/material/FormControl';
@@ -7,8 +6,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 
 import { useAppDispatch, useAppSelector } from '~/hooks/store';
-import { getDroneModel } from './selectors';
 import { setDroneModel } from './actions';
+import { getDroneModel } from './selectors';
 import { isValidDroneModelType } from './types';
 
 /**

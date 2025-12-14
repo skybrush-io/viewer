@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import FormControl from '@mui/material/FormControl';
@@ -9,8 +8,8 @@ import Select from '@mui/material/Select';
 import { useAppDispatch, useAppSelector } from '~/hooks/store';
 import type { SceneryType } from '~/views/player/Scenery';
 
-import { getScenery } from './selectors';
 import { setScenery } from './actions';
+import { getScenery } from './selectors';
 
 /**
  * Component for selecting the playback speed.

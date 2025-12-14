@@ -1,8 +1,6 @@
-import React from 'react';
-
-import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 import VolumeOff from '@mui/icons-material/VolumeOff';
 import VolumeUp from '@mui/icons-material/VolumeUp';
+import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 
 const VolumeButton = ({
   muted,

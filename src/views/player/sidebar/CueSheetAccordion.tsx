@@ -1,13 +1,12 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { MiniList, MiniListItemButton } from '@skybrush/mui-components';
 import { type Cue } from '@skybrush/show-format';
+import { useTranslation } from 'react-i18next';
 import { getCues } from '~/features/show/selectors';
 import { useAppDispatch, useAppSelector } from '~/hooks/store';
 import { formatPlaybackTimestamp } from '~/utils/formatters';
 
-import { Accordion, AccordionSummary, AccordionDetails } from './Accordion';
 import { setPlaybackPosition } from '~/features/playback/actions';
+import { Accordion, AccordionDetails, AccordionSummary } from './Accordion';
 
 const CueSheetSection = ({ cues }: { cues: readonly Cue[] }) => {
   const dispatch = useAppDispatch();

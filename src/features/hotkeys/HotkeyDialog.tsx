@@ -2,7 +2,8 @@
  * @file React Component for handling hotkeys.
  */
 
-import React, { useEffect, useState } from 'react';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 import {
   getApplicationKeyMap,
   type KeyMapDisplayOptions,
@@ -22,11 +23,11 @@ import DraggableDialog from '@skybrush/mui-components/lib/DraggableDialog';
 
 import { isRunningOnMac, platformModifierKey } from '~/utils/platform';
 
+import { useTranslation } from 'react-i18next';
+import type { RootState } from '~/store';
 import { HotkeyGroup } from './keymap';
 import { isHotkeyDialogVisible } from './selectors';
 import { closeHotkeyDialog } from './slice';
-import type { RootState } from '~/store';
-import { useTranslation } from 'react-i18next';
 
 /**
  * Formats the given hotkey sequence to make it suitable for the user.

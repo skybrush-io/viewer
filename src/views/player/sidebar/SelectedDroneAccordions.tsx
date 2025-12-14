@@ -1,17 +1,16 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
-import { useAppSelector } from '~/hooks/store';
+import { useTranslation } from 'react-i18next';
 import { getSelectedDroneIndices } from '~/features/selection/selectors';
 import {
   getLightProgramPlayers,
   getNamesOfDronesInShow,
   getTrajectoryPlayers,
 } from '~/features/show/selectors';
-import { Accordion, AccordionSummary, AccordionDetails } from './Accordion';
-import DroneInspectorSection from './DroneInspectorSection';
-import { isRunningOnMac } from '~/utils/platform';
+import { useAppSelector } from '~/hooks/store';
 import { formatDroneIndex } from '~/utils/formatters';
+import { isRunningOnMac } from '~/utils/platform';
+import { Accordion, AccordionDetails, AccordionSummary } from './Accordion';
+import DroneInspectorSection from './DroneInspectorSection';
 
 export default function SelectedDroneAccordions() {
   const { t } = useTranslation();

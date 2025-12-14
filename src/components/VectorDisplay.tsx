@@ -1,6 +1,6 @@
-import clsx from 'clsx';
-import React, { Fragment } from 'react';
 import { styled } from '@mui/material';
+import clsx from 'clsx';
+import { Fragment } from 'react';
 
 type Vector3DProps = Readonly<{
   value: number[];

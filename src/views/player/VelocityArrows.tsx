@@ -1,12 +1,12 @@
-import React, { useRef } from 'react';
 import type { TrajectoryPlayer, Vector3 } from '@skybrush/show-format';
-import { getTrajectoryPlayers } from '~/features/show/selectors';
-import { useAppSelector } from '~/hooks/store';
+import { useRef } from 'react';
 import {
   getElapsedSecondsGetter,
   isPlaying,
 } from '~/features/playback/selectors';
 import { getSelectedDroneIndices } from '~/features/selection/selectors';
+import { getTrajectoryPlayers } from '~/features/show/selectors';
+import { useAppSelector } from '~/hooks/store';
 import usePeriodicRefresh from '~/hooks/usePeriodicRefresh';
 
 type VelocityArrowProps = {

@@ -1,5 +1,4 @@
 import config from 'config';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 

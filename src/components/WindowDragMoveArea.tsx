@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Box, { type BoxProps } from '@mui/material/Box';
 import { systemFont } from '@skybrush/app-theme-mui';
 

@@ -1,7 +1,6 @@
 import config from 'config';
 import get from 'lodash-es/get';
 import maxBy from 'lodash-es/maxBy';
-import uniq from 'lodash-es/uniq';
 
 import { createSelector } from '@reduxjs/toolkit';
 
@@ -373,8 +372,7 @@ export type GroupedPyroCue = {
  */
 export const getPyroCues = createSelector(
   getPyroPrograms,
-  getDroneSwarmSpecification,
-  (pyroPrograms, swarm): readonly GroupedPyroCue[] => {
+  (pyroPrograms): readonly GroupedPyroCue[] => {
     // First, collect all individual events with their metadata
     interface EventData {
       time: number;

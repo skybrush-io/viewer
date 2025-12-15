@@ -10,7 +10,6 @@ import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { hasAudio } from '~/features/audio/selectors';
 import {
-  getNamesOfDronesInShow,
   getNumberOfDronesInShow,
   getPyroCues,
   getShowDurationAsString,
@@ -21,7 +20,6 @@ import {
   hasYawControl,
 } from '~/features/show/selectors';
 import { useAppSelector } from '~/hooks/store';
-import { formatDroneIndex } from '~/utils/formatters';
 
 // t('inspector.metadata.environment.indoor')
 // t('inspector.metadata.environment.outdoor')
@@ -44,7 +42,6 @@ export default function MetadataSection() {
   const isPyroControlled = useAppSelector(hasPyroControl);
   const pyroCues = useAppSelector(getPyroCues);
   const formatTimestamp = useAppSelector(getTimestampFormatter);
-  const droneNames = useAppSelector(getNamesOfDronesInShow);
 
   return (
     <Box sx={{ px: 2 }}>

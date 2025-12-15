@@ -27,7 +27,10 @@ import {
   type YawControl,
 } from '@skybrush/show-format';
 
-import { DEFAULT_CAMERA_NAME_PLACEHOLDER } from '~/constants';
+import {
+  DEFAULT_CAMERA_NAME_PLACEHOLDER,
+  PYRO_GROUPING_WINDOW,
+} from '~/constants';
 import type { RootState } from '~/store';
 import { formatDroneIndex, formatPlaybackTimestamp } from '~/utils/formatters';
 import type { ShowDataSource } from './types';
@@ -383,7 +386,6 @@ export const getPyroCues = createSelector(
     }
 
     const allEvents: EventData[] = [];
-    const GROUPING_WINDOW = 10; // 10 seconds window for grouping
 
     for (let droneIndex = 0; droneIndex < pyroPrograms.length; droneIndex++) {
       const program = pyroPrograms[droneIndex];
@@ -448,7 +450,7 @@ export const getPyroCues = createSelector(
       // Find if this event belongs to an existing group (within 10 seconds of the group's first event)
       let addedToGroup = false;
       for (const group of groupedCues) {
-        if (eventData.time <= group.time + GROUPING_WINDOW) {
+        if (eventData.time <= group.time + PYRO_GROUPING_WINDOW) {
           // Add to existing group
           if (!group.droneIndices.includes(eventData.droneIndex)) {
             group.droneIndices.push(eventData.droneIndex);

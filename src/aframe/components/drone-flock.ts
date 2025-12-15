@@ -19,7 +19,7 @@ import type {
   YawControlPlayer,
 } from '@skybrush/show-format';
 
-import { DEFAULT_DRONE_MODEL } from '~/constants';
+import { DEFAULT_DRONE_MODEL, DEFAULT_PYRO_DURATION } from '~/constants';
 import {
   getElapsedSecondsGetter,
   type TimestampGetter,
@@ -590,9 +590,6 @@ AFrame.registerComponent('drone-flock', {
       //   [timeSeconds, channel, payloadId]
       let hasActivePyro = false;
       if (pyroProgram && Array.isArray(pyroProgram.events)) {
-        // Default duration if not specified in payload (0.5 seconds)
-        const DEFAULT_PYRO_DURATION = 0.5;
-
         for (const event of pyroProgram.events) {
           if (!Array.isArray(event) || event.length === 0) {
             continue;

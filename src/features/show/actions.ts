@@ -1,4 +1,6 @@
 import type { ShowSpecification } from '@skybrush/show-format';
+
+import { addRecentFile } from '~/features/ui/slice';
 import type { AppThunk } from '~/store';
 import { getElectronBridge } from '~/window';
 
@@ -18,6 +20,7 @@ export const loadShowFromLocalFile =
       dispatch(
         loadShowFromRequest({ show, source: { type: 'file', filename } })
       );
+      dispatch(addRecentFile(filename));
     }
   };
 

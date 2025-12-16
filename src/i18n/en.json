@@ -33,7 +33,8 @@
   "generic": {
     "no": "No",
     "yes": "Yes",
-    "pleaseWait": "Please wait…"
+    "pleaseWait": "Please wait…",
+    "recents": "Recents"
   },
   "hotkeys": {
     "cueBackward": "Cue backward (Shift = 10x, Alt = by frames)",

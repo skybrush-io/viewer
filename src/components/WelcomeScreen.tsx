@@ -54,6 +54,7 @@ const WelcomeScreen = ({
               <MiniList>
                 {recentFiles.map((rf) => (
                   <MiniListItemButton
+                    key={rf}
                     onClick={() => {
                       onLoadShowFromLocalFile(rf);
                     }}

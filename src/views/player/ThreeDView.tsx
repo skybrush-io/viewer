@@ -52,7 +52,7 @@ type ThreeDViewProps = {
     parameters: any;
   };
   readonly numDrones: number;
-  readonly ref: React.Ref<HTMLElement>;
+  readonly ref?: React.Ref<HTMLElement>;
   readonly scaleLabels: boolean;
   readonly scenery: SceneryType;
   readonly showId: number;

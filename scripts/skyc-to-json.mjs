@@ -1,10 +1,8 @@
 import { promises as fs } from 'node:fs';
 import process from 'node:process';
 
+import { loadCompiledShow } from '@skybrush/show-format';
 import { program } from 'commander';
-import showFormat from '@skybrush/show-format';
-
-const { loadCompiledShow } = showFormat;
 
 program
   .storeOptionsAsProperties(false)
@@ -12,6 +10,9 @@ program
   .requiredOption('-o, --output <filename>', 'name of the output file')
   .parse(process.argv);
 
+/**
+ * @param {{input: string, output: string}} options
+ */
 async function main(options) {
   const data = await fs.readFile(options.input);
   const show = await loadCompiledShow(data);

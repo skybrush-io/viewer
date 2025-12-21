@@ -15,7 +15,7 @@ import { findSceneCamera } from '~/views/player/utils';
 
 const toWXYZ = (xyzw: number[]): number[] => [xyzw[3], ...xyzw.slice(0, 3)];
 
-export function getSharingLink(): AppThunk {
+export function getSharingLink(): AppThunk<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState();
     const playbackPosition = getElapsedSeconds(state);

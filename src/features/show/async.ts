@@ -43,5 +43,5 @@ export const _doLoadShow = createAsyncThunk(
 
 export const withProgressIndicator = createAsyncThunk(
   'show/withProgressIndicator',
-  async <T>(promise: any): Promise<T> => promise
-) as any;
+  <T>(promise: any): Promise<T> => promise
+);

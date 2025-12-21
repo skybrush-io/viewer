@@ -36,7 +36,7 @@ import { DEFAULT_CAMERA_ORIENTATION, getCameraPose } from './utils';
 
 export const canLoadShowFromLocalFile = (): boolean => config.io.localFiles;
 
-const EMPTY_ARRAY = Object.freeze([]);
+const EMPTY_ARRAY: readonly unknown[] = Object.freeze([]);
 const EMPTY_OBJECT = Object.freeze({});
 const DEFAULT_CAMERAS: Record<string, Camera[]> = {
   // Skybrush coordinate system: X points forward, Y points left, Z points up.
@@ -76,7 +76,7 @@ export const getShowDataSource = (state: RootState): ShowDataSource =>
  */
 export const getShowSpecification = (
   state: RootState
-): ShowSpecification | undefined => get(state, 'show.data');
+): ShowSpecification | undefined => state.show?.data ?? undefined;
 
 /**
  * Returns the metadata of the show, if any.
@@ -190,11 +190,9 @@ export const getCommonShowSettings = createSelector(
  */
 export const getDroneSwarmSpecification = (
   state: RootState
-): DroneSpecification[] => {
-  const result = get(state, 'show.data.swarm.drones');
-  return Array.isArray(result)
-    ? result
-    : (EMPTY_ARRAY as any as DroneSpecification[]);
+): readonly DroneSpecification[] => {
+  const result = state.show?.data?.swarm?.drones;
+  return Array.isArray(result) ? result : (EMPTY_ARRAY as DroneSpecification[]);
 };
 
 /**
@@ -207,7 +205,7 @@ export const getLoadedShowId = (state: RootState): number => state.show.id;
  * Selector that returns the type of the show (indoor or outdoor).
  */
 export const getShowEnvironmentType = (state: RootState): string =>
-  get(state, 'show.data.environment.type') || 'outdoor';
+  state.show?.data?.environment?.type ?? 'outdoor';
 
 /**
  * Selector that returns whether the show is indoor.
@@ -319,7 +317,7 @@ export const getCues = createSelector(
   getCommonShowSettings,
   (settings): readonly Cue[] => {
     const cues = settings?.cues?.items;
-    return Array.isArray(cues) ? cues : EMPTY_ARRAY;
+    return Array.isArray(cues) ? cues : (EMPTY_ARRAY as Cue[]);
   }
 );
 
@@ -329,7 +327,7 @@ export const getCues = createSelector(
  */
 const getLightPrograms = createSelector(
   getDroneSwarmSpecification,
-  (swarm: DroneSpecification[]) =>
+  (swarm: readonly DroneSpecification[]) =>
     swarm.map((drone: DroneSpecification) => {
       const program = drone.settings?.lights;
       return isValidLightProgram(program) ? program : undefined;
@@ -427,11 +425,9 @@ export const getTrajectoryPlayers = createSelector(
  */
 const getPyroPrograms = createSelector(
   getDroneSwarmSpecification,
-  (swarm: DroneSpecification[]) =>
+  (swarm: readonly DroneSpecification[]) =>
     swarm.map((drone: DroneSpecification) => {
-      // TODO(ntamas): remove cast to any when we have updated @skybrush/show-format
-      // with the pyro property
-      const program = (drone.settings as any)?.pyro;
+      const program = drone.settings?.pyro;
       return isValidPyroProgram(program) ? program : undefined;
     })
 );

@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 
 import CameraSelectorChip from '~/components/CameraSelectorChip';
+import { cameraTriggerActions, keyMap } from '~/features/hotkeys/keymap';
 import { getPerspectiveCamerasAndDefaultCamera } from '~/features/show/selectors';
 import { switchToCameraByIndex } from '~/features/three-d/actions';
 import { getSelectedCameraIndex } from '~/features/three-d/selectors';
-import { cameraTriggerActions, keyMap } from '~/features/hotkeys/keymap';
 import type { RootState } from '~/store';
 
 const getFirstSequence = (keyMapItem: {
@@ -19,7 +19,7 @@ const getFirstSequence = (keyMapItem: {
     Array.isArray(keyMapItem.sequences) &&
     keyMapItem.sequences.length > 0
   ) {
-    return keyMapItem.sequences![0];
+    return keyMapItem.sequences[0];
   }
 };
 

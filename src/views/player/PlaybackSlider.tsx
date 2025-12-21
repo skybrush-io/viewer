@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import PlaybackSlider from '@skybrush/mui-components/lib/PlaybackSlider';
+import { PlaybackSlider } from '@skybrush/mui-components';
 
 import {
   setPlaybackPosition,
@@ -11,14 +11,13 @@ import {
   isAdjustingPlaybackPosition,
   isPlaying,
 } from '~/features/playback/selectors';
+import { getPlaybackSliderStepSize } from '~/features/settings/selectors';
 import {
   getMarksFromShowCues,
   getShowDuration,
   getTimestampFormatter,
 } from '~/features/show/selectors';
-
 import type { RootState } from '~/store';
-import { getPlaybackSliderStepSize } from '~/features/settings/selectors';
 
 export default connect(
   // mapStateToProps

@@ -2,13 +2,15 @@ import fs from 'node:fs/promises';
 
 import { get } from 'lodash-es';
 
-import showFormat from '@skybrush/show-format';
+import { loadCompiledShow } from '@skybrush/show-format';
 
 import { getUrlToAudioBuffer, setAudioBuffer } from './media-buffers.mjs';
 import { setTitle } from './window-title.mjs';
 
-const { loadCompiledShow } = showFormat;
-
+/**
+ * @param {string} filename
+ * @param {Electron.BrowserWindow} window
+ */
 export const getShowAsObjectFromLocalFile = async (filename, window) => {
   const contents = await fs.readFile(filename);
 
@@ -24,6 +26,10 @@ export const getShowAsObjectFromLocalFile = async (filename, window) => {
   return showSpec;
 };
 
+/**
+ * @param {Buffer<ArrayBufferLike>} buffer
+ * @param {Electron.BrowserWindow} window
+ */
 export const getShowAsObjectFromBuffer = async (buffer, window) => {
   const showSpec = await loadCompiledShow(buffer, { assets: true });
 

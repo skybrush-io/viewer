@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 
 import { Keyboard } from '@mui/icons-material';
 import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
-import Tooltip from '@skybrush/mui-components/lib/Tooltip';
+import { Tooltip } from '@skybrush/mui-components';
 
 import { useAppDispatch } from '~/hooks/store';
 import { showHotkeyDialog } from './slice';

@@ -130,6 +130,22 @@ function getInitialShowLoadingRequest(): ShowLoadingRequest | undefined {
   }
 }
 
+function isPositionTuple(x: unknown): x is [number, number, number] {
+  return (
+    Array.isArray(x) &&
+    x.length === 3 &&
+    x.every((v) => typeof v === 'number' && Number.isFinite(v))
+  );
+}
+
+function isQuaternionTuple(x: unknown): x is [number, number, number, number] {
+  return (
+    Array.isArray(x) &&
+    x.length === 4 &&
+    x.every((v) => typeof v === 'number' && Number.isFinite(v))
+  );
+}
+
 function parsePoseFromURLParam(value: string): Pose | null {
   let pose;
 
@@ -139,21 +155,14 @@ function parsePoseFromURLParam(value: string): Pose | null {
     return null;
   }
 
-  if (
-    typeof pose === 'object' &&
-    pose.p &&
-    pose.q &&
-    Array.isArray(pose.p) &&
-    Array.isArray(pose.q) &&
-    pose.p.length === 3 &&
-    pose.q.length === 4 &&
-    pose.p.every((x: any) => typeof x === 'number') &&
-    pose.q.every((x: any) => typeof x === 'number')
-  ) {
-    return {
-      position: pose.p,
-      orientation: pose.q,
-    };
+  if (typeof pose === 'object') {
+    const { p, q } = pose;
+    if (isPositionTuple(p) && isQuaternionTuple(q)) {
+      return {
+        position: p,
+        orientation: q,
+      };
+    }
   }
 
   return null;
@@ -237,7 +246,9 @@ export class SkybrushViewer {
 
     root.render(<App initialShow={initialShow} />);
 
-    return root.unmount;
+    return () => {
+      root.unmount();
+    };
   }
 }
 

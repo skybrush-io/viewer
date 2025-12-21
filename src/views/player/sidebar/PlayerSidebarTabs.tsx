@@ -5,7 +5,7 @@ import Settings from '@mui/icons-material/Settings';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 
-import Tooltip from '@skybrush/mui-components/lib/Tooltip';
+import { Tooltip } from '@skybrush/mui-components';
 
 import type { CSSProperties } from '@mui/material';
 import { getActiveSidebarTab } from '~/features/sidebar/selectors';

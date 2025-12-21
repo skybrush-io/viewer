@@ -1,15 +1,18 @@
-import path from 'node:path';
 import { isNil } from 'lodash-es';
+import path from 'node:path';
 
 import { isRunningOnMac } from './utils.mjs';
 
 const appNames = new WeakMap();
 const representedFiles = new WeakMap();
 
-export const setTitle = (
-  window,
-  { appName, representedFile, alternateFile }
-) => {
+/**
+ * @param {Electron.BrowserWindow} window
+ * @param {{ appName?: string, representedFile?: string, alternateFile?: string }} options
+ */
+export const setTitle = (window, options) => {
+  let { appName, representedFile, alternateFile } = options ?? {};
+
   if (appName !== undefined) {
     appNames.set(window, isNil(appName) ? '' : String(appName));
   }

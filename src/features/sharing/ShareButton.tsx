@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import Share from '@mui/icons-material/Share';
 import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
-import Tooltip from '@skybrush/mui-components/lib/Tooltip';
+import { Tooltip } from '@skybrush/mui-components';
 
 import { hasLoadedShowFile } from '~/features/show/selectors';
 import type { RootState } from '~/store';

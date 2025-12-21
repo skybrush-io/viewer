@@ -9,7 +9,7 @@ import { useResizeObserver } from '@mantine/hooks';
 
 import ChartIcon from '@mui/icons-material/InsertChartOutlined';
 import Box, { type BoxProps } from '@mui/material/Box';
-import BackgroundHint from '@skybrush/mui-components/lib/BackgroundHint';
+import { BackgroundHint } from '@skybrush/mui-components';
 
 import {
   findPanelById,

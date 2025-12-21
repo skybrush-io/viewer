@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 
 import Box, { type BoxProps } from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import MuteButton from '@skybrush/mui-components/lib/MuteButton';
-import PlayStopButton from '@skybrush/mui-components/lib/PlayStopButton';
+import { MuteButton, PlayStopButton } from '@skybrush/mui-components';
 
 import OpenButton from '~/components/buttons/OpenButton';
 import ToggleSidebarButton from '~/components/buttons/ToggleSidebarButton';

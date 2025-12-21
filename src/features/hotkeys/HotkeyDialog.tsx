@@ -19,7 +19,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 
-import DraggableDialog from '@skybrush/mui-components/lib/DraggableDialog';
+import { DraggableDialog } from '@skybrush/mui-components';
 
 import { isRunningOnMac, platformModifierKey } from '~/utils/platform';
 

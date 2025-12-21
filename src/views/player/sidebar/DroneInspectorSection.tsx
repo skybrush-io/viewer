@@ -1,8 +1,7 @@
 import Colorize from '@mui/icons-material/Colorize';
 import LocationOn from '@mui/icons-material/LocationOn';
 import NorthEast from '@mui/icons-material/NorthEast';
-import MiniList from '@skybrush/mui-components/lib/MiniList';
-import MiniListItem from '@skybrush/mui-components/lib/MiniListItem';
+import { MiniList, MiniListItem } from '@skybrush/mui-components';
 import type {
   Color,
   LightProgramPlayer,

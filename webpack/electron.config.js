@@ -22,6 +22,8 @@ const htmlWebPackPluginConfiguration = {
 };
 
 const optimization = {};
+
+/** @type {Array<import("webpack").Plugin>} */
 const plugins = [
   // process and Buffer polyfills are needed for AFrame to work nicely as of
   // 1.1.0

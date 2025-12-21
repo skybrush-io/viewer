@@ -5,7 +5,7 @@ import Assignment from '@mui/icons-material/Assignment';
 import AssignmentLate from '@mui/icons-material/AssignmentLate';
 import AssignmentTurnedIn from '@mui/icons-material/AssignmentTurnedIn';
 import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
-import Tooltip from '@skybrush/mui-components/lib/Tooltip';
+import { Tooltip } from '@skybrush/mui-components';
 
 import { toggleMode } from '~/features/ui/actions';
 import { UIMode } from '~/features/ui/modes';

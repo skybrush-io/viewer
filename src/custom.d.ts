@@ -18,7 +18,26 @@ declare module '*.obj' {
 
 // Provide typings for @skybrush/aframe-components
 declare module '@skybrush/aframe-components' {
+  import type * as THREENamespace from 'three';
+
+  type Component<T> = {
+    data: T;
+  };
+
+  type ComponentSpecification<T = unknown> = {
+    schema: Record<string, any>;
+    init: (this: Component<T>) => void;
+    update: (this: Component<T>, oldData: T) => void;
+    remove: () => void;
+    tick?: (time: number, timeDelta: number) => void;
+  };
+
+  const THREE: typeof THREENamespace;
   export function objectToString(object: any): string;
+  export function registerComponent(
+    name: string,
+    spec: ComponentSpecification
+  ): void;
 }
 
 // Provide typings for @skybrush/aframe-components/lib/spatial

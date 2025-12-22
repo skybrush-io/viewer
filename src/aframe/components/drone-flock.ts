@@ -586,39 +586,23 @@ AFrame.registerComponent('drone-flock', {
       }
 
       // Check if there's an active pyro event at the current time.
-      // We now assume that pyroProgram.events is always an array in the form:
-      //   [timeSeconds, channel, payloadId]
       let hasActivePyro = false;
-      if (pyroProgram && Array.isArray(pyroProgram.events)) {
+      if (pyroProgram) {
         for (const event of pyroProgram.events) {
-          if (!Array.isArray(event) || event.length === 0) {
-            continue;
-          }
-
-          const eventTime = typeof event[0] === 'number' ? event[0] : undefined;
+          const eventTime = event[0];
           let eventDuration = DEFAULT_PYRO_DURATION;
 
-          // Try to get duration from payload if payloadId is provided
+          const payloadId = event[2];
+          const payload = pyroProgram.payloads[payloadId];
           if (
-            event.length >= 3 &&
-            typeof event[2] === 'string' &&
-            pyroProgram.payloads &&
-            typeof pyroProgram.payloads === 'object'
+            payload &&
+            typeof payload.duration === 'number' &&
+            payload.duration > 0
           ) {
-            const payloadId = event[2];
-            const payload = pyroProgram.payloads[payloadId];
-            if (
-              payload &&
-              typeof payload === 'object' &&
-              typeof payload.duration === 'number' &&
-              payload.duration > 0
-            ) {
-              eventDuration = payload.duration;
-            }
+            eventDuration = payload.duration;
           }
 
           if (
-            typeof eventTime === 'number' &&
             currentTime >= eventTime &&
             currentTime <= eventTime + eventDuration
           ) {

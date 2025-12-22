@@ -14,11 +14,13 @@ import {
   createTrajectoryPlayer,
   createYawControlPlayer,
   getCamerasFromShowSpecification,
+  validatePyroProgram,
   validateTrajectory,
   validateYawControl,
   type Camera,
   type Cue,
   type DroneSpecification,
+  type PyroProgram,
   type ShowMetadata,
   type ShowSettings,
   type ShowSpecification,
@@ -154,14 +156,16 @@ export const isValidLightProgram = (program: unknown): boolean =>
 /**
  * Returns whether an object "looks like" a valid pyro program.
  */
-export const isValidPyroProgram = (program: unknown): boolean =>
-  typeof program === 'object' &&
-  program !== null &&
-  'version' in program &&
-  program.version === 1 &&
-  'events' in program &&
-  Array.isArray(program.events) &&
-  program.events.length > 0;
+export const isValidPyroProgram = (
+  program: unknown
+): program is PyroProgram => {
+  try {
+    validatePyroProgram(program);
+    return true;
+  } catch {
+    return false;
+  }
+};
 
 /**
  * Returns whether an object "looks like" valid yaw control data.
@@ -398,45 +402,25 @@ export const getPyroCues = createSelector(
       }
 
       for (const event of program.events) {
-        if (!Array.isArray(event) || event.length === 0) continue;
-
         // Array format - first element is the time in seconds
-        const eventTime: number | undefined =
-          typeof event[0] === 'number' ? event[0] : undefined;
+        const eventTime: number = event[0];
 
-        if (eventTime !== undefined) {
-          // Extract payload name and channel from event: [time, channel, payloadId]
-          let payloadName: string | undefined;
-          let channel: number | undefined;
-
-          if (event.length >= 2 && typeof event[1] === 'number') {
-            channel = event[1];
-          }
-          if (
-            event.length >= 3 &&
-            typeof event[2] === 'string' &&
-            program.payloads &&
-            typeof program.payloads === 'object'
-          ) {
-            const payloadId = event[2];
-            const payload = (program.payloads as any)[payloadId];
-            if (
-              payload &&
-              typeof payload === 'object' &&
-              typeof payload.name === 'string'
-            ) {
-              payloadName = payload.name;
-            }
-          }
-
-          allEvents.push({
-            time: eventTime,
-            droneIndex,
-            event,
-            payloadName,
-            channel,
-          });
+        // Extract payload name and channel from event: [time, channel, payloadId]
+        let payloadName: string | undefined;
+        const channel: number = event[1];
+        const payloadId = event[2];
+        const payload = program.payloads[payloadId];
+        if (payload) {
+          payloadName = payload.name;
         }
+
+        allEvents.push({
+          time: eventTime,
+          droneIndex,
+          event,
+          payloadName,
+          channel,
+        });
       }
     }
 

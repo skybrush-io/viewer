@@ -9,7 +9,7 @@ import { setTitle } from './window-title.mjs';
 
 const router = express.Router();
 
-router.post('/focus', async (req, res, next) => {
+router.post('/focus', (req, res, next) => {
   try {
     const targetWindow = getFirstMainWindow();
     if (targetWindow) {
@@ -22,7 +22,7 @@ router.post('/focus', async (req, res, next) => {
   }
 });
 
-router.post('/load', async (req, res, next) => {
+router.post('/load', (req, res, next) => {
   if (!req.is('application/skybrush-compiled')) {
     return res.sendStatus(400);
   }
@@ -31,8 +31,9 @@ router.post('/load', async (req, res, next) => {
     const proposedTitle = req.header('x-skybrush-viewer-title');
     const targetWindow = getFirstMainWindow({ required: true });
 
-    const success = Promise.race([
+    Promise.race([
       (async () => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const showSpec = await getShowAsObjectFromBuffer(req.body);
         await ipc.callRenderer(targetWindow, 'setUIMode', 'validation');
         await ipc.callRenderer(targetWindow, 'loadShowFromObject', showSpec);
@@ -47,13 +48,17 @@ router.post('/load', async (req, res, next) => {
         return true;
       })(),
       setTimeout(10000, false),
-    ]);
-
-    if (success) {
-      res.json({ result: true });
-    } else {
-      throw new Error('Timeout');
-    }
+    ])
+      .then((success) => {
+        if (success) {
+          res.json({ result: true });
+        } else {
+          throw new Error('Timeout');
+        }
+      })
+      .catch((error) => {
+        next(error);
+      });
   } catch (error) {
     return next(error);
   }

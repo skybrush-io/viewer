@@ -31,12 +31,12 @@ contextBridge.exposeInMainWorld('bridge', {
     receiveActionsFromRenderer(...args);
 
     // Let the main process know that we are now ready to open show files
-    ipc.callMain('readyForFileOpening');
+    void ipc.callMain('readyForFileOpening');
   },
   selectLocalShowFileForOpening: () =>
     ipc.callMain('selectLocalShowFileForOpening'),
   setTitle({ appName, representedFile }) {
-    ipc.callMain('setTitle', { appName, representedFile });
+    void ipc.callMain('setTitle', { appName, representedFile });
   },
 });
 

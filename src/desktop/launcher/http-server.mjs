@@ -24,7 +24,20 @@ function isOwnIPAddress(address) {
 
 // Monkey-patch SSDPServer._send so we never send advertisements and we respond
 // to requests from our own IP only
+
+/**
+ * @typedef {(message: unknown, host: string, port: number, cb: (error?: any) => void) => void} SSDPServerSendFn
+ */
+
+/** @type {SSDPServerSendFn} */
 const _originalSend = SSDPServer.prototype._send;
+
+/**
+ * @param {unknown} message
+ * @param {string} host
+ * @param {number} port
+ * @param {(error?: any) => void} cb
+ */
 SSDPServer.prototype._send = function (message, host, port, cb) {
   if (typeof host === 'function') {
     // This is an advertisement
@@ -45,10 +58,10 @@ SSDPServer.prototype._send = function (message, host, port, cb) {
 // older versions of the Skybrush Studio for Blender add-on look for Skybrush
 // Viewer in the "real" IP addresses of the network interfaces only, not on
 // 127.0.0.1. This was fixed in versions 1.9.2 and 1.10.0 of the Blender add-on.
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 SSDPServer.prototype._createSockets = function () {
   const interfaces = networkInterfaces();
-
-  this.sockets = {};
 
   for (const iName of Object.keys(interfaces)) {
     if (this._interfaces && this._interfaces.includes(iName)) {
@@ -75,6 +88,8 @@ SSDPServer.prototype._createSockets = function () {
     throw new Error('No sockets available, cannot start.');
   }
 };
+/* eslint-enable @typescript-eslint/no-unsafe-argument */
+/* eslint-enable @typescript-eslint/no-unsafe-call */
 
 const setupSSDPDiscovery = async (port) => {
   const UPNP_DEVICE_ID = `urn:collmot-com:device:skybrush-viewer:1`;
@@ -94,6 +109,24 @@ const setupSSDPDiscovery = async (port) => {
   }
 };
 
+/**
+ * @type {Express.ErrorRequestHandler}
+ */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+const logErrors = (error, _req, res, next) => {
+  console.log(error);
+
+  if (res.headersSent) {
+    return next(error);
+  }
+
+  res.status(500);
+  res.json({ error: String(error) || 'Unexpected error' });
+};
+/* eslint-enable @typescript-eslint/no-unsafe-return */
+/* eslint-enable @typescript-eslint/no-unsafe-call */
+
 export const setupHttpServer = async ({ port = 0 } = {}) => {
   const app = express();
   const server = http.createServer(app).listen({ port });
@@ -109,16 +142,7 @@ export const setupHttpServer = async ({ port = 0 } = {}) => {
 
   app.use('/api/v1', apiV1);
 
-  app.use((error, _req, res, next) => {
-    console.log(error);
-
-    if (res.headersSent) {
-      return next(error);
-    }
-
-    res.status(500);
-    res.json({ error: String(error) || 'Unexpected error' });
-  });
+  app.use(logErrors);
 };
 
 export default setupHttpServer;

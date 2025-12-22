@@ -62,7 +62,7 @@
     "ky": "^1.14.1",
     "lodash-es": "^4.17.22",
     "natural-orderby": "^5.0.0",
-    "node-ssdp": "^4.0.1",
+    "node-ssdp": "4.0.1",
     "process": "^0.11.10",
     "react": "^19.2.3",
     "react-chartjs-2": "^2.11.1",

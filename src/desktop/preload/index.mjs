@@ -1,5 +1,5 @@
+import { contextBridge } from 'electron';
 import { ipcRenderer as ipc } from 'electron-better-ipc';
-import { contextBridge } from 'electtron';
 import createStorageEngine from 'redux-persist-electron-storage';
 
 import { receiveActionsFromRenderer, setupIpc } from './ipc';

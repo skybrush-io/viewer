@@ -2,7 +2,7 @@ import { contextBridge } from 'electron';
 import { ipcRenderer as ipc } from 'electron-better-ipc';
 import createStorageEngine from 'redux-persist-electron-storage';
 
-import { receiveActionsFromRenderer, setupIpc } from './ipc';
+import { receiveActionsFromRenderer, setupIpc } from './ipc.mjs';
 
 /**
  * Creates a Redux state store object that stores the Redux state in an

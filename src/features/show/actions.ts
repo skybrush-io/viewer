@@ -14,7 +14,7 @@ export const loadShowFromLocalFile =
 
     if (getShowAsObjectFromLocalFile) {
       const loadAction = await dispatch(
-        withProgressIndicator(getShowAsObjectFromLocalFile(filename))
+        withProgressIndicator(() => getShowAsObjectFromLocalFile(filename))
       );
       const show: ShowSpecification = loadAction.payload as ShowSpecification;
       dispatch(

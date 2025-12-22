@@ -4,7 +4,10 @@
  * instance.
  */
 
-import { createSelectionHandlerThunk } from '@skybrush/redux-toolkit';
+import {
+  createSelectionHandlerThunk,
+  type SelectionHandlerThunk,
+} from '@skybrush/redux-toolkit';
 import AFrame from 'aframe';
 import watch from 'redux-watch';
 import * as THREE from 'three';
@@ -35,13 +38,7 @@ import { SELECTABLE_OBJECT_CLASS } from '~/views/player/constants';
 import fontUrl from '~/../assets/fonts/Roboto-msdf.json';
 import fontImageUrl from '~/../assets/fonts/Roboto-msdf.png';
 
-import type { Dispatch } from '@reduxjs/toolkit';
 import type { ModifierKeysSystem } from './modifier-keys';
-
-type SelectionHandlerThunk<S> = (
-  id: number,
-  event: React.UIEvent
-) => (dispatch: Dispatch, getState: () => S) => void;
 
 const defaultGeometry = Object.freeze({
   primitive: 'sphere',
@@ -182,7 +179,7 @@ export type DroneFlockSystem = AFrame.System & {
     default: () => AFrame.Entity;
   };
   _getElapsedSeconds: TimestampGetter;
-  _selectionThunk: SelectionHandlerThunk<RootState>;
+  _selectionThunk: SelectionHandlerThunk<number, RootState>;
   _vec: THREE.Vector3;
 };
 

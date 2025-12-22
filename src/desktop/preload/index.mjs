@@ -25,16 +25,23 @@ function createStateStore() {
 contextBridge.exposeInMainWorld('bridge', {
   createStateStore,
   isElectron: true,
+
   getShowAsObjectFromLocalFile: (filename) =>
     ipc.callMain('getShowAsObjectFromLocalFile', filename),
-  provideActions(...args) {
-    receiveActionsFromRenderer(...args);
+
+  /**
+   * @param {Record<string, (...args: any[]) => void>} actions
+   */
+  provideActions: (actions) => {
+    receiveActionsFromRenderer(actions);
 
     // Let the main process know that we are now ready to open show files
     void ipc.callMain('readyForFileOpening');
   },
+
   selectLocalShowFileForOpening: () =>
     ipc.callMain('selectLocalShowFileForOpening'),
+
   setTitle({ appName, representedFile }) {
     void ipc.callMain('setTitle', { appName, representedFile });
   },

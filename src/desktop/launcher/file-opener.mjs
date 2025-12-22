@@ -3,10 +3,16 @@ import { ipcMain as ipc } from 'electron-better-ipc';
 
 import { getFirstMainWindow } from './utils.mjs';
 
+/**
+ * @param {(filename: string) => void | Promise<void>} function_
+ * @param {{ async: boolean; filenames: string[]; maxCount: number}} options
+ */
 const handleFileOpeningRequestsWith = (function_, options = {}) => {
   const { async = false, filenames = [], maxCount = 1 } = options;
-  const pendingFilesToOpen = [];
   const rendererIsReady = { value: false };
+
+  /** @type {string[]} */
+  const pendingFilesToOpen = [];
 
   const flushPendingFiles = async () => {
     if (!app.isReady() || !rendererIsReady.value) {
@@ -20,11 +26,14 @@ const handleFileOpeningRequestsWith = (function_, options = {}) => {
       if (async) {
         await function_(filename);
       } else {
-        function_(filename);
+        void function_(filename);
       }
     }
   };
 
+  /**
+   * @param {string} filename
+   */
   const processFile = async (filename) => {
     pendingFilesToOpen.push(filename);
     if (pendingFilesToOpen.length > maxCount) {
@@ -36,29 +45,32 @@ const handleFileOpeningRequestsWith = (function_, options = {}) => {
 
   app.on('will-finish-launching', () => {
     app.on('open-file', (event, file) => {
-      processFile(file);
       event.preventDefault();
+      void processFile(file);
     });
   });
 
   app.on('ready', () => {
-    flushPendingFiles();
+    void flushPendingFiles();
   });
 
   if (Array.isArray(filenames)) {
     for (const filename of filenames) {
       if (typeof filename === 'string') {
-        processFile(filename);
+        void processFile(filename);
       }
     }
   }
 
   ipc.answerRenderer('readyForFileOpening', () => {
     rendererIsReady.value = true;
-    flushPendingFiles();
+    void flushPendingFiles();
   });
 };
 
+/**
+ * @param {string[]} filenames
+ */
 const setupFileOpener = (filenames) => {
   handleFileOpeningRequestsWith(
     async (filename) => {

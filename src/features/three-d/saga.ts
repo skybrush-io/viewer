@@ -1,3 +1,4 @@
+import type { Entity } from 'aframe';
 import React from 'react';
 import { put, select, take } from 'redux-saga/effects';
 
@@ -8,6 +9,7 @@ import {
   type Pose,
   type ThreeJsPositionTuple,
   type ThreeJsQuaternionTuple,
+  type ThreeJsRotationTuple,
 } from '@skybrush/aframe-components/spatial';
 import type { Camera, Vector3Tuple } from '@skybrush/show-format';
 
@@ -21,7 +23,7 @@ import {
   switchToSelectedCamera,
 } from './slice';
 
-export const cameraRef = React.createRef<any>();
+export const cameraRef = React.createRef<Entity>();
 
 type CameraTarget = {
   lookAt?: ThreeJsPositionTuple;
@@ -133,11 +135,9 @@ function handleRememberCameraPose(_controller: CameraController) {
     return overrideCameraPose(
       threeJsToSkybrushPose({
         position: cameraObj.position.toArray(),
-        rotation: cameraObj.rotation
-          .reorder('YZX')
-          .toArray()
-          .slice(0, 3)
-          .map((x: number) => x * (180 / Math.PI)),
+        rotation: (
+          cameraObj.rotation.reorder('YZX').toArray().slice(0, 3) as number[]
+        ).map((x: number) => x * (180 / Math.PI)) as ThreeJsRotationTuple,
       })
     );
   } else {

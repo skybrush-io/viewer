@@ -1,6 +1,6 @@
 import { app, Menu, shell } from 'electron';
 import { is, openUrlMenuItem } from 'electron-util';
-import { isDev, aboutMenuItem, appMenu } from 'electron-util/main';
+import { aboutMenuItem, appMenu, isDev } from 'electron-util/main';
 
 const helpSubmenu = [
   openUrlMenuItem({
@@ -62,15 +62,16 @@ if (isDev) {
       {
         label: 'Show App Data',
         click() {
-          shell.openItem(app.getPath('userData'));
+          void shell.openPath(app.getPath('userData'));
         },
       },
       {
         label: 'Delete App Data',
         click() {
-          shell.moveItemToTrash(app.getPath('userData'));
-          app.relaunch();
-          app.quit();
+          void shell.trashItem(app.getPath('userData')).then(() => {
+            app.relaunch();
+            app.quit();
+          });
         },
       },
     ],

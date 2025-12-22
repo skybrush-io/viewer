@@ -1,7 +1,11 @@
 import { ipcRenderer as ipc } from 'electron-better-ipc';
 
 /**
- * @type {Record<string, (...args: any[]) => unknown>}
+ * @typedef {Record<string, (...args: any[]) => unknown>} ActionMap
+ */
+
+/**
+ * @type {ActionMap}
  */
 const actionsFromRenderer = {};
 
@@ -36,6 +40,9 @@ const createActionProxy =
     return action(...args);
   };
 
+/**
+ * @param {ActionMap} actions
+ */
 export const receiveActionsFromRenderer = (actions) => {
   Object.assign(actionsFromRenderer, actions);
 };

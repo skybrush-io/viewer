@@ -7,10 +7,11 @@ import { type ConfigOverrides } from 'config-overrides';
 
 import audio from '~/../assets/shows/demo.mp3';
 
-const show = async (): Promise<ShowSpecification> =>
-  import(
+const show = async (): Promise<ShowSpecification> => {
+  return (await import(
     /* webpackChunkName: "show" */ '~/../assets/shows/demo.json'
-  ) as unknown as ShowSpecification;
+  )) as unknown as ShowSpecification;
+};
 
 const overrides: ConfigOverrides = {
   buttons: {

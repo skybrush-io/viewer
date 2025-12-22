@@ -31,7 +31,7 @@ const StyledCard = styled((props: StyledCardProps) => <Card {...props} />)(({
   const isDark = isThemeDark(theme);
 
   return {
-    ...(createSecondaryAreaStyle(theme, {}) as any),
+    ...createSecondaryAreaStyle(theme, {}),
 
     position: 'relative',
     height,

@@ -4,6 +4,7 @@
 
 import config from 'config';
 
+import type { Entity } from 'aframe';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
@@ -43,7 +44,7 @@ type ThreeDViewProps = {
     position: ThreeJsPositionTuple;
     rotation: ThreeJsRotationTuple;
   };
-  readonly cameraRef: React.RefObject<HTMLElement>;
+  readonly cameraRef: React.RefObject<Entity | null>;
   readonly droneModel: DroneModelType;
   readonly droneRadius: number;
   readonly grid: boolean | string;
@@ -129,7 +130,7 @@ const ThreeDView = (props: ThreeDViewProps) => {
   // in Chrome, but it's still a problem in both cases. That's why we need a
   // separate cameraId and sceneLoaded state
   useEffect(() => {
-    if (showId !== cameraId && (cameraRef.current as any)?.sceneEl?.hasLoaded) {
+    if (showId !== cameraId && cameraRef.current?.sceneEl?.hasLoaded) {
       setCameraId(showId);
     }
   }, [cameraId, cameraRef, showId]);

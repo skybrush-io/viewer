@@ -1,4 +1,4 @@
-import AFrame from '@skybrush/aframe-components';
+import AFrame, { type Component } from 'aframe';
 import * as THREE from 'three';
 
 export type ArrowProps = {
@@ -9,7 +9,7 @@ export type ArrowProps = {
   headWidth?: number;
 };
 
-type ArrowComponent = AFrame.Component<ArrowProps> & {
+type ArrowComponent = Component<ArrowProps> & {
   arrow: THREE.ArrowHelper;
 };
 

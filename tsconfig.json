@@ -8,10 +8,10 @@
     "paths": {
       "~/*": ["./src/*"],
     },
+    "esModuleInterop": true, 
     "resolveJsonModule": true,
     "strict": true,
     "target": "esnext",
     "typeRoots": ["./types", "./node_modules/@types"],
-    "allowSyntheticDefaultImports": true,
   },
 }

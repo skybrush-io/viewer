@@ -1,9 +1,9 @@
 /**
  * A-Frame component to keep track of the state of modifier keys.
  */
-import AFrame from 'aframe';
+import AFrame, { type System } from 'aframe';
 
-export type ModifierKeysSystem = AFrame.System & {
+export type ModifierKeysSystem = System & {
   altKey: boolean;
   ctrlKey: boolean;
   metaKey: boolean;

@@ -1,4 +1,4 @@
-import AFrame from 'aframe';
+import AFrame, { type Component } from 'aframe';
 
 import GlowingMaterial from '../materials/GlowingMaterial';
 
@@ -9,7 +9,7 @@ export type GlowMaterialProps = {
   sharpness: number;
   opacity: number;
 };
-export type GlowMaterialComponent = AFrame.Component<GlowMaterialProps> & {
+export type GlowMaterialComponent = Component<GlowMaterialProps> & {
   material: GlowingMaterial;
   _getMaterialProperties(): GlowMaterialProps;
 };

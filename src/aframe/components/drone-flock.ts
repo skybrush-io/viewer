@@ -8,7 +8,7 @@ import {
   createSelectionHandlerThunk,
   type SelectionHandlerThunk,
 } from '@skybrush/redux-toolkit';
-import AFrame from 'aframe';
+import AFrame, { type Component, type Entity, type System } from 'aframe';
 import watch from 'redux-watch';
 import * as THREE from 'three';
 
@@ -77,7 +77,7 @@ function createGlowingMaterialProps() {
 /**
  * Convenience function to create an AFrame entity with attributes.
  */
-function createEntity(props = {}, children: AFrame.Entity[] = []) {
+function createEntity(props = {}, children: Entity[] = []) {
   const element = document.createElement('a-entity');
 
   for (const [name, value] of Object.entries(props)) {
@@ -91,31 +91,29 @@ function createEntity(props = {}, children: AFrame.Entity[] = []) {
   return element;
 }
 
-function getDroneFromEntity(entity: AFrame.Entity): AFrame.Entity {
+function getDroneFromEntity(entity: Entity): Entity {
   // We assume that the drone is the first child and it is always there
-  return entity.childNodes[0] as AFrame.Entity;
+  return entity.childNodes[0] as Entity;
 }
 
-function getDroneMeshFromEntity(entity: AFrame.Entity): THREE.Mesh | undefined {
+function getDroneMeshFromEntity(entity: Entity): THREE.Mesh | undefined {
   return getDroneFromEntity(entity)?.getObject3D('mesh') as THREE.Mesh;
 }
 
-function getGlowMeshFromEntity(entity: AFrame.Entity): THREE.Mesh | undefined {
+function getGlowMeshFromEntity(entity: Entity): THREE.Mesh | undefined {
   // We assume that the glow is the third child
-  const glowEntity = entity.childNodes[2] as AFrame.Entity | undefined;
+  const glowEntity = entity.childNodes[2] as Entity | undefined;
   return glowEntity?.getObject3D('mesh') as THREE.Mesh;
 }
 
-function getLabelFromEntity(entity: AFrame.Entity): AFrame.Entity {
+function getLabelFromEntity(entity: Entity): Entity {
   // We assume that the label is the second child and it is always there
-  return entity.childNodes[1] as AFrame.Entity;
+  return entity.childNodes[1] as Entity;
 }
 
-function getYawIndicatorFromEntity(
-  entity: AFrame.Entity
-): AFrame.Entity | undefined {
+function getYawIndicatorFromEntity(entity: Entity): Entity | undefined {
   // We assume that the yaw marker is the first child of the drone
-  return getDroneFromEntity(entity)?.childNodes[0] as AFrame.Entity | undefined;
+  return getDroneFromEntity(entity)?.childNodes[0] as Entity | undefined;
 }
 
 const DEFAULT_LABEL_SCALE = 3;
@@ -141,55 +139,52 @@ type UAVEntityOptions = {
   showYaw: boolean;
 };
 
-export type DroneFlockSystem = AFrame.System & {
+export type DroneFlockSystem = System & {
   currentTime: number;
 
-  createNewUAVEntity: (options: UAVEntityOptions) => AFrame.Entity;
+  createNewUAVEntity: (options: UAVEntityOptions) => Entity;
   createTrajectoryPlayerForIndex: (index: number) => TrajectoryPlayer;
   rotateEntityLabelTowards: (
-    entity: AFrame.Entity,
+    entity: Entity,
     position: THREE.Vector3,
     data: DroneFlockProps
   ) => void;
-  resetLabelScaleAndPosition(entity: AFrame.Entity): void;
-  updateEntityPose: (entity: AFrame.Entity, rotation: THREE.Euler) => void;
+  resetLabelScaleAndPosition(entity: Entity): void;
+  updateEntityPose: (entity: Entity, rotation: THREE.Euler) => void;
   updateEntityPositionAndColor: (
-    entity: AFrame.Entity,
+    entity: Entity,
     position: THREE.Vector3,
     color: THREE.Color
   ) => void;
-  updateEntitySize: (entity: AFrame.Entity, size: number) => void;
-  updateGlowVisibility: (entity: AFrame.Entity, visible: boolean) => void;
-  updateLabelColor: (entity: AFrame.Entity, color: string) => void;
-  updateLabelVisibility: (entity: AFrame.Entity, visible: boolean) => void;
-  updateYawIndicatorVisibility: (
-    entity: AFrame.Entity,
-    visible: boolean
-  ) => void;
+  updateEntitySize: (entity: Entity, size: number) => void;
+  updateGlowVisibility: (entity: Entity, visible: boolean) => void;
+  updateLabelColor: (entity: Entity, color: string) => void;
+  updateLabelVisibility: (entity: Entity, visible: boolean) => void;
+  updateYawIndicatorVisibility: (entity: Entity, visible: boolean) => void;
 
-  _createGlowEntity: () => AFrame.Entity;
+  _createGlowEntity: () => Entity;
   _createLabelEntity: (
     label: string,
     visible: boolean,
     labelColor: string
-  ) => AFrame.Entity;
+  ) => Entity;
   _createTrajectoryPlayerForIndex: (index: number) => TrajectoryPlayer;
-  _createYawIndicatorEntity: (showYaw: boolean) => AFrame.Entity;
-  _entityFactories: Record<string, () => AFrame.Entity> & {
-    default: () => AFrame.Entity;
+  _createYawIndicatorEntity: (showYaw: boolean) => Entity;
+  _entityFactories: Record<string, () => Entity> & {
+    default: () => Entity;
   };
   _getElapsedSeconds: TimestampGetter;
   _selectionThunk: SelectionHandlerThunk<number, RootState>;
   _vec: THREE.Vector3;
 };
 
-export type DroneFlockComponent = AFrame.Component<
+export type DroneFlockComponent = Component<
   DroneFlockProps,
   DroneFlockSystem
 > & {
   _drones: Array<{
     index: number;
-    entity: AFrame.Entity;
+    entity: Entity;
   }>;
   _cameraPosition: THREE.Vector3;
   _color: THREE.Color;
@@ -263,7 +258,7 @@ AFrame.registerSystem('drone-flock', {
     droneEntity.append(this._createYawIndicatorEntity(showYaw));
 
     const labelEntity = this._createLabelEntity(label, showLabel, labelColor);
-    const children: AFrame.Entity[] = [droneEntity, labelEntity];
+    const children: Entity[] = [droneEntity, labelEntity];
 
     if (showGlow) {
       children.push(this._createGlowEntity());
@@ -341,7 +336,7 @@ AFrame.registerSystem('drone-flock', {
     this.currentTime = this._getElapsedSeconds();
   },
 
-  resetLabelScaleAndPosition(entity: AFrame.Entity) {
+  resetLabelScaleAndPosition(entity: Entity) {
     const label = getLabelFromEntity(entity);
     if (label) {
       const labelScale = DEFAULT_LABEL_SCALE;
@@ -354,7 +349,7 @@ AFrame.registerSystem('drone-flock', {
 
   rotateEntityLabelTowards(
     this: DroneFlockSystem,
-    entity: AFrame.Entity,
+    entity: Entity,
     position: THREE.Vector3,
     data: DroneFlockProps
   ) {
@@ -375,7 +370,7 @@ AFrame.registerSystem('drone-flock', {
     }
   },
 
-  updateEntityPose(entity: AFrame.Entity, rotation: THREE.Euler) {
+  updateEntityPose(entity: Entity, rotation: THREE.Euler) {
     const drone = getDroneFromEntity(entity);
     if (drone) {
       /* Angle has to be inverted because Skybrush yaw angles increase in
@@ -385,7 +380,7 @@ AFrame.registerSystem('drone-flock', {
   },
 
   updateEntityPositionAndColor(
-    entity: AFrame.Entity,
+    entity: Entity,
     position: THREE.Vector3,
     color: THREE.Color
   ) {
@@ -401,32 +396,32 @@ AFrame.registerSystem('drone-flock', {
     material?.color.copy(color);
   },
 
-  updateEntitySize(entity: AFrame.Entity, size: number) {
+  updateEntitySize(entity: Entity, size: number) {
     entity.object3D.scale.set(size, size, size);
   },
 
-  updateGlowVisibility(entity: AFrame.Entity, visible: boolean) {
+  updateGlowVisibility(entity: Entity, visible: boolean) {
     const glowMesh = getGlowMeshFromEntity(entity);
     if (glowMesh) {
       glowMesh.visible = visible;
     }
   },
 
-  updateLabelColor(entity: AFrame.Entity, color: string) {
+  updateLabelColor(entity: Entity, color: string) {
     const label = getLabelFromEntity(entity);
     if (label) {
       label.setAttribute('text', 'color', color);
     }
   },
 
-  updateLabelVisibility(entity: AFrame.Entity, visible: boolean) {
+  updateLabelVisibility(entity: Entity, visible: boolean) {
     const label = getLabelFromEntity(entity);
     if (label) {
       label.object3D.visible = visible;
     }
   },
 
-  updateYawIndicatorVisibility(entity: AFrame.Entity, visible: boolean) {
+  updateYawIndicatorVisibility(entity: Entity, visible: boolean) {
     const yaw = getYawIndicatorFromEntity(entity);
     if (yaw) {
       yaw.object3D.visible = visible;

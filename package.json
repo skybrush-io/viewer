@@ -30,7 +30,7 @@
     "@mui/icons-material": "^7.3.6",
     "@mui/material": "^7.3.6",
     "@reduxjs/toolkit": "^2.11.2",
-    "@skybrush/aframe-components": "^3.0.1",
+    "@skybrush/aframe-components": "^3.0.2",
     "@skybrush/app-theme-mui": "^5.0.0",
     "@skybrush/electron-app-framework": "^5.0.0",
     "@skybrush/mui-components": "^6.0.0",

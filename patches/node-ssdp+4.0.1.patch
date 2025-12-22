@@ -1,0 +1,44 @@
+diff --git a/node_modules/node-ssdp/lib/index.js b/node_modules/node-ssdp/lib/index.js
+index 1ea2cb2..e6da4c5 100644
+--- a/node_modules/node-ssdp/lib/index.js
++++ b/node_modules/node-ssdp/lib/index.js
+@@ -162,7 +162,8 @@ SSDP.prototype._createSockets = function () {
+       self._logger('discovering all IPs from interface %s', iName)
+ 
+       interfaces[iName].forEach(function (ipInfo) {
+-        if (ipInfo.internal == false && ipInfo.family == "IPv4") {
++        // patched: allow listening on localhost as well
++        if (ipInfo.family == "IPv4") {
+           self._logger('Will use interface %s', iName)
+           var socket
+ 
+@@ -502,9 +503,29 @@ SSDP.prototype._getHeaders = function _getHeaders(msg) {
+ 
+ 
+ 
++function isOwnIpAddress(address) {
++  var interfaces = os.networkInterfaces()
++
++  for (var iface of Object.values(interfaces)) {
++    for (var net of iface) {
++      if (net.address === address) {
++        return true
++      }
++    }
++  }
++
++  return false
++}
++
+ SSDP.prototype._send = function (message, host, port, cb) {
+   var self = this
+ 
++  // Respond to requests from our own IP addresses and localhost only
++  if (typeof host !== 'function' && host !== '127.0.0.1' && !isOwnIpAddress(host)) {
++    cb();
++    return;
++  }
++
+   if (typeof host === 'function') {
+     cb = host
+     host = this._ssdpIp

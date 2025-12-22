@@ -28,7 +28,7 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
   flexDirection: 'row-reverse',
   fontSize: theme.typography.body1.fontSize,
   minHeight: theme.spacing(4),
-  margin: theme.spacing(0, 0, 0, -2.5),
+  margin: theme.spacing(0, 2, 0, -0.5),
   [`& .${accordionSummaryClasses.expandIconWrapper}.${accordionSummaryClasses.expanded}`]:
     {
       transform: 'rotate(90deg)',

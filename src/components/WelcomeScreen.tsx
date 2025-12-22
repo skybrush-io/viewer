@@ -49,12 +49,20 @@ const WelcomeScreen = ({
       {canLoadShowFromLocalFile && (
         <>
           {recentFiles.length > 0 && (
-            <Box mb={4}>
-              <Typography variant='h5'>{t('generic.recents')}</Typography>
+            <Box sx={{ mb: 4, textAlign: 'left' }}>
+              <Typography
+                variant='subtitle1'
+                color='textSecondary'
+                sx={{ pl: 1, textTransform: 'uppercase' }}
+              >
+                {t('generic.recentFiles')}
+              </Typography>
               <MiniList>
                 {recentFiles.map((rf) => (
                   <MiniListItemButton
                     key={rf}
+                    gap={2}
+                    inset={1}
                     onClick={() => {
                       onLoadShowFromLocalFile(rf);
                     }}

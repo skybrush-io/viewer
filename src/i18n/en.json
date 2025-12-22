@@ -34,7 +34,7 @@
     "no": "No",
     "yes": "Yes",
     "pleaseWait": "Please wait…",
-    "recents": "Recents"
+    "recentFiles": "Recent files"
   },
   "hotkeys": {
     "cueBackward": "Cue backward (Shift = 10x, Alt = by frames)",

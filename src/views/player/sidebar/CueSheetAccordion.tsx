@@ -15,10 +15,11 @@ const CueSheetSection = ({ cues }: { cues: readonly Cue[] }) => {
     <MiniList>
       {cues.map((cue, index) => (
         <MiniListItemButton
+          key={index}
           onClick={() => {
             dispatch(setPlaybackPosition(cue.time));
           }}
-          key={index}
+          inset={2}
           primaryText={cue.name}
           secondaryText={formatPlaybackTimestamp(cue.time)}
         />

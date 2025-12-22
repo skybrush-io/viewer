@@ -24,7 +24,7 @@ export default function SelectedDroneAccordions() {
 
   if (selection.length === 0) {
     return (
-      <Box sx={{ textAlign: 'center', py: 2, pr: 2, color: 'text.secondary' }}>
+      <Box sx={{ textAlign: 'center', py: 2, px: 2, color: 'text.secondary' }}>
         {t('inspector.selectedDrones.hint') +
           ' ' +
           t(
@@ -48,6 +48,7 @@ export default function SelectedDroneAccordions() {
                 index={index}
                 trajectoryPlayer={trajectoryPlayers[index]}
                 lightProgramPlayer={lightProgramPlayers[index]}
+                sx={{ px: 2 }}
               />
             </AccordionDetails>
           </Accordion>

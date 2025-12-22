@@ -14,7 +14,7 @@ const InspectorTab = () => {
   const { t } = useTranslation();
 
   return (
-    <Box sx={{ px: 2 }}>
+    <Box>
       <PlayheadSection />
 
       <Accordion defaultExpanded>

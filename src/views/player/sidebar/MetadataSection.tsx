@@ -40,7 +40,7 @@ export default function MetadataSection() {
   const isPyroControlled = useAppSelector(hasPyroControl);
 
   return (
-    <>
+    <Box sx={{ px: 2 }}>
       <Box
         sx={{
           fontWeight: 'bold',
@@ -84,6 +84,6 @@ export default function MetadataSection() {
           icon={<Flare fontSize='small' sx={ICON_STYLE} />}
         />
       </MiniList>
-    </>
+    </Box>
   );
 }

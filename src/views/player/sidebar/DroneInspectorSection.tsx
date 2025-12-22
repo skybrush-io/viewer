@@ -1,7 +1,11 @@
 import Colorize from '@mui/icons-material/Colorize';
 import LocationOn from '@mui/icons-material/LocationOn';
 import NorthEast from '@mui/icons-material/NorthEast';
-import { MiniList, MiniListItem } from '@skybrush/mui-components';
+import {
+  MiniList,
+  MiniListItem,
+  MiniListProps,
+} from '@skybrush/mui-components';
 import type {
   Color,
   LightProgramPlayer,
@@ -24,7 +28,8 @@ type DroneInspectorSectionProps = Readonly<{
   index: number;
   trajectoryPlayer: TrajectoryPlayer;
   lightProgramPlayer: LightProgramPlayer;
-}>;
+}> &
+  MiniListProps;
 
 type State = {
   position: Vector3;
@@ -44,6 +49,7 @@ const EMPTY_ARRAY: number[] = [];
 export default function DroneInspectorSection({
   trajectoryPlayer,
   lightProgramPlayer,
+  ...rest
 }: DroneInspectorSectionProps) {
   const shouldRefresh = useAppSelector(isPlaying);
   const getTimestamp = useAppSelector(getElapsedSecondsGetter);
@@ -101,7 +107,7 @@ export default function DroneInspectorSection({
   }
 
   return (
-    <MiniList>
+    <MiniList {...rest}>
       <MiniListItem
         primaryText={
           <VectorDisplay

@@ -107,6 +107,7 @@
     "@types/react-window": "^1.8.8",
     "@types/three": "^0.182.0",
     "@types/timsort": "^0.3.3",
+    "@types/tmp": "^0.2.6",
     "compression-webpack-plugin": "^11.1.0",
     "cross-env": "^10.1.0",
     "css-loader": "^7.1.2",

@@ -1,5 +1,5 @@
-import isNil from 'lodash-es/isNil';
 import { createSelector } from '@reduxjs/toolkit';
+import isNil from 'lodash-es/isNil';
 
 import { isAudioReadyToPlay } from '~/features/audio/selectors';
 import {
@@ -40,6 +40,8 @@ export const getElapsedSeconds = (
   timestamp: number | null = null
 ) => getElapsedSecondsGetter(state)(timestamp);
 
+export type TimestampGetter = (timestamp?: number | null) => number;
+
 /**
  * Selector that returns a getter function that can be invoked with a timestamp
  * and that will return the number of seconds elapsed in the show at the given
@@ -55,7 +57,7 @@ export const getElapsedSecondsGetter = createSelector(
     stoppedAt: number | null,
     adjustedTo: number | null,
     speed: number
-  ) =>
+  ): TimestampGetter =>
     (timestamp: number | null = null) => {
       if (!isNil(adjustedTo)) {
         return adjustedTo / 1000;

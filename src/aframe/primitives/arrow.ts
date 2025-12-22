@@ -2,7 +2,7 @@
  * A-Frame primitive that creates an arrow entity.
  */
 
-import AFrame from '@skybrush/aframe-components';
+import AFrame from 'aframe';
 
 AFrame.registerPrimitive('a-arrow', {
   // Attaches the 'arrow' component by default.

@@ -1,4 +1,4 @@
-import type { Pose } from '@skybrush/aframe-components/lib/spatial';
+import type { Pose } from '@skybrush/aframe-components/spatial';
 import type { ShowSpecification } from '@skybrush/show-format';
 
 /**

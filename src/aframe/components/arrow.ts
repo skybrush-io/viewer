@@ -1,7 +1,17 @@
-/* global AFRAME */
 import AFrame from '@skybrush/aframe-components';
+import * as THREE from 'three';
 
-const { THREE } = AFrame;
+export type ArrowProps = {
+  direction: THREE.Vector3;
+  length?: number;
+  color: string;
+  headLength?: number;
+  headWidth?: number;
+};
+
+type ArrowComponent = AFrame.Component<ArrowProps> & {
+  arrow: THREE.ArrowHelper;
+};
 
 AFrame.registerComponent('arrow', {
   schema: {
@@ -28,17 +38,17 @@ AFrame.registerComponent('arrow', {
     },
   },
 
-  init: function () {
-    var data = this.data;
-    var direction = new THREE.Vector3(
+  init(this: ArrowComponent) {
+    const data = this.data;
+    const direction = new THREE.Vector3(
       data.direction.x,
       data.direction.y,
       data.direction.z
     );
-    var length = data.length || direction.length();
-    var headLength = data.headLength || length * 0.2;
-    var headWidth = data.headWidth || headLength * 0.2;
-    var color = new THREE.Color(data.color);
+    const length = data.length || direction.length();
+    const headLength = data.headLength || length * 0.2;
+    const headWidth = data.headWidth || headLength * 0.2;
+    const color = new THREE.Color(data.color);
     this.arrow = new THREE.ArrowHelper(
       direction.normalize(),
       new THREE.Vector3(),
@@ -50,15 +60,15 @@ AFrame.registerComponent('arrow', {
     this.el.setObject3D('arrow', this.arrow);
   },
 
-  update: function (oldData) {
-    var data = this.data;
-    var diff = AFRAME.utils.diff(data, oldData);
+  update(this: ArrowComponent, oldData: ArrowProps) {
+    const data = this.data;
+    const diff = AFRAME.utils.diff(data, oldData);
     if ('color' in diff) {
       this.arrow.setColor(new THREE.Color(data.color));
     }
-    var length;
+    let length;
     if ('direction' in diff) {
-      var direction = new THREE.Vector3(
+      const direction = new THREE.Vector3(
         data.direction.x,
         data.direction.y,
         data.direction.z
@@ -72,9 +82,9 @@ AFrame.registerComponent('arrow', {
       'headLength' in diff ||
       'headWidth' in diff
     ) {
-      length = data.length || length;
-      var headLength = data.headLength || length * 0.2;
-      var headWidth = data.headWidth || headLength * 0.2;
+      length = data.length ?? length ?? 0;
+      const headLength = data.headLength ?? length * 0.2;
+      const headWidth = data.headWidth ?? headLength * 0.2;
       this.arrow.setLength(length, headLength, headWidth);
     }
   },

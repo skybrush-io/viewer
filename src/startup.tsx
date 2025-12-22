@@ -3,7 +3,7 @@ import { Base64 } from 'js-base64';
 import ky from 'ky';
 import { createRoot } from 'react-dom/client';
 
-import type { Pose } from '@skybrush/aframe-components/lib/spatial';
+import type { Pose } from '@skybrush/aframe-components/spatial';
 
 import type { ShowLoadingRequest } from './features/show/types';
 

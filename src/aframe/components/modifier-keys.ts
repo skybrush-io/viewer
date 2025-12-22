@@ -1,10 +1,19 @@
 /**
  * A-Frame component to keep track of the state of modifier keys.
  */
-import AFrame from '@skybrush/aframe-components';
+import AFrame from 'aframe';
+
+export type ModifierKeysSystem = AFrame.System & {
+  altKey: boolean;
+  ctrlKey: boolean;
+  metaKey: boolean;
+  shiftKey: boolean;
+  _handleKeyEvent(event: KeyboardEvent): void;
+  updateSyntheticEvent(event: any): void;
+};
 
 AFrame.registerSystem('modifier-keys', {
-  init() {
+  init(this: ModifierKeysSystem) {
     this.altKey = false;
     this.ctrlKey = false;
     this.metaKey = false;
@@ -16,14 +25,14 @@ AFrame.registerSystem('modifier-keys', {
     window.addEventListener('keyup', handleKeyEvent);
   },
 
-  _handleKeyEvent(event) {
+  _handleKeyEvent(this: ModifierKeysSystem, event: KeyboardEvent) {
     this.altKey = event.altKey;
     this.ctrlKey = event.ctrlKey;
     this.metaKey = event.metaKey;
     this.shiftKey = event.shiftKey;
   },
 
-  updateSyntheticEvent(event) {
+  updateSyntheticEvent(this: ModifierKeysSystem, event: any) {
     event.altKey = this.altKey;
     event.ctrlKey = this.ctrlKey;
     event.metaKey = this.metaKey;

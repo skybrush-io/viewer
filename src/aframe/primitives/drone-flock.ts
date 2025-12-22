@@ -3,7 +3,7 @@
  * individual drones.
  */
 
-import AFrame from '@skybrush/aframe-components';
+import AFrame from 'aframe';
 
 AFrame.registerPrimitive('a-drone-flock', {
   // Attaches the 'drone-flock' component by default.

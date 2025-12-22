@@ -1,18 +1,17 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "baseUrl": "./src",
     "jsx": "react-jsx",
     "outDir": "./dist/",
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "paths": {
-      "~/*": ["./*"]
+      "~/*": ["./src/*"],
     },
     "resolveJsonModule": true,
     "strict": true,
     "target": "esnext",
     "typeRoots": ["./types", "./node_modules/@types"],
-    "allowSyntheticDefaultImports": true
-  }
+    "allowSyntheticDefaultImports": true,
+  },
 }

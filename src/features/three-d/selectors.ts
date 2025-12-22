@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { skybrushToThreeJsPose } from '@skybrush/aframe-components/lib/spatial';
+import { skybrushToThreeJsPose } from '@skybrush/aframe-components/spatial';
 import get from 'lodash-es/get';
 
 import {

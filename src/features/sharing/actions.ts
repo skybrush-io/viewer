@@ -8,7 +8,7 @@ import {
   type Pose,
   type ThreeJsPositionTuple,
   type ThreeJsQuaternionTuple,
-} from '@skybrush/aframe-components/lib/spatial';
+} from '@skybrush/aframe-components/spatial';
 import { getElapsedSeconds } from '~/features/playback/selectors';
 import type { AppThunk } from '~/store';
 import { findSceneCamera } from '~/views/player/utils';

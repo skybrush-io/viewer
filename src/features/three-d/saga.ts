@@ -8,7 +8,7 @@ import {
   type Pose,
   type ThreeJsPositionTuple,
   type ThreeJsQuaternionTuple,
-} from '@skybrush/aframe-components/lib/spatial';
+} from '@skybrush/aframe-components/spatial';
 import type { Camera, Vector3Tuple } from '@skybrush/show-format';
 
 import { getSelectedCamera } from './selectors';

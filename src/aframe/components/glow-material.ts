@@ -1,6 +1,18 @@
-import AFrame from '@skybrush/aframe-components';
+import AFrame from 'aframe';
 
 import GlowingMaterial from '../materials/GlowingMaterial';
+
+export type GlowMaterialProps = {
+  color: string;
+  falloff: number;
+  internalRadius: number;
+  sharpness: number;
+  opacity: number;
+};
+export type GlowMaterialComponent = AFrame.Component<GlowMaterialProps> & {
+  material: GlowingMaterial;
+  _getMaterialProperties(): GlowMaterialProps;
+};
 
 AFrame.registerComponent('glow-material', {
   schema: {
@@ -11,21 +23,21 @@ AFrame.registerComponent('glow-material', {
     opacity: { type: 'number', is: 'uniform', default: 1 },
   },
 
-  init() {
+  init(this: GlowMaterialComponent) {
     this.material = new GlowingMaterial(this._getMaterialProperties());
     this.el.addEventListener('loaded', () => {
       const mesh = this.el.getObject3D('mesh');
       if (mesh) {
-        mesh.material = this.material;
+        (mesh as any).material = this.material;
       }
     });
   },
 
-  update() {
+  update(this: GlowMaterialComponent) {
     this.material?.setValues(this._getMaterialProperties());
   },
 
-  _getMaterialProperties() {
+  _getMaterialProperties(this: GlowMaterialComponent) {
     const { color, falloff, internalRadius, sharpness, opacity } = this.data;
     return {
       color,

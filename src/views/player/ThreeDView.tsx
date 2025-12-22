@@ -14,7 +14,7 @@ import { objectToString } from '@skybrush/aframe-components';
 import type {
   ThreeJsPositionTuple,
   ThreeJsRotationTuple,
-} from '@skybrush/aframe-components/lib/spatial';
+} from '@skybrush/aframe-components/spatial';
 
 import { getDroneModel } from '~/features/settings/selectors';
 import type { DroneModelType } from '~/features/settings/types';

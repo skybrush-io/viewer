@@ -1,4 +1,4 @@
-import AFrame from '@skybrush/aframe-components';
+import AFrame from 'aframe';
 
 import 'aframe-environment-component';
 import 'aframe-look-at-component';

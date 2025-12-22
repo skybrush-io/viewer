@@ -3,7 +3,7 @@
  */
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { Pose } from '@skybrush/aframe-components/lib/spatial';
+import type { Pose } from '@skybrush/aframe-components/spatial';
 import type { Vector3Tuple } from '@skybrush/show-format';
 
 type NavigationMode = 'walk' | 'fly';

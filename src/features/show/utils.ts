@@ -1,7 +1,7 @@
 import {
   skybrushRotationToQuaternion,
   type Pose,
-} from '@skybrush/aframe-components/lib/spatial';
+} from '@skybrush/aframe-components/spatial';
 import type { Camera } from '@skybrush/show-format';
 import type { ShowDataSource } from './types';
 

@@ -8,7 +8,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import {
   skybrushToThreeJsPose,
   type Pose,
-} from '@skybrush/aframe-components/lib/spatial';
+} from '@skybrush/aframe-components/spatial';
 import {
   CameraType,
   createLightProgramPlayer,

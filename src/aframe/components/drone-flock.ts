@@ -15,6 +15,7 @@ import * as THREE from 'three';
 import type {
   Color,
   LightProgramPlayer,
+  PyroProgram,
   TrajectoryPlayer,
   YawControlPlayer,
 } from '@skybrush/show-format';
@@ -117,9 +118,9 @@ function getYawIndicatorFromEntity(entity: Entity): Entity | undefined {
   return getDroneFromEntity(entity)?.childNodes[0] as Entity | undefined;
 }
 
-function getPyroEffectFromEntity(entity) {
+function getPyroEffectFromEntity(entity: Entity): Entity {
   // We assume that the pyro effect is the last child and it is always there
-  return [...entity.childNodes].at(-1);
+  return [...entity.childNodes].at(-1) as Entity;
 }
 
 const DEFAULT_LABEL_SCALE = 3;
@@ -166,6 +167,7 @@ export type DroneFlockSystem = System & {
   updateGlowVisibility: (entity: Entity, visible: boolean) => void;
   updateLabelColor: (entity: Entity, color: string) => void;
   updateLabelVisibility: (entity: Entity, visible: boolean) => void;
+  updatePyroEffectVisibility: (entity: Entity, visible: boolean) => void;
   updateYawIndicatorVisibility: (entity: Entity, visible: boolean) => void;
 
   _createGlowEntity: () => Entity;
@@ -174,6 +176,7 @@ export type DroneFlockSystem = System & {
     visible: boolean,
     labelColor: string
   ) => Entity;
+  _createPyroEffectEntity: () => Entity;
   _createTrajectoryPlayerForIndex: (index: number) => TrajectoryPlayer;
   _createYawIndicatorEntity: (showYaw: boolean) => Entity;
   _entityFactories: Record<string, () => Entity> & {
@@ -200,6 +203,7 @@ export type DroneFlockComponent = Component<
   _trajectoryPlayers: TrajectoryPlayer[];
   _lightProgramPlayers: LightProgramPlayer[];
   _yawControlPlayers: Array<YawControlPlayer | undefined>;
+  _pyroPrograms: Array<PyroProgram | undefined>;
 };
 
 AFrame.registerSystem('drone-flock', {
@@ -459,7 +463,7 @@ AFrame.registerSystem('drone-flock', {
     }
   },
 
-  updatePyroEffectVisibility(entity, visible) {
+  updatePyroEffectVisibility(entity: Entity, visible: boolean) {
     const pyroEffect = getPyroEffectFromEntity(entity);
     if (pyroEffect) {
       pyroEffect.object3D.visible = visible;
@@ -520,9 +524,11 @@ AFrame.registerComponent('drone-flock', {
 
     const boundGetPyroPrograms = () => getPyroPrograms(store.getState());
     store.subscribe(
-      watch(boundGetPyroPrograms)((pyroPrograms) => {
-        this._pyroPrograms = pyroPrograms;
-      })
+      watch<Array<PyroProgram | undefined>>(boundGetPyroPrograms)(
+        (pyroPrograms) => {
+          this._pyroPrograms = pyroPrograms;
+        }
+      )
     );
 
     this._lightProgramPlayers = boundGetLightProgramPlayers();

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { styled } from '@mui/material/styles';
 
+import type { PlaybackSliderProps } from '@skybrush/mui-components';
 import { PlaybackSlider as PlaybackSliderBase } from '@skybrush/mui-components';
 
 import {
@@ -18,6 +19,7 @@ import {
   getMarksFromShowCues,
   getShowDuration,
   getTimestampFormatter,
+  type MarkData,
 } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 
@@ -53,22 +55,23 @@ const StyledPlaybackSlider = styled(PlaybackSliderBase)`
 `;
 
 // Component to set data attributes for always-visible labels
-const PlaybackSliderWithLabelAttributes = (props: any) => {
-  const sliderRef = useRef<HTMLDivElement>(null);
+const PlaybackSliderWithLabelAttributes = (props: PlaybackSliderProps) => {
+  const sliderRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    if (!sliderRef.current || !props.marks) return;
+    if (!sliderRef.current || !props.marks) {
+      return;
+    }
 
     // Set data attributes for always-visible labels
     const marks = sliderRef.current?.querySelectorAll('.MuiSlider-mark');
-    if (marks && props.marks) {
+    if (marks && Array.isArray(props.marks)) {
       // Create a map of mark values to mark data
-      const markDataMap = new Map<number, any>();
-      props.marks.forEach((markData: any) => {
-        if (markData && typeof markData.value === 'number') {
-          markDataMap.set(markData.value, markData);
-        }
-      });
+      const markDataMap = new Map<number, MarkData>(
+        props.marks
+          .filter((mark) => typeof mark?.value === 'number')
+          .map((mark) => [mark.value, mark])
+      );
 
       // Match labels to marks by their value
       marks.forEach((mark) => {
@@ -89,7 +92,9 @@ const PlaybackSliderWithLabelAttributes = (props: any) => {
     }
   }, [props.marks]);
 
-  return <StyledPlaybackSlider ref={sliderRef} {...props} />;
+  // NOTE: This will not work, as as `mui-components` is still on
+  //       React 18 and `PlaybackSlider` does not have `forwardRef`...
+  return <StyledPlaybackSlider ref={sliderRef as any} {...props} />;
 };
 
 export default connect(

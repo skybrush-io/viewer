@@ -367,10 +367,9 @@ export const getPyroPrograms = createSelector(
  */
 export type GroupedPyroCue = {
   time: number;
-  droneIndices: number[];
-  events: any[];
+  droneIndices: number[]; // TODO: This should be `Set<number>`
   payloadNames: string[];
-  channel?: number; // Channel number from event (second element in array format)
+  channel?: number;
 };
 
 /**
@@ -380,87 +379,57 @@ export type GroupedPyroCue = {
 export const getPyroCues = createSelector(
   getPyroPrograms,
   (pyroPrograms): readonly GroupedPyroCue[] => {
-    // First, collect all individual events with their metadata
-    interface EventData {
+    type EventData = {
       time: number;
       droneIndex: number;
-      event: any;
       payloadName?: string;
       channel?: number;
-    }
+    };
 
-    const allEvents: EventData[] = [];
-
-    for (let droneIndex = 0; droneIndex < pyroPrograms.length; droneIndex++) {
-      const program = pyroPrograms[droneIndex];
-      if (!program) continue;
-
-      // We now assume that pyro events are always provided as an array in the form:
-      //   [timeSeconds, channel, payloadId]
-      if (!Array.isArray(program.events)) {
-        continue;
-      }
-
-      for (const event of program.events) {
-        // Array format - first element is the time in seconds
-        const eventTime: number = event[0];
-
-        // Extract payload name and channel from event: [time, channel, payloadId]
-        let payloadName: string | undefined;
-        const channel: number = event[1];
-        const payloadId = event[2];
-        const payload = program.payloads[payloadId];
-        if (payload) {
-          payloadName = payload.name;
-        }
-
-        allEvents.push({
-          time: eventTime,
-          droneIndex,
-          event,
-          payloadName,
-          channel,
-        });
-      }
-    }
-
-    // Sort all events by time
-    allEvents.sort((a, b) => a.time - b.time);
+    const allEvents: EventData[] = pyroPrograms
+      .flatMap((program, droneIndex) =>
+        program
+          ? program.events.map(([time, channel, payloadId]) => ({
+              time,
+              droneIndex,
+              payloadName: program.payloads[payloadId]?.name,
+              channel,
+            }))
+          : []
+      )
+      .toSorted((a, b) => a.time - b.time);
 
     // Group events within 10-second windows
     const groupedCues: GroupedPyroCue[] = [];
 
+    // TODO: Use `Map.groupBy` if possible!
     for (const eventData of allEvents) {
-      // Find if this event belongs to an existing group (within 10 seconds of the group's first event)
-      let addedToGroup = false;
-      for (const group of groupedCues) {
-        if (eventData.time <= group.time + PYRO_GROUPING_WINDOW) {
-          // Add to existing group
-          if (!group.droneIndices.includes(eventData.droneIndex)) {
-            group.droneIndices.push(eventData.droneIndex);
-          }
-          group.events.push(eventData.event);
-          if (
-            eventData.payloadName &&
-            !group.payloadNames.includes(eventData.payloadName)
-          ) {
-            group.payloadNames.push(eventData.payloadName);
-          }
-          // Set channel if not already set (use first channel found)
-          if (group.channel === undefined && eventData.channel !== undefined) {
-            group.channel = eventData.channel;
-          }
-          addedToGroup = true;
-          break;
-        }
-      }
+      // Find if this event belongs to an existing group
+      // (within the grouping window of the group's first event)
+      const group = groupedCues.find(
+        (g) => eventData.time <= g.time + PYRO_GROUPING_WINDOW
+      );
 
-      // If not added to any group, create a new group
-      if (!addedToGroup) {
+      if (group !== undefined) {
+        // Add to existing group
+        if (!group.droneIndices.includes(eventData.droneIndex)) {
+          group.droneIndices.push(eventData.droneIndex);
+        }
+        if (
+          eventData.payloadName &&
+          !group.payloadNames.includes(eventData.payloadName)
+        ) {
+          group.payloadNames.push(eventData.payloadName);
+        }
+        // Set channel if not already set (use first channel found)
+        if (group.channel === undefined && eventData.channel !== undefined) {
+          group.channel = eventData.channel;
+        }
+      } else {
+        // If not added to any group, create a new group
         groupedCues.push({
           time: eventData.time,
           droneIndices: [eventData.droneIndex],
-          events: [eventData.event],
           payloadNames: eventData.payloadName ? [eventData.payloadName] : [],
           channel: eventData.channel,
         });
@@ -471,6 +440,12 @@ export const getPyroCues = createSelector(
   }
 );
 
+export type MarkData = {
+  value: number;
+  label?: string;
+  alwaysVisible?: boolean;
+};
+
 /**
  * Returns an object that is suitable to be passed to the playback slider
  * component to mark the important cues in the currently loaded show.
@@ -478,66 +453,40 @@ export const getPyroCues = createSelector(
 export const getMarksFromShowCues = createSelector(
   getCues,
   getPyroCues,
-  (cues, pyroCues) => {
-    const marks: Array<{
-      value: number;
-      label?: string;
-      alwaysVisible?: boolean;
-    }> = [];
-
-    // Add regular cues with always-visible labels
-    const cuesByTime = new Map<number, Cue[]>();
-    cues.forEach((cue) => {
-      const time = cue.time;
-      if (!cuesByTime.has(time)) {
-        cuesByTime.set(time, []);
-      }
-      cuesByTime.get(time)!.push(cue);
-    });
-
-    cuesByTime.forEach((cuesAtTime, time) => {
-      // Get the first cue name, or use a default
-      const cueName = cuesAtTime[0]?.name || 'Cue';
-      marks.push({
+  (cues, pyroCues): MarkData[] => [
+    // Regular cues with always-visible labels
+    ...[...Map.groupBy(cues, (cue) => cue.time).entries()].map(
+      ([time, cuesAtTime]) => ({
         value: time,
-        label: cueName,
+        label: cuesAtTime[0]?.name || 'Cue',
         alwaysVisible: true,
-      });
-    });
-
-    // Add pyro cues with hover-only labels
-    marks.push(
-      ...pyroCues.map((cue) => {
-        const channel = cue.channel !== undefined ? cue.channel + 1 : undefined;
-        const payloadNames = cue.payloadNames || [];
-        let payloadText =
-          payloadNames.length > 0 ? payloadNames.join(', ') : '';
-
-        // Truncate long payload names for timeline labels
-        if (payloadText.length > 25) {
-          payloadText = payloadText.substring(0, 22) + '...';
-        }
-
-        // Build label: "Ch 6: 30s Gold Glittering Gerb" or "Ch 6"
-        let label = '';
-        if (channel !== undefined) {
-          label = payloadText
-            ? `Ch ${channel}: ${payloadText}`
-            : `Ch ${channel}`;
-        } else if (payloadText) {
-          label = payloadText;
-        }
-
-        return {
-          value: cue.time,
-          label: label || undefined,
-          alwaysVisible: false,
-        };
       })
-    );
+    ),
+    // Pyro cues with hover-only labels
+    ...pyroCues.map((cue) => {
+      const channel = cue.channel !== undefined ? cue.channel + 1 : undefined;
+      const payloadNames = cue.payloadNames || [];
+      let payloadText = payloadNames.join(', ');
 
-    return marks;
-  }
+      // Truncate long payload names for timeline labels
+      // TODO: Use the proper ellipsis character: "…"
+      if (payloadText.length > 25) {
+        payloadText = payloadText.substring(0, 22) + '...';
+      }
+
+      // Build label: "Ch 6: 30s Gold Glittering Gerb" or "Ch 6"
+      const label = [
+        ...(channel !== undefined ? [`Ch ${channel}`] : []),
+        ...(payloadText ? [payloadText] : []),
+      ].join(': ');
+
+      return {
+        value: cue.time,
+        label: label || undefined,
+        alwaysVisible: false,
+      };
+    }),
+  ]
 );
 
 /**

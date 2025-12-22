@@ -117,9 +117,9 @@ export default function MetadataSection() {
               const payloadNames = cue.payloadNames || [];
 
               // Build primary text with payload name right after channel
-              const payloadText =
-                payloadNames.length > 0 ? payloadNames.join(', ') : '';
+              const payloadText = payloadNames.join(', ');
               // Truncate long payload names to fit better
+              // TODO: Use ellipsis character (…) or `text-overflow: ellipsis`?
               const truncatedPayload =
                 payloadText.length > 30
                   ? payloadText.substring(0, 27) + '...'

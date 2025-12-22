@@ -118,14 +118,8 @@ function getYawIndicatorFromEntity(entity: Entity): Entity | undefined {
 }
 
 function getPyroEffectFromEntity(entity) {
-  // Pyro effect is always the last child
-  // Structure: [drone, label, glow? (if showGlow), pyro]
-  const children = entity.childNodes;
-  if (children.length === 0) {
-    return null;
-  }
-  // Pyro is always the last child
-  return children[children.length - 1];
+  // We assume that the pyro effect is the last child and it is always there
+  return [...entity.childNodes].at(-1);
 }
 
 const DEFAULT_LABEL_SCALE = 3;
@@ -586,31 +580,23 @@ AFrame.registerComponent('drone-flock', {
       }
 
       // Check if there's an active pyro event at the current time.
-      let hasActivePyro = false;
-      if (pyroProgram) {
-        for (const event of pyroProgram.events) {
-          const eventTime = event[0];
-          let eventDuration = DEFAULT_PYRO_DURATION;
+      const hasActivePyro =
+        pyroProgram !== undefined &&
+        pyroProgram.events.some(([eventTime, _, payloadId]) => {
+          // NOTE: `payload` might actually be `undefined`, the keys of the
+          //       `payloads` object are not validated when loading the show!
+          const payload: PyroProgram['payloads'][string] | undefined =
+            pyroProgram.payloads[payloadId];
 
-          const payloadId = event[2];
-          const payload = pyroProgram.payloads[payloadId];
-          if (
-            payload &&
-            typeof payload.duration === 'number' &&
-            payload.duration > 0
-          ) {
-            eventDuration = payload.duration;
-          }
+          const eventDuration =
+            typeof payload?.duration === 'number' && payload.duration > 0
+              ? payload.duration
+              : DEFAULT_PYRO_DURATION;
 
-          if (
-            currentTime >= eventTime &&
-            currentTime <= eventTime + eventDuration
-          ) {
-            hasActivePyro = true;
-            break;
-          }
-        }
-      }
+          return (
+            currentTime >= eventTime && currentTime <= eventTime + eventDuration
+          );
+        });
 
       updateEntityPositionAndColor(entity, vec, color);
       updateEntityPose(entity, rot);

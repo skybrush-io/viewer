@@ -289,25 +289,46 @@ AFrame.registerSystem('drone-flock', {
   },
 
   _createPyroEffectEntity() {
-    // Create a bright orange/red glowing sphere for pyro effects
-    // Make it larger and position it to the side/above for better visibility
-    return createEntity({
-      geometry: {
-        primitive: 'sphere',
-        radius: 1.5,
-        segmentsHeight: 16,
-        segmentsWidth: 16,
+    return createEntity(
+      {
+        visible: false,
       },
-      material: {
-        color: new THREE.Color('#ff3300'),
-        shader: 'flat',
-        transparent: true,
-        opacity: 0.9,
-      },
-      scale: '4.0 4.0 4.0',
-      position: '0 0.5 0',
-      visible: false,
-    });
+      [
+        createEntity({
+          geometry: {
+            primitive: 'octahedron',
+            radius: 1.25,
+          },
+          material: {
+            shader: 'flat',
+            transparent: true,
+          },
+          animation: {
+            property: 'material.color',
+            from: '#ff3300',
+            to: '#ffcc00',
+            dur: 1000,
+            dir: 'alternate',
+            loop: true,
+            easing: 'easeInOutSine',
+          },
+        }),
+        createEntity({
+          geometry: {
+            primitive: 'cone',
+            radiusTop: 0.75,
+            radiusBottom: 0,
+            height: 5,
+          },
+          material: {
+            shader: 'pyro-sparks',
+            transparent: true,
+          },
+          position: '0 0 -3',
+          rotation: '90 0 0',
+        }),
+      ]
+    );
   },
 
   _createLabelEntity(label: string, visible: boolean, color = 'white') {

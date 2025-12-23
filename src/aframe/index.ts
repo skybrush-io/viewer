@@ -15,4 +15,6 @@ import './components/modifier-keys';
 import './primitives/arrow';
 import './primitives/drone-flock';
 
+import './shaders/pyro-sparks';
+
 export default AFrame;

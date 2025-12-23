@@ -21,6 +21,7 @@ import {
 } from '~/features/show/selectors';
 import { getRecentFiles } from '~/features/ui/selectors';
 import type { RootState } from '~/store';
+import { platformPathSeparator } from '~/utils/platform';
 
 import CentralHelperPanel from './CentralHelperPanel';
 import SkybrushLogo from './SkybrushLogo';
@@ -67,8 +68,11 @@ const WelcomeScreen = ({
                       onLoadShowFromLocalFile(rf);
                     }}
                     // TODO: Truncate these using `text-overflow: ellipsis`?
-                    primaryText={rf.split('/').at(-1)}
-                    secondaryText={rf.split('/').slice(0, -1).join('/')}
+                    primaryText={rf.split(platformPathSeparator).at(-1)}
+                    secondaryText={rf
+                      .split(platformPathSeparator)
+                      .slice(0, -1)
+                      .join(platformPathSeparator)}
                   />
                 ))}
               </MiniList>

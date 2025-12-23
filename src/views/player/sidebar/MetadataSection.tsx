@@ -60,7 +60,7 @@ export default function MetadataSection() {
         />
         <MiniListItem
           primaryText={t('inspector.metadata.droneCount')}
-          secondaryText={droneCount}
+          secondaryText={String(droneCount)}
           icon={<Tag fontSize='small' sx={ICON_STYLE} />}
         />
         <MiniListItem

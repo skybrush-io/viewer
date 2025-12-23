@@ -440,10 +440,10 @@ export const getPyroCues = createSelector(
   }
 );
 
+// TODO: use `Mark` from `@mui/material/esm/Slider/useSlider.types.d.ts`!
 export type MarkData = {
   value: number;
   label?: string;
-  alwaysVisible?: boolean;
 };
 
 /**
@@ -454,15 +454,14 @@ export const getMarksFromShowCues = createSelector(
   getCues,
   getPyroCues,
   (cues, pyroCues): MarkData[] => [
-    // Regular cues with always-visible labels
+    // Regular cues
     ...[...Map.groupBy(cues, (cue) => cue.time).entries()].map(
       ([time, cuesAtTime]) => ({
         value: time,
         label: cuesAtTime[0]?.name || 'Cue',
-        alwaysVisible: true,
       })
     ),
-    // Pyro cues with hover-only labels
+    // Pyro cues
     ...pyroCues.map((cue) => {
       const channel = cue.channel !== undefined ? cue.channel + 1 : undefined;
       const payloadNames = cue.payloadNames || [];
@@ -483,7 +482,6 @@ export const getMarksFromShowCues = createSelector(
       return {
         value: cue.time,
         label: label || undefined,
-        alwaysVisible: false,
       };
     }),
   ]

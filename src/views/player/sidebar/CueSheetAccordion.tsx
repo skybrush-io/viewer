@@ -28,20 +28,32 @@ const CueSheetSection = ({ cues }: { cues: readonly Cue[] }) => {
   );
 };
 
-export default function CueListAccordion() {
-  const cues = useAppSelector(getCues);
-  const { t } = useTranslation();
-
+export function CueListAccordion({
+  cues,
+  title,
+}: {
+  cues: readonly Cue[];
+  title: string;
+}) {
   if (cues.length === 0) {
     return null; // Don't render the accordion if there are no cues
   } else {
     return (
       <Accordion>
-        <AccordionSummary>{t('inspector.cueSheet.summary')}</AccordionSummary>
+        <AccordionSummary>{title}</AccordionSummary>
         <AccordionDetails>
           <CueSheetSection cues={cues} />
         </AccordionDetails>
       </Accordion>
     );
   }
+}
+
+export default function CueSheetAccordion() {
+  const cues = useAppSelector(getCues);
+  const { t } = useTranslation();
+
+  return (
+    <CueListAccordion cues={cues} title={t('inspector.cueSheet.summary')} />
+  );
 }

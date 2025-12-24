@@ -23,8 +23,6 @@ import {
 } from '~/features/show/selectors';
 import { useAppSelector } from '~/hooks/store';
 
-import { CueListAccordion } from './CueSheetAccordion';
-
 // t('inspector.metadata.environment.indoor')
 // t('inspector.metadata.environment.outdoor')
 
@@ -100,42 +98,6 @@ export default function MetadataSection() {
           icon={<Flare fontSize='small' sx={ICON_STYLE} />}
         />
       </MiniList>
-      {pyroCues.length > 0 && (
-        <CueListAccordion
-          cues={pyroCues.map((cue, index) => {
-            const droneCount = cue.droneIndices.length;
-            // Use channel + 1 as channel number if available, otherwise fall back to index + 1
-            const channel =
-              cue.channel !== undefined ? cue.channel + 1 : index + 1;
-            const payloadNames = cue.payloadNames || [];
-
-            // Build primary text with payload name right after channel
-            const payloadText = payloadNames.join(', ');
-            // Truncate long payload names to fit better
-            const truncatedPayload =
-              payloadText.length > 25
-                ? payloadText.substring(0, 24) + '…'
-                : payloadText;
-
-            const primaryText = truncatedPayload
-              ? t('inspector.metadata.pyroCueItemWithNumber', {
-                  channel,
-                  payloadName: truncatedPayload,
-                  count: droneCount,
-                })
-              : t('inspector.metadata.pyroCueItemWithNumberNoPayload', {
-                  channel,
-                  count: droneCount,
-                });
-
-            return {
-              name: primaryText,
-              time: cue.time,
-            };
-          })}
-          title={t('inspector.metadata.pyroCuesList')}
-        />
-      )}
     </Box>
   );
 }

@@ -5,6 +5,7 @@ import { Accordion, AccordionDetails, AccordionSummary } from './Accordion';
 import CueSheetAccordion from './CueSheetAccordion';
 import MetadataSection from './MetadataSection';
 import PlayheadSection from './PlayheadSection';
+import PyroCuesAccordion from './PyroCuesAccordion';
 import SelectedDroneAccordions from './SelectedDroneAccordions';
 
 /**
@@ -25,6 +26,7 @@ const InspectorTab = () => {
       </Accordion>
 
       <CueSheetAccordion />
+      <PyroCuesAccordion />
       <SelectedDroneAccordions />
     </Box>
   );

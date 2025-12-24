@@ -1,5 +1,7 @@
 import { connect } from 'react-redux';
 
+import { styled } from '@mui/material/styles';
+
 import { PlaybackSlider } from '@skybrush/mui-components';
 
 import {
@@ -18,6 +20,29 @@ import {
   getTimestampFormatter,
 } from '~/features/show/selectors';
 import type { RootState } from '~/store';
+
+// Styled component to position mark labels above the timeline
+const StyledPlaybackSlider = styled(PlaybackSlider)`
+  & {
+    margin-bottom: 0;
+  }
+
+  .MuiSlider-markLabel {
+    top: -24px;
+    bottom: auto;
+    white-space: nowrap;
+    font-size: 0.75rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  .MuiSlider-mark:hover + .MuiSlider-markLabel,
+  .MuiSlider-markLabel:hover {
+    opacity: 1;
+    pointer-events: auto;
+  }
+`;
 
 export default connect(
   // mapStateToProps
@@ -43,4 +68,4 @@ export default connect(
         Array.isArray(value) ? value[0] : value
       ),
   }
-)(PlaybackSlider);
+)(StyledPlaybackSlider);

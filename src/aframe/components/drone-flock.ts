@@ -15,11 +15,12 @@ import * as THREE from 'three';
 import type {
   Color,
   LightProgramPlayer,
+  PyroProgram,
   TrajectoryPlayer,
   YawControlPlayer,
 } from '@skybrush/show-format';
 
-import { DEFAULT_DRONE_MODEL } from '~/constants';
+import { DEFAULT_DRONE_MODEL, DEFAULT_PYRO_DURATION } from '~/constants';
 import {
   getElapsedSecondsGetter,
   type TimestampGetter,
@@ -28,6 +29,7 @@ import { getSelectedDroneIndices } from '~/features/selection/selectors';
 import { setSelectedDroneIndices } from '~/features/selection/slice';
 import {
   getLightProgramPlayers,
+  getPyroPrograms,
   getTrajectoryPlayers,
   getYawControlPlayers,
 } from '~/features/show/selectors';
@@ -116,6 +118,11 @@ function getYawIndicatorFromEntity(entity: Entity): Entity | undefined {
   return getDroneFromEntity(entity)?.childNodes[0] as Entity | undefined;
 }
 
+function getPyroEffectFromEntity(entity: Entity): Entity {
+  // We assume that the pyro effect is the last child and it is always there
+  return [...entity.childNodes].at(-1) as Entity;
+}
+
 const DEFAULT_LABEL_SCALE = 3;
 const DEFAULT_LABEL_OFFSET = DEFAULT_LABEL_SCALE / 2;
 
@@ -160,6 +167,7 @@ export type DroneFlockSystem = System & {
   updateGlowVisibility: (entity: Entity, visible: boolean) => void;
   updateLabelColor: (entity: Entity, color: string) => void;
   updateLabelVisibility: (entity: Entity, visible: boolean) => void;
+  updatePyroEffectVisibility: (entity: Entity, visible: boolean) => void;
   updateYawIndicatorVisibility: (entity: Entity, visible: boolean) => void;
 
   _createGlowEntity: () => Entity;
@@ -168,6 +176,7 @@ export type DroneFlockSystem = System & {
     visible: boolean,
     labelColor: string
   ) => Entity;
+  _createPyroEffectEntity: () => Entity;
   _createTrajectoryPlayerForIndex: (index: number) => TrajectoryPlayer;
   _createYawIndicatorEntity: (showYaw: boolean) => Entity;
   _entityFactories: Record<string, () => Entity> & {
@@ -194,6 +203,7 @@ export type DroneFlockComponent = Component<
   _trajectoryPlayers: TrajectoryPlayer[];
   _lightProgramPlayers: LightProgramPlayer[];
   _yawControlPlayers: Array<YawControlPlayer | undefined>;
+  _pyroPrograms: Array<PyroProgram | undefined>;
 };
 
 AFrame.registerSystem('drone-flock', {
@@ -264,6 +274,9 @@ AFrame.registerSystem('drone-flock', {
       children.push(this._createGlowEntity());
     }
 
+    // Always add pyro effect entity, visibility will be controlled dynamically
+    children.push(this._createPyroEffectEntity());
+
     return createEntity({ position: '0 0 0' }, children);
   },
 
@@ -273,6 +286,49 @@ AFrame.registerSystem('drone-flock', {
       'glow-material': createGlowingMaterialProps(),
       scale: '3 3 3',
     });
+  },
+
+  _createPyroEffectEntity() {
+    return createEntity(
+      {
+        visible: false,
+      },
+      [
+        createEntity({
+          geometry: {
+            primitive: 'octahedron',
+            radius: 1.25,
+          },
+          material: {
+            shader: 'flat',
+            transparent: true,
+          },
+          animation: {
+            property: 'material.color',
+            from: '#ff3300',
+            to: '#ffcc00',
+            dur: 1000,
+            dir: 'alternate',
+            loop: true,
+            easing: 'easeInOutSine',
+          },
+        }),
+        createEntity({
+          geometry: {
+            primitive: 'cone',
+            radiusTop: 0.75,
+            radiusBottom: 0,
+            height: 5,
+          },
+          material: {
+            shader: 'pyro-sparks',
+            transparent: true,
+          },
+          position: '0 0 -3',
+          rotation: '90 0 0',
+        }),
+      ]
+    );
   },
 
   _createLabelEntity(label: string, visible: boolean, color = 'white') {
@@ -427,6 +483,13 @@ AFrame.registerSystem('drone-flock', {
       yaw.object3D.visible = visible;
     }
   },
+
+  updatePyroEffectVisibility(entity: Entity, visible: boolean) {
+    const pyroEffect = getPyroEffectFromEntity(entity);
+    if (pyroEffect) {
+      pyroEffect.object3D.visible = visible;
+    }
+  },
 });
 
 AFrame.registerComponent('drone-flock', {
@@ -480,9 +543,19 @@ AFrame.registerComponent('drone-flock', {
       )
     );
 
+    const boundGetPyroPrograms = () => getPyroPrograms(store.getState());
+    store.subscribe(
+      watch<Array<PyroProgram | undefined>>(boundGetPyroPrograms)(
+        (pyroPrograms) => {
+          this._pyroPrograms = pyroPrograms;
+        }
+      )
+    );
+
     this._lightProgramPlayers = boundGetLightProgramPlayers();
     this._trajectoryPlayers = boundGetTrajectoryPlayers();
     this._yawControlPlayers = boundGetYawControlPlayers();
+    this._pyroPrograms = boundGetPyroPrograms();
   },
 
   remove() {
@@ -495,6 +568,7 @@ AFrame.registerComponent('drone-flock', {
       rotateEntityLabelTowards,
       updateEntityPositionAndColor,
       updateEntityPose,
+      updatePyroEffectVisibility,
     } = this.system!;
     const vec = this._vec;
     const rot = this._rot;
@@ -511,6 +585,7 @@ AFrame.registerComponent('drone-flock', {
       const lightProgramPlayer = this._lightProgramPlayers[index];
       const trajectoryPlayer = this._trajectoryPlayers[index];
       const yawControlPlayer = this._yawControlPlayers[index];
+      const pyroProgram = this._pyroPrograms[index];
 
       if (trajectoryPlayer) {
         trajectoryPlayer.getPositionAt(currentTime, vec);
@@ -531,8 +606,28 @@ AFrame.registerComponent('drone-flock', {
         color.setScalar(0.5);
       }
 
+      // Check if there's an active pyro event at the current time.
+      const hasActivePyro =
+        pyroProgram !== undefined &&
+        pyroProgram.events.some(([eventTime, _, payloadId]) => {
+          // NOTE: `payload` might actually be `undefined`, the keys of the
+          //       `payloads` object are not validated when loading the show!
+          const payload: PyroProgram['payloads'][string] | undefined =
+            pyroProgram.payloads[payloadId];
+
+          const eventDuration =
+            typeof payload?.duration === 'number' && payload.duration > 0
+              ? payload.duration
+              : DEFAULT_PYRO_DURATION;
+
+          return (
+            currentTime >= eventTime && currentTime <= eventTime + eventDuration
+          );
+        });
+
       updateEntityPositionAndColor(entity, vec, color);
       updateEntityPose(entity, rot);
+      updatePyroEffectVisibility(entity, hasActivePyro);
 
       if (showLabels) {
         rotateEntityLabelTowards(entity, this._cameraPosition, this.data);

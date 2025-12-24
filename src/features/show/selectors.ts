@@ -1,7 +1,6 @@
 import config from 'config';
 import get from 'lodash-es/get';
 import maxBy from 'lodash-es/maxBy';
-import uniq from 'lodash-es/uniq';
 
 import { createSelector } from '@reduxjs/toolkit';
 
@@ -15,11 +14,13 @@ import {
   createTrajectoryPlayer,
   createYawControlPlayer,
   getCamerasFromShowSpecification,
+  validatePyroProgram,
   validateTrajectory,
   validateYawControl,
   type Camera,
   type Cue,
   type DroneSpecification,
+  type PyroProgram,
   type ShowMetadata,
   type ShowSettings,
   type ShowSpecification,
@@ -28,7 +29,10 @@ import {
   type YawControl,
 } from '@skybrush/show-format';
 
-import { DEFAULT_CAMERA_NAME_PLACEHOLDER } from '~/constants';
+import {
+  DEFAULT_CAMERA_NAME_PLACEHOLDER,
+  PYRO_GROUPING_WINDOW,
+} from '~/constants';
 import type { RootState } from '~/store';
 import { formatDroneIndex, formatPlaybackTimestamp } from '~/utils/formatters';
 import type { ShowDataSource } from './types';
@@ -152,14 +156,16 @@ export const isValidLightProgram = (program: unknown): boolean =>
 /**
  * Returns whether an object "looks like" a valid pyro program.
  */
-export const isValidPyroProgram = (program: unknown): boolean =>
-  typeof program === 'object' &&
-  program !== null &&
-  'version' in program &&
-  program.version === 1 &&
-  'events' in program &&
-  Array.isArray(program.events) &&
-  program.events.length > 0;
+export const isValidPyroProgram = (
+  program: unknown
+): program is PyroProgram => {
+  try {
+    validatePyroProgram(program);
+    return true;
+  } catch {
+    return false;
+  }
+};
 
 /**
  * Returns whether an object "looks like" valid yaw control data.
@@ -344,13 +350,141 @@ export const getLightProgramPlayers = createSelector(
 );
 
 /**
+ * Returns an array containing all the pyro programs. The array will contain
+ * undefined for all the drones that have no pyro control data in the mission.
+ */
+export const getPyroPrograms = createSelector(
+  getDroneSwarmSpecification,
+  (swarm: readonly DroneSpecification[]) =>
+    swarm.map((drone: DroneSpecification) => {
+      const program = drone.settings?.pyro;
+      return isValidPyroProgram(program) ? program : undefined;
+    })
+);
+
+/**
+ * Type representing a grouped pyro cue with multiple drones at the same time.
+ */
+export type GroupedPyroCue = {
+  time: number;
+  droneIndices: number[]; // TODO: This should be `Set<number>`
+  payloadNames: string[];
+  channel?: number;
+};
+
+/**
+ * Returns an array containing all pyro cues grouped by timestamp.
+ * Each cue includes the timestamp, list of drone indices, and event data.
+ */
+export const getPyroCues = createSelector(
+  getPyroPrograms,
+  (pyroPrograms): readonly GroupedPyroCue[] => {
+    type EventData = {
+      time: number;
+      droneIndex: number;
+      payloadName?: string;
+      channel?: number;
+    };
+
+    const allEvents: EventData[] = pyroPrograms
+      .flatMap((program, droneIndex) =>
+        program
+          ? program.events.map(([time, channel, payloadId]) => ({
+              time,
+              droneIndex,
+              payloadName: program.payloads[payloadId]?.name,
+              channel,
+            }))
+          : []
+      )
+      .toSorted((a, b) => a.time - b.time);
+
+    // Group events within 10-second windows
+    const groupedCues: GroupedPyroCue[] = [];
+
+    // TODO: Use `Map.groupBy` if possible!
+    for (const eventData of allEvents) {
+      // Find if this event belongs to an existing group
+      // (within the grouping window of the group's first event)
+      const group = groupedCues.find(
+        (g) => eventData.time <= g.time + PYRO_GROUPING_WINDOW
+      );
+
+      if (group !== undefined) {
+        // Add to existing group
+        if (!group.droneIndices.includes(eventData.droneIndex)) {
+          group.droneIndices.push(eventData.droneIndex);
+        }
+        if (
+          eventData.payloadName &&
+          !group.payloadNames.includes(eventData.payloadName)
+        ) {
+          group.payloadNames.push(eventData.payloadName);
+        }
+        // Set channel if not already set (use first channel found)
+        if (group.channel === undefined && eventData.channel !== undefined) {
+          group.channel = eventData.channel;
+        }
+      } else {
+        // If not added to any group, create a new group
+        groupedCues.push({
+          time: eventData.time,
+          droneIndices: [eventData.droneIndex],
+          payloadNames: eventData.payloadName ? [eventData.payloadName] : [],
+          channel: eventData.channel,
+        });
+      }
+    }
+
+    return groupedCues;
+  }
+);
+
+// TODO: use `Mark` from `@mui/material/esm/Slider/useSlider.types.d.ts`!
+export type MarkData = {
+  value: number;
+  label?: string;
+};
+
+/**
  * Returns an object that is suitable to be passed to the playback slider
  * component to mark the important cues in the currently loaded show.
  */
-export const getMarksFromShowCues = createSelector(getCues, (cues) =>
-  uniq(cues.map((cue) => cue.time)).map((value) => ({
-    value,
-  }))
+export const getMarksFromShowCues = createSelector(
+  getCues,
+  getPyroCues,
+  (cues, pyroCues): MarkData[] => [
+    // Regular cues
+    ...[...Map.groupBy(cues, (cue) => cue.time).entries()].map(
+      ([time, cuesAtTime]) => ({
+        value: time,
+        label: cuesAtTime[0]?.name || 'Cue',
+      })
+    ),
+    // Pyro cues
+    ...pyroCues.map((cue) => {
+      const channel = cue.channel !== undefined ? cue.channel + 1 : undefined;
+      const payloadNames = cue.payloadNames || [];
+      let payloadText = payloadNames.join(', ');
+
+      // Truncate long payload names for timeline labels
+      // TODO: Use the proper ellipsis character: "…"
+      if (payloadText.length > 25) {
+        payloadText = payloadText.substring(0, 22) + '...';
+      }
+
+      // Build label: "Ch 6: 30s Gold Glittering Gerb" or "Ch 6"
+      const label = [
+        ...(channel !== undefined ? [`Ch ${channel}`] : []),
+        ...(payloadText ? [payloadText] : []),
+      ].join(': ');
+
+      return {
+        value: cue.time,
+        label: label || undefined,
+      };
+    }),
+  ]
 );
 
 /**
@@ -417,19 +551,6 @@ export const getTrajectoryPlayers = createSelector(
   getTrajectories,
   (trajectories) =>
     trajectories.map((t) => createTrajectoryPlayer(t ?? EMPTY_TRAJECTORY))
-);
-
-/**
- * Returns an array containing all the pyro programs. The array will contain
- * undefined for all the drones that have no pyro control data in the mission.
- */
-const getPyroPrograms = createSelector(
-  getDroneSwarmSpecification,
-  (swarm: readonly DroneSpecification[]) =>
-    swarm.map((drone: DroneSpecification) => {
-      const program = drone.settings?.pyro;
-      return isValidPyroProgram(program) ? program : undefined;
-    })
 );
 
 /**

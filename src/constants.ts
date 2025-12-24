@@ -49,3 +49,13 @@ export const DEFAULT_DRONE_MODEL = 'sphere';
  * Width of the sidebar on the player UI.
  */
 export const PLAYER_SIDEBAR_WIDTH = 320;
+
+/**
+ * Default duration for pyro events if not specified in payload. (In seconds.)
+ */
+export const DEFAULT_PYRO_DURATION = 0.5;
+
+/**
+ * Length of the temporal window for grouping pyro events. (Given in seconds.)
+ */
+export const PYRO_GROUPING_WINDOW = 10;

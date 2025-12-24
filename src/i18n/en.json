@@ -65,7 +65,16 @@
       },
       "summary": "Metadata",
       "yawControl": "Yaw control",
-      "pyroControl": "Pyro control"
+      "pyroControl": "Pyro control",
+      "pyroCues": "Pyro cues",
+      "pyroCuesCount_one": "{{count}} cue",
+      "pyroCuesCount_other": "{{count}} cues",
+      "pyroCuesList": "Pyro Cues",
+      "pyroCueItem": "Drone {{drone}}",
+      "pyroCueItemGrouped_one": "{{count}} drone: {{drones}}",
+      "pyroCueItemGrouped_other": "{{count}} drones: {{drones}}",
+      "pyroCueItemWithNumber": "Ch {{channel}}: {{payloadName}} ({{count}})",
+      "pyroCueItemWithNumberNoPayload": "Ch {{channel}} ({{count}})"
     },
     "selectedDrones": {
       "hint": "Click on drones in the main view to inspect them.",

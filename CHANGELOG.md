@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - A list of recently opened files is now shown on the welcome screen.
 
+- Pyro effects are now visualized in the 3D view with a dedicated pyro shader that
+  tries to simulate sparks falling from the drone.
+
+- Pyro cues are now listed on the sidebar inspector panel, thanks to a contribution
+  from [@matt-edminster](https://github.com/matt-edminster)
+
 ## [2.8.0] - 2025-12-12
 
 ### Added

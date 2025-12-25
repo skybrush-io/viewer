@@ -18,7 +18,7 @@ export default function PyroCuesAccordion() {
   return (
     <CueListAccordion
       cues={cues.map((cue, index) => {
-        const droneCount = cue.droneIndices.length;
+        const droneCount = cue.droneIndices.size;
         // Use channel + 1 as channel number if available, otherwise fall back to index + 1
         const channel = cue.channel !== undefined ? cue.channel + 1 : index + 1;
         const payloadNames = cue.payloadNames || [];

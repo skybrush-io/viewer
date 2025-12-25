@@ -372,7 +372,7 @@ export const getPyroPrograms = createSelector(
  */
 export type GroupedPyroCue = {
   time: number;
-  droneIndices: number[]; // TODO: This should be `Set<number>`
+  droneIndices: Set<number>;
   payloadNames: string[];
   channel?: number;
 };
@@ -417,9 +417,7 @@ export const getPyroCues = createSelector(
 
       if (group !== undefined) {
         // Add to existing group
-        if (!group.droneIndices.includes(eventData.droneIndex)) {
-          group.droneIndices.push(eventData.droneIndex);
-        }
+        group.droneIndices.add(eventData.droneIndex);
         if (
           eventData.payloadName &&
           !group.payloadNames.includes(eventData.payloadName)
@@ -434,7 +432,7 @@ export const getPyroCues = createSelector(
         // If not added to any group, create a new group
         groupedCues.push({
           time: eventData.time,
-          droneIndices: [eventData.droneIndex],
+          droneIndices: new Set([eventData.droneIndex]),
           payloadNames: eventData.payloadName ? [eventData.payloadName] : [],
           channel: eventData.channel,
         });

@@ -59,3 +59,9 @@ export const DEFAULT_PYRO_DURATION = 0.5;
  * Length of the temporal window for grouping pyro events. (Given in seconds.)
  */
 export const PYRO_GROUPING_WINDOW = 10;
+
+/**
+ * Length of cue names in characters when they are being used in a context where
+ * they might have to be truncated.
+ */
+export const MAX_PYRO_CUE_NAME_LENGTH = 25;

@@ -31,10 +31,15 @@ import {
 
 import {
   DEFAULT_CAMERA_NAME_PLACEHOLDER,
+  MAX_PYRO_CUE_NAME_LENGTH,
   PYRO_GROUPING_WINDOW,
 } from '~/constants';
 import type { RootState } from '~/store';
-import { formatDroneIndex, formatPlaybackTimestamp } from '~/utils/formatters';
+import {
+  formatDroneIndex,
+  formatPlaybackTimestamp,
+  truncate,
+} from '~/utils/formatters';
 import type { ShowDataSource } from './types';
 import { DEFAULT_CAMERA_ORIENTATION, getCameraPose } from './utils';
 
@@ -465,13 +470,10 @@ export const getMarksFromShowCues = createSelector(
     ...pyroCues.map((cue) => {
       const channel = cue.channel !== undefined ? cue.channel + 1 : undefined;
       const payloadNames = cue.payloadNames || [];
-      let payloadText = payloadNames.join(', ');
-
-      // Truncate long payload names for timeline labels
-      // TODO: Use the proper ellipsis character: "…"
-      if (payloadText.length > 25) {
-        payloadText = payloadText.substring(0, 22) + '...';
-      }
+      const payloadText = truncate(
+        payloadNames.join(', '),
+        MAX_PYRO_CUE_NAME_LENGTH
+      );
 
       // Build label: "Ch 6: 30s Gold Glittering Gerb" or "Ch 6"
       const label = [

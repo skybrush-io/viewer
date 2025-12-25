@@ -1,7 +1,9 @@
 import { useTranslation } from 'react-i18next';
 
+import { MAX_PYRO_CUE_NAME_LENGTH } from '~/constants';
 import { getPyroCues } from '~/features/show/selectors';
 import { useAppSelector } from '~/hooks/store';
+import { truncate } from '~/utils/formatters';
 
 import CueListAccordion from './CueListAccordion';
 
@@ -21,18 +23,17 @@ export default function PyroCuesAccordion() {
         const channel = cue.channel !== undefined ? cue.channel + 1 : index + 1;
         const payloadNames = cue.payloadNames || [];
 
-        // Build primary text with payload name right after channel
-        const payloadText = payloadNames.join(', ');
-        // Truncate long payload names to fit better
-        const truncatedPayload =
-          payloadText.length > 25
-            ? payloadText.substring(0, 24) + '…'
-            : payloadText;
+        // Build primary text with payload name right after channel.
+        // Truncate long payload names to fit better.
+        const payloadName = truncate(
+          payloadNames.join(', '),
+          MAX_PYRO_CUE_NAME_LENGTH
+        );
 
-        const primaryText = truncatedPayload
+        const primaryText = payloadName
           ? t('inspector.pyroCues.itemWithNumber', {
               channel,
-              payloadName: truncatedPayload,
+              payloadName,
               count: droneCount,
             })
           : t('inspector.pyroCues.itemWithNumberNoPayload', {

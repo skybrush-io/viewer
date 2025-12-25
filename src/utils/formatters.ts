@@ -59,3 +59,13 @@ export function formatPlaybackTimestampAsFrames(
   ).padStart(fps >= 10 ? 2 : 1, '0');
   return `${minutes}:${formattedSeconds}+${frames}`;
 }
+
+/**
+ * Truncates a string to a given maximum length, adding an ellipsis if needed.
+ */
+export function truncate(str: string, maxLength: number): string {
+  if (str.length <= maxLength) {
+    return str;
+  }
+  return str.substring(0, maxLength - 1) + '…';
+}

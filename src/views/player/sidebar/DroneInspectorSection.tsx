@@ -4,7 +4,7 @@ import NorthEast from '@mui/icons-material/NorthEast';
 import {
   MiniList,
   MiniListItem,
-  MiniListProps,
+  type MiniListProps,
 } from '@skybrush/mui-components';
 import type {
   Color,

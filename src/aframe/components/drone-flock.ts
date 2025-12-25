@@ -316,15 +316,15 @@ AFrame.registerSystem('drone-flock', {
         createEntity({
           geometry: {
             primitive: 'cone',
-            radiusTop: 0.75,
+            radiusTop: 1,
             radiusBottom: 0,
-            height: 5,
+            height: 10,
           },
           material: {
             shader: 'pyro-sparks',
             transparent: true,
           },
-          position: '0 0 -3',
+          position: '0 0 -5',
           rotation: '90 0 0',
         }),
       ]

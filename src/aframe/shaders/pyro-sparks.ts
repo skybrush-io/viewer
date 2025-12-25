@@ -59,7 +59,7 @@ AFRAME.registerShader('pyro-sparks', {
       vec3 p = vWorldPos + vPos;
       p.y += time * 0.005;
       float n = noise(p * 5.0);
-      float s = pow(smoothstep(0.5, 1.0, n) * 2.5, 5.0);
+      float s = pow(smoothstep(0.25, 1.0, n) * 2.5, 5.0);
       vec3 color = vec3(0.75, 0.75, 0.25);
       gl_FragColor = vec4(mix(0.1 * color, color, s), s * s);
     }

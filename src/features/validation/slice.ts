@@ -20,13 +20,6 @@ export type ValidationSliceState = {
     order: string[];
   };
 
-  settings: {
-    maxAltitude: number | null;
-    minDistance: number | null;
-    maxVelocityXY: number | null;
-    maxVelocityZ: number | null;
-  };
-
   disabledValidators: string[];
   selection: string[];
   visiblePanels: ValidationPanel[];
@@ -36,15 +29,6 @@ const initialState: ValidationSliceState = {
   messages: {
     byId: {},
     order: [],
-  },
-
-  // For the validation settings, "null" means "use the setting from the show
-  // file if given"
-  settings: {
-    maxAltitude: null,
-    minDistance: null,
-    maxVelocityXY: null,
-    maxVelocityZ: null,
   },
 
   // List of validators that are disabled

@@ -41,9 +41,9 @@ export type Chart = {
  */
 export type CalculationState<T> = {
   id: string;
-  state: 'idle' | 'calculating' | 'ready' | 'error' | 'cancelled';
-  progress: number | null;
-  data: T;
+  status: 'idle' | 'calculating' | 'ready' | 'error' | 'cancelled';
+  progress?: number | undefined;
+  data?: T;
   error?: string;
 };
 

@@ -25,7 +25,6 @@ const styles = {
     boxShadow: 8,
     fontSize: 'fontSize',
     minWidth: 200,
-    p: 6,
     position: 'absolute',
     left: '50%',
     top: '50%',
@@ -45,6 +44,7 @@ type CentralHelperPanelProps = {
   readonly canDismiss?: boolean;
   readonly children: React.ReactNode;
   readonly onDismiss?: () => void;
+  readonly padding?: number;
   readonly visible: boolean;
 };
 
@@ -52,10 +52,11 @@ const CentralHelperPanel = ({
   canDismiss,
   children,
   onDismiss,
+  padding,
   visible,
 }: CentralHelperPanelProps) => (
   <Fade appear mountOnEnter unmountOnExit timeout={500} in={visible}>
-    <Box sx={styles.root}>
+    <Box sx={{ ...styles.root, p: padding ?? 6 }}>
       {children}
       {canDismiss && (
         <Box sx={styles.inner}>

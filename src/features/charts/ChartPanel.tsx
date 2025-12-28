@@ -1,12 +1,18 @@
-import merge from 'lodash-es/merge';
+import { isNil, merge } from 'lodash-es';
 import { useMemo } from 'react';
 import { Scatter } from 'react-chartjs-2';
 
-import Box from '@mui/material/Box';
-import Card, { type CardProps } from '@mui/material/Card';
-import Typography from '@mui/material/Typography';
+import {
+  Box,
+  Card,
+  type CardProps,
+  LinearProgress,
+  Typography,
+} from '@mui/material';
 import { orange } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
+
+import CentralHelperPanel from '~/components/CentralHelperPanel';
 
 import {
   createChartStyle,
@@ -255,12 +261,16 @@ const createOptions = ({
 };
 
 type ChartPanelProps = {
-  /** The chart data being shown in the panel. Takes precedence over `calculation` */
+  /**
+   * The chart data being shown in the panel. Ignored if `calculation` is also
+   * specified. Use this for chart data that has already been calculated.
+   */
   chart?: Chart;
 
   /**
    * The calculation that will eventually provide the chart data being shown in the
-   * panel. Use this for asynchronous chart calculations that take a longer time.
+   * panel. Takes precedence over `chart`. Use this for asynchronous chart calculations
+   * that take a longer time.
    */
   calculation?: ChartCalculationState;
 
@@ -297,7 +307,10 @@ const ChartPanel = ({
   title,
   verticalUnit = '',
 }: ChartPanelProps) => {
-  const { datasets } = chart ?? calculation?.data ?? {};
+  const { status, error, progress } = calculation ?? { status: 'idle' };
+  const calculating = status === 'calculating';
+
+  const { datasets } = (calculation ? calculation.data : chart) ?? {};
   const rawScatterData = useMemo(
     () => (canvas: HTMLElement) => {
       if (!(canvas instanceof HTMLCanvasElement)) {
@@ -333,6 +346,11 @@ const ChartPanel = ({
         }
       }
 
+      if (series.length === 0) {
+        // Create a dummy series to make place for the legend at the top
+        series.push({ label: '' });
+      }
+
       return {
         datasets: series,
       };
@@ -352,14 +370,36 @@ const ChartPanel = ({
     [formatPlaybackTimestamp, range, threshold, thresholdLabel, verticalUnit]
   );
 
+  const showHeaderBox = !isNil(title) || !isNil(error) || calculating;
+
   return (
     <StyledCard square height={height}>
       <Scatter data={rawScatterData} options={options} />
-      {title && (
-        <Box left={8} top={4} position='absolute'>
-          <Typography variant='button'>{title}</Typography>
+      {showHeaderBox ? (
+        <Box left={8} top={4} right={8} position='absolute' display='flex'>
+          {isNil(title) ? null : (
+            <Box flex={1}>
+              <Typography variant='button'>{title}</Typography>
+            </Box>
+          )}
+          <Box flex={1} />
+          {calculating || isNil(error) ? null : (
+            <Box flex={1}>
+              <Typography variant='button' color='error'>
+                {error}
+              </Typography>
+            </Box>
+          )}
         </Box>
-      )}
+      ) : null}
+      <CentralHelperPanel padding={2} visible={calculating}>
+        <Typography variant='body1'>Calculating...</Typography>
+        <LinearProgress
+          value={progress}
+          variant={isNil(progress) ? 'indeterminate' : 'determinate'}
+          sx={{ my: 1, width: 320 }}
+        />
+      </CentralHelperPanel>
     </StyledCard>
   );
 };

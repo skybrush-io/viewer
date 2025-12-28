@@ -10,9 +10,7 @@ import { Tooltip } from '@skybrush/mui-components';
 import { toggleMode } from '~/features/ui/actions';
 import { UIMode } from '~/features/ui/modes';
 import type { RootState } from '~/store';
-
-import { hasValidationMessages } from './selectors';
-
+ 
 type ToggleValidationModeButtonProps = IconButtonProps & {
   readonly onToggleValidationMode?: () => void;
   readonly trajectoriesValid?: boolean;
@@ -49,7 +47,7 @@ const ToggleValidationModeButton = ({
 export default connect(
   // mapStateToProps
   (state: RootState) => ({
-    trajectoriesValid: !hasValidationMessages(state),
+    trajectoriesValid: true,
   }),
   // mapDispatchToProps
   {

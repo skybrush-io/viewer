@@ -12,32 +12,21 @@ import {
 import { clearLoadedShow } from '~/features/show/slice';
 
 import type { ValidationPanel } from './panels';
-import { removeAllMessages } from './utils';
 
 export type ValidationSliceState = {
-  messages: {
-    byId: Record<string, string>;
-    order: string[];
-  };
-
+  // List of validators that are disabled
   disabledValidators: string[];
+
+  // Current selection of drones to show on charts
   selection: string[];
+
+  // List of chart panels that are visible
   visiblePanels: ValidationPanel[];
 };
 
 const initialState: ValidationSliceState = {
-  messages: {
-    byId: {},
-    order: [],
-  },
-
-  // List of validators that are disabled
   disabledValidators: [],
-
-  // Current selection of drones to show on charts
   selection: [],
-
-  // List of chart panels that are visible
   visiblePanels: [],
 };
 
@@ -69,7 +58,6 @@ const { actions, reducer } = createSlice({
 
   extraReducers(builder: ActionReducerMapBuilder<ValidationSliceState>) {
     builder.addCase(clearLoadedShow, (state) => {
-      removeAllMessages(state);
       state.selection = [];
     });
   },

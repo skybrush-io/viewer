@@ -6,7 +6,6 @@ import type { RootState } from '~/store';
 
 import { getIndicesOfSelectedDrones } from './items';
 import { getSampledTimeInstants, isSelectionEmpty } from './selectors';
-import type { ValidationSliceState } from './slice';
 
 type ChartPoint = {
   x: number;
@@ -140,12 +139,3 @@ export const createChartDataSelector = (
       ? getAggregatedChartData(state)
       : getChartDataForSelectedDrones(state);
 };
-
-/**
- * Removes all messages from the state slice corresponding to the validation
- * reducer.
- */
-export function removeAllMessages(state: ValidationSliceState) {
-  state.messages.byId = {};
-  state.messages.order = [];
-}

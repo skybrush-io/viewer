@@ -6,7 +6,14 @@ const chartsAdapter = createEntityAdapter<ChartCalculationState>();
 
 const { actions, reducer } = createSlice({
   name: 'charts',
-  initialState: chartsAdapter.getInitialState(),
+  initialState: chartsAdapter.getInitialState(undefined, {
+    test: {
+      id: 'test',
+      status: 'calculating',
+      progress: 42,
+      error: 'Test error',
+    },
+  }),
   reducers: {
     removeAllCharts: (state) => {
       chartsAdapter.removeAll(state);

@@ -32,8 +32,6 @@ const getProximityChart = createSelector(
           values: createChartPointsWithTips(
             times,
             distances,
-            // TODO(ntamas): it would be great if we could calculate the tooltip
-            // lazily, only when the user hovers over the chart
             indices.map((pair) =>
               pair ? `${names[pair[0]]}\u2013${names[pair[1]]}` : undefined
             )

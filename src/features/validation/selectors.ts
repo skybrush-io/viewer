@@ -1,6 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
 import get from 'lodash-es/get';
-import range from 'lodash-es/range';
 
 import { type Vector3 } from '@skybrush/show-format';
 
@@ -12,6 +11,18 @@ import {
 } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 
+import {
+  areVectorsAlmostEqual,
+  calculateScalarDerivative,
+  calculateVectorDerivative,
+  projectAllToXY,
+  projectAllToZ,
+  projectToXY,
+  projectToZ,
+  sampleDurationEvenly,
+  samplePositionAt,
+  sampleVelocityAt,
+} from './calculations';
 import getClosestPair from './closest-pair';
 import { DEFAULT_VALIDATION_SETTINGS, SAMPLES_PER_SECOND } from './constants';
 import { type ValidationSettings } from './types';
@@ -118,16 +129,7 @@ export const getVerticalAccelerationThresholdDown = (state: RootState) =>
  */
 export const getSampledTimeInstants = createSelector(
   getShowDuration,
-  (duration) => {
-    const numberSamples = Math.ceil(duration * SAMPLES_PER_SECOND);
-    const result = range(numberSamples).map((x) => x / SAMPLES_PER_SECOND);
-
-    if (result.length > 0 && result.at(-1)! < duration) {
-      result.push(duration);
-    }
-
-    return result;
-  }
+  sampleDurationEvenly
 );
 
 /**
@@ -150,16 +152,7 @@ export const getSampledPositionsForDrones = createSelector(
   (players, samples) => {
     // TODO(ntamas): make this async and make it run in a worker or at least in
     // the background so we don't lock the UI
-    return players.map((player) =>
-      samples.map((time) =>
-        player.getPositionAt(time, {
-          x: 0,
-          y: 0,
-          z: 0,
-          t: time,
-        } as Vector3)
-      )
-    );
+    return players.map((player) => samplePositionAt(player, samples));
   }
 );
 
@@ -173,93 +166,9 @@ export const getSampledVelocitiesForDrones = createSelector(
   (players, samples) => {
     // TODO(ntamas): make this async and make it run in a worker or at least in
     // the background so we don't lock the UI
-    return players.map((player) =>
-      samples.map((time) =>
-        player.getVelocityAt(time, {
-          x: 0,
-          y: 0,
-          z: 0,
-          t: time,
-        } as Vector3)
-      )
-    );
+    return players.map((player) => sampleVelocityAt(player, samples));
   }
 );
-
-/**
- * Projects a 3D vector to the XY plane and returns the length of the projected vector.
- */
-const projectToXY = (coord: Vector3) => Math.hypot(coord.x, coord.y);
-
-/**
- * Projects a 3D vector to the Z axis.
- */
-const projectToZ = (coord: Vector3) => coord.z;
-
-/**
- * Calculates the derivative of a vector of scalars where the derivative at
- * index i is estimated from the values at indices (i-k) and (i+k), i.e. we
- * are using the midpoint method with a step size of k.
- */
-export function calculateScalarDerivative(
-  values: number[],
-  numSteps = 1,
-  dt = 1
-): number[] {
-  const n = values.length;
-  const result: number[] = Array.from({ length: n });
-  const scale = 2 * numSteps * dt;
-  for (let i = numSteps; i < n - numSteps; i++) {
-    result[i] = (values[i + numSteps] - values[i - numSteps]) / scale;
-  }
-
-  // Fill the endpoints
-  if (n >= 2 * numSteps + 1) {
-    for (let i = 0; i < numSteps; i++) {
-      result[i] = result[numSteps];
-      result[n - i - 1] = result[n - numSteps - 1];
-    }
-  } else {
-    result.fill(0);
-  }
-
-  return result;
-}
-
-/**
- * Calculates the derivative of a vector of 3D vectors where the derivative at
- * index i is estimated from the vectors at indices (i-k) and (i+k), i.e. we
- * are using the midpoint method with a step size of k.
- */
-export function calculateVectorDerivative(
-  values: Vector3[],
-  numSteps = 1,
-  dt = 1
-): Vector3[] {
-  const n = values.length;
-  const result: Vector3[] = Array.from({ length: n });
-  const scale = 2 * numSteps * dt;
-  for (let i = numSteps; i < n - numSteps; i++) {
-    result[i] = {
-      x: (values[i + numSteps].x - values[i - numSteps].x) / scale,
-      y: (values[i + numSteps].y - values[i - numSteps].y) / scale,
-      z: (values[i + numSteps].z - values[i - numSteps].z) / scale,
-    };
-  }
-
-  // Fill the endpoints
-  if (n >= 2 * numSteps + 1) {
-    for (let i = 0; i < numSteps; i++) {
-      result[i] = result[numSteps];
-      result[n - i - 1] = result[n - numSteps - 1];
-    }
-  } else {
-    const ZERO = { x: 0, y: 0, z: 0 };
-    result.fill(ZERO);
-  }
-
-  return result;
-}
 
 /**
  * Returns an array mapping drones to their altitudes, sampled at regular
@@ -289,9 +198,7 @@ export const getSampledHorizontalVelocitiesForDrones = createSelector(
  */
 export const getSampledVerticalVelocitiesForDrones = createSelector(
   getSampledVelocitiesForDrones,
-  (velocitiesByDrones) => {
-    return velocitiesByDrones.map((velocities) => velocities.map(projectToZ));
-  }
+  (velocitiesByDrones) => velocitiesByDrones.map(projectAllToZ)
 );
 
 /**
@@ -308,7 +215,7 @@ export const getSampledHorizontalAccelerationsForDrones = createSelector(
   (velocitiesByDrones) => {
     const dt = 1 / SAMPLES_PER_SECOND;
     return velocitiesByDrones.map((velocities) => {
-      return calculateVectorDerivative(velocities, 1, dt).map(projectToXY);
+      return projectAllToXY(calculateVectorDerivative(velocities, 1, dt));
     });
   }
 );
@@ -331,16 +238,6 @@ export const getSampledVerticalAccelerationsForDrones = createSelector(
     );
   }
 );
-
-const arePositionsAlmostEqual = (
-  a: Vector3,
-  b: Vector3 | undefined,
-  eps = 0.05
-): boolean =>
-  b !== undefined &&
-  Math.abs(a.x - b.x) < eps &&
-  Math.abs(a.y - b.y) < eps &&
-  Math.abs(a.z - b.z) < eps;
 
 /**
  * Returns two arrays, one mapping frames to the distance of the closest drone
@@ -382,8 +279,9 @@ export const getNearestNeighborsAndDistancesForFrames = createSelector(
       for (let droneIndex = 0; droneIndex < droneCount; droneIndex++) {
         const pos = positionsByDrones[droneIndex];
         if (
-          !arePositionsAlmostEqual(pos[frameIndex], pos.at(0)) &&
-          !arePositionsAlmostEqual(pos[frameIndex], pos.at(-1))
+          pos.length > 0 &&
+          !areVectorsAlmostEqual(pos[frameIndex], pos[0]) &&
+          !areVectorsAlmostEqual(pos[frameIndex], pos.at(-1)!)
         ) {
           indexMap.push(droneIndex);
           positionsInCurrentFrame.push(pos[frameIndex]);

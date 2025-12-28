@@ -2,12 +2,12 @@
  * Saga that loads the default hardcoded drone show when the app is started.
  */
 
+import { freeze } from '@reduxjs/toolkit';
+import ky from 'ky';
 import get from 'lodash-es/get';
 import isNil from 'lodash-es/isNil';
-import ky from 'ky';
 import { type Channel, channel } from 'redux-saga';
 import { call, fork, put, putResolve, take } from 'redux-saga/effects';
-import { freeze } from '@reduxjs/toolkit';
 
 import { setAudioUrl } from '~/features/audio/slice';
 import { setPlaybackPosition } from '~/features/playback/actions';
@@ -62,11 +62,11 @@ function* loadShowFromRequestChannelSaga(
       yield put(setAudioUrl(audioOkay ? (audio ?? audioUrl) : null));
 
       if (!effectiveKeepCameraPose) {
-        yield put(clearCameraPoseOverride() as any);
+        yield put(clearCameraPoseOverride());
       }
 
       if (!keepPlayhead) {
-        yield put(setPlaybackPosition(initialSeekTime ?? 0) as any);
+        yield put(setPlaybackPosition(initialSeekTime ?? 0));
       }
     } catch {
       console.error('Unexpected error while loading show');

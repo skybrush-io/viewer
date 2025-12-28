@@ -237,9 +237,7 @@ export const isShowOutdoor = (state: RootState) =>
 export const getCameras = createSelector(
   getShowSpecification,
   (spec?: ShowSpecification): Camera[] =>
-    spec
-      ? getCamerasFromShowSpecification(spec)
-      : (EMPTY_ARRAY as any as Camera[])
+    spec ? getCamerasFromShowSpecification(spec) : (EMPTY_ARRAY as Camera[])
 );
 
 /**
@@ -282,7 +280,7 @@ const getDefaultCamera = (cameras: Camera[]): Camera | undefined => {
 export const getPerspectiveCameras = createSelector(getCameras, (cameras) =>
   cameras && cameras.length > 0
     ? cameras.filter(isProbablyPerspectiveCamera).map(ensureHeightAboveGround)
-    : (EMPTY_ARRAY as any as Camera[])
+    : (EMPTY_ARRAY as Camera[])
 );
 
 /**

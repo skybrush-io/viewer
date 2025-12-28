@@ -4,14 +4,14 @@ import { connect } from 'react-redux';
 import { getTimestampFormatter } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 
-import ChartPanel from './ChartPanel';
+import ChartPanel from '~/features/charts/ChartPanel';
 import {
   getHorizontalVelocityThreshold,
   getSampledHorizontalVelocitiesForDrones,
 } from './selectors';
-import { createChartDataSelector } from './utils';
+import { createChartSelector } from './utils';
 
-const getDataForHorizontalVelocityChart = createChartDataSelector(
+const getHorizontalVelocityChart = createChartSelector(
   getSampledHorizontalVelocitiesForDrones
 );
 
@@ -23,7 +23,7 @@ const Y_RANGE: [number, number] = [0, 1];
 export default connect(
   // mapStateToProps
   (state: RootState) => ({
-    data: getDataForHorizontalVelocityChart(state),
+    chart: getHorizontalVelocityChart(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
     range: Y_RANGE,
     threshold: getHorizontalVelocityThreshold(state),

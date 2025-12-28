@@ -54,7 +54,7 @@ const SidebarListItem = connect(
   // mapDispatchToProps
   (dispatch: AppDispatch, ownProps: { id: string }) => ({
     onToggleSelection() {
-      dispatch(toggleItemInSelection(ownProps.id) as any);
+      dispatch(toggleItemInSelection(ownProps.id));
     },
   })
 )(SidebarListItemPresentation);

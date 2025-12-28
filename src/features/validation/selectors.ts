@@ -157,7 +157,7 @@ export const getSampledPositionsForDrones = createSelector(
           y: 0,
           z: 0,
           t: time,
-        } as any as Vector3)
+        } as Vector3)
       )
     );
   }
@@ -180,7 +180,7 @@ export const getSampledVelocitiesForDrones = createSelector(
           y: 0,
           z: 0,
           t: time,
-        } as any as Vector3)
+        } as Vector3)
       )
     );
   }
@@ -345,7 +345,7 @@ const arePositionsAlmostEqual = (
 /**
  * Returns two arrays, one mapping frames to the distance of the closest drone
  * pair in that frame, and another mapping frames to the indices of the closts
- * drone pairs in the at frame. Each item of the array may be null if the frame
+ * drone pairs in the at frame. Each item of the array may be undefined if the frame
  * has at most one drone.
  */
 export const getNearestNeighborsAndDistancesForFrames = createSelector(
@@ -354,13 +354,15 @@ export const getNearestNeighborsAndDistancesForFrames = createSelector(
   (
     positionsByDrones,
     times
-  ): [Array<number | null>, Array<[number, number] | null>] => {
+  ): [Array<number | undefined>, Array<[number, number] | undefined>] => {
     // TODO(ntamas): make this async and make it run in a worker or at least in
     // the background so we don't lock the UI
     const frameCount = times.length;
     const droneCount = positionsByDrones.length;
-    const distances: Array<number | null> = Array.from({ length: frameCount });
-    const indices: Array<[number, number] | null> = Array.from({
+    const distances: Array<number | undefined> = Array.from({
+      length: frameCount,
+    });
+    const indices: Array<[number, number] | undefined> = Array.from({
       length: frameCount,
     });
     const indexMap: number[] = [];
@@ -414,8 +416,8 @@ export const getNearestNeighborsAndDistancesForFrames = createSelector(
             ? [firstIndex, secondIndex]
             : [secondIndex, firstIndex];
       } else {
-        distances[frameIndex] = null;
-        indices[frameIndex] = null;
+        distances[frameIndex] = undefined;
+        indices[frameIndex] = undefined;
       }
     }
 

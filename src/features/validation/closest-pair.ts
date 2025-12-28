@@ -81,7 +81,7 @@ function divide({ orderedByX, orderedByY }: OrderedPoints): {
 
 function baseCase(points: Vector3[]): [Vector3, Vector3] {
   if (points.length === 2) {
-    return points as any as [Vector3, Vector3];
+    return points as [Vector3, Vector3];
   }
 
   const combinations: Array<[Vector3, Vector3]> = [

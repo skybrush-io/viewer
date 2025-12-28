@@ -16,6 +16,7 @@ import {
 } from '@skybrush/app-theme-mui';
 
 import { CHART_COLORS } from './constants';
+import type { Chart, ChartCalculationState } from './types';
 
 import 'chartjs-plugin-annotation';
 import 'chartjs-plugin-crosshair';
@@ -254,26 +255,40 @@ const createOptions = ({
 };
 
 type ChartPanelProps = {
-  readonly data: Array<{
-    values: Array<{
-      x: number;
-      y: number | null;
-      tip?: string | null;
-    }>;
-    label: string;
-    role?: 'minimum' | 'maximum' | 'mean' | 'single';
-  }>;
-  readonly formatPlaybackTimestamp?: (value: number) => string;
-  readonly height: number;
-  readonly range: [number, number];
-  readonly threshold?: number | undefined | Array<number | undefined>;
-  readonly thresholdLabel?: string;
-  readonly title?: string;
-  readonly verticalUnit?: string;
+  /** The chart data being shown in the panel. Takes precedence over `calculation` */
+  chart?: Chart;
+
+  /**
+   * The calculation that will eventually provide the chart data being shown in the
+   * panel. Use this for asynchronous chart calculations that take a longer time.
+   */
+  calculation?: ChartCalculationState;
+
+  /** Formatter for timestamps on the X axis of the chart */
+  formatPlaybackTimestamp?: (value: number) => string;
+
+  /** Height of the chart panel in pixels */
+  height: number;
+
+  /** Y axis range for the chart */
+  range: [number, number];
+
+  /** Threshold value(s) to show on the chart as annotations */
+  threshold?: number | undefined | Array<number | undefined>;
+
+  /** Label for the threshold annotation */
+  thresholdLabel?: string;
+
+  /** Title of the chart */
+  title?: string;
+
+  /** Unit string to show on the vertical axis and in tooltips */
+  verticalUnit?: string;
 };
 
 const ChartPanel = ({
-  data,
+  calculation,
+  chart,
   formatPlaybackTimestamp,
   height,
   range,
@@ -282,22 +297,28 @@ const ChartPanel = ({
   title,
   verticalUnit = '',
 }: ChartPanelProps) => {
-  const chartData = useMemo(
-    () => (canvas: HTMLCanvasElement) => {
+  const { datasets } = chart ?? calculation?.data ?? {};
+  const rawScatterData = useMemo(
+    () => (canvas: HTMLElement) => {
+      if (!(canvas instanceof HTMLCanvasElement)) {
+        // We support drawing on canvas elements only
+        return { datasets: [] };
+      }
+
       const lineStyles = createLineStyles({ canvas });
       const numberStyles = lineStyles.length;
 
-      const datasets = [];
+      const series = [];
       const index = 0;
       let styleIndex = 0;
 
-      for (const dataset of data || []) {
+      for (const dataset of datasets ?? []) {
         if (dataset) {
           const isBoundary =
             dataset.role === 'minimum' || dataset.role === 'maximum';
 
-          datasets.push({
-            label: dataset.label || `Series ${index + 1}`,
+          series.push({
+            label: dataset.label ?? `Series ${index + 1}`,
             data: dataset.values,
             fill: dataset.role === 'maximum' ? '+1' : false,
             showLine: true,
@@ -313,10 +334,10 @@ const ChartPanel = ({
       }
 
       return {
-        datasets,
+        datasets: series,
       };
     },
-    [data]
+    [datasets]
   );
 
   const options = useMemo(
@@ -333,7 +354,7 @@ const ChartPanel = ({
 
   return (
     <StyledCard square height={height}>
-      <Scatter data={chartData as any} options={options} />
+      <Scatter data={rawScatterData} options={options} />
       {title && (
         <Box left={8} top={4} position='absolute'>
           <Typography variant='button'>{title}</Typography>

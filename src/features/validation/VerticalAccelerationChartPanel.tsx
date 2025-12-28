@@ -4,15 +4,15 @@ import { connect } from 'react-redux';
 import { getTimestampFormatter } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 
-import ChartPanel from './ChartPanel';
+import ChartPanel from '~/features/charts/ChartPanel';
 import {
   getSampledVerticalAccelerationsForDrones,
   getVerticalAccelerationThresholdDown,
   getVerticalAccelerationThresholdUp,
 } from './selectors';
-import { createChartDataSelector } from './utils';
+import { createChartSelector } from './utils';
 
-const getDataForVerticalAccelerationChart = createChartDataSelector(
+const getVerticalAccelerationChart = createChartSelector(
   getSampledVerticalAccelerationsForDrones
 );
 
@@ -26,7 +26,7 @@ const Y_RANGE: [number, number] = [-1, 1];
 export default connect(
   // mapStateToProps
   (state: RootState) => ({
-    data: getDataForVerticalAccelerationChart(state),
+    chart: getVerticalAccelerationChart(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
     range: Y_RANGE,
     threshold: [

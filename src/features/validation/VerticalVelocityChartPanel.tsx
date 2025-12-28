@@ -1,18 +1,18 @@
 import { t } from 'i18next';
 import { connect } from 'react-redux';
 
+import ChartPanel from '~/features/charts/ChartPanel';
 import { getTimestampFormatter } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 
-import ChartPanel from './ChartPanel';
 import {
   getSampledVerticalVelocitiesForDrones,
   getVerticalVelocityThresholdDown,
   getVerticalVelocityThresholdUp,
 } from './selectors';
-import { createChartDataSelector } from './utils';
+import { createChartSelector } from './utils';
 
-const getDataForVerticalVelocityChart = createChartDataSelector(
+const getVerticalVelocityChart = createChartSelector(
   getSampledVerticalVelocitiesForDrones
 );
 
@@ -24,7 +24,7 @@ const Y_RANGE: [number, number] = [-1, 1];
 export default connect(
   // mapStateToProps
   (state: RootState) => ({
-    data: getDataForVerticalVelocityChart(state),
+    chart: getVerticalVelocityChart(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
     range: Y_RANGE,
     threshold: [

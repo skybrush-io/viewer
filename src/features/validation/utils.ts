@@ -1,47 +1,17 @@
 import { createSelector } from '@reduxjs/toolkit';
-import zipWith from 'lodash-es/zipWith';
 
+import type { Chart, ChartPointWithTip } from '~/features/charts/types';
+import { createChartPoints } from '~/features/charts/utils';
 import { getNamesOfDronesInShow } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 
 import { getIndicesOfSelectedDrones } from './items';
 import { getSampledTimeInstants, isSelectionEmpty } from './selectors';
 
-type ChartPoint = {
-  x: number;
-  y: number | null;
-};
-
-type ChartPointWithTip = ChartPoint & {
-  tip: string | null;
-};
-
-const createChartPoint = (x: number, y: number | null): ChartPoint => ({
-  x,
-  y,
-});
-const createChartPointWithTip = (
-  x: number,
-  y: number | null,
-  tip: string | null
-): ChartPointWithTip => ({
-  x,
-  y,
-  tip,
-});
-
-export const createChartPoints = (xs: number[], ys: Array<number | null>) =>
-  zipWith(xs, ys, createChartPoint);
-
-export const createChartPointsWithTips = (
-  xs: number[],
-  ys: Array<number | null>,
-  tips: Array<string | null>
-) => zipWith(xs, ys, tips, createChartPointWithTip);
-
-export const createChartDataSelector = (
-  selector: (state: RootState) => number[][]
-) => {
+export const createChartSelector = (
+  selector: (state: RootState) => number[][],
+  options: Omit<Chart, 'datasets'> = {}
+): ((state: RootState) => Chart) => {
   // Sub-selector that returns the chart data that should be shown if some
   // drones are selected explicitly.
   const getChartDataForSelectedDrones = createSelector(
@@ -62,9 +32,8 @@ export const createChartDataSelector = (
     }
   );
 
-  // Sub-selector that returns aggregated data series that contain the minimum,
-  // maximum and mean of all the individual data points in the series
-  // corresponding to the drones
+  // Sub-selector that returns aggregated data series that contain the minimum and
+  // maximum of all the individual data points in the series corresponding to the drones
   const getAggregatedChartData = createSelector(
     selector,
     getSampledTimeInstants,
@@ -103,7 +72,6 @@ export const createChartDataSelector = (
         minValues[frameIndex] = {
           x: time,
           y: minValue,
-          tip: null,
         };
         if (minIndex !== undefined) {
           minValues[frameIndex].tip = names[minIndex];
@@ -112,7 +80,6 @@ export const createChartDataSelector = (
         maxValues[frameIndex] = {
           x: time,
           y: maxValue,
-          tip: null,
         };
         if (maxIndex !== undefined) {
           maxValues[frameIndex].tip = names[maxIndex];
@@ -134,8 +101,10 @@ export const createChartDataSelector = (
     }
   );
 
-  return (state: RootState) =>
-    isSelectionEmpty(state)
+  return (state: RootState) => ({
+    datasets: isSelectionEmpty(state)
       ? getAggregatedChartData(state)
-      : getChartDataForSelectedDrones(state);
+      : getChartDataForSelectedDrones(state),
+    ...options,
+  });
 };

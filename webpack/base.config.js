@@ -33,6 +33,7 @@ module.exports = {
 
     // Add support for retrieving worker URLs directly from the code.
     // This is needed to use the 'workerpool' package.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     new WorkerUrlPlugin(),
 
     // Resolve process.env in the code; the object below provides the

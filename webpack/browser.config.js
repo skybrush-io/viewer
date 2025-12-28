@@ -52,6 +52,15 @@ module.exports = merge(baseConfig, {
     app: './src/index',
   },
 
+  resolve: {
+    alias: {
+      // These are needed for WorkerUrlPlugin to work correctly, but only in the
+      // browser context
+      child_process: false,
+      worker_threads: false,
+    },
+  },
+
   ...useAppConfiguration(process.env.SKYBRUSH_VARIANT ?? 'webapp'),
 
   module: {

@@ -91,7 +91,8 @@
     "url": "^0.11.4",
     "util": "^0.12.5",
     "webpack-shell-plugin-next": "^2.3.3",
-    "whatwg-fetch": "^3.6.20"
+    "whatwg-fetch": "^3.6.20",
+    "workerpool": "^10.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
@@ -134,7 +135,8 @@
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0",
     "webpack-merge": "^6.0.1",
-    "worker-loader": "^3.0.8"
+    "worker-loader": "^3.0.8",
+    "worker-url": "^1.1.0"
   },
   "resolutions": {
     "memfs": "3.4.7"

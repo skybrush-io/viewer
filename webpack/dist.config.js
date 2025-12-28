@@ -20,6 +20,16 @@ module.exports = merge(baseConfig, {
   // Make sure to use a _single_ entry point here; we want a single bundle.js
   // in the browser-based deployment for sake of simplicity
   entry: ['whatwg-fetch', './src/index'],
+
+  resolve: {
+    alias: {
+      // These are needed for WorkerUrlPlugin to work correctly, but only in the
+      // browser context
+      child_process: false,
+      worker_threads: false,
+    },
+  },
+
   output: {
     filename: 'bundle.js',
     publicPath: 'auto',

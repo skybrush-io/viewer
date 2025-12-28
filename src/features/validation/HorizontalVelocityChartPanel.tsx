@@ -7,12 +7,12 @@ import type { RootState } from '~/store';
 import ChartPanel from '~/features/charts/ChartPanel';
 import {
   getHorizontalVelocityThreshold,
-  getSampledHorizontalVelocitiesForDrones,
+  selectSampledHorizontalVelocityGetter,
 } from './selectors';
-import { createChartSelectorFromSwarmRelatedSelector } from './utils';
+import { createChartSelectorFromDroneRelatedSelector } from './utils';
 
-const getHorizontalVelocityChart = createChartSelectorFromSwarmRelatedSelector(
-  getSampledHorizontalVelocitiesForDrones
+const getHorizontalVelocityChart = createChartSelectorFromDroneRelatedSelector(
+  selectSampledHorizontalVelocityGetter
 );
 
 // Custom range to use for the chart panel. This prevents the annotations from

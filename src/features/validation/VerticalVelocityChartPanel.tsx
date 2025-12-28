@@ -6,14 +6,14 @@ import { getTimestampFormatter } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 
 import {
-  getSampledVerticalVelocitiesForDrones,
   getVerticalVelocityThresholdDown,
   getVerticalVelocityThresholdUp,
+  selectSampledVerticalVelocityGetter,
 } from './selectors';
-import { createChartSelectorFromSwarmRelatedSelector } from './utils';
+import { createChartSelectorFromDroneRelatedSelector } from './utils';
 
-const getVerticalVelocityChart = createChartSelectorFromSwarmRelatedSelector(
-  getSampledVerticalVelocitiesForDrones
+const getVerticalVelocityChart = createChartSelectorFromDroneRelatedSelector(
+  selectSampledVerticalVelocityGetter
 );
 
 // Custom range to use for the chart panel. This prevents the annotations from

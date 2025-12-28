@@ -7,13 +7,13 @@ import type { RootState } from '~/store';
 import ChartPanel from '~/features/charts/ChartPanel';
 import {
   getHorizontalAccelerationThreshold,
-  getSampledHorizontalAccelerationsForDrones,
+  selectSampledHorizontalAccelerationGetter,
 } from './selectors';
-import { createChartSelectorFromSwarmRelatedSelector } from './utils';
+import { createChartSelectorFromDroneRelatedSelector } from './utils';
 
 const getHorizontalAccelerationChart =
-  createChartSelectorFromSwarmRelatedSelector(
-    getSampledHorizontalAccelerationsForDrones
+  createChartSelectorFromDroneRelatedSelector(
+    selectSampledHorizontalAccelerationGetter
   );
 
 // Custom range to use for the chart panel. This prevents the annotations from

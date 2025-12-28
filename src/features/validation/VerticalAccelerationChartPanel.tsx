@@ -6,15 +6,15 @@ import type { RootState } from '~/store';
 
 import ChartPanel from '~/features/charts/ChartPanel';
 import {
-  getSampledVerticalAccelerationsForDrones,
   getVerticalAccelerationThresholdDown,
   getVerticalAccelerationThresholdUp,
+  selectSampledVerticalAccelerationGetter,
 } from './selectors';
-import { createChartSelectorFromSwarmRelatedSelector } from './utils';
+import { createChartSelectorFromDroneRelatedSelector } from './utils';
 
 const getVerticalAccelerationChart =
-  createChartSelectorFromSwarmRelatedSelector(
-    getSampledVerticalAccelerationsForDrones
+  createChartSelectorFromDroneRelatedSelector(
+    selectSampledVerticalAccelerationGetter
   );
 
 const maybeNegate = (x?: number) => (typeof x === 'number' ? -x : x);

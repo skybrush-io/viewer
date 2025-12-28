@@ -86,33 +86,10 @@ function aggregateDataSeries(
   ];
 }
 
-/**
- * Creates a chart selector that takes the current state of the application and
- * produces the data for a chart, given a _single_ selector that maps the state to
- * an array containing some precomputed data for all drones.
- *
- * In this function it is assumed that the provided selector is memoized so retrieving
- * an individual data series related to a drone is efficient.
- *
- * @param selector - a selector that takes the root state and returns an array where the
- *        i-th element is some precomputed data series for the i-th drone in the show
- * @param options - additional options to apply on the generated chart
- * @returns the chart selector
- */
-export const createChartSelectorFromSwarmRelatedSelector = (
-  selector: (state: RootState) => number[][],
+const createChartSelectorFromDataProvider = (
+  getDataProvider: (state: RootState) => ValidationDataProvider,
   options: Omit<Chart, 'datasets'> = {}
 ): ((state: RootState) => Chart) => {
-  const getDataProvider = createSelector(
-    selector,
-    getNamesOfDronesInShow,
-    (data: number[][], names: string[]): ValidationDataProvider => ({
-      getItemCount: () => data.length,
-      getItemAt: (itemIndex: number) => data[itemIndex],
-      getNameOfItemAt: (itemIndex: number) => names[itemIndex],
-    })
-  );
-
   // Sub-selector that returns the chart data that should be shown if some
   // drones are selected explicitly. This is relatively simple as the selection
   // only contains a few drones so we can just compute the data on the fly, saving
@@ -142,4 +119,56 @@ export const createChartSelectorFromSwarmRelatedSelector = (
       : getChartDataForSelectedDrones(state),
     ...options,
   });
+};
+
+/**
+ * Creates a chart selector that takes the current state of the application and
+ * produces the data for a chart, given a single selector that maps the state to
+ * an array containing some derived data for all drones.
+ *
+ * @param selector - a selector that takes the root state and returns an array where the
+ *        i-th element is some derived data series for the i-th drone in the show
+ * @param options - additional options to apply on the generated chart
+ * @returns the chart selector
+ */
+export const createChartSelectorFromSwarmRelatedSelector = (
+  selector: (state: RootState) => number[][],
+  options: Omit<Chart, 'datasets'> = {}
+): ((state: RootState) => Chart) => {
+  const getDataProvider = createSelector(
+    selector,
+    getNamesOfDronesInShow,
+    (data: number[][], names: string[]): ValidationDataProvider => ({
+      getItemCount: () => data.length,
+      getItemAt: (itemIndex: number) => data[itemIndex],
+      getNameOfItemAt: (itemIndex: number) => names[itemIndex],
+    })
+  );
+  return createChartSelectorFromDataProvider(getDataProvider, options);
+};
+
+/**
+ * Creates a chart selector that takes the current state of the application and
+ * produces the data for a chart, given a single selector that maps the state and the
+ * index of a given drone to an array containing some derived data for that drone only.
+ *
+ * @param selector - a selector that takes the root state and a drone index, and returns
+ *        a derived data series related to that drone only
+ * @param options - additional options to apply on the generated chart
+ * @returns the chart selector
+ */
+export const createChartSelectorFromDroneRelatedSelector = (
+  selector: (state: RootState) => (index: number) => number[],
+  options: Omit<Chart, 'datasets'> = {}
+): ((state: RootState) => Chart) => {
+  const getDataProvider = createSelector(
+    selector,
+    getNamesOfDronesInShow,
+    (getItemAt, names: string[]): ValidationDataProvider => ({
+      getItemCount: () => names.length,
+      getItemAt,
+      getNameOfItemAt: (itemIndex: number) => names[itemIndex],
+    })
+  );
+  return createChartSelectorFromDataProvider(getDataProvider, options);
 };

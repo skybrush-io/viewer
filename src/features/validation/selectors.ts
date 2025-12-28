@@ -166,15 +166,33 @@ export const getSampledVelocitiesForDrones = createSelector(
 );
 
 /**
+ * Returns a function that maps from a drone index to an array containing the altitude
+ * of that drone, sampled at regular intervals.
+ */
+export const selectSampledAltitudeGetter = createSelector(
+  getSampledPositionsForDrones,
+  (positions) => (index: number) => projectAllToZ(positions[index] ?? [])
+);
+
+/**
  * Returns an array mapping drones to their altitudes, sampled at regular
  * intervals.
  *
  * This function does not need to be memoized. It is a relatively simple operation,
  * but the result takes a lot of memory.
  */
-export const getSampledAltitudesForDrones = (state: RootState) => {
+export const getSampledAltitudesForAllDrones = (state: RootState) => {
   return getSampledPositionsForDrones(state).map(projectAllToZ);
 };
+
+/**
+ * Returns a function that maps from a drone index to an array containing the horizontal
+ * velocity of that drone, sampled at regular intervals.
+ */
+export const selectSampledHorizontalVelocityGetter = createSelector(
+  getSampledVelocitiesForDrones,
+  (velocities) => (index: number) => projectAllToXY(velocities[index] ?? [])
+);
 
 /**
  * Returns an array mapping drones to their horizontal velocities, sampled at regular
@@ -188,6 +206,15 @@ export const getSampledHorizontalVelocitiesForDrones = (state: RootState) => {
 };
 
 /**
+ * Returns a function that maps from a drone index to an array containing the vertical
+ * velocity of that drone, sampled at regular intervals.
+ */
+export const selectSampledVerticalVelocityGetter = createSelector(
+  getSampledVelocitiesForDrones,
+  (velocities) => (index: number) => projectAllToZ(velocities[index] ?? [])
+);
+
+/**
  * Returns an array mapping drones to their vertical velocities, sampled at regular
  * intervals.
  *
@@ -197,6 +224,8 @@ export const getSampledHorizontalVelocitiesForDrones = (state: RootState) => {
 export const getSampledVerticalVelocitiesForDrones = (state: RootState) => {
   return getSampledVelocitiesForDrones(state).map(projectAllToZ);
 };
+
+const TIME_BETWEEN_SAMPLES = 1 / SAMPLES_PER_SECOND;
 
 /**
  * Returns an array mapping drones to their estimated horizontal accelerations,
@@ -215,11 +244,28 @@ export const getSampledVerticalVelocitiesForDrones = (state: RootState) => {
 export const getSampledHorizontalAccelerationsForDrones = (
   state: RootState
 ) => {
-  const dt = 1 / SAMPLES_PER_SECOND;
   return getSampledVelocitiesForDrones(state).map((velocities) =>
-    projectAllToXY(calculateVectorDerivative(velocities, 1, dt))
+    projectAllToXY(
+      calculateVectorDerivative(velocities, 1, TIME_BETWEEN_SAMPLES)
+    )
   );
 };
+
+/**
+ * Returns a function that maps from a drone index to an array containing the horizontal
+ * acceleration of that drone, sampled at regular intervals.
+ */
+export const selectSampledHorizontalAccelerationGetter = createSelector(
+  getSampledVelocitiesForDrones,
+  (velocities) => (index: number) =>
+    projectAllToXY(
+      calculateVectorDerivative(
+        velocities[index] ?? [],
+        1,
+        TIME_BETWEEN_SAMPLES
+      )
+    )
+);
 
 /**
  * Returns an array mapping drones to their estimated vertical accelerations,
@@ -236,11 +282,24 @@ export const getSampledHorizontalAccelerationsForDrones = (
  * across all drones, which will be memoized separately.
  */
 export const getSampledVerticalAccelerationsForDrones = (state: RootState) => {
-  const dt = 1 / SAMPLES_PER_SECOND;
   return getSampledVerticalVelocitiesForDrones(state).map((velocities) =>
-    calculateScalarDerivative(velocities, 1, dt)
+    calculateScalarDerivative(velocities, 1, TIME_BETWEEN_SAMPLES)
   );
 };
+
+/**
+ * Returns a function that maps from a drone index to an array containing the vertical
+ * acceleration of that drone, sampled at regular intervals.
+ */
+export const selectSampledVerticalAccelerationGetter = createSelector(
+  getSampledVelocitiesForDrones,
+  (velocities) => (index: number) =>
+    calculateScalarDerivative(
+      projectAllToZ(velocities[index] ?? []),
+      1,
+      TIME_BETWEEN_SAMPLES
+    )
+);
 
 /**
  * Returns two arrays, one mapping frames to the distance of the closest drone

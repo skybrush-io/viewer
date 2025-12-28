@@ -7,12 +7,12 @@ import type { RootState } from '~/store';
 
 import {
   getAltitudeWarningThreshold,
-  getSampledAltitudesForDrones,
+  selectSampledAltitudeGetter,
 } from './selectors';
-import { createChartSelectorFromSwarmRelatedSelector } from './utils';
+import { createChartSelectorFromDroneRelatedSelector } from './utils';
 
-const getAltitudeChart = createChartSelectorFromSwarmRelatedSelector(
-  getSampledAltitudesForDrones
+const getAltitudeChart = createChartSelectorFromDroneRelatedSelector(
+  selectSampledAltitudeGetter
 );
 
 // Custom ranges to use for the chart panel. This prevents the annotations from

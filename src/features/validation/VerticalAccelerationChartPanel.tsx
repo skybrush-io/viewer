@@ -10,11 +10,12 @@ import {
   getVerticalAccelerationThresholdDown,
   getVerticalAccelerationThresholdUp,
 } from './selectors';
-import { createChartSelector } from './utils';
+import { createChartSelectorFromSwarmRelatedSelector } from './utils';
 
-const getVerticalAccelerationChart = createChartSelector(
-  getSampledVerticalAccelerationsForDrones
-);
+const getVerticalAccelerationChart =
+  createChartSelectorFromSwarmRelatedSelector(
+    getSampledVerticalAccelerationsForDrones
+  );
 
 const maybeNegate = (x?: number) => (typeof x === 'number' ? -x : x);
 

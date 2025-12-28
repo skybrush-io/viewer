@@ -9,9 +9,11 @@ import {
   getAltitudeWarningThreshold,
   getSampledAltitudesForDrones,
 } from './selectors';
-import { createChartSelector } from './utils';
+import { createChartSelectorFromSwarmRelatedSelector } from './utils';
 
-const getAltitudeChart = createChartSelector(getSampledAltitudesForDrones);
+const getAltitudeChart = createChartSelectorFromSwarmRelatedSelector(
+  getSampledAltitudesForDrones
+);
 
 // Custom ranges to use for the chart panel. This prevents the annotations from
 // affecting the range chosen by Chart.js but it will still allow the data to

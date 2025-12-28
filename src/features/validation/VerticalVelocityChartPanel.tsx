@@ -10,9 +10,9 @@ import {
   getVerticalVelocityThresholdDown,
   getVerticalVelocityThresholdUp,
 } from './selectors';
-import { createChartSelector } from './utils';
+import { createChartSelectorFromSwarmRelatedSelector } from './utils';
 
-const getVerticalVelocityChart = createChartSelector(
+const getVerticalVelocityChart = createChartSelectorFromSwarmRelatedSelector(
   getSampledVerticalVelocitiesForDrones
 );
 

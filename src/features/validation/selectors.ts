@@ -15,8 +15,6 @@ import {
   getClosestPairsAndDistances,
   projectAllToXY,
   projectAllToZ,
-  projectToXY,
-  projectToZ,
   sampleDurationEvenly,
   samplePositionAt,
   sampleVelocityAt,
@@ -170,33 +168,35 @@ export const getSampledVelocitiesForDrones = createSelector(
 /**
  * Returns an array mapping drones to their altitudes, sampled at regular
  * intervals.
+ *
+ * This function does not need to be memoized. It is a relatively simple operation,
+ * but the result takes a lot of memory.
  */
-export const getSampledAltitudesForDrones = createSelector(
-  getSampledPositionsForDrones,
-  (positionsByDrones) => {
-    return positionsByDrones.map((positions) => positions.map(projectToZ));
-  }
-);
+export const getSampledAltitudesForDrones = (state: RootState) => {
+  return getSampledPositionsForDrones(state).map(projectAllToZ);
+};
 
 /**
  * Returns an array mapping drones to their horizontal velocities, sampled at regular
  * intervals.
+ *
+ * This function does not need to be memoized. It is a relatively simple operation,
+ * but the result takes a lot of memory.
  */
-export const getSampledHorizontalVelocitiesForDrones = createSelector(
-  getSampledVelocitiesForDrones,
-  (velocitiesByDrones) => {
-    return velocitiesByDrones.map((velocities) => velocities.map(projectToXY));
-  }
-);
+export const getSampledHorizontalVelocitiesForDrones = (state: RootState) => {
+  return getSampledVelocitiesForDrones(state).map(projectAllToXY);
+};
 
 /**
  * Returns an array mapping drones to their vertical velocities, sampled at regular
  * intervals.
+ *
+ * This function does not need to be memoized. It is a relatively simple operation,
+ * but the result takes a lot of memory.
  */
-export const getSampledVerticalVelocitiesForDrones = createSelector(
-  getSampledVelocitiesForDrones,
-  (velocitiesByDrones) => velocitiesByDrones.map(projectAllToZ)
-);
+export const getSampledVerticalVelocitiesForDrones = (state: RootState) => {
+  return getSampledVelocitiesForDrones(state).map(projectAllToZ);
+};
 
 /**
  * Returns an array mapping drones to their estimated horizontal accelerations,
@@ -206,16 +206,20 @@ export const getSampledVerticalVelocitiesForDrones = createSelector(
  * better to derive them directly from the trajectory, but the result would be
  * zero for linear segments and infinity at the points where segments join with
  * discontinuous velocities, and this is not useful for the end user.
+ *
+ * This function is not memoized. Although calculating the accelerations from the
+ * velocities is not necessarily cheap, the result takes a lot of memory, and typically
+ * we only need the _aggregated_ chart that shows the minimum and maximum acceleration
+ * across all drones, which will be memoized separately.
  */
-export const getSampledHorizontalAccelerationsForDrones = createSelector(
-  getSampledVelocitiesForDrones,
-  (velocitiesByDrones) => {
-    const dt = 1 / SAMPLES_PER_SECOND;
-    return velocitiesByDrones.map((velocities) => {
-      return projectAllToXY(calculateVectorDerivative(velocities, 1, dt));
-    });
-  }
-);
+export const getSampledHorizontalAccelerationsForDrones = (
+  state: RootState
+) => {
+  const dt = 1 / SAMPLES_PER_SECOND;
+  return getSampledVelocitiesForDrones(state).map((velocities) =>
+    projectAllToXY(calculateVectorDerivative(velocities, 1, dt))
+  );
+};
 
 /**
  * Returns an array mapping drones to their estimated vertical accelerations,
@@ -225,16 +229,18 @@ export const getSampledHorizontalAccelerationsForDrones = createSelector(
  * better to derive them directly from the trajectory, but the result would be
  * zero for linear segments and infinity at the points where segments join with
  * discontinuous velocities, and this is not useful for the end user.
+ *
+ * This function is not memoized. Although calculating the accelerations from the
+ * velocities is not necessarily cheap, the result takes a lot of memory, and typically
+ * we only need the _aggregated_ chart that shows the minimum and maximum acceleration
+ * across all drones, which will be memoized separately.
  */
-export const getSampledVerticalAccelerationsForDrones = createSelector(
-  getSampledVerticalVelocitiesForDrones,
-  (velocitiesByDrones) => {
-    const dt = 1 / SAMPLES_PER_SECOND;
-    return velocitiesByDrones.map((velocities) =>
-      calculateScalarDerivative(velocities, 1, dt)
-    );
-  }
-);
+export const getSampledVerticalAccelerationsForDrones = (state: RootState) => {
+  const dt = 1 / SAMPLES_PER_SECOND;
+  return getSampledVerticalVelocitiesForDrones(state).map((velocities) =>
+    calculateScalarDerivative(velocities, 1, dt)
+  );
+};
 
 /**
  * Returns two arrays, one mapping frames to the distance of the closest drone

@@ -8,6 +8,74 @@ import type { RootState } from '~/store';
 import { getIndicesOfSelectedDrones } from './items';
 import { getSampledTimeInstants, isSelectionEmpty } from './selectors';
 
+function aggregateDataSeries(
+  data: number[][],
+  times: number[],
+  names: string[]
+) {
+  const minValues: ChartPointWithTip[] = [];
+  const maxValues: ChartPointWithTip[] = [];
+  let frameCount = 0;
+  let seriesIndex = 0;
+  for (const series of data) {
+    const numCommonItems = Math.min(series.length, frameCount);
+
+    for (let itemIndex = 0; itemIndex < numCommonItems; itemIndex++) {
+      const currentValue = series[itemIndex];
+      const minValue = minValues[itemIndex];
+      const maxValue = maxValues[itemIndex];
+
+      if (currentValue < minValue.y!) {
+        minValue.y = currentValue;
+        minValue.tip = names[seriesIndex];
+      }
+
+      if (currentValue > maxValue.y!) {
+        maxValue.y = currentValue;
+        maxValue.tip = names[seriesIndex];
+      }
+    }
+
+    if (series.length > frameCount) {
+      const tip = names[seriesIndex];
+      minValues.splice(
+        frameCount,
+        0,
+        ...series.slice(frameCount).map((y, index) => ({
+          x: times[frameCount + index],
+          y,
+          tip,
+        }))
+      );
+      maxValues.splice(
+        frameCount,
+        0,
+        ...series.slice(frameCount).map((y, index) => ({
+          x: times[frameCount + index],
+          y,
+          tip,
+        }))
+      );
+      frameCount = series.length;
+    }
+
+    seriesIndex++;
+  }
+
+  return [
+    {
+      label: 'Maximum',
+      values: maxValues,
+      role: 'maximum',
+    },
+    {
+      label: 'Minimum',
+      values: minValues,
+      role: 'minimum',
+    },
+  ];
+}
+
 export const createChartSelector = (
   selector: (state: RootState) => number[][],
   options: Omit<Chart, 'datasets'> = {}
@@ -38,67 +106,7 @@ export const createChartSelector = (
     selector,
     getSampledTimeInstants,
     getNamesOfDronesInShow,
-    (data, times, names) => {
-      const minValues: ChartPointWithTip[] = [];
-      const maxValues: ChartPointWithTip[] = [];
-
-      const droneCount = data.length;
-      const frameCount = times.length;
-
-      minValues.length = frameCount;
-      maxValues.length = frameCount;
-
-      for (let frameIndex = 0; frameIndex < frameCount; frameIndex++) {
-        const time = times[frameIndex];
-        let minValue = Number.POSITIVE_INFINITY;
-        let maxValue = Number.NEGATIVE_INFINITY;
-        let minIndex;
-        let maxIndex;
-
-        for (let droneIndex = 0; droneIndex < droneCount; droneIndex++) {
-          const currentValue = data[droneIndex][frameIndex];
-
-          if (minValue > currentValue) {
-            minValue = currentValue;
-            minIndex = droneIndex;
-          }
-
-          if (maxValue < currentValue) {
-            maxValue = currentValue;
-            maxIndex = droneIndex;
-          }
-        }
-
-        minValues[frameIndex] = {
-          x: time,
-          y: minValue,
-        };
-        if (minIndex !== undefined) {
-          minValues[frameIndex].tip = names[minIndex];
-        }
-
-        maxValues[frameIndex] = {
-          x: time,
-          y: maxValue,
-        };
-        if (maxIndex !== undefined) {
-          maxValues[frameIndex].tip = names[maxIndex];
-        }
-      }
-
-      return [
-        {
-          label: 'Maximum',
-          values: maxValues,
-          role: 'maximum',
-        },
-        {
-          label: 'Minimum',
-          values: minValues,
-          role: 'minimum',
-        },
-      ];
-    }
+    aggregateDataSeries
   );
 
   return (state: RootState) => ({

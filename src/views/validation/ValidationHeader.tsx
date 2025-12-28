@@ -6,13 +6,12 @@ import ChevronRight from '@mui/icons-material/ChevronRight';
 import Box, { type BoxProps } from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
-import { clearLoadedShow } from '~/features/show/slice';
 import { setMode } from '~/features/ui/actions';
 import { UIMode } from '~/features/ui/modes';
 import { togglePanelVisibility } from '~/features/validation/actions';
 import { PANELS, type ValidationPanel } from '~/features/validation/panels';
 import { getVisiblePanels } from '~/features/validation/selectors';
-import type { AppThunk, RootState } from '~/store';
+import type { RootState } from '~/store';
 
 import { canReloadShow } from '~/features/playback/selectors';
 import { reloadShow } from '~/features/show/actions';
@@ -98,10 +97,12 @@ export default connect(
   }),
   // mapDispatchToProps
   {
+    /*
     onClearLoadedShow: (): AppThunk => (dispatch) => {
       dispatch(clearLoadedShow());
       dispatch(setMode(UIMode.PLAYER));
     },
+    */
     onReloadShow: reloadShow,
     onReturnToViewer: () => setMode(UIMode.PLAYER),
     onTogglePanel: (id: ValidationPanel) => togglePanelVisibility(id),

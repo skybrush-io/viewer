@@ -26,6 +26,7 @@ import type { Chart, ChartCalculationState } from './types';
 
 import 'chartjs-plugin-annotation';
 import 'chartjs-plugin-crosshair';
+import { useTranslation } from 'react-i18next';
 
 type StyledCardProps = CardProps & {
   height: number;
@@ -260,7 +261,7 @@ const createOptions = ({
   return options;
 };
 
-type ChartPanelProps = {
+export type ChartPanelProps = {
   /**
    * The chart data being shown in the panel. Ignored if `calculation` is also
    * specified. Use this for chart data that has already been calculated.
@@ -307,6 +308,7 @@ const ChartPanel = ({
   title,
   verticalUnit = '',
 }: ChartPanelProps) => {
+  const { t } = useTranslation();
   const { status, error, progress } = calculation ?? { status: 'idle' };
   const calculating = status === 'calculating';
 
@@ -378,13 +380,13 @@ const ChartPanel = ({
       {showHeaderBox ? (
         <Box left={8} top={4} right={8} position='absolute' display='flex'>
           {isNil(title) ? null : (
-            <Box flex={1}>
+            <Box>
               <Typography variant='button'>{title}</Typography>
             </Box>
           )}
           <Box flex={1} />
           {calculating || isNil(error) ? null : (
-            <Box flex={1}>
+            <Box>
               <Typography variant='button' color='error'>
                 {error}
               </Typography>
@@ -393,7 +395,7 @@ const ChartPanel = ({
         </Box>
       ) : null}
       <CentralHelperPanel padding={2} visible={calculating}>
-        <Typography variant='body1'>Calculating...</Typography>
+        <Typography variant='body1'>{t('generic.pleaseWait')}</Typography>
         <LinearProgress
           value={progress}
           variant={isNil(progress) ? 'indeterminate' : 'determinate'}

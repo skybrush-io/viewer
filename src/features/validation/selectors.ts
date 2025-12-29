@@ -12,7 +12,6 @@ import type { RootState } from '~/store';
 import {
   calculateScalarDerivative,
   calculateVectorDerivative,
-  getClosestPairsAndDistances,
   projectAllToXY,
   projectAllToZ,
   sampleDurationEvenly,
@@ -299,18 +298,6 @@ export const selectSampledVerticalAccelerationGetter = createSelector(
       1,
       TIME_BETWEEN_SAMPLES
     )
-);
-
-/**
- * Returns two arrays, one mapping frames to the distance of the closest drone
- * pair in that frame, and another mapping frames to the indices of the closts
- * drone pairs in the at frame. Each item of the array may be undefined if the frame
- * has at most one drone.
- */
-export const getNearestNeighborsAndDistancesForFrames = createSelector(
-  getSampledPositionsForDrones,
-  getSampledTimeInstants,
-  getClosestPairsAndDistances
 );
 
 const EMPTY_SELECTION: string[] = [];

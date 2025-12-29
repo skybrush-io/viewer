@@ -1,5 +1,5 @@
 import { isNil, merge } from 'lodash-es';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { Scatter } from 'react-chartjs-2';
 
 import {
@@ -297,6 +297,14 @@ export type ChartPanelProps = {
   verticalUnit?: string;
 };
 
+// Add memoization to the Scatter component to avoid re-rendering it when the
+// chart is generated asynchronously and we are only updating the progress state.
+//
+// This memoization is also required to avoid a weird exception that happens when
+// toggling any of the _other_ plots while the proximity plot (an async plot)
+// is visible.
+const MemoScatter = memo(Scatter);
+
 const ChartPanel = ({
   calculation,
   chart,
@@ -376,7 +384,7 @@ const ChartPanel = ({
 
   return (
     <StyledCard square height={height}>
-      <Scatter data={rawScatterData} options={options} />
+      <MemoScatter data={rawScatterData} options={options} />
       {showHeaderBox ? (
         <Box left={8} top={4} right={8} position='absolute' display='flex'>
           {isNil(title) ? null : (

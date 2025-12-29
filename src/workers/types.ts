@@ -1,4 +1,5 @@
-import type getClosestPairsAndDistances from './functions/proximity-check';
+import type { Vector3 } from '@skybrush/show-format';
+import type { DistancesAndIndices } from './functions/proximity-check';
 
 /**
  * Events that can be sent from an async function to report progress.
@@ -51,7 +52,11 @@ export type AsyncFnOptions = {
   handleEvent?: <T>(event: AsyncFnEvent<T>) => void;
 };
 
-type Workerify<F> = F extends (...args: infer A) => infer R
+/**
+ * Converts a standard sync function signature into a "workerified" version that
+ * returns a promise and has an extra argument for worker options.
+ */
+export type Workerify<F> = F extends (...args: infer A) => infer R
   ? (...args: [...A, options?: AsyncFnOptions]) => Promise<Awaited<R>>
   : never;
 
@@ -59,5 +64,9 @@ type Workerify<F> = F extends (...args: infer A) => infer R
  * Type specification for the API of functions exposed by the worker module.
  */
 export type WorkerApi = {
-  getClosestPairsAndDistances: Workerify<typeof getClosestPairsAndDistances>;
+  getClosestPairsAndDistances: (
+    positions: Vector3[][],
+    times: number[],
+    options?: AsyncFnOptions
+  ) => Promise<DistancesAndIndices>;
 };

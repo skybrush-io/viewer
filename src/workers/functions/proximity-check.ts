@@ -3,10 +3,17 @@ import { workerEmit } from 'workerpool';
 import { areVectorsAlmostEqual } from '~/features/validation/calculations';
 import getClosestPair from '~/features/validation/closest-pair';
 
+export type DistancesAndIndices = [
+  Array<number | undefined>,
+  Array<[number, number] | undefined>,
+];
+
 export default function getClosestPairsAndDistances(
   positions: Vector3[][],
-  times: number[]
-): [Array<number | undefined>, Array<[number, number] | undefined>] {
+  times: number[],
+  takeoffPositions?: Vector3[],
+  landingPositions?: Vector3[]
+): DistancesAndIndices {
   const frameCount = times.length;
   const droneCount = positions.length;
   const distances: Array<number | undefined> = Array.from({
@@ -18,6 +25,9 @@ export default function getClosestPairsAndDistances(
   const indexMap: number[] = [];
   const positionsInCurrentFrame: Vector3[] = [];
   let lastProgressAt = 0;
+
+  takeoffPositions ??= [];
+  landingPositions ??= [];
 
   for (let frameIndex = 0; frameIndex < frameCount; frameIndex++) {
     const now = performance.now();
@@ -42,10 +52,13 @@ export default function getClosestPairsAndDistances(
     positionsInCurrentFrame.length = 0;
     for (let droneIndex = 0; droneIndex < droneCount; droneIndex++) {
       const pos = positions[droneIndex];
+      const takeoffPos = takeoffPositions[droneIndex];
+      const landingPos = landingPositions[droneIndex];
+
       if (
         pos.length > 0 &&
-        !areVectorsAlmostEqual(pos[frameIndex], pos[0]) &&
-        !areVectorsAlmostEqual(pos[frameIndex], pos.at(-1)!)
+        !areVectorsAlmostEqual(pos[frameIndex], takeoffPos) &&
+        !areVectorsAlmostEqual(pos[frameIndex], landingPos)
       ) {
         indexMap.push(droneIndex);
         positionsInCurrentFrame.push(pos[frameIndex]);

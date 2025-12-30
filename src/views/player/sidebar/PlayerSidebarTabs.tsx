@@ -7,7 +7,7 @@ import Tabs from '@mui/material/Tabs';
 
 import { Tooltip } from '@skybrush/mui-components';
 
-import type { CSSProperties } from '@mui/material';
+import type { CSSProperties } from '@mui/material/styles';
 import { getActiveSidebarTab } from '~/features/sidebar/selectors';
 import { setActiveSidebarTab } from '~/features/sidebar/slice';
 import { SidebarTab } from '~/features/sidebar/types';

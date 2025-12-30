@@ -19,7 +19,7 @@ export default defineConfig(
     },
   },
 
-  globalIgnores(['build']),
+  globalIgnores(['.*', 'build', 'dist']),
 
   {
     // Allow eslint-plugin-react to detect the React version automatically
@@ -56,6 +56,15 @@ export default defineConfig(
       },
     },
     rules: {
+      // Prevent barrel imports from @mui according to the recommendations
+      // on https://mui.com/material-ui/guides/minimizing-bundle-size/
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [{ regex: '^@mui/[^/]+$' }],
+        },
+      ],
+
       // Use Array<T> for more complex stuff but T[] for simple types.
       // Improves readability in most cases.
       '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
@@ -93,7 +102,11 @@ export default defineConfig(
       // influences the inferred type).
       '@typescript-eslint/no-unused-vars': [
         'error',
-        { ignoreRestSiblings: true, argsIgnorePattern: '^_' },
+        {
+          ignoreRestSiblings: true,
+          argsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+        },
       ],
 
       // Allow 'never' in template expressions. This is because we often use template

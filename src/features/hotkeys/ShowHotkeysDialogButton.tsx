@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { Keyboard } from '@mui/icons-material';
+import Keyboard from '@mui/icons-material/Keyboard';
 import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 import { Tooltip } from '@skybrush/mui-components';
 

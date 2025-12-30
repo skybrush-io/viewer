@@ -2,13 +2,10 @@ import { isNil, merge } from 'lodash-es';
 import { memo, useMemo } from 'react';
 import { Scatter } from 'react-chartjs-2';
 
-import {
-  Box,
-  Card,
-  type CardProps,
-  LinearProgress,
-  Typography,
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Card, { type CardProps } from '@mui/material/Card';
+import LinearProgress from '@mui/material/LinearProgress';
+import Typography from '@mui/material/Typography';
 import { orange } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
 

@@ -1,4 +1,4 @@
-import { styled } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import { Fragment } from 'react';
 

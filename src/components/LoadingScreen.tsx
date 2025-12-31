@@ -15,6 +15,7 @@ import {
 } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 
+import React from 'react';
 import CentralHelperPanel from './CentralHelperPanel';
 
 const styles = {
@@ -46,6 +47,11 @@ type LoadingScreenProps = {
   readonly visible: boolean;
 };
 
+const Progress = React.memo(() => (
+  <CircularProgress size={64} sx={styles.progress} />
+));
+Progress.displayName = 'Progress';
+
 const LoadingScreen = ({
   canPlay,
   error,
@@ -60,7 +66,7 @@ const LoadingScreen = ({
     onDismiss={onDismiss}
   >
     <Box sx={styles.root}>
-      {loading && <CircularProgress size={64} sx={styles.progress} />}
+      {loading && <Progress />}
       <Fab
         aria-label='play'
         color='primary'

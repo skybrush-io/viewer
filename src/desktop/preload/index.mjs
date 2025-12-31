@@ -1,5 +1,6 @@
 import { contextBridge } from 'electron';
 import { ipcRenderer as ipc } from 'electron-better-ipc';
+import fs from 'node:fs/promises';
 import createStorageEngine from 'redux-persist-electron-storage';
 
 import { receiveActionsFromRenderer, setupIpc } from './ipc.mjs';
@@ -18,20 +19,19 @@ function createStateStore() {
   });
 }
 
-// Inject the bridge functions between the main and the renderer processes.
-// These are the only functions that the renderer processes may call to access
-// any functionality that requires Node.js -- they are not allowed to use
-// Node.js modules themselves
-contextBridge.exposeInMainWorld('bridge', {
+/**
+ * The bridge functions between the main and the renderer processes.
+ *
+ * These are the only functions that the renderer processes may call to access
+ * any functionality that requires Node.js -- they are not allowed to use
+ * Node.js modules themselves.
+ *
+ * @type {import('../../window.ts').ElectronBridge}
+ */
+const bridge = {
   createStateStore,
   isElectron: true,
 
-  getShowAsObjectFromLocalFile: (filename) =>
-    ipc.callMain('getShowAsObjectFromLocalFile', filename),
-
-  /**
-   * @param {Record<string, (...args: any[]) => void>} actions
-   */
   provideActions: (actions) => {
     receiveActionsFromRenderer(actions);
 
@@ -39,13 +39,21 @@ contextBridge.exposeInMainWorld('bridge', {
     void ipc.callMain('readyForFileOpening');
   },
 
+  readFile: (filename) => fs.readFile(filename),
+
   selectLocalShowFileForOpening: () =>
     ipc.callMain('selectLocalShowFileForOpening'),
 
-  setTitle({ appName, representedFile }) {
-    void ipc.callMain('setTitle', { appName, representedFile });
+  setAudioBuffer: (index, options) =>
+    ipc.callMain('setAudioBuffer', { index, options }),
+
+  setTitle: async ({ appName, representedFile }) => {
+    await ipc.callMain('setTitle', { appName, representedFile });
   },
-});
+};
+
+// Inject the bridge functions to the context of the renderer process.
+contextBridge.exposeInMainWorld('bridge', bridge);
 
 // Set up IPC channels that we are going to listen to
 setupIpc();

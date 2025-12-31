@@ -1,6 +1,5 @@
+import type { AudioData } from '@skybrush/show-format';
 import type { ActionCreator } from 'redux';
-
-import type { ShowSpecification } from '@skybrush/show-format';
 
 /**
  * Type specification for the bridge that we inject into the window object
@@ -9,18 +8,17 @@ import type { ShowSpecification } from '@skybrush/show-format';
 export type ElectronBridge = {
   isElectron: boolean;
 
-  getShowAsObjectFromLocalFile: (
-    filename: string
-  ) => Promise<ShowSpecification>;
   provideActions: (
     actionCreators: Record<string, ActionCreator<unknown>>
   ) => void;
+  readFile: (filename: string) => Promise<Buffer>;
   selectLocalShowFileForOpening: () => Promise<string>;
+  setAudioBuffer: (index: number, options: AudioData) => Promise<string | null>;
   setTitle: (options: {
     appName?: string;
     representedFile?: string;
     alternateFile?: string;
-  }) => void;
+  }) => Promise<void>;
 };
 
 export type WindowWithBridge = Window & {

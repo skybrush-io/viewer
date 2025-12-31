@@ -15,6 +15,9 @@ export type ShowDataSource =
       filename: string;
     }
   | {
+      type: 'buffer';
+    }
+  | {
       type: 'manifestUrl';
       filename: string;
     }

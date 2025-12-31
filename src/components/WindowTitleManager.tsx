@@ -19,7 +19,7 @@ const WindowTitleManager = ({
     if (isElectronWindow(window)) {
       // Running inside Electron, use the bridge API to ask the renderer
       // process to change the window title.
-      window.bridge.setTitle({ appName });
+      void window.bridge.setTitle({ appName });
     } else {
       // Running inside the browser, set the title of the document
       document.title = showTitle ? `${showTitle} | ${appName}` : appName;

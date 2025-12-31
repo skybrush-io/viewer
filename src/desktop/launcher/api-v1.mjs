@@ -3,7 +3,6 @@ import { setTimeout } from 'node:timers/promises';
 import { ipcMain as ipc } from 'electron-better-ipc';
 import express from 'express';
 
-import { getShowAsObjectFromBuffer } from './show-loader.mjs';
 import { getFirstMainWindow } from './utils.mjs';
 import { setTitle } from './window-title.mjs';
 
@@ -33,10 +32,8 @@ router.post('/load', (req, res, next) => {
 
     Promise.race([
       (async () => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        const showSpec = await getShowAsObjectFromBuffer(req.body);
+        await ipc.callRenderer(targetWindow, 'loadShowFromBuffer', req.body);
         await ipc.callRenderer(targetWindow, 'setUIMode', 'validation');
-        await ipc.callRenderer(targetWindow, 'loadShowFromObject', showSpec);
 
         setTitle(targetWindow, {
           representedFile: null,

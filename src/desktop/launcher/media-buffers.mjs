@@ -5,7 +5,7 @@ import tmp from 'tmp-promise';
  * @typedef {Object} AudioBuffer
  * @property {string} path - Path to the temporary file holding the audio data
  * @property {() => Promise<void>} cleanup - Function to call to delete the temporary file
- * @property {string} mimeType - MIME type of the audio data
+ * @property {string} mediaType - MIME type of the audio data
  */
 
 /**
@@ -34,24 +34,30 @@ export const getAudioBuffer = (index) => loadedAudioBuffers[index] ?? null;
  *
  * @param {number} index - index of the buffer
  */
-export const getUrlToAudioBuffer = (index) =>
+const getUrlToAudioBuffer = (index) =>
   index >= 0 ? `media://audio/${index}` : null;
 
 /**
  * Sets the contents of the audio buffer with the given index.
  *
  * @param {number} index - index of the buffer
- * @param {{ data: string | NodeJS.ArrayBufferView; mimeType: string}} options
+ * @param {import('@skybrush/show-format').AudioData} options
  */
 export const setAudioBuffer = async (index, options) => {
-  const { data, mimeType } = options;
+  const { data, mediaType } = options;
+
+  if (index < 0) {
+    return null;
+  }
 
   clearAudioBuffer(index);
 
   const { path, cleanup } = await tmp.file();
   await fs.writeFile(path, data);
 
-  loadedAudioBuffers[index] = { path, cleanup, mimeType };
+  loadedAudioBuffers[index] = { path, cleanup, mediaType };
+
+  return getUrlToAudioBuffer(index);
 };
 
 /**

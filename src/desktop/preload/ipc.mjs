@@ -52,8 +52,7 @@ export const setupIpc = () => {
     'notifyFileOpeningRequest',
     createActionProxy('loadShowFromLocalFile')
   );
-
+  ipc.answerMain('loadShowFromBuffer', createActionProxy('loadShowFromBuffer'));
   ipc.answerMain('loadShowFromObject', createActionProxy('loadShowFromObject'));
-
   ipc.answerMain('setUIMode', createActionProxy('setUIMode'));
 };

@@ -12,6 +12,7 @@ import { configureStoreAndPersistence } from '@skybrush/redux-toolkit';
 
 import reducer from './features';
 import {
+  loadShowFromBuffer,
   loadShowFromLocalFile,
   loadShowFromObject,
 } from './features/show/actions';
@@ -61,6 +62,7 @@ if (isElectronWindow(window)) {
   window.bridge.provideActions(
     bindActionCreators(
       {
+        loadShowFromBuffer,
         loadShowFromLocalFile,
         loadShowFromObject,
         setUIMode,

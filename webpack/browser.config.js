@@ -46,39 +46,41 @@ if (useHotModuleReloading) {
   optimization.runtimeChunk = 'single'; // hot module reloading needs this
 }
 
-module.exports = merge(baseConfig, {
-  entry: {
-    polyfill: ['whatwg-fetch'],
-    app: './src/index',
-  },
-
-  resolve: {
-    alias: {
-      // These are needed for WorkerUrlPlugin to work correctly, but only in the
-      // browser context
-      child_process: false,
-      worker_threads: false,
+module.exports = merge(
+  baseConfig,
+  {
+    entry: {
+      polyfill: ['whatwg-fetch'],
+      app: './src/index',
     },
-  },
 
-  ...useAppConfiguration(process.env.SKYBRUSH_VARIANT ?? 'webapp'),
-
-  module: {
-    rules: [
-      {
-        test: /\.m?js$/,
-        resolve: {
-          fullySpecified: false,
-        },
+    resolve: {
+      alias: {
+        // These are needed for WorkerUrlPlugin to work correctly, but only in the
+        // browser context
+        child_process: false,
+        worker_threads: false,
       },
-    ],
-  },
+    },
 
-  devServer: {
-    // Fall back to serving index.html when the URL is not found
-    historyApiFallback: true,
-  },
+    module: {
+      rules: [
+        {
+          test: /\.m?js$/,
+          resolve: {
+            fullySpecified: false,
+          },
+        },
+      ],
+    },
 
-  optimization,
-  plugins,
-});
+    devServer: {
+      // Fall back to serving index.html when the URL is not found
+      historyApiFallback: true,
+    },
+
+    optimization,
+    plugins,
+  },
+  useAppConfiguration(process.env.SKYBRUSH_VARIANT ?? 'webapp')
+);

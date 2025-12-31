@@ -12,15 +12,14 @@ import { isThemeDark } from '@skybrush/app-theme-mui';
 const styles = {
   root: {
     background: (theme: Theme) =>
-      String(
-        new Color(
-          isThemeDark(theme)
-            ? theme.palette.common.black
-            : theme.palette.background.default
-        )
-          .alpha(0.7)
-          .string()
-      ),
+      new Color(
+        isThemeDark(theme)
+          ? theme.palette.common.black
+          : theme.palette.background.default
+      )
+        .alpha(0.7)
+        .string(),
+    backdropFilter: 'blur(24px)',
     borderRadius: 1,
     boxShadow: 8,
     fontSize: 'fontSize',

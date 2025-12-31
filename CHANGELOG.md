@@ -17,6 +17,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pyro cues are now listed on the sidebar inspector panel, thanks to a contribution
   from [@matt-edminster](https://github.com/matt-edminster)
 
+### Changed
+
+- Large shows now load much faster; a typical 5000-drone show now loads in about
+  15 seconds instead of three and a half minutes on a MacBook Pro M4.
+
+- Proximity charts are now calculated in a background worker thread to keep the UI
+  responsive even for large shows.
+
 ## [2.8.0] - 2025-12-12
 
 ### Added

@@ -222,7 +222,7 @@ export class Vector3Array {
    * @param dt - time difference between steps (default: 1)
    * @returns a new Vector3Array containing the derivatives.
    */
-  derivative(options: DerivativeOptions): Vector3Array {
+  derivative(options: DerivativeOptions = {}): Vector3Array {
     const { numSteps = 1, dt = 1 } = options;
     if (numSteps <= 0) {
       throw new Error('numSteps must be positive');
@@ -235,13 +235,14 @@ export class Vector3Array {
     const offset = 3 * numSteps;
     const end = n - offset;
     for (let i = offset; i < end; i++) {
-      result._data[i] = this._data[i + offset] - this._data[i - offset] / scale;
+      result._data[i] =
+        (this._data[i + offset] - this._data[i - offset]) / scale;
     }
 
     // Fill the endpoints
     if (n >= 2 * numSteps + 1) {
       for (let i = 0; i < numSteps; i++) {
-        for (let j = 0; j < 3; i++) {
+        for (let j = 0; j < 3; j++) {
           result._data[3 * i + j] = result._data[3 * numSteps + j];
           result._data[3 * (n - i - 1) + j] =
             result._data[3 * (n - numSteps - 1) + j];

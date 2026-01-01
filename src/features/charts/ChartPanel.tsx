@@ -401,7 +401,12 @@ const ChartPanel = ({
       ) : null}
       <CentralHelperPanel padding={2} visible={calculating}>
         <Typography variant='body1'>{t('generic.pleaseWait')}</Typography>
+        {/* the key below is necessary to _prevent_ the progress bar from trying to
+         * animate its bar from an indeterminate state to a determinate state. We
+         * prefer to remove the indeterminate progress bar completely and replace it
+         * with a fresh determinate progress bar */}
         <LinearProgress
+          key={isNil(progress) ? 'indeterminate' : 'determinate'}
           value={progress}
           variant={isNil(progress) ? 'indeterminate' : 'determinate'}
           sx={{ my: 1, width: 320 }}

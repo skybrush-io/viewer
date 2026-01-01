@@ -1,4 +1,4 @@
-import type { Vector3 } from '@skybrush/show-format';
+import { type Vector3Array } from '~/features/validation/vector3-array';
 import type { DistancesAndIndices } from './functions/proximity-check';
 
 /**
@@ -65,7 +65,7 @@ export type Workerify<F> = F extends (...args: infer A) => infer R
  */
 export type WorkerApi = {
   getClosestPairsAndDistances: (
-    positions: Vector3[][],
+    positions: Vector3Array[],
     times: number[],
     options?: AsyncFnOptions
   ) => Promise<DistancesAndIndices>;

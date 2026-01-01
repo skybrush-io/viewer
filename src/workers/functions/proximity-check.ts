@@ -2,6 +2,7 @@ import type { Vector3 } from '@skybrush/show-format';
 import { workerEmit } from 'workerpool';
 import { areVectorsAlmostEqual } from '~/features/validation/calculations';
 import getClosestPair from '~/features/validation/closest-pair';
+import { Vector3Array } from '~/features/validation/vector3-array';
 
 export type DistancesAndIndices = [
   Array<number | undefined>,
@@ -9,13 +10,31 @@ export type DistancesAndIndices = [
 ];
 
 export default function getClosestPairsAndDistances(
-  positions: Vector3[][],
-  times: number[],
+  positionData: Float32Array,
+  frameCount: number,
+  droneCount: number,
   takeoffPositions?: Vector3[],
   landingPositions?: Vector3[]
 ): DistancesAndIndices {
-  const frameCount = times.length;
-  const droneCount = positions.length;
+  // positionData is encoded as a flat Float32Array where the positions of the drones
+  // in each frame stored sequentially for all frames as follows:
+  //
+  // [drone0_frame0_x, drone0_frame0_y, drone0_frame0_z,
+  //  drone1_frame0_x, drone1_frame0_y, drone1_frame0_z,
+  //  ...,
+  //  drone0_frame1_x, drone0_frame1_y, drone0_frame1_z,
+  //  drone1_frame1_x, drone1_frame1_y, drone1_frame1_z,
+  //  ...]
+  //
+  // This allows us to extract the positions in a frame simply by slicing the array.
+
+  if (positionData.length !== frameCount * droneCount * 3) {
+    throw new Error(
+      `Expected position data length to be ${frameCount * droneCount * 3}, ` +
+        `but got ${positionData.length}`
+    );
+  }
+
   const distances: Array<number | undefined> = Array.from({
     length: frameCount,
   });
@@ -23,7 +42,7 @@ export default function getClosestPairsAndDistances(
     length: frameCount,
   });
   const indexMap: number[] = [];
-  const positionsInCurrentFrame: Vector3[] = [];
+  const sizeOfSingleFrame = droneCount * 3;
   let lastProgressAt = 0;
 
   takeoffPositions ??= [];
@@ -40,6 +59,14 @@ export default function getClosestPairsAndDistances(
       lastProgressAt = now;
     }
 
+    const allPositionsInCurrentFrame = Vector3Array.from(
+      positionData.slice(
+        frameIndex * sizeOfSingleFrame,
+        (frameIndex + 1) * sizeOfSingleFrame
+      )
+    );
+    let selectedPositionsInCurrentFrame: Vector3[] = [];
+
     // We collect only those drones that are not at their takeoff or landing
     // positions. This is to provide sensible results for multi-stage shows
     // where half of the fleet is idling on the ground while the other half is
@@ -49,37 +76,32 @@ export default function getClosestPairsAndDistances(
     // So, positionsInCurrentFrame will contain only the positions of the active drones,
     // and indexMap[i] contains the index of the i-th active drone.
     indexMap.length = 0;
-    positionsInCurrentFrame.length = 0;
+    selectedPositionsInCurrentFrame.length = 0;
     for (let droneIndex = 0; droneIndex < droneCount; droneIndex++) {
-      const pos = positions[droneIndex];
+      const pos = allPositionsInCurrentFrame.get(droneIndex);
       const takeoffPos = takeoffPositions[droneIndex];
       const landingPos = landingPositions[droneIndex];
 
       if (
-        pos.length > 0 &&
-        !areVectorsAlmostEqual(pos[frameIndex], takeoffPos) &&
-        !areVectorsAlmostEqual(pos[frameIndex], landingPos)
+        !areVectorsAlmostEqual(pos, takeoffPos) &&
+        !areVectorsAlmostEqual(pos, landingPos)
       ) {
         indexMap.push(droneIndex);
-        positionsInCurrentFrame.push(pos[frameIndex]);
+        selectedPositionsInCurrentFrame.push(pos);
       }
     }
 
     // If all drones are idle, we can consider all of them for the closest pair calculation
-    if (positionsInCurrentFrame.length === 0) {
-      for (let droneIndex = 0; droneIndex < droneCount; droneIndex++) {
-        const pos = positions[droneIndex];
-        indexMap.push(droneIndex);
-        positionsInCurrentFrame.push(pos[frameIndex]);
-      }
+    if (selectedPositionsInCurrentFrame.length === 0) {
+      selectedPositionsInCurrentFrame = allPositionsInCurrentFrame.toArray();
     }
 
-    const closestPair = getClosestPair(positionsInCurrentFrame);
+    const closestPair = getClosestPair(selectedPositionsInCurrentFrame);
     if (closestPair) {
       const firstIndex =
-        indexMap[positionsInCurrentFrame.indexOf(closestPair[0])];
+        indexMap[selectedPositionsInCurrentFrame.indexOf(closestPair[0])];
       const secondIndex =
-        indexMap[positionsInCurrentFrame.indexOf(closestPair[1])];
+        indexMap[selectedPositionsInCurrentFrame.indexOf(closestPair[1])];
 
       distances[frameIndex] = Math.hypot(
         closestPair[0].x - closestPair[1].x,

@@ -11,9 +11,8 @@ import type { RootState } from '~/store';
 
 import {
   calculateScalarDerivative,
-  calculateVectorDerivative,
-  projectAllToXY,
-  projectAllToZ,
+  projectVector3ArrayToXY,
+  projectVector3ArrayToZ,
   sampleDurationEvenly,
   samplePositionAt,
   sampleVelocityAt,
@@ -170,7 +169,7 @@ export const getSampledVelocitiesForDrones = createSelector(
  */
 export const selectSampledAltitudeGetter = createSelector(
   getSampledPositionsForDrones,
-  (positions) => (index: number) => projectAllToZ(positions[index] ?? [])
+  (positions) => (index: number) => projectVector3ArrayToZ(positions[index])
 );
 
 /**
@@ -181,7 +180,7 @@ export const selectSampledAltitudeGetter = createSelector(
  * but the result takes a lot of memory.
  */
 export const getSampledAltitudesForAllDrones = (state: RootState) => {
-  return getSampledPositionsForDrones(state).map(projectAllToZ);
+  return getSampledPositionsForDrones(state).map(projectVector3ArrayToZ);
 };
 
 /**
@@ -190,7 +189,7 @@ export const getSampledAltitudesForAllDrones = (state: RootState) => {
  */
 export const selectSampledHorizontalVelocityGetter = createSelector(
   getSampledVelocitiesForDrones,
-  (velocities) => (index: number) => projectAllToXY(velocities[index] ?? [])
+  (velocities) => (index: number) => projectVector3ArrayToXY(velocities[index])
 );
 
 /**
@@ -201,7 +200,7 @@ export const selectSampledHorizontalVelocityGetter = createSelector(
  * but the result takes a lot of memory.
  */
 export const getSampledHorizontalVelocitiesForDrones = (state: RootState) => {
-  return getSampledVelocitiesForDrones(state).map(projectAllToXY);
+  return getSampledVelocitiesForDrones(state).map(projectVector3ArrayToXY);
 };
 
 /**
@@ -210,7 +209,7 @@ export const getSampledHorizontalVelocitiesForDrones = (state: RootState) => {
  */
 export const selectSampledVerticalVelocityGetter = createSelector(
   getSampledVelocitiesForDrones,
-  (velocities) => (index: number) => projectAllToZ(velocities[index] ?? [])
+  (velocities) => (index: number) => projectVector3ArrayToZ(velocities[index])
 );
 
 /**
@@ -221,7 +220,7 @@ export const selectSampledVerticalVelocityGetter = createSelector(
  * but the result takes a lot of memory.
  */
 export const getSampledVerticalVelocitiesForDrones = (state: RootState) => {
-  return getSampledVelocitiesForDrones(state).map(projectAllToZ);
+  return getSampledVelocitiesForDrones(state).map(projectVector3ArrayToZ);
 };
 
 const TIME_BETWEEN_SAMPLES = 1 / SAMPLES_PER_SECOND;
@@ -244,9 +243,7 @@ export const getSampledHorizontalAccelerationsForDrones = (
   state: RootState
 ) => {
   return getSampledVelocitiesForDrones(state).map((velocities) =>
-    projectAllToXY(
-      calculateVectorDerivative(velocities, 1, TIME_BETWEEN_SAMPLES)
-    )
+    projectVector3ArrayToXY(velocities.derivative({ dt: TIME_BETWEEN_SAMPLES }))
   );
 };
 
@@ -257,12 +254,8 @@ export const getSampledHorizontalAccelerationsForDrones = (
 export const selectSampledHorizontalAccelerationGetter = createSelector(
   getSampledVelocitiesForDrones,
   (velocities) => (index: number) =>
-    projectAllToXY(
-      calculateVectorDerivative(
-        velocities[index] ?? [],
-        1,
-        TIME_BETWEEN_SAMPLES
-      )
+    projectVector3ArrayToXY(
+      velocities[index].derivative({ dt: TIME_BETWEEN_SAMPLES })
     )
 );
 
@@ -294,7 +287,7 @@ export const selectSampledVerticalAccelerationGetter = createSelector(
   getSampledVelocitiesForDrones,
   (velocities) => (index: number) =>
     calculateScalarDerivative(
-      projectAllToZ(velocities[index] ?? []),
+      projectVector3ArrayToZ(velocities[index]),
       1,
       TIME_BETWEEN_SAMPLES
     )

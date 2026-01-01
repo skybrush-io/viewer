@@ -1,6 +1,7 @@
 import type { TrajectoryPlayer, Vector3 } from '@skybrush/show-format';
 import { range } from 'lodash-es';
 import { SAMPLES_PER_SECOND } from './constants';
+import { Vector3Array } from './vector3-array';
 
 /**
  * Checks whether two 3D vectors are almost equal within a given epsilon.
@@ -45,7 +46,7 @@ export function calculateScalarDerivative(
 }
 
 /**
- * Calculates the derivative of a vector of 3D vectors where the derivative at
+ * Calculates the derivative of an array of 3D vectors where the derivative at
  * index i is estimated from the vectors at indices (i-k) and (i+k), i.e. we
  * are using the midpoint method with a step size of k.
  */
@@ -80,24 +81,25 @@ export function calculateVectorDerivative(
 }
 
 /**
- * Projects a 3D vector to the XY plane and returns the length of the projected vector.
+ * Projects multiple 3D vectors in a Vector3Array to the XY plane and returns the lengths
+ * of the projected vectors.
  */
-export const projectToXY = (coord: Vector3) => Math.hypot(coord.x, coord.y);
+export const projectVector3ArrayToXY = (vectors: Vector3Array) => {
+  const xs = vectors.getX();
+  const ys = vectors.getY();
+  const result: number[] = Array.from({ length: vectors.length });
+  for (let i = 0; i < vectors.length; i++) {
+    result[i] = Math.hypot(xs[i], ys[i]);
+  }
+  return result;
+};
 
 /**
- * Projects a 3D vector to the Z axis and returns the length of the projected vector.
+ * Projects multiple 3D vectors in a Vector3Array to the Z axis and returns the lengths
+ * of the projected vectors.
  */
-export const projectToZ = (coord: Vector3) => coord.z;
-
-/**
- * Projects multiple 3D vectors to the XY plane and returns the lengths of the projected vectors.
- */
-export const projectAllToXY = (vectors: Vector3[]) => vectors.map(projectToXY);
-
-/**
- * Projects multiple 3D vectors to the Z axis and returns the lengths of the projected vectors.
- */
-export const projectAllToZ = (vectors: Vector3[]) => vectors.map(projectToZ);
+export const projectVector3ArrayToZ = (vectors: Vector3Array) =>
+  Array.from(vectors.getZ());
 
 /**
  * Samples a time interval evenly at a fixed rate.
@@ -130,14 +132,10 @@ export function sampleDurationEvenly(
 export function samplePositionAt(
   player: TrajectoryPlayer,
   times: number[]
-): Vector3[] {
-  return times.map((time) =>
-    player.getPositionAt(time, {
-      x: 0,
-      y: 0,
-      z: 0,
-    } as Vector3)
-  );
+): Vector3Array {
+  const result = new Float32Array(times.length * 3);
+  player.getPositionsAt(times, result);
+  return Vector3Array.from(result);
 }
 
 /**
@@ -149,12 +147,8 @@ export function samplePositionAt(
 export function sampleVelocityAt(
   player: TrajectoryPlayer,
   times: number[]
-): Vector3[] {
-  return times.map((time) =>
-    player.getVelocityAt(time, {
-      x: 0,
-      y: 0,
-      z: 0,
-    } as Vector3)
-  );
+): Vector3Array {
+  const result = new Float32Array(times.length * 3);
+  player.getVelocitiesAt(times, result);
+  return Vector3Array.from(result);
 }

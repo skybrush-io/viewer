@@ -19,7 +19,7 @@ const styles = {
 const PageLoadingIndicator = () => (
   <Box sx={styles.root}>
     <Box sx={styles.progress}>
-      <CircularProgress size={64} />
+      <CircularProgress disableShrink size={64} />
     </Box>
   </Box>
 );

@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Proximity charts are now calculated in a background worker thread to keep the UI
   responsive even for large shows.
 
+- Significantly reduced memory footprint of the validation view. Validating the
+  trajectories of a typical 5000-drone show now takes less than 10 seconds on a
+  MacBook Pro M4.
+
 ## [2.8.0] - 2025-12-12
 
 ### Added

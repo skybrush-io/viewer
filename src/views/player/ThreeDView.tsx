@@ -165,14 +165,16 @@ const ThreeDView = (props: ThreeDViewProps) => {
 
       <a-entity rotation='-90 0 90'>
         {axes && <CoordinateSystemAxes length={10} lineWidth={10} />}
+        {/* Watch out for the handling of Boolean props below: they need to be
+         * passed to AFrame components as strings! */}
         <a-drone-flock
           drone-model={droneModel}
           drone-radius={droneRadius}
           label-color={isLightScenery ? 'black' : 'white'}
-          scale-labels={scaleLabels}
-          show-glow={!isLightScenery}
-          show-labels={showLabels}
-          show-yaw={showYaw}
+          scale-labels={String(!!scaleLabels)}
+          show-glow={String(!isLightScenery)}
+          show-labels={String(!!showLabels)}
+          show-yaw={String(!!showYaw)}
           size={numDrones}
         />
         <SelectionMarkers />

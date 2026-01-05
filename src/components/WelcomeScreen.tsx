@@ -4,9 +4,8 @@ import { connect } from 'react-redux';
 import Folder from '@mui/icons-material/Folder';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 
-import { MiniList, MiniListItemButton } from '@skybrush/mui-components';
+import { TransparentList } from '@skybrush/mui-components';
 
 import { shouldUseWelcomeScreen } from '~/features/settings/selectors';
 import {
@@ -23,6 +22,10 @@ import { getRecentFiles } from '~/features/ui/selectors';
 import type { RootState } from '~/store';
 import { platformPathSeparator } from '~/utils/platform';
 
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import CentralHelperPanel from './CentralHelperPanel';
 import SkybrushLogo from './SkybrushLogo';
 
@@ -51,31 +54,27 @@ const WelcomeScreen = ({
         <>
           {recentFiles.length > 0 && (
             <Box sx={{ mb: 4, textAlign: 'left' }}>
-              <Typography
-                variant='subtitle1'
-                color='textSecondary'
-                sx={{ pl: 1, textTransform: 'uppercase' }}
-              >
-                {t('generic.recentFiles')}
-              </Typography>
-              <MiniList>
+              <Tabs indicatorColor='primary' value='recent' centered>
+                <Tab label={t('generic.recentFiles')} value='recent' />
+              </Tabs>
+              <TransparentList dense>
                 {recentFiles.map((rf) => (
-                  <MiniListItemButton
+                  <ListItemButton
                     key={rf}
-                    gap={2}
-                    inset={1}
                     onClick={() => {
                       onLoadShowFromLocalFile(rf);
                     }}
-                    // TODO: Truncate these using `text-overflow: ellipsis`?
-                    primaryText={rf.split(platformPathSeparator).at(-1)}
-                    secondaryText={rf
-                      .split(platformPathSeparator)
-                      .slice(0, -1)
-                      .join(platformPathSeparator)}
-                  />
+                  >
+                    <ListItemText
+                      primary={rf.split(platformPathSeparator).at(-1)}
+                      secondary={rf
+                        .split(platformPathSeparator)
+                        .slice(0, -1)
+                        .join(platformPathSeparator)}
+                    />
+                  </ListItemButton>
                 ))}
-              </MiniList>
+              </TransparentList>
             </Box>
           )}
           <Button

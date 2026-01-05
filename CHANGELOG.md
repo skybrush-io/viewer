@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.1] - 2026-01-06
+
+### Fixed
+
+- Fixed incorrect handling of Boolean props in the `<a-drone-flock>` component,
+  which made the "Show label" and "Show yaw" switches unresponsive.
+
 ## [2.9.0] - 2026-01-05
 
 ### Added

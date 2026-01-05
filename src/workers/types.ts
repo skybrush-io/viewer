@@ -1,4 +1,4 @@
-import { type Vector3Array } from '~/features/validation/vector3-array';
+import { type Vector3Array } from '@skybrush/show-format';
 import type { DistancesAndIndices } from './functions/proximity-check';
 
 /**

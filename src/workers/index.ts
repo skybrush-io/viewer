@@ -2,8 +2,8 @@
  * Main entry point for workers used by the application.
  */
 
+import { Vector3Array } from '@skybrush/show-format';
 import type { Promise as WorkerPoolPromise } from 'workerpool';
-import { Vector3Array } from '~/features/validation/vector3-array';
 import type { DistancesAndIndices } from './functions/proximity-check';
 import { pool } from './pool';
 import { type WorkerApi } from './types';

@@ -1,8 +1,7 @@
-import type { Vector3 } from '@skybrush/show-format';
+import { Vector3Array, type Vector3 } from '@skybrush/show-format';
 import { workerEmit } from 'workerpool';
 import { areVectorsAlmostEqual } from '~/features/validation/calculations';
 import getClosestPair from '~/features/validation/closest-pair';
-import { Vector3Array } from '~/features/validation/vector3-array';
 
 export type DistancesAndIndices = [
   Array<number | undefined>,

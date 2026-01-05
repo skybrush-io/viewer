@@ -1,7 +1,10 @@
-import type { TrajectoryPlayer, Vector3 } from '@skybrush/show-format';
+import {
+  Vector3Array,
+  type TrajectoryPlayer,
+  type Vector3,
+} from '@skybrush/show-format';
 import { range } from 'lodash-es';
 import { SAMPLES_PER_SECOND } from './constants';
-import { Vector3Array } from './vector3-array';
 
 /**
  * Checks whether two 3D vectors are almost equal within a given epsilon.

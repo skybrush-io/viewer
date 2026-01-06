@@ -1,5 +1,6 @@
 import { contextBridge } from 'electron';
 import { ipcRenderer as ipc } from 'electron-better-ipc';
+import ElectronStore from 'electron-store';
 import fs from 'node:fs/promises';
 import createStorageEngine from 'redux-persist-electron-storage';
 
@@ -12,11 +13,12 @@ import { receiveActionsFromRenderer, setupIpc } from './ipc.mjs';
  * @return  a Redux storage engine that can be used by redux-storage
  */
 function createStateStore() {
-  return createStorageEngine({
-    store: {
-      name: 'state',
-    },
+  const electronStore = new ElectronStore({
+    // I'm not sure how graceful redux-storage is when the store throws an
+    // exception during startup, so let's prevent that for the time being
+    clearInvalidConfig: true,
   });
+  return createStorageEngine({ electronStore });
 }
 
 /**

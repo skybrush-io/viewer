@@ -39,6 +39,8 @@ export const getValidationSettings = createSelector(
     // settings instead of camelCased. We need to fix that, but until then
     // here's a compatibility workaround.
     if (validation?.max_altitude !== undefined) {
+      settings.maxAccelerationXY = validation.max_acceleration_xy;
+      settings.maxAccelerationZ = validation.max_acceleration_z;
       settings.maxAltitude = validation.max_altitude;
       settings.maxVelocityXY = validation.max_velocity_xy;
       settings.maxVelocityZ = validation.max_velocity_z;

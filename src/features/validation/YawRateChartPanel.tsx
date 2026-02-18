@@ -14,20 +14,23 @@ import { createChartSelectorFromDroneRelatedSelector } from './utils';
 const getYawRateChart = createChartSelectorFromDroneRelatedSelector(
   selectSampledYawRateGetter
 );
+const maybeNegate = (x?: number) => (typeof x === 'number' ? -x : x);
 
-// Custom ranges to use for the chart panel. This prevents the annotations from
+// Custom range to use for the chart panel. This prevents the annotations from
 // affecting the range chosen by Chart.js but it will still allow the data to
 // expand the range if needed.
-const Y_RANGE_INDOOR: [number, number] = [0, 2];
-const Y_RANGE_OUTDOOR: [number, number] = [0, 10];
+const Y_RANGE: [number, number] = [-1, 1];
 
 export default connect(
   // mapStateToProps
   (state: RootState) => ({
     chart: getYawRateChart(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
-    range: isShowIndoor(state) ? Y_RANGE_INDOOR : Y_RANGE_OUTDOOR,
-    threshold: getYawRateWarningThreshold(state),
+    range: Y_RANGE,
+    threshold: [
+      getYawRateWarningThreshold(state),
+      maybeNegate(getYawRateWarningThreshold(state))
+    ],
     thresholdLabel: t('validation.yawRateThreshold'),
     title: t('validation.yawRate'),
     verticalUnit: ' m',

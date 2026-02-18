@@ -14,18 +14,17 @@ const getYawChart = createChartSelectorFromDroneRelatedSelector(
   selectSampledYawGetter
 );
 
-// Custom ranges to use for the chart panel. This prevents the annotations from
+// Custom range to use for the chart panel. This prevents the annotations from
 // affecting the range chosen by Chart.js but it will still allow the data to
 // expand the range if needed.
-const Y_RANGE_INDOOR: [number, number] = [0, 2];
-const Y_RANGE_OUTDOOR: [number, number] = [0, 10];
+const Y_RANGE: [number, number] = [-1, 1];
 
 export default connect(
   // mapStateToProps
   (state: RootState) => ({
     chart: getYawChart(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
-    range: isShowIndoor(state) ? Y_RANGE_INDOOR : Y_RANGE_OUTDOOR,
+    range: Y_RANGE,
     title: t('validation.yaw'),
     verticalUnit: ' deg',
   }),

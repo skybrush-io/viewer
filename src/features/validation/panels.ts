@@ -4,6 +4,8 @@ import HorizontalVelocityChartPanel from './HorizontalVelocityChartPanel';
 import ProximityChartPanel from './ProximityChartPanel';
 import VerticalAccelerationChartPanel from './VerticalAccelerationChartPanel';
 import VerticalVelocityChartPanel from './VerticalVelocityChartPanel';
+import YawChartPanel from './YawChartPanel';
+import YawRateChartPanel from './YawRateChartPanel';
 
 export enum ValidationPanel {
   ALTITUDE = 'altitude',
@@ -12,6 +14,8 @@ export enum ValidationPanel {
   HORIZONTAL_ACCELERATION = 'horizontalAcceleration',
   VERTICAL_ACCELERATION = 'verticalAcceleration',
   PROXIMITY = 'proximity',
+  YAW = 'yaw',
+  YAW_RATE = 'yawRate',
 }
 
 export type PanelSpecification = {
@@ -51,6 +55,16 @@ export const PANELS: PanelSpecification[] = [
     id: ValidationPanel.PROXIMITY,
     component: ProximityChartPanel,
     priority: 60,
+  },
+  {
+    id: ValidationPanel.YAW,
+    component: YawChartPanel,
+    priority: 70,
+  },
+  {
+    id: ValidationPanel.YAW_RATE,
+    component: YawRateChartPanel,
+    priority: 80,
   },
 ];
 

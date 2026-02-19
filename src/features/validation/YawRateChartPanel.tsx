@@ -2,7 +2,7 @@ import { t } from 'i18next';
 import { connect } from 'react-redux';
 
 import ChartPanel from '~/features/charts/ChartPanel';
-import { getTimestampFormatter, isShowIndoor } from '~/features/show/selectors';
+import { getTimestampFormatter } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 
 import {
@@ -29,11 +29,11 @@ export default connect(
     range: Y_RANGE,
     threshold: [
       getYawRateWarningThreshold(state),
-      maybeNegate(getYawRateWarningThreshold(state))
+      maybeNegate(getYawRateWarningThreshold(state)),
     ],
     thresholdLabel: t('validation.yawRateThreshold'),
     title: t('validation.yawRate'),
-    verticalUnit: ' m',
+    verticalUnit: '\u00B0/s',
   }),
   // mapDispatchToProps
   {}

@@ -2,12 +2,10 @@ import { t } from 'i18next';
 import { connect } from 'react-redux';
 
 import ChartPanel from '~/features/charts/ChartPanel';
-import { getTimestampFormatter, isShowIndoor } from '~/features/show/selectors';
+import { getTimestampFormatter } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 
-import {
-  selectSampledYawGetter,
-} from './selectors';
+import { selectSampledYawGetter } from './selectors';
 import { createChartSelectorFromDroneRelatedSelector } from './utils';
 
 const getYawChart = createChartSelectorFromDroneRelatedSelector(
@@ -26,7 +24,7 @@ export default connect(
     formatPlaybackTimestamp: getTimestampFormatter(state),
     range: Y_RANGE,
     title: t('validation.yaw'),
-    verticalUnit: ' deg',
+    verticalUnit: '\u00B0',
   }),
   // mapDispatchToProps
   {}

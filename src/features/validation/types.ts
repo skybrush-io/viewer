@@ -6,5 +6,6 @@ export type ValidationSettings = {
   maxVelocityXY: number;
   maxVelocityZ: number;
   maxVelocityZUp?: number;
+  maxYawRate?: number;
   minDistance: number;
 };

@@ -6,6 +6,7 @@ import {
   getShowEnvironmentType,
   getTimestampFormatter,
   getTrajectoryPlayers,
+  getYawControlPlayers,
 } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 
@@ -16,6 +17,7 @@ import {
   sampleDurationEvenly,
   samplePositionAt,
   sampleVelocityAt,
+  sampleYawAt,
 } from './calculations';
 import { DEFAULT_VALIDATION_SETTINGS, SAMPLES_PER_SECOND } from './constants';
 import { type ValidationSettings } from './types';
@@ -37,10 +39,13 @@ export const getValidationSettings = createSelector(
     // settings instead of camelCased. We need to fix that, but until then
     // here's a compatibility workaround.
     if (validation?.max_altitude !== undefined) {
+      settings.maxAccelerationXY = validation.max_acceleration_xy;
+      settings.maxAccelerationZ = validation.max_acceleration_z;
       settings.maxAltitude = validation.max_altitude;
       settings.maxVelocityXY = validation.max_velocity_xy;
       settings.maxVelocityZ = validation.max_velocity_z;
       settings.maxVelocityZUp = validation.max_velocity_z_up;
+      settings.maxYawRate = validation.max_yaw_rate;
       settings.minDistance = validation.min_distance;
     } else {
       Object.assign(settings, validation);
@@ -116,6 +121,14 @@ export const getVerticalAccelerationThresholdUp = (state: RootState) => {
  */
 export const getVerticalAccelerationThresholdDown = (state: RootState) =>
   getValidationSettings(state).maxAccelerationZ;
+
+/**
+ * Selector that selects the yaw rate warning threshold from the show specification,
+ * falling back to a default if needed.
+ */
+export const getYawRateWarningThreshold = (state: RootState) =>
+  getValidationSettings(state).maxYawRate;
+
 
 /**
  * Returns the list of time instants to sample during the validation phase.
@@ -292,6 +305,65 @@ export const selectSampledVerticalAccelerationGetter = createSelector(
       TIME_BETWEEN_SAMPLES
     )
 );
+
+/**
+ * Returns an array mapping drones to their yaw angles in radians, 
+ * sampled at regular intervals.
+ */
+export const getSampledYawForDrones = createSelector(
+  getYawControlPlayers,
+  getSampledTimeInstants,
+  (players, samples) => {
+    // TODO(ntamas): make this async and make it run in a worker or at least in
+    // the background so we don't lock the UI
+    return players.map((player) =>
+      player
+        ? sampleYawAt(player, samples)
+        : Array.from({ length: samples.length }, () => 0)
+    );
+  }
+);
+
+/**
+ * Returns a function that maps from a drone index to an array containing the yaw
+ * of that drone, in degrees, sampled at regular intervals.
+ */
+export const selectSampledYawGetter = createSelector(
+  getSampledYawForDrones,
+  (yaws) => (index: number) => yaws[index].map((rad) => rad * 180 / Math.PI)
+);
+
+
+/**
+ * Returns an array mapping drones to their estimated yaw rates in radians,
+ * sampled at regular intervals.
+ *
+ * The yaw rates are estimated from the yaw angles. In theory it would be
+ * better to derive them directly from the yaw control player, but that is
+ * not implemented yet.
+ *
+ * This function is not memoized. Although calculating the yaw rates from the
+ * yaw angles is not necessarily cheap, the result takes a lot of memory, and typically
+ * we only need the _aggregated_ chart that shows the minimum and maximum yaw rate
+ * across all drones, which will be memoized separately.
+ */
+export const getSampledYawRatesForDrones = (
+  state: RootState
+) => {
+  return getSampledYawForDrones(state).map((yaws) =>
+    calculateScalarDerivative(yaws, 1, TIME_BETWEEN_SAMPLES)
+  );
+};
+
+/**
+ * Returns a function that maps from a drone index to an array containing the
+ * yaw rate of that drone in [deg/s], sampled at regular intervals.
+ */
+export const selectSampledYawRateGetter = createSelector(
+  getSampledYawRatesForDrones,
+  (yaw_rates) => (index: number) => yaw_rates[index].map((rad) => rad * 180 / Math.PI)
+);
+
 
 const EMPTY_SELECTION: string[] = [];
 

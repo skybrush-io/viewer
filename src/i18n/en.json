@@ -129,6 +129,9 @@
     "verticalAcceleration": "Vertical accelerations",
     "verticalAccelerationThreshold": "Z acceleration threshold",
     "verticalVelocity": "Vertical velocities",
-    "verticalVelocityThreshold": "Z velocity threshold"
+    "verticalVelocityThreshold": "Z velocity threshold",
+    "yaw": "Yaw angles",
+    "yawRate": "Yaw rates",
+    "yawRateThreshold": "Yaw rate threshold"
   }
 }

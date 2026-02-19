@@ -289,6 +289,37 @@ AFrame.registerSystem('drone-flock', {
   },
 
   _createPyroEffectEntity() {
+    return this._createPyroEffectEnityWithoutShader();
+  },
+
+  _createPyroEffectEnityWithoutShader() {
+    // Create a bright orange/red glowing sphere for pyro effects
+    // Make it larger and position it to the side/above for better visibility
+    return createEntity({
+      geometry: {
+        primitive: 'sphere',
+        radius: 1.5,
+        segmentsHeight: 16,
+        segmentsWidth: 16,
+      },
+
+      material: {
+        color: new THREE.Color('#ff3300'),
+        shader: 'flat',
+        transparent: true,
+      },
+
+      scale: '4.0 4.0 4.0',
+      position: '0 0.5 0',
+      visible: false,
+    });
+  },
+
+  _creaePyroEffectEntityWithShader() {
+    // Create a cone with a custom shader for pyro effects. This looks nicer but
+    // causes performance problems for shows with ~800 drones or more (setInterval()
+    // calls are starved and the clock in the inspector sidebar does not update itself
+    // fast enough).
     return createEntity(
       {
         visible: false,

@@ -11,11 +11,11 @@ import DragDropHandler from './components/DragDropHandler';
 import MainTopLevelView from './components/MainTopLevelView';
 import SplashScreen from './components/SplashScreen';
 import WindowTitleManager from './components/WindowTitleManager';
-
 import AppHotkeys from './features/hotkeys/AppHotkeys';
+import HotkeyDialog from './features/hotkeys/HotkeyDialog';
 import { loadShowFromRequest } from './features/show/slice';
 import { type ShowLoadingRequest } from './features/show/types';
-
+import LanguageWatcher from './i18n/LanguageWatcher';
 import rootSaga from './sagas';
 import { persistor, store } from './store';
 import ThemeProvider, { toastOptions } from './theme';
@@ -26,8 +26,6 @@ import '~/../assets/css/kbd.css';
 import '@fontsource/fira-sans/400.css';
 import '@fontsource/fira-sans/500.css';
 import 'react-cover-page/themes/dark.css';
-import HotkeyDialog from './features/hotkeys/HotkeyDialog';
-import LanguageWatcher from './i18n/LanguageWatcher';
 
 type AppProps = {
   readonly initialShow?: ShowLoadingRequest;

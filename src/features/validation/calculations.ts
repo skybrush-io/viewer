@@ -5,8 +5,8 @@ import {
   type Vector3,
 } from '@skybrush/show-format';
 import { range } from 'lodash-es';
+import { Euler } from 'three';
 import { SAMPLES_PER_SECOND } from './constants';
-import {Euler} from 'three';
 
 /**
  * Checks whether two 3D vectors are almost equal within a given epsilon.
@@ -168,7 +168,7 @@ export function sampleYawAt(
   player: YawControlPlayer,
   times: number[]
 ): number[] {
-  const result:number[] = new Array(times.length);
+  const result: number[] = new Array(times.length);
   // TODO: would be better to define player.getYawsAt() in @skybrush/show-format
   const temp = new Euler();
   for (let i = 0; i < times.length; i++) {

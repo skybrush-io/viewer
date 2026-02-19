@@ -129,7 +129,6 @@ export const getVerticalAccelerationThresholdDown = (state: RootState) =>
 export const getYawRateWarningThreshold = (state: RootState) =>
   getValidationSettings(state).maxYawRate;
 
-
 /**
  * Returns the list of time instants to sample during the validation phase.
  */
@@ -307,7 +306,7 @@ export const selectSampledVerticalAccelerationGetter = createSelector(
 );
 
 /**
- * Returns an array mapping drones to their yaw angles in radians, 
+ * Returns an array mapping drones to their yaw angles in radians,
  * sampled at regular intervals.
  */
 export const getSampledYawForDrones = createSelector(
@@ -330,9 +329,8 @@ export const getSampledYawForDrones = createSelector(
  */
 export const selectSampledYawGetter = createSelector(
   getSampledYawForDrones,
-  (yaws) => (index: number) => yaws[index].map((rad) => rad * 180 / Math.PI)
+  (yaws) => (index: number) => yaws[index].map((rad) => (rad * 180) / Math.PI)
 );
-
 
 /**
  * Returns an array mapping drones to their estimated yaw rates in radians,
@@ -347,9 +345,7 @@ export const selectSampledYawGetter = createSelector(
  * we only need the _aggregated_ chart that shows the minimum and maximum yaw rate
  * across all drones, which will be memoized separately.
  */
-export const getSampledYawRatesForDrones = (
-  state: RootState
-) => {
+export const getSampledYawRatesForDrones = (state: RootState) => {
   return getSampledYawForDrones(state).map((yaws) =>
     calculateScalarDerivative(yaws, 1, TIME_BETWEEN_SAMPLES)
   );
@@ -361,9 +357,9 @@ export const getSampledYawRatesForDrones = (
  */
 export const selectSampledYawRateGetter = createSelector(
   getSampledYawRatesForDrones,
-  (yaw_rates) => (index: number) => yaw_rates[index].map((rad) => rad * 180 / Math.PI)
+  (yaw_rates) => (index: number) =>
+    yaw_rates[index].map((rad) => (rad * 180) / Math.PI)
 );
-
 
 const EMPTY_SELECTION: string[] = [];
 

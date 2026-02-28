@@ -5,12 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [main]
+## [2.10.0] - 2026-03-01
 
 ### Added
 
-- Added yaw and yaw rate blocks to the validation window. Support for new yaw rate 
+- Added yaw and yaw rate blocks to the validation window. Support for new yaw rate
   threshold is also implemented.
+
+### Fixed
+
+- Temporarily reverted pyro visualization to the one used before version 2.9.0 because
+  the new shader seems to have caused problems with updating the clock and the playback
+  slider.
 
 ## [2.9.1] - 2026-01-06
 

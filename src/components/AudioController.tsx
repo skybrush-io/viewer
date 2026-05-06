@@ -13,6 +13,7 @@ import {
   notifyAudioSeeked,
   notifyAudioSeeking,
 } from '~/features/audio/slice';
+import { getCurrentAudioStartTime } from '~/features/audio/selectors';
 import {
   getElapsedSecondsGetter,
   isAdjustingPlaybackPosition,
@@ -28,6 +29,7 @@ type AudioControllerProps = {
   readonly onSeeked: () => void;
   readonly onSeeking: () => void;
   readonly playing: boolean;
+  readonly startTime: number;
   readonly url?: string;
 };
 
@@ -39,6 +41,7 @@ const AudioController = ({
   onSeeked,
   onSeeking,
   playing,
+  startTime,
   url,
 }: AudioControllerProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -54,17 +57,22 @@ const AudioController = ({
   // playback position when needed
   useEffect(() => {
     if (audioRef.current) {
-      if (playing) {
+      const currentTime = elapsedSecondsGetter() - startTime;
+      // TODO(vasarhelyi): this version moves the audio ahead but
+      // it will not start playing if you start playback at zero
+      // and reach the start time as there is no trigger yet to
+      // change the pause() state to play().
+      if (playing && currentTime >= 0) {
         // TODO(ntamas): there is a hardcoded delay between the audio and the
         // visuals. I don't know why it's needed or whether it varies from
         // machine to machine. We need to test it.
-        audioRef.current.currentTime = elapsedSecondsGetter() + 0.15;
+        audioRef.current.currentTime = currentTime + 0.15;
         void audioRef.current.play();
       } else {
         audioRef.current.pause();
       }
     }
-  }, [elapsedSecondsGetter, playing]);
+  }, [elapsedSecondsGetter, playing, startTime]);
 
   return url ? (
     <audio
@@ -87,6 +95,7 @@ export default connect(
     ...state.audio,
     elapsedSecondsGetter: getElapsedSecondsGetter(state),
     playing: isPlayingInRealTime(state) && !isAdjustingPlaybackPosition(state),
+    startTime: getCurrentAudioStartTime(state),
   }),
   // mapDispatchToProps
   {

@@ -1,6 +1,12 @@
 import type { RootState } from '~/store';
 
 /**
+ * Selector that returns the audio start time in seconds.
+ */
+export const getCurrentAudioStartTime = (state: RootState): number =>
+  state.audio.startTime;
+
+/**
  * Selector that returns the current audio URL.
  */
 export const getCurrentAudioUrl = (state: RootState): string | undefined =>

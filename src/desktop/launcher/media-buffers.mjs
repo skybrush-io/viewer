@@ -44,7 +44,7 @@ const getUrlToAudioBuffer = (index) =>
  * @param {import('@skybrush/show-format').AudioData} options
  */
 export const setAudioBuffer = async (index, options) => {
-  const { data, mediaType } = options;
+  const { data, mediaType, startTime } = options;
 
   if (index < 0) {
     return null;
@@ -55,7 +55,7 @@ export const setAudioBuffer = async (index, options) => {
   const { path, cleanup } = await tmp.file();
   await fs.writeFile(path, data);
 
-  loadedAudioBuffers[index] = { path, cleanup, mediaType };
+  loadedAudioBuffers[index] = { path, cleanup, mediaType, startTime };
 
   return getUrlToAudioBuffer(index);
 };

@@ -50,7 +50,7 @@ export const setAudioBuffer = async (index, options) => {
     return null;
   }
 
-  clearAudioBuffer(index);
+  await clearAudioBuffer(index);
 
   const { path, cleanup } = await tmp.file();
   await fs.writeFile(path, data);
@@ -65,11 +65,15 @@ export const setAudioBuffer = async (index, options) => {
  *
  * @param {number} index - index of the buffer
  */
-export const clearAudioBuffer = (index) => {
+export const clearAudioBuffer = async (index) => {
   const existingBuffer = getAudioBuffer(index);
 
   if (existingBuffer && existingBuffer.cleanup) {
-    void existingBuffer.cleanup();
+    try {
+      await existingBuffer.cleanup();
+    } catch {
+      // Ignore cleanup errors (file may be locked by audio element)
+    }
   }
 
   loadedAudioBuffers[index] = null;

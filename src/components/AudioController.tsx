@@ -45,6 +45,10 @@ const AudioController = ({
   url,
 }: AudioControllerProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const timeoutIdRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const playingRef = useRef(playing);
+  playingRef.current = playing;
+
   const onError = useCallback(() => {
     toast.error('Error while playing audio; playback stopped.');
 
@@ -55,24 +59,50 @@ const AudioController = ({
 
   // Effect that takes care of stopping / starting the audio and re-syncing the
   // playback position when needed
+  const tryPlayAudio = useCallback(() => {
+    if (!audioRef.current || !playingRef.current) {
+      return;
+    }
+    const currentTime = elapsedSecondsGetter() - startTime;
+    if (currentTime >= 0) {
+      // TODO(ntamas): there is a hardcoded delay between the audio and the
+      // visuals. I don't know why it's needed or whether it varies from
+      // machine to machine. We need to test it.
+      audioRef.current.currentTime = currentTime + 0.15;
+      audioRef.current.play().catch(() => {});
+    } else {
+      const delay = Math.min(5000, -currentTime * 1000);
+      timeoutIdRef.current = setTimeout(tryPlayAudio, delay);
+    }
+  }, [elapsedSecondsGetter, startTime]);
+
   useEffect(() => {
-    if (audioRef.current) {
+    if (!audioRef.current) {
+      return;
+    }
+
+    if (playing) {
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current);
+      }
       const currentTime = elapsedSecondsGetter() - startTime;
-      // TODO(vasarhelyi): this version moves the audio ahead but
-      // it will not start playing if you start playback at zero
-      // and reach the start time as there is no trigger yet to
-      // change the pause() state to play().
-      if (playing && currentTime >= 0) {
-        // TODO(ntamas): there is a hardcoded delay between the audio and the
-        // visuals. I don't know why it's needed or whether it varies from
-        // machine to machine. We need to test it.
-        audioRef.current.currentTime = currentTime + 0.15;
-        void audioRef.current.play();
-      } else {
-        audioRef.current.pause();
+      const delay = currentTime >= 0 ? 0 : -currentTime * 1000;
+      timeoutIdRef.current = setTimeout(tryPlayAudio, delay);
+    } else {
+      audioRef.current.pause();
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current);
+        timeoutIdRef.current = null;
       }
     }
-  }, [elapsedSecondsGetter, playing, startTime]);
+
+    return () => {
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current);
+        timeoutIdRef.current = null;
+      }
+    };
+  }, [playing, startTime, tryPlayAudio, elapsedSecondsGetter]);
 
   return url ? (
     <audio

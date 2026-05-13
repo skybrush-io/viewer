@@ -83,18 +83,11 @@ const AudioController = ({
     }
 
     if (playing) {
-      if (timeoutIdRef.current) {
-        clearTimeout(timeoutIdRef.current);
-      }
       const currentTime = elapsedSecondsGetter() - startTime;
       const delay = currentTime >= 0 ? 0 : -currentTime * 1000;
       timeoutIdRef.current = setTimeout(tryPlayAudio, delay);
     } else {
       audioRef.current.pause();
-      if (timeoutIdRef.current) {
-        clearTimeout(timeoutIdRef.current);
-        timeoutIdRef.current = null;
-      }
     }
 
     return () => {

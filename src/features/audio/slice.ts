@@ -11,6 +11,7 @@ type AudioSliceState = {
   seeking: boolean;
   muted: boolean;
   volume: number;
+  startTime: number;
 };
 
 const initialState: AudioSliceState = {
@@ -19,6 +20,7 @@ const initialState: AudioSliceState = {
   seeking: false,
   muted: false,
   volume: 1,
+  startTime: 0,
 };
 
 const { actions, reducer } = createSlice({
@@ -46,6 +48,10 @@ const { actions, reducer } = createSlice({
       state.url = typeof payload === 'string' ? payload : undefined;
     },
 
+    setAudioStartTime(state, action: PayloadAction<number>) {
+      state.startTime = action.payload;
+    },
+
     toggleMuted: noPayload((state) => {
       state.muted = !state.muted;
     }),
@@ -58,6 +64,7 @@ export const {
   notifyAudioSeeked,
   notifyAudioSeeking,
   setAudioUrl,
+  setAudioStartTime,
   toggleMuted,
 } = actions;
 

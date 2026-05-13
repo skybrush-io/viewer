@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 import { connect } from 'react-redux';
 
+import { getCurrentAudioStartTime } from '~/features/audio/selectors';
 import {
   notifyAudioCanPlay,
   notifyAudioMetadataLoaded,
@@ -28,6 +29,7 @@ type AudioControllerProps = {
   readonly onSeeked: () => void;
   readonly onSeeking: () => void;
   readonly playing: boolean;
+  readonly startTime: number;
   readonly url?: string;
 };
 
@@ -39,32 +41,62 @@ const AudioController = ({
   onSeeked,
   onSeeking,
   playing,
+  startTime,
   url,
 }: AudioControllerProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const timeoutIdRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const playingRef = useRef(playing);
+  playingRef.current = playing;
+
   const onError = useCallback(() => {
     toast.error('Error while playing audio; playback stopped.');
 
-    if (audioRef?.current) {
-      console.error(audioRef.current.error);
+    const error = audioRef?.current?.error;
+    if (error) {
+      console.error(`Error ${error.code}: ${error.message ?? String(error)}`);
     }
   }, [audioRef]);
 
   // Effect that takes care of stopping / starting the audio and re-syncing the
   // playback position when needed
-  useEffect(() => {
-    if (audioRef.current) {
-      if (playing) {
-        // TODO(ntamas): there is a hardcoded delay between the audio and the
-        // visuals. I don't know why it's needed or whether it varies from
-        // machine to machine. We need to test it.
-        audioRef.current.currentTime = elapsedSecondsGetter() + 0.15;
-        void audioRef.current.play();
-      } else {
-        audioRef.current.pause();
-      }
+  const tryPlayAudio = useCallback(() => {
+    if (!audioRef.current || !playingRef.current) {
+      return;
     }
-  }, [elapsedSecondsGetter, playing]);
+    const currentTime = elapsedSecondsGetter() - startTime;
+    if (currentTime >= 0) {
+      // TODO(ntamas): there is a hardcoded delay between the audio and the
+      // visuals. I don't know why it's needed or whether it varies from
+      // machine to machine. We need to test it.
+      audioRef.current.currentTime = currentTime + 0.15;
+      audioRef.current.play().catch(() => {});
+    } else {
+      const delay = Math.min(5000, -currentTime * 1000);
+      timeoutIdRef.current = setTimeout(tryPlayAudio, delay);
+    }
+  }, [elapsedSecondsGetter, startTime]);
+
+  useEffect(() => {
+    if (!audioRef.current) {
+      return;
+    }
+
+    if (playing) {
+      const currentTime = elapsedSecondsGetter() - startTime;
+      const delay = currentTime >= 0 ? 0 : -currentTime * 1000;
+      timeoutIdRef.current = setTimeout(tryPlayAudio, delay);
+    } else {
+      audioRef.current.pause();
+    }
+
+    return () => {
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current);
+        timeoutIdRef.current = null;
+      }
+    };
+  }, [playing, startTime, tryPlayAudio, elapsedSecondsGetter]);
 
   return url ? (
     <audio
@@ -87,6 +119,7 @@ export default connect(
     ...state.audio,
     elapsedSecondsGetter: getElapsedSecondsGetter(state),
     playing: isPlayingInRealTime(state) && !isAdjustingPlaybackPosition(state),
+    startTime: getCurrentAudioStartTime(state),
   }),
   // mapDispatchToProps
   {

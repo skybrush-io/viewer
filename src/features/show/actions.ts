@@ -21,7 +21,7 @@ const loadShowFromBufferInner = async (buffer: Buffer) => {
   const showSpec = await loadCompiledShow(buffer, { assets: true });
 
   const audioSpec = showSpec?.media?.audio;
-  const { data: audioData, mediaType } = audioSpec ?? {};
+  const { data: audioData, mediaType, startTime } = audioSpec ?? {};
 
   // We can't use the audio directly; we need to save it to a file and then use a
   // URL pointing to that file
@@ -30,6 +30,7 @@ const loadShowFromBufferInner = async (buffer: Buffer) => {
       const url = await setAudioBuffer(0, {
         data: audioData,
         mediaType: mediaType ?? 'audio/mpeg',
+        startTime: startTime ?? 0,
       });
 
       const audioSpecWithUrl = audioSpec as AudioSpecWithUrl;

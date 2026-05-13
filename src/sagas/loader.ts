@@ -9,7 +9,7 @@ import isNil from 'lodash-es/isNil';
 import { type Channel, channel } from 'redux-saga';
 import { call, fork, put, putResolve, take } from 'redux-saga/effects';
 
-import { setAudioUrl } from '~/features/audio/slice';
+import { setAudioStartTime, setAudioUrl } from '~/features/audio/slice';
 import { setPlaybackPosition } from '~/features/playback/actions';
 import { _doLoadShow } from '~/features/show/async';
 import { loadShowFromRequest, setShowDataSource } from '~/features/show/slice';
@@ -59,7 +59,10 @@ function* loadShowFromRequestChannelSaga(
       );
       const audioInShowSpec = get(showSpec, 'media.audio.url');
       const audioUrl = isNil(audioInShowSpec) ? null : String(audioInShowSpec);
+      const audioStartTimeInShowSpec = get(showSpec, 'media.audio.startTime');
+      const audioStartTime = Number(audioStartTimeInShowSpec) || 0;
       yield put(setAudioUrl(audioOkay ? (audio ?? audioUrl) : null));
+      yield put(setAudioStartTime(audioStartTime));
 
       if (!effectiveKeepCameraPose) {
         yield put(clearCameraPoseOverride());

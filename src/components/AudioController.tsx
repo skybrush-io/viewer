@@ -7,13 +7,13 @@ import { useCallback, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 import { connect } from 'react-redux';
 
+import { getCurrentAudioStartTime } from '~/features/audio/selectors';
 import {
   notifyAudioCanPlay,
   notifyAudioMetadataLoaded,
   notifyAudioSeeked,
   notifyAudioSeeking,
 } from '~/features/audio/slice';
-import { getCurrentAudioStartTime } from '~/features/audio/selectors';
 import {
   getElapsedSecondsGetter,
   isAdjustingPlaybackPosition,

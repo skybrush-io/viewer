@@ -52,8 +52,9 @@ const AudioController = ({
   const onError = useCallback(() => {
     toast.error('Error while playing audio; playback stopped.');
 
-    if (audioRef?.current) {
-      console.error(audioRef.current.error);
+    const error = audioRef?.current?.error;
+    if (error) {
+      console.error(`Error ${error.code}: ${error.message ?? String(error)}`);
     }
   }, [audioRef]);
 

@@ -20,6 +20,7 @@ import {
   type Camera,
   type Cue,
   type DroneSpecification,
+  type Location,
   type PyroProgram,
   type ShowMetadata,
   type ShowSettings,
@@ -229,6 +230,56 @@ export const isShowIndoor = (state: RootState) =>
  */
 export const isShowOutdoor = (state: RootState) =>
   getShowEnvironmentType(state) === 'outdoor';
+
+/**
+ * Scale factor for converting latitude/longitude from the .skyc file format
+ * (1e-7 degree integers) to decimal degrees.
+ */
+const LOCATION_COORD_SCALE = 1 / 10_000_000;
+
+/**
+ * Scale factor for converting altitude from the .skyc file format
+ * (millimeters) to meters.
+ */
+const LOCATION_ALT_SCALE = 1 / 1000;
+
+/**
+ * Returns the geodetic location of the show, or undefined if the show has
+ * no location data. Converts from the .skyc file's native integer format
+ * (1e-7 degrees, millimeters) to degrees and meters.
+ */
+export const getShowLocation = createSelector(
+  getShowSpecification,
+  (spec?: ShowSpecification): Location | undefined => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const raw: any = (spec as any)?.environment?.location;
+    if (!raw) {
+      return undefined;
+    }
+    let origin: any;
+    let orientation: number | undefined;
+    if (Array.isArray(raw)) {
+      origin = raw;
+      orientation = undefined;
+    } else {
+      origin = raw.origin;
+      orientation = raw.orientation;
+    }
+    if (!origin || !Array.isArray(origin)) {
+      console.warn('[getShowLocation] Invalid location origin:', origin, 'raw:', raw);
+      return undefined;
+    }
+    const [rawLat, rawLon, rawAlt] = origin;
+    // TODO: When the show file does not provide an altitude, default to 0
+    // here. In the future, the proper AMSL elevation for this location
+    // should be inferred from the terrain tiles or a geoid model.
+    const alt = rawAlt !== undefined ? rawAlt * LOCATION_ALT_SCALE : 0;
+    return {
+      origin: [rawLat * LOCATION_COORD_SCALE, rawLon * LOCATION_COORD_SCALE, alt],
+      orientation: orientation ?? 0,
+    };
+  }
+);
 
 /**
  * Returns an array containing all the cameras from the show file,

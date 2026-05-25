@@ -12,6 +12,7 @@ import { computeEcefToSkybrushTransform } from '~/geo/coordinates';
 
 type TerrainTilesComponent = Component & {
   _tilesRenderer: TilesRenderer | null;
+  _buildingsRenderer: TilesRenderer | null;
   _tilesetUrl: string;
   _token: string;
   _cesiumAssetId: number;
@@ -32,53 +33,73 @@ function toEllipsoidalHeight(
   return egm96ToEllipsoid(lat, lon, amslAlt);
 }
 
-function initIonTiles(
-  component: TerrainTilesComponent,
-  assetId: number,
-  accessToken: string
-) {
-  const tilesRenderer = new TilesRenderer('');
-  tilesRenderer.registerPlugin(
-    new CesiumIonAuthPlugin({
-      apiToken: accessToken,
-      assetId: String(assetId),
-      autoRefreshToken: true,
-      useRecommendedSettings: true,
-      assetTypeHandler: (type, renderer) => {
-        if (type === 'TERRAIN') {
-          renderer.registerPlugin(new QuantizedMeshPlugin({}));
-        }
-      },
-    })
-  );
-
-  // Compute ECEF position of the show origin so that LoadRegionPlugin can
-  // force-load tiles in that area (the plugin works in tile tree's local
-  // coordinate system, i.e. ECEF for Cesium World Terrain)
-  const ellipsoidalAlt = toEllipsoidalHeight(
-    component._originLat,
-    component._originLon,
-    component._originAlt
-  );
-  const originEcef = new Vector3();
+function computeOriginEcef(
+  lat: number,
+  lon: number,
+  alt: number
+): Vector3 {
+  const result = new Vector3();
+  const ellipsoidalAlt = toEllipsoidalHeight(lat, lon, alt);
   WGS84_ELLIPSOID.getCartographicToPosition(
-    component._originLat * Math.PI / 180,
-    component._originLon * Math.PI / 180,
+    lat * Math.PI / 180,
+    lon * Math.PI / 180,
     ellipsoidalAlt,
-    originEcef
+    result
   );
+  return result;
+}
 
-  const regionPlugin = new LoadRegionPlugin();
-  regionPlugin.addRegion(
+function makeRegionPlugin(originEcef: Vector3): LoadRegionPlugin {
+  const plugin = new LoadRegionPlugin();
+  plugin.addRegion(
     new SphereRegion({
       sphere: new Sphere(originEcef, 5000),
       mask: true,
       errorTarget: 16,
     })
   );
-  tilesRenderer.registerPlugin(regionPlugin);
+  return plugin;
+}
 
-  finishInit(component, tilesRenderer);
+function makeCesiumAuthPlugin(
+  accessToken: string,
+  assetId: string
+): CesiumIonAuthPlugin {
+  return new CesiumIonAuthPlugin({
+    apiToken: accessToken,
+    assetId,
+    autoRefreshToken: true,
+    useRecommendedSettings: true,
+    assetTypeHandler: (type, renderer) => {
+      if (type === 'TERRAIN') {
+        renderer.registerPlugin(new QuantizedMeshPlugin({}));
+      }
+    },
+  });
+}
+
+function initIonTiles(
+  component: TerrainTilesComponent,
+  assetId: number,
+  accessToken: string
+) {
+  const originEcef = computeOriginEcef(
+    component._originLat,
+    component._originLon,
+    component._originAlt
+  );
+
+  // Terrain renderer (CWT)
+  const terrainRenderer = new TilesRenderer('');
+  terrainRenderer.registerPlugin(makeCesiumAuthPlugin(accessToken, String(assetId)));
+  terrainRenderer.registerPlugin(makeRegionPlugin(originEcef));
+
+  // Buildings renderer (OSM 3D Buildings)
+  const buildingsRenderer = new TilesRenderer('');
+  buildingsRenderer.registerPlugin(makeCesiumAuthPlugin(accessToken, '96188'));
+  buildingsRenderer.registerPlugin(makeRegionPlugin(originEcef));
+
+  finishInit(component, terrainRenderer, buildingsRenderer);
 }
 
 function initDirectTiles(component: TerrainTilesComponent, url: string) {
@@ -118,7 +139,8 @@ function initDirectTiles(component: TerrainTilesComponent, url: string) {
 
 function finishInit(
   component: TerrainTilesComponent,
-  tilesRenderer: TilesRenderer
+  tilesRenderer: TilesRenderer,
+  buildingsRenderer?: TilesRenderer
 ) {
   const sceneEl = (component.el as Entity).sceneEl;
   if (!sceneEl) {
@@ -154,9 +176,6 @@ function finishInit(
     tilesRenderer.registerPlugin(imagery);
   }
 
-  tilesRenderer.setCamera(camera);
-  tilesRenderer.setResolutionFromRenderer(camera, renderer);
-
   const ellipsoidalAlt = toEllipsoidalHeight(
     component._originLat,
     component._originLon,
@@ -170,16 +189,28 @@ function finishInit(
     component._orientation
   );
 
-  tilesRenderer.addEventListener('load-root-tileset', () => {
-    tilesRenderer.group.applyMatrix4(transform);
-  });
+  const renderers = [tilesRenderer];
+  if (buildingsRenderer) {
+    renderers.push(buildingsRenderer);
+  }
 
-  tilesRenderer.addEventListener('load-error', (event: any) => {
-    console.error('[terrain-tiles] Tile load error:', event);
-  });
+  for (const r of renderers) {
+    r.setCamera(camera);
+    r.setResolutionFromRenderer(camera, renderer);
 
-  (component.el as Entity).object3D.add(tilesRenderer.group);
+    r.addEventListener('load-root-tileset', () => {
+      r.group.applyMatrix4(transform);
+    });
+
+    r.addEventListener('load-error', (event: any) => {
+      console.error('[terrain-tiles] Tile load error:', event);
+    });
+
+    (component.el as Entity).object3D.add(r.group);
+  }
+
   component._tilesRenderer = tilesRenderer;
+  component._buildingsRenderer = buildingsRenderer ?? null;
 }
 
 if (AFrame.components?.['terrain-tiles']) {
@@ -198,6 +229,7 @@ AFrame.registerComponent('terrain-tiles', {
 
   init(this: TerrainTilesComponent) {
     this._tilesRenderer = null;
+    this._buildingsRenderer = null;
     this._tilesetUrl = '';
     this._token = '';
     this._cesiumAssetId = 0;
@@ -237,25 +269,32 @@ AFrame.registerComponent('terrain-tiles', {
   },
 
   tick(this: TerrainTilesComponent, _time: number, _delta: number) {
-    const tilesRenderer = this._tilesRenderer;
-    if (!tilesRenderer) {
-      return;
-    }
+    const renderers: (TilesRenderer | null)[] = [
+      this._tilesRenderer,
+      this._buildingsRenderer,
+    ];
 
     const camera = (this.el as Entity).sceneEl?.camera;
     if (camera) {
-      tilesRenderer.setCamera(camera);
-      if (!this._resolutionSet) {
-        const sceneRenderer = (this.el as Entity).sceneEl?.renderer;
-        if (sceneRenderer) {
-          tilesRenderer.setResolutionFromRenderer(camera, sceneRenderer);
-          this._resolutionSet = true;
+      for (const r of renderers) {
+        if (!r) { continue; }
+        r.setCamera(camera);
+        if (!this._resolutionSet) {
+          const sceneRenderer = (this.el as Entity).sceneEl?.renderer;
+          if (sceneRenderer) {
+            r.setResolutionFromRenderer(camera, sceneRenderer);
+          }
         }
+      }
+      if (!this._resolutionSet && camera) {
+        this._resolutionSet = true;
       }
       camera.updateMatrixWorld();
     }
 
-    tilesRenderer.update();
+    for (const r of renderers) {
+      if (r) { r.update(); }
+    }
   },
 
   remove(this: TerrainTilesComponent) {
@@ -272,9 +311,12 @@ AFrame.registerComponent('terrain-tiles', {
   },
 
   _disposeRenderer(this: TerrainTilesComponent) {
-    if (this._tilesRenderer) {
-      (this.el as Entity).object3D.remove(this._tilesRenderer.group);
-      this._tilesRenderer = null;
+    for (const key of ['_tilesRenderer', '_buildingsRenderer'] as const) {
+      const r = this[key];
+      if (r) {
+        (this.el as Entity).object3D.remove(r.group);
+        this[key] = null;
+      }
     }
   },
 });

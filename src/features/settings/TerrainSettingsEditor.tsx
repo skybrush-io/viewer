@@ -19,7 +19,19 @@ const TerrainSettingsEditor = () => {
   const { t } = useTranslation();
 
   const setMode = (mode: TerrainMode) => {
-    dispatch(updateAppSettings('threeD', { terrain: { ...terrain, mode } }));
+    const next = { ...terrain, mode };
+    // Save current token to the old provider slot, load the other provider's
+    // stored token when switching between active providers.
+    if (terrain.mode === 'googleMaps' && mode !== 'googleMaps') {
+      next.googleMapsToken = terrain.token;
+      next.token = mode === 'cesiumIon' ? terrain.cesiumIonToken : '';
+    } else if (terrain.mode === 'cesiumIon' && mode !== 'cesiumIon') {
+      next.cesiumIonToken = terrain.token;
+      next.token = mode === 'googleMaps' ? terrain.googleMapsToken : '';
+    } else if (terrain.mode === 'disabled' && mode !== 'disabled') {
+      next.token = mode === 'googleMaps' ? terrain.googleMapsToken : terrain.cesiumIonToken;
+    }
+    dispatch(updateAppSettings('threeD', { terrain: next }));
   };
 
   const setField = (field: string, value: string | number) => {
@@ -27,6 +39,8 @@ const TerrainSettingsEditor = () => {
       updateAppSettings('threeD', { terrain: { ...terrain, [field]: value } })
     );
   };
+
+  const showToken = terrain.mode !== 'disabled';
 
   return (
     <>
@@ -41,31 +55,22 @@ const TerrainSettingsEditor = () => {
           onChange={(event) => setMode(event.target.value as TerrainMode)}
         >
           <MenuItem value='disabled'>{t('settings.terrain.disabled')}</MenuItem>
-          <MenuItem value='enabled'>{t('settings.terrain.enabled')}</MenuItem>
+          <MenuItem value='googleMaps'>{t('settings.terrain.googleMaps')}</MenuItem>
+          <MenuItem value='cesiumIon'>{t('settings.terrain.cesiumIon')}</MenuItem>
         </Select>
       </FormControl>
 
-      {terrain.mode === 'enabled' && (
-        <>
-          <Box pt={2}>
-            <TextField
-              fullWidth
-              variant='filled'
-              label={t('settings.terrain.tilesetUrl')}
-              value={terrain.tilesetUrl}
-              onChange={(event) => setField('tilesetUrl', event.target.value)}
-            />
-          </Box>
-          <Box pt={2}>
-            <TextField
-              fullWidth
-              variant='filled'
-              label={t('settings.terrain.token')}
-              value={terrain.token}
-              onChange={(event) => setField('token', event.target.value)}
-            />
-          </Box>
-        </>
+      {showToken && (
+        <Box pt={2}>
+          <TextField
+            key={terrain.mode}
+            fullWidth
+            variant='filled'
+            label={t('settings.terrain.token')}
+            value={terrain.token}
+            onChange={(event) => setField('token', event.target.value)}
+          />
+        </Box>
       )}
     </>
   );

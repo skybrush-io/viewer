@@ -109,9 +109,9 @@
     "showYaw": "Show yaw indicators",
     "terrain": {
       "label": "Real-world terrain",
-      "enabled": "Enabled",
       "disabled": "Disabled",
-      "tilesetUrl": "3D Tiles URL",
+      "googleMaps": "Google Maps",
+      "cesiumIon": "Cesium Ion",
       "token": "Access token"
     }
   },

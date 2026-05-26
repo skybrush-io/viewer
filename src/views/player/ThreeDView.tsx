@@ -77,6 +77,8 @@ const DEFAULT_TERRAIN_SETTINGS: TerrainSettings = {
   tilesetUrl: '',
   token: '',
   cesiumAssetId: 0,
+  googleMapsToken: '',
+  cesiumIonToken: '',
 };
 
 const ThreeDView = (props: ThreeDViewProps) => {
@@ -103,14 +105,29 @@ const ThreeDView = (props: ThreeDViewProps) => {
 
   const [cameraId, setCameraId] = useState(0);
 
-  const terrainEnabled = terrain.mode === 'enabled' && !!location;
+  const terrainEnabled = terrain.mode !== 'disabled' && !!location;
   const terrainOrigin = location?.origin;
   const terrainLat = terrainOrigin?.[0] ?? 0;
   const terrainLon = terrainOrigin?.[1] ?? 0;
   const terrainAlt = terrainOrigin?.[2] ?? 0;
   const terrainOrientation = location?.orientation ?? 0;
 
-  if (terrain.mode === 'enabled' && !location) {
+  const terrainTilesProps =
+    terrain.mode === 'googleMaps'
+      ? {
+          url: 'https://tile.googleapis.com/v1/3dtiles/root.json',
+          token: terrain.token,
+          cesiumAssetId: 0,
+          provider: 'googleMaps',
+        }
+      : {
+          url: '',
+          token: terrain.token,
+          cesiumAssetId: terrain.cesiumAssetId || 1,
+          provider: 'cesiumIon',
+        };
+
+  if (terrain.mode !== 'disabled' && !location) {
     console.info(
       'Terrain mode enabled but show has no geodetic location; disabling terrain rendering.'
     );
@@ -208,9 +225,10 @@ const ThreeDView = (props: ThreeDViewProps) => {
           <a-entity
             key={`terrain-${showId}`}
             terrain-tiles={objectToString({
-              url: terrain.tilesetUrl,
-              token: terrain.token,
-              cesiumAssetId: terrain.cesiumAssetId,
+              url: terrainTilesProps.url,
+              token: terrainTilesProps.token,
+              cesiumAssetId: terrainTilesProps.cesiumAssetId,
+              provider: terrainTilesProps.provider,
               originLat: terrainLat,
               originLon: terrainLon,
               originAlt: terrainAlt,

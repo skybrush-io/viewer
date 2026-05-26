@@ -82,6 +82,8 @@ const initialState: SettingsSliceState = {
       tilesetUrl: '',
       token: '',
       cesiumAssetId: 0,
+      googleMapsToken: '',
+      cesiumIonToken: '',
     },
   },
 };

@@ -20,6 +20,7 @@ type TerrainTilesComponent = Component & {
   _originLon: number;
   _originAlt: number;
   _orientation: number;
+  _provider: string;
   _resolutionSet: boolean;
   _initRenderer(): void;
   _disposeRenderer(): void;
@@ -163,8 +164,8 @@ function finishInit(
   sceneEl.object3D.add(sun);
   sceneEl.object3D.add(sun.target);
 
-  // Drape satellite imagery (Bing Maps Aerial) over terrain tiles via Cesium Ion
-  if (component._token) {
+  // Drape satellite imagery (Bing Maps Aerial) over terrain tiles via Cesium Ion.
+  if (component._provider === 'cesiumIon' && component._token) {
     const imagery = new ImageOverlayPlugin({ overlays: [], renderer });
     imagery.addOverlay(
       new CesiumIonOverlay({
@@ -221,6 +222,7 @@ AFrame.registerComponent('terrain-tiles', {
     url: { type: 'string' },
     token: { type: 'string' },
     cesiumAssetId: { type: 'number', default: 0 },
+    provider: { type: 'string', default: 'cesiumIon' },
     originLat: { type: 'number' },
     originLon: { type: 'number' },
     originAlt: { type: 'number', default: 0 },
@@ -237,6 +239,7 @@ AFrame.registerComponent('terrain-tiles', {
     this._originLon = 0;
     this._originAlt = 0;
     this._orientation = 0;
+    this._provider = '';
     this._resolutionSet = false;
   },
 
@@ -250,7 +253,8 @@ AFrame.registerComponent('terrain-tiles', {
       data.originLat !== this._originLat ||
       data.originLon !== this._originLon ||
       data.originAlt !== this._originAlt ||
-      data.orientation !== this._orientation;
+      data.orientation !== this._orientation ||
+      data.provider !== this._provider;
 
     if (!changed) {
       return;
@@ -263,6 +267,7 @@ AFrame.registerComponent('terrain-tiles', {
     this._originLon = data.originLon as number;
     this._originAlt = data.originAlt as number;
     this._orientation = data.orientation as number;
+    this._provider = data.provider as string;
 
     this._disposeRenderer();
     this._initRenderer();
@@ -302,9 +307,19 @@ AFrame.registerComponent('terrain-tiles', {
   },
 
   _initRenderer(this: TerrainTilesComponent) {
-    if (this._token && !this._tilesetUrl) {
+    if (this._provider === 'cesiumIon') {
+      if (!this._token) {
+        console.warn('[terrain-tiles] No Cesium Ion token configured');
+        return;
+      }
       const assetId = this._cesiumAssetId || 1;
       initIonTiles(this, assetId, this._token);
+    } else if (this._provider === 'googleMaps') {
+      if (!this._token) {
+        console.warn('[terrain-tiles] No Google Maps API key configured');
+        return;
+      }
+      initDirectTiles(this, this._tilesetUrl);
     } else if (this._tilesetUrl) {
       initDirectTiles(this, this._tilesetUrl);
     }

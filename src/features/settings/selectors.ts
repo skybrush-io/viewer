@@ -21,7 +21,7 @@ export const getLanguage = (state: RootState) =>
 export const getScenery = (state: RootState) => state.settings.threeD.scenery;
 
 export const getTerrainSettings = (state: RootState): TerrainSettings =>
-  state.settings.threeD.terrain ?? { mode: 'disabled', tilesetUrl: '', token: '', cesiumAssetId: 0 };
+  state.settings.threeD.terrain ?? { mode: 'disabled', tilesetUrl: '', token: '', cesiumAssetId: 0, googleMapsToken: '', cesiumIonToken: '' };
 
 export const getSimulatedPlaybackFrameRate = (state: RootState) => {
   const fps = state.settings.playback?.fps ?? DEFAULT_PLAYBACK_FPS;

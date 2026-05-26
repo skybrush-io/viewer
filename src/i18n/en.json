@@ -106,7 +106,14 @@
     "showAxes": "Show axes",
     "showGrid": "Show grid",
     "showLabels": "Show labels",
-    "showYaw": "Show yaw indicators"
+    "showYaw": "Show yaw indicators",
+    "terrain": {
+      "label": "Real-world terrain",
+      "disabled": "Disabled",
+      "googleMaps": "Google Maps",
+      "cesiumIon": "Cesium Ion",
+      "token": "Access token"
+    }
   },
   "sharing": {
     "copyLinkToClipboard": {

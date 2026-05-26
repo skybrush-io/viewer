@@ -7,7 +7,7 @@ import config from 'config';
 
 import { DEFAULT_DRONE_MODEL, DEFAULT_PLAYBACK_FPS } from '~/constants';
 
-import type { DroneModelType } from './types';
+import type { DroneModelType, TerrainSettings } from './types';
 
 type SettingsSliceState = {
   general: {
@@ -27,6 +27,7 @@ type SettingsSliceState = {
     showYaw: boolean;
     droneRadius?: number;
     droneModel?: DroneModelType;
+    terrain: TerrainSettings;
   };
 };
 
@@ -74,6 +75,16 @@ const initialState: SettingsSliceState = {
 
     // Drone model to use in the 3D view
     droneModel: DEFAULT_DRONE_MODEL,
+
+    // Realistic 3D terrain settings
+    terrain: {
+      mode: 'disabled',
+      tilesetUrl: '',
+      token: '',
+      cesiumAssetId: 0,
+      googleMapsToken: '',
+      cesiumIonToken: '',
+    },
   },
 };
 

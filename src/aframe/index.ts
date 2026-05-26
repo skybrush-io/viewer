@@ -11,6 +11,7 @@ import './components/arrow';
 import './components/drone-flock';
 import './components/glow-material';
 import './components/modifier-keys';
+import './components/terrain-tiles';
 
 import './primitives/arrow';
 import './primitives/drone-flock';

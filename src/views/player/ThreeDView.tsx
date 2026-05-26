@@ -18,11 +18,13 @@ import type {
 } from '@skybrush/aframe-components/spatial';
 
 import { getDroneModel } from '~/features/settings/selectors';
-import type { DroneModelType } from '~/features/settings/types';
+import type { DroneModelType, TerrainSettings } from '~/features/settings/types';
 import {
   getLoadedShowId,
   getNumberOfDronesInShow,
+  getShowLocation,
 } from '~/features/show/selectors';
+import type { Location } from '@skybrush/show-format';
 import {
   getEffectiveDroneRadius,
   getEffectiveScenery,
@@ -61,11 +63,22 @@ type ThreeDViewProps = {
   readonly showStatistics: boolean;
   readonly showYaw: boolean;
   readonly vrEnabled?: boolean;
+  readonly location?: Location;
+  readonly terrain: TerrainSettings;
 };
 
 const DEFAULT_CAMERA_CONFIGURATION = {
   position: [0, 20, 50],
   rotation: [0, 0, 0],
+};
+
+const DEFAULT_TERRAIN_SETTINGS: TerrainSettings = {
+  mode: 'disabled',
+  tilesetUrl: '',
+  token: '',
+  cesiumAssetId: 0,
+  googleMapsToken: '',
+  cesiumIonToken: '',
 };
 
 const ThreeDView = (props: ThreeDViewProps) => {
@@ -76,6 +89,7 @@ const ThreeDView = (props: ThreeDViewProps) => {
     droneModel,
     droneRadius,
     grid,
+    location,
     navigation,
     numDrones,
     ref,
@@ -85,10 +99,39 @@ const ThreeDView = (props: ThreeDViewProps) => {
     showLabels,
     showStatistics,
     showYaw,
+    terrain = DEFAULT_TERRAIN_SETTINGS,
     vrEnabled,
   } = props;
 
   const [cameraId, setCameraId] = useState(0);
+
+  const terrainEnabled = terrain.mode !== 'disabled' && !!location;
+  const terrainOrigin = location?.origin;
+  const terrainLat = terrainOrigin?.[0] ?? 0;
+  const terrainLon = terrainOrigin?.[1] ?? 0;
+  const terrainAlt = terrainOrigin?.[2] ?? 0;
+  const terrainOrientation = location?.orientation ?? 0;
+
+  const terrainTilesProps =
+    terrain.mode === 'googleMaps'
+      ? {
+          url: 'https://tile.googleapis.com/v1/3dtiles/root.json',
+          token: terrain.token,
+          cesiumAssetId: 0,
+          provider: 'googleMaps',
+        }
+      : {
+          url: '',
+          token: terrain.token,
+          cesiumAssetId: terrain.cesiumAssetId || 1,
+          provider: 'cesiumIon',
+        };
+
+  if (terrain.mode !== 'disabled' && !location) {
+    console.info(
+      'Terrain mode enabled but show has no geodetic location; disabling terrain rendering.'
+    );
+  }
 
   const extraCameraProps = {
     'look-controls': objectToString({
@@ -105,8 +148,8 @@ const ThreeDView = (props: ThreeDViewProps) => {
     }),
   };
   const extraSceneProps: Record<string, string> = {};
-  const isLightScenery = scenery === 'day';
-  const isSceneryEnabled = scenery !== 'disabled';
+  const isLightScenery = scenery === 'day' && !terrainEnabled;
+  const isSceneryEnabled = scenery !== 'disabled' && !terrainEnabled;
 
   if (showStatistics) {
     extraSceneProps.stats = 'true';
@@ -178,10 +221,25 @@ const ThreeDView = (props: ThreeDViewProps) => {
           size={numDrones}
         />
         <SelectionMarkers />
+        {terrainEnabled && (
+          <a-entity
+            key={`terrain-${showId}`}
+            terrain-tiles={objectToString({
+              url: terrainTilesProps.url,
+              token: terrainTilesProps.token,
+              cesiumAssetId: terrainTilesProps.cesiumAssetId,
+              provider: terrainTilesProps.provider,
+              originLat: terrainLat,
+              originLon: terrainLon,
+              originAlt: terrainAlt,
+              orientation: terrainOrientation,
+            })}
+          />
+        )}
         {/* <VelocityArrows /> */}
       </a-entity>
 
-      <Scenery type={scenery} grid={grid} />
+      {!terrainEnabled && <Scenery type={scenery} grid={grid} />}
     </a-scene>
   );
 };
@@ -197,6 +255,7 @@ export default connect(
     droneModel: getDroneModel(state),
     droneRadius: getEffectiveDroneRadius(state),
     scenery: getEffectiveScenery(state),
+    location: getShowLocation(state),
   }),
   // mapDispatchToProps
   {},

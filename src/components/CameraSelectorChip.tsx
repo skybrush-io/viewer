@@ -101,6 +101,7 @@ const CameraSelectorChip = ({
       >
         {(cameras || []).map((camera, index) => (
           <MenuItem
+            // eslint-disable-next-line @eslint-react/no-array-index-key
             key={index}
             onClick={() => {
               handleClose(index);

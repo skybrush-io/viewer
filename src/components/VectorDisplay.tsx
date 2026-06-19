@@ -95,6 +95,7 @@ export default function VectorDisplay({
   return (
     <StyledBox minValueWidth={minValueWidth} minUnitWidth={minUnitWidth}>
       {value.map((v, i) => (
+        // eslint-disable-next-line @eslint-react/no-array-index-key
         <Fragment key={i}>
           <div
             className={clsx(

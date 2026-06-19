@@ -29,12 +29,12 @@ const SelectionMarker = ({
   trajectoryPlayer,
   timestamp,
 }: SelectionMarkerProps) => {
-  const state = useRef<State | null>(null);
-  if (!state.current) {
-    state.current = createState();
+  const stateRef = useRef<State | null>(null);
+  if (!stateRef.current) {
+    stateRef.current = createState();
   }
 
-  const { position } = state.current;
+  const { position } = stateRef.current;
   if (trajectoryPlayer) {
     trajectoryPlayer.getPositionAt(timestamp, position);
   } else {

@@ -108,7 +108,7 @@ export default function LCDText({
       color: color ?? 'black',
       fontSize,
       height,
-    } as React.CSSProperties;
+    };
   }, [color, height]);
 
   variant = variant ?? 'default';

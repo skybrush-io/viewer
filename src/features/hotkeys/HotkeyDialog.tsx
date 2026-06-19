@@ -3,7 +3,7 @@
  */
 
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import {
   getApplicationKeyMap,
   type KeyMapDisplayOptions,
@@ -92,12 +92,14 @@ type HotkeyDialogProps = {
  * Dialog that shows the current list of hotkeys.
  */
 const HotkeyDialog = ({ onClose, open }: HotkeyDialogProps) => {
-  const [hotkeys, setHotkeys] = useState(() => getApplicationKeyMap());
+  // Explanation for disabling the ESLint rule: This is because we want to re-query the
+  // application key map whenever the dialog is opened or closed. The alternative would
+  // be to use a state variable and an effect, but that would cause an unnecessary
+  // re-render, see @eslint-react/set-state-in-effect
+  //
+  // eslint-disable-next-line @eslint-react/exhaustive-deps
+  const hotkeys = useMemo(() => getApplicationKeyMap(), [open]);
   const { t } = useTranslation();
-
-  useEffect(() => {
-    setHotkeys(getApplicationKeyMap());
-  }, [open]);
 
   return (
     <DraggableDialog

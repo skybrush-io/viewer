@@ -4,15 +4,18 @@
   "description": "Viewer for Skybrush drone shows",
   "main": "launcher.bundle.js",
   "scripts": {
+    "format:check": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint --fix .",
     "bundle": "rimraf build && cross-env NODE_ENV=production webpack --mode=production --progress --config webpack/dist.config.js",
     "i18n": "i18next",
-    "lint": "eslint",
     "postinstall": "patch-package",
     "analyze": "webpack --config webpack/browser.config.js --progress --json >stats.json",
     "start": "cross-env SKYBRUSH_VARIANT=demo webpack serve --config webpack/browser.config.js --progress",
     "start:electron": "webpack serve --config webpack/electron.config.js --progress",
     "start:public": "webpack serve --config webpack/browser.config.js --progress --host 0.0.0.0",
-    "test": "npm run lint"
+    "type:check": "tsc --noEmit --skipLibCheck"
   },
   "repository": {
     "type": "git",
@@ -97,9 +100,10 @@
     "workerpool": "^10.0.2"
   },
   "devDependencies": {
+    "@eslint-react/eslint-plugin": "^5.9.0",
     "@eslint/js": "^10.0.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.6.2",
-    "@skybrush/eslint-config": "^0.3.1",
+    "@skybrush/eslint-config": "^0.4.0",
     "@types/aframe": "^1.2.9",
     "@types/chart.js": "^2.9.41",
     "@types/color": "^4.2.1",
@@ -117,8 +121,8 @@
     "dotenv-webpack": "^9.0.0",
     "electron": "^42.4.1",
     "eslint": "^10.5.0",
-    "eslint-plugin-react": "^7.37.5",
     "git-revision-webpack-plugin": "^5.0.0",
+    "globals": "^17.6.0",
     "html-webpack-plugin": "^5.6.7",
     "i18next-parser": "^9.4.0",
     "less": "^4.6.6",

@@ -58,12 +58,12 @@ export default function DroneInspectorSection({
 
   usePeriodicRefresh(shouldRefresh ? 100 : null);
 
-  const state = useRef<State | null>(null);
-  if (!state.current) {
-    state.current = createState();
+  const stateRef = useRef<State | null>(null);
+  if (!stateRef.current) {
+    stateRef.current = createState();
   }
 
-  const { position, velocity, color } = state.current;
+  const { position, velocity, color } = stateRef.current;
   const timestamp = getTimestamp();
 
   if (trajectoryPlayer) {

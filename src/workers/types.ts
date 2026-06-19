@@ -23,7 +23,7 @@ export function isAsyncFnEvent(event: unknown): event is AsyncFnEvent<unknown> {
     return false;
   }
 
-  const eventType = (event as { type: unknown }).type;
+  const eventType = event.type;
   return (
     eventType === 'progress' ||
     eventType === 'log' ||

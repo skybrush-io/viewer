@@ -1,8 +1,8 @@
 import {
   Vector3Array,
-  YawControlPlayer,
   type TrajectoryPlayer,
   type Vector3,
+  type YawControlPlayer,
 } from '@skybrush/show-format';
 import { range } from 'lodash-es';
 import { Euler } from 'three';

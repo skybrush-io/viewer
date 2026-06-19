@@ -6,7 +6,6 @@ import {
   threeJsToSkybrushPosition,
   threeJsToSkybrushQuaternion,
   type Pose,
-  type ThreeJsPositionTuple,
   type ThreeJsQuaternionTuple,
 } from '@skybrush/aframe-components/spatial';
 import { getElapsedSeconds } from '~/features/playback/selectors';
@@ -28,13 +27,9 @@ export function getSharingLink(): AppThunk<Promise<void>> {
 
     if (camera) {
       const pose: Pose = {
-        position: threeJsToSkybrushPosition(
-          camera.position.toArray() as ThreeJsPositionTuple
-        ),
+        position: threeJsToSkybrushPosition(camera.position.toArray()),
         orientation: threeJsToSkybrushQuaternion(
-          toWXYZ(
-            camera.quaternion.toArray() as number[]
-          ) as ThreeJsQuaternionTuple
+          toWXYZ(camera.quaternion.toArray()) as ThreeJsQuaternionTuple
         ),
       };
 

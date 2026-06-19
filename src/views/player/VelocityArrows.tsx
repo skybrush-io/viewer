@@ -28,12 +28,12 @@ const createState = () => ({
 const VelocityArrow = ({ trajectoryPlayer, timestamp }: VelocityArrowProps) => {
   const { getPositionAt, getVelocityAt } = trajectoryPlayer;
 
-  const state = useRef<State | null>(null);
-  if (!state.current) {
-    state.current = createState();
+  const stateRef = useRef<State | null>(null);
+  if (!stateRef.current) {
+    stateRef.current = createState();
   }
 
-  const { position, velocity } = state.current;
+  const { position, velocity } = stateRef.current;
   getPositionAt(timestamp, position);
   getVelocityAt(timestamp, velocity);
 

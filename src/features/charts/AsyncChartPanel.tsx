@@ -34,7 +34,7 @@ const AsyncChartPanel = ({ fn, ...rest }: AsyncChartPanelProps) => {
     return () => {
       abortController.abort();
     };
-  }, [fn, id]);
+  }, [fn, id, dispatch]);
 
   const calculation = useAppSelector(selectCalculation);
 

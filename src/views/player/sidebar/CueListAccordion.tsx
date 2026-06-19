@@ -14,6 +14,7 @@ const CueSheetSection = ({ cues }: { cues: readonly Cue[] }) => {
     <MiniList>
       {cues.map((cue, index) => (
         <MiniListItemButton
+          // eslint-disable-next-line @eslint-react/no-array-index-key
           key={index}
           onClick={() => {
             dispatch(setPlaybackPosition(cue.time));

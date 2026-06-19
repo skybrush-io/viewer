@@ -37,6 +37,7 @@ import SelectionMarkers from './SelectionMarkers';
 
 import flapperDroneModel from '~/../assets/models/flapper-drone.obj';
 import quadcopterModel from '~/../assets/models/quadcopter.obj';
+import FlightVolume from './FlightVolume';
 
 type ThreeDViewProps = {
   readonly axes: boolean;
@@ -131,6 +132,7 @@ const ThreeDView = (props: ThreeDViewProps) => {
   // separate cameraId and sceneLoaded state
   useEffect(() => {
     if (showId !== cameraId && cameraRef.current?.sceneEl?.hasLoaded) {
+      // eslint-disable-next-line @eslint-react/set-state-in-effect
       setCameraId(showId);
     }
   }, [cameraId, cameraRef, showId]);
@@ -178,6 +180,7 @@ const ThreeDView = (props: ThreeDViewProps) => {
           size={numDrones}
         />
         <SelectionMarkers />
+        <FlightVolume />
         {/* <VelocityArrows /> */}
       </a-entity>
 

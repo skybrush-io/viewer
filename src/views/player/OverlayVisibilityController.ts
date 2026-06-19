@@ -29,16 +29,19 @@ const useMouseMovingState = (
   useEffect(() => {
     if (lastPosition[0] === docX && lastPosition[1] === docY) {
       if (hasTimerFired && moving) {
+        // eslint-disable-next-line @eslint-react/set-state-in-effect
         setMoving(false);
         if (onStopped) {
           onStopped();
         }
       }
     } else {
+      // eslint-disable-next-line @eslint-react/set-state-in-effect
       setLastPosition([docX, docY]);
       reset();
 
       if (!moving) {
+        // eslint-disable-next-line @eslint-react/set-state-in-effect
         setMoving(true);
         if (onStarted) {
           onStarted();

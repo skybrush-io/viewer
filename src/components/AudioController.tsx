@@ -54,6 +54,7 @@ const AudioController = ({
 
     const error = audioRef?.current?.error;
     if (error) {
+      // eslint-disable-next-line @typescript-eslint/no-base-to-string
       console.error(`Error ${error.code}: ${error.message ?? String(error)}`);
     }
   }, [audioRef]);
@@ -70,7 +71,9 @@ const AudioController = ({
       // visuals. I don't know why it's needed or whether it varies from
       // machine to machine. We need to test it.
       audioRef.current.currentTime = currentTime + 0.15;
-      audioRef.current.play().catch(() => {});
+      audioRef.current.play().catch(() => {
+        /* nop */
+      });
     } else {
       const delay = Math.min(5000, -currentTime * 1000);
       timeoutIdRef.current = setTimeout(tryPlayAudio, delay);

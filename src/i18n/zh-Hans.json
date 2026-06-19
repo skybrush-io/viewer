@@ -1,126 +1,126 @@
 {
-    "settings": {
-        "droneRadius": "无人机尺寸",
-        "droneModel": {
-            "label": "无人机模型",
-            "quad": "四旋翼飞机",
-            "flapper": "拍翼机",
-            "sphere": "球体"
-        },
-        "scenery": {
-            "auto": "自动",
-            "indoor": "室内",
-            "disabled": "已禁用",
-            "day": "白天",
-            "night": "夜晚",
-            "label": "场景"
-        },
-        "showAxes": "显示坐标轴",
-        "language": "语言",
-        "showGrid": "显示网格",
-        "scaleLabels": "均衡标签大小",
-        "showLabels": "显示标签",
-        "showYaw": "显示偏航指示",
-        "playbackSpeed": "播放速度",
-        "playbackFrameRate": "每秒帧数"
+  "settings": {
+    "droneRadius": "无人机尺寸",
+    "droneModel": {
+      "label": "无人机模型",
+      "quad": "四旋翼飞机",
+      "flapper": "拍翼机",
+      "sphere": "球体"
     },
-    "chartGrid": {
-        "noChartsHint": {
-            "header": "未选择图表",
-            "text": "请使用标题中的按钮选择一种图表类型"
-        }
+    "scenery": {
+      "auto": "自动",
+      "indoor": "室内",
+      "disabled": "已禁用",
+      "day": "白天",
+      "night": "夜晚",
+      "label": "场景"
     },
-    "buttons": {
-        "resetZoom": "重置缩放",
-        "settings": "设置",
-        "trackDrones": "旋转相机朝向无人机",
-        "returnToViewer": "重置缩放",
-        "closeShow": "关闭显示",
-        "validateTrajectories": "验证轨迹",
-        "openShowFile": "打开表演文件",
-        "shareLink": "分享链接以展示",
-        "toggleSidebar": "切换侧边栏",
-        "inspector": "检查器",
-        "showHotkeysDialog": "显示快捷键",
-        "close": "关闭",
-        "reloadShow": "重新载入表演文件"
-    },
-    "validation": {
-        "altitudeThreshold": "所有无人机",
-        "horizontalVelocityThreshold": "XY 速度阈值",
-        "allDrones": "所有无人机",
-        "altitude": "所有无人机的高度分布",
-        "verticalVelocityThreshold": "Z 速度阈值",
-        "distanceThreshold": "距离阈值",
-        "proximity": "接近度",
-        "verticalVelocity": "垂直速度",
-        "horizontalVelocity": "水平速度",
-        "distanceOfClosestDronePair": "最近的无人机间距",
-        "horizontalAcceleration": "水平加速度",
-        "verticalAccelerationThreshold": "Z轴加速度阈值",
-        "verticalAcceleration": "垂直加速度",
-        "horizontalAccelerationThreshold": "XY轴加速度阈值"
-    },
-    "cameras": {
-        "noCamera": "无相机",
-        "default": "默认视图",
-        "indexedLabel": "相机 {{ index }}",
-        "shared": "共享视图"
-    },
-    "bottomOverlay": {
-        "rightText": "Skybrush © 2020-{{ year }} CollMot Robotics 有限公司。",
-        "leftText": "使用方向键移动（按住 Shift 键可加速），按 E/C 键可改变高度。拖动场景查看四周，滚轮或 +/- 键可缩放视角。"
-    },
-    "sharing": {
-        "copyLinkToClipboard": {
-            "loading": "正在复制链接…",
-            "success": "链接已复制到剪贴板",
-            "error": "无法将链接复制到剪贴板"
-        }
-    },
-    "inspector": {
-        "metadata": {
-            "yawControl": "偏航控制",
-            "summary": "元数据",
-            "environment": {
-                "indoor": "室内",
-                "outdoor": "室外",
-                "label": "环境"
-            },
-            "droneCount": "无人机数量",
-            "duration": "期间",
-            "audio": "音频轨道",
-            "pyroControl": "烟花控制"
-        },
-        "selectedDrones": {
-            "unnamed": "无人机 {{ index }}",
-            "hintMultiple": {
-                "other": "按住 Ctrl 键可选择多架无人机。",
-                "mac": "按住Cmd键多选无人机。"
-            },
-            "hint": "在主视图中点击无人机以进行检视。"
-        },
-        "cueSheet": {
-            "summary": "提示列表"
-        }
-    },
-    "hotkeys": {
-        "selectFourthCamera": "选择第四台摄像机",
-        "rewind": "回到开头",
-        "selectFirstCamera": "选择第一个摄像头",
-        "togglePlayback": "播放/停止",
-        "cueBackward": "向后跳帧（按住 Shift = 10倍速,按住 Alt = 逐帧）",
-        "dialogTitle": "键盘快捷键",
-        "selectSecondCamera": "选择第二个摄像头",
-        "selectFifthCamera": "选择第五个摄像头",
-        "selectThirdCamera": "选择第三个摄像头",
-        "cueForward": "向前跳帧（按住 Shift = 10倍速,按住 Alt = 逐帧）",
-        "selectDefaultCamera": "选择默认镜头",
-        "toggleMuted": "静音或取消静音声音"
-    },
-    "generic": {
-        "no": "无",
-        "yes": "有",
-        "pleaseWait": "请稍等…"
+    "showAxes": "显示坐标轴",
+    "language": "语言",
+    "showGrid": "显示网格",
+    "scaleLabels": "均衡标签大小",
+    "showLabels": "显示标签",
+    "showYaw": "显示偏航指示",
+    "playbackSpeed": "播放速度",
+    "playbackFrameRate": "每秒帧数"
+  },
+  "chartGrid": {
+    "noChartsHint": {
+      "header": "未选择图表",
+      "text": "请使用标题中的按钮选择一种图表类型"
     }
+  },
+  "buttons": {
+    "resetZoom": "重置缩放",
+    "settings": "设置",
+    "trackDrones": "旋转相机朝向无人机",
+    "returnToViewer": "重置缩放",
+    "closeShow": "关闭显示",
+    "validateTrajectories": "验证轨迹",
+    "openShowFile": "打开表演文件",
+    "shareLink": "分享链接以展示",
+    "toggleSidebar": "切换侧边栏",
+    "inspector": "检查器",
+    "showHotkeysDialog": "显示快捷键",
+    "close": "关闭",
+    "reloadShow": "重新载入表演文件"
+  },
+  "validation": {
+    "altitudeThreshold": "所有无人机",
+    "horizontalVelocityThreshold": "XY 速度阈值",
+    "allDrones": "所有无人机",
+    "altitude": "所有无人机的高度分布",
+    "verticalVelocityThreshold": "Z 速度阈值",
+    "distanceThreshold": "距离阈值",
+    "proximity": "接近度",
+    "verticalVelocity": "垂直速度",
+    "horizontalVelocity": "水平速度",
+    "distanceOfClosestDronePair": "最近的无人机间距",
+    "horizontalAcceleration": "水平加速度",
+    "verticalAccelerationThreshold": "Z轴加速度阈值",
+    "verticalAcceleration": "垂直加速度",
+    "horizontalAccelerationThreshold": "XY轴加速度阈值"
+  },
+  "cameras": {
+    "noCamera": "无相机",
+    "default": "默认视图",
+    "indexedLabel": "相机 {{ index }}",
+    "shared": "共享视图"
+  },
+  "bottomOverlay": {
+    "rightText": "Skybrush © 2020-{{ year }} CollMot Robotics 有限公司。",
+    "leftText": "使用方向键移动（按住 Shift 键可加速），按 E/C 键可改变高度。拖动场景查看四周，滚轮或 +/- 键可缩放视角。"
+  },
+  "sharing": {
+    "copyLinkToClipboard": {
+      "loading": "正在复制链接…",
+      "success": "链接已复制到剪贴板",
+      "error": "无法将链接复制到剪贴板"
+    }
+  },
+  "inspector": {
+    "metadata": {
+      "yawControl": "偏航控制",
+      "summary": "元数据",
+      "environment": {
+        "indoor": "室内",
+        "outdoor": "室外",
+        "label": "环境"
+      },
+      "droneCount": "无人机数量",
+      "duration": "期间",
+      "audio": "音频轨道",
+      "pyroControl": "烟花控制"
+    },
+    "selectedDrones": {
+      "unnamed": "无人机 {{ index }}",
+      "hintMultiple": {
+        "other": "按住 Ctrl 键可选择多架无人机。",
+        "mac": "按住Cmd键多选无人机。"
+      },
+      "hint": "在主视图中点击无人机以进行检视。"
+    },
+    "cueSheet": {
+      "summary": "提示列表"
+    }
+  },
+  "hotkeys": {
+    "selectFourthCamera": "选择第四台摄像机",
+    "rewind": "回到开头",
+    "selectFirstCamera": "选择第一个摄像头",
+    "togglePlayback": "播放/停止",
+    "cueBackward": "向后跳帧（按住 Shift = 10倍速,按住 Alt = 逐帧）",
+    "dialogTitle": "键盘快捷键",
+    "selectSecondCamera": "选择第二个摄像头",
+    "selectFifthCamera": "选择第五个摄像头",
+    "selectThirdCamera": "选择第三个摄像头",
+    "cueForward": "向前跳帧（按住 Shift = 10倍速,按住 Alt = 逐帧）",
+    "selectDefaultCamera": "选择默认镜头",
+    "toggleMuted": "静音或取消静音声音"
+  },
+  "generic": {
+    "no": "无",
+    "yes": "有",
+    "pleaseWait": "请稍等…"
+  }
 }

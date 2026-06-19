@@ -109,7 +109,12 @@ const CameraSelectorChip = ({
           >
             <ListItemText>{getLabelForCamera(camera, index, t)}</ListItemText>
             {hotkeys[index] && (
-              <Typography variant='body1' color='text.secondary' ml={2}>
+              <Typography
+                variant='body1'
+                sx={{
+                  color: 'text.secondary',
+                  ml: 2
+                }}>
                 {
                   // eslint-disable-next-line @typescript-eslint/no-base-to-string
                   String(hotkeys[index])

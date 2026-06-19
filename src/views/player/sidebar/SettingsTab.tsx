@@ -13,23 +13,42 @@ import ThreeDViewSettingToggles from '~/features/settings/ThreeDViewSettingToggl
  */
 const SettingsTab = () => (
   <List sx={{ background: 'unset' }}>
-    <Box px={2}>
+    <Box sx={{
+      px: 2
+    }}>
       <LanguageSelector />
     </Box>
 
-    <Box px={2} pt={2}>
+    <Box
+      sx={{
+        px: 2,
+        pt: 2
+      }}>
       <ScenerySelector />
     </Box>
 
-    <Box px={2} pt={2}>
+    <Box
+      sx={{
+        px: 2,
+        pt: 2
+      }}>
       <PlaybackSpeedSelector />
     </Box>
 
-    <Box px={2} pt={2}>
+    <Box
+      sx={{
+        px: 2,
+        pt: 2
+      }}>
       <FrameRateSelector />
     </Box>
 
-    <Box px={2} pt={2} pb={1}>
+    <Box
+      sx={{
+        px: 2,
+        pt: 2,
+        pb: 1
+      }}>
       <DroneSizeSlider />
     </Box>
 

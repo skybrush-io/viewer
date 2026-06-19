@@ -37,7 +37,6 @@ import SelectionMarkers from './SelectionMarkers';
 
 import flapperDroneModel from '~/../assets/models/flapper-drone.obj';
 import quadcopterModel from '~/../assets/models/quadcopter.obj';
-import FlightVolume from './FlightVolume';
 
 type ThreeDViewProps = {
   readonly axes: boolean;
@@ -180,7 +179,7 @@ const ThreeDView = (props: ThreeDViewProps) => {
           size={numDrones}
         />
         <SelectionMarkers />
-        <FlightVolume />
+        {/* <FlightVolume /> */}
         {/* <VelocityArrows /> */}
       </a-entity>
 

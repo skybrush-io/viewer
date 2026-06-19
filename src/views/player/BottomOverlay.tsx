@@ -92,18 +92,32 @@ const BottomOverlay = ({
   ...rest
 }: BottomOverlayProps) => (
   <Box sx={style} {...rest}>
-    <Box display='flex' alignItems='center'>
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center'
+      }}>
       {canLoadShowFromLocalFile && (
-        <Box pl={1} mr={-1}>
+        <Box
+          sx={{
+            pl: 1,
+            mr: -1
+          }}>
           <OpenButton disabled={playing} onClick={onLoadShowFromLocalFile} />
         </Box>
       )}
       {config.buttons.reload && (
-        <Box pl={1} mr={-1}>
+        <Box
+          sx={{
+            pl: 1,
+            mr: -1
+          }}>
           <ReloadButton disabled={!canReloadShow} onClick={onReloadShow} />
         </Box>
       )}
-      <Box px={2}>
+      <Box sx={{
+        px: 2
+      }}>
         <PlayStopButton
           edge='start'
           disabled={!canTogglePlayback}
@@ -112,13 +126,24 @@ const BottomOverlay = ({
         />
         {hasAudio && <MuteButton muted={muted} onClick={onToggleMuted} />}
       </Box>
-      <Box flex={1} textAlign='center' pt={0.5}>
+      <Box
+        sx={{
+          flex: 1,
+          textAlign: 'center',
+          pt: 0.5
+        }}>
         <PlaybackSlider />
       </Box>
-      <Box textAlign='right' pl={2}>
+      <Box
+        sx={{
+          textAlign: 'right',
+          pl: 2
+        }}>
         {formatPlaybackTimestamp(duration)}
       </Box>
-      <Box px={1}>
+      <Box sx={{
+        px: 1
+      }}>
         {config.modes.deepLinking && <ShareButton />}
         {config.modes.vr && (
           <IconButton id='vr-button' size='large'>
@@ -135,15 +160,20 @@ const BottomOverlay = ({
 
     {leftText || rightText ? (
       <Box
-        display='flex'
-        alignItems='center'
-        maxWidth='100%'
-        minHeight={24}
-        px={2}
-      >
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          maxWidth: '100%',
+          minHeight: 24,
+          px: 2
+        }}>
         <Box style={noWrap}>{leftText}</Box>
-        <Box flex={1}> </Box>
-        <Box style={{ ...noWrap, opacity: 0.5 }} textAlign='right'>
+        <Box sx={{
+          flex: 1
+        }}> </Box>
+        <Box style={{ ...noWrap, opacity: 0.5 }} sx={{
+          textAlign: 'right'
+        }}>
           {rightText}
         </Box>
       </Box>

@@ -50,7 +50,7 @@ type LoadingScreenProps = {
 const Progress = React.memo(() => (
   /* shrinking effect disabled because sometimes the CPU load becomes high during
    * the loading process and it would screw up the animation */
-  <CircularProgress disableShrink size={64} sx={styles.progress} />
+  (<CircularProgress disableShrink size={64} sx={styles.progress} />)
 ));
 Progress.displayName = 'Progress';
 

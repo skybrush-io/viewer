@@ -96,7 +96,7 @@ export default function VectorDisplay({
     <StyledBox minValueWidth={minValueWidth} minUnitWidth={minUnitWidth}>
       {value.map((v, i) => (
         // eslint-disable-next-line @eslint-react/no-array-index-key
-        <Fragment key={i}>
+        (<Fragment key={i}>
           <div
             className={clsx(
               'Vector3D-label',
@@ -113,7 +113,7 @@ export default function VectorDisplay({
           >
             {v.toFixed(digits)}
           </div>
-        </Fragment>
+        </Fragment>)
       ))}
       {unit && <div className='Vector3D-unit'>{unit}</div>}
     </StyledBox>

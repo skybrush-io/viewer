@@ -35,7 +35,7 @@ type ChartGridProps = BoxProps & {
   readonly visiblePanels: ValidationPanel[];
 };
 
-const ChartGrid = ({ visiblePanels, ...rest }: ChartGridProps) => {
+const ChartGrid = ({ visiblePanels, sx, ...rest }: ChartGridProps) => {
   const [ref, { height = 0 }] = useResizeObserver();
   const { t } = useTranslation();
 
@@ -81,7 +81,7 @@ const ChartGrid = ({ visiblePanels, ...rest }: ChartGridProps) => {
       : [];
 
   return (
-    <Box ref={ref} sx={style} {...omit(rest, 'ref')}>
+    <Box ref={ref} sx={{ ...style, ...sx }} {...omit(rest, 'ref')}>
       {children.length > 0 ? (
         children
       ) : (

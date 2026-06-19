@@ -383,13 +383,22 @@ const ChartPanel = ({
     <StyledCard square height={height}>
       <MemoScatter data={rawScatterData} options={options} />
       {showHeaderBox ? (
-        <Box left={8} top={4} right={8} position='absolute' display='flex'>
+        <Box
+          sx={{
+            left: 8,
+            top: 4,
+            right: 8,
+            position: 'absolute',
+            display: 'flex'
+          }}>
           {isNil(title) ? null : (
             <Box>
               <Typography variant='button'>{title}</Typography>
             </Box>
           )}
-          <Box flex={1} />
+          <Box sx={{
+            flex: 1
+          }} />
           {calculating || isNil(error) ? null : (
             <Box>
               <Typography variant='button' color='error'>

@@ -27,9 +27,16 @@ const ValidationView = () => (
         paddingLeft: SIDEBAR_WIDTH,
       }}
     />
-    <Box flex={1} display='flex' flexDirection='row' overflow='hidden'>
+    <Box
+      sx={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'row',
+        overflow: 'hidden',
+      }}
+    >
       <ValidationSidebar width={SIDEBAR_WIDTH} />
-      <ChartGrid flex={1} mb={2} pr={1} />
+      <ChartGrid sx={{ flex: 1, mb: 2, pr: 1 }} />
     </Box>
   </Box>
 );

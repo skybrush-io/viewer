@@ -48,12 +48,6 @@ const styles = {
   },
 } as const;
 
-const modalProps = {
-  BackdropProps: {
-    invisible: true,
-  },
-};
-
 /**
  * Sidebar drawer component for the application.
  */
@@ -66,8 +60,8 @@ const PlayerSidebar = () => {
       anchor='right'
       open={open}
       sx={styles.root}
-      ModalProps={modalProps}
       variant='persistent'
+      hideBackdrop
     >
       <Box
         sx={{

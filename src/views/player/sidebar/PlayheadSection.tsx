@@ -42,11 +42,11 @@ export default function PlayheadSection() {
     >
       <LCDText
         height={64}
-        textAlign='center'
         variant='14segment'
         decoration='shadow'
         color={theme.palette.primary.main}
         offSegments
+        sx={{ textAlign: 'center' }}
       >
         {formattedTime}
       </LCDText>

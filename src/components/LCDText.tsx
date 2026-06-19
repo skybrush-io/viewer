@@ -61,6 +61,7 @@ export default function LCDText({
   off,
   offSegments,
   variant = 'default',
+  sx,
   ...rest
 }: LCDTextProps) {
   const textStyle = useMemo(() => {
@@ -113,8 +114,13 @@ export default function LCDText({
 
   variant = variant ?? 'default';
 
+  const mergedSxProps = {
+    ...variants[variant].sx,
+    ...sx,
+  };
+
   return (
-    <Box sx={variants[variant].sx} {...rest}>
+    <Box sx={mergedSxProps} {...rest}>
       {offSegments && variant !== 'default' && (
         <div style={offSegmentStyle}>
           {children.replace(/[^:. ]/g, variants[variant].allSegmentsChar ?? '')}

@@ -1,0 +1,16 @@
+diff --git a/node_modules/react-transition-group/package.json b/node_modules/react-transition-group/package.json
+index e9bd537..c2609e8 100644
+--- a/node_modules/react-transition-group/package.json
++++ b/node_modules/react-transition-group/package.json
+@@ -4,6 +4,11 @@
+   "description": "A react component toolset for managing animations",
+   "main": "cjs/index.js",
+   "module": "esm/index.js",
++  "exports": {
++    ".": "./esm/index.js",
++    "./Transition": "./esm/Transition.js",
++    "./TransitionGroupContext": "./esm/TransitionGroupContext.js"
++  },
+   "repository": {
+     "type": "git",
+     "url": "https://github.com/reactjs/react-transition-group.git"

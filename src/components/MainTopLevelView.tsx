@@ -26,7 +26,13 @@ const MainTopLevelView = ({ mode }: MainTopLevelViewProps) => {
   const ref: RefObject<Element> = useRef(null) as any;
 
   return (
-    <Box ref={ref} display='flex' flexDirection='column' height='100vh'>
+    <Box
+      ref={ref}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh'
+      }}>
       <Suspense fallback={<PageLoadingIndicator />}>
         {mode === UIMode.PLAYER && <PlayerView screenRef={ref} />}
         {mode === UIMode.VALIDATION && <LazyValidationView />}

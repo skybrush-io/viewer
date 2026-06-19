@@ -103,7 +103,10 @@ const ValidationSidebar = ({
   width = 160,
 }: ValidationSidebarProps) => {
   return (
-    <Box width={width} sx={style}>
+    <Box
+      sx={[{
+        width: width
+      }, ...(Array.isArray(style) ? style : [style])]}>
       <List
         rowHeight={36}
         rowCount={singleDroneItems.length + 1}

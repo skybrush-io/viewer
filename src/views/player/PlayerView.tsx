@@ -22,11 +22,7 @@ const PlayerView = ({
   readonly screenRef: React.RefObject<Element>;
 }) => (
   <>
-    <Box
-      sx={{
-        position: 'relative',
-        flex: 1
-      }}>
+    <Box sx={{ position: 'relative', flex: 1 }}>
       <ThreeDView cameraRef={cameraRef} />
       <Overlays />
       <WelcomeScreen />

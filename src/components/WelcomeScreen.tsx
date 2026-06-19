@@ -47,11 +47,7 @@ const WelcomeScreen = ({
   const { t } = useTranslation();
   return (
     <CentralHelperPanel visible={visible}>
-      <Box
-        sx={{
-          textAlign: 'center',
-          mb: 4
-        }}>
+      <Box sx={{ textAlign: 'center', mb: 4 }}>
         <SkybrushLogo />
       </Box>
       {canLoadShowFromLocalFile && (

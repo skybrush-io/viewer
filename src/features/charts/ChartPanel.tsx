@@ -389,16 +389,15 @@ const ChartPanel = ({
             top: 4,
             right: 8,
             position: 'absolute',
-            display: 'flex'
-          }}>
+            display: 'flex',
+          }}
+        >
           {isNil(title) ? null : (
             <Box>
               <Typography variant='button'>{title}</Typography>
             </Box>
           )}
-          <Box sx={{
-            flex: 1
-          }} />
+          <Box sx={{ flex: 1 }} />
           {calculating || isNil(error) ? null : (
             <Box>
               <Typography variant='button' color='error'>

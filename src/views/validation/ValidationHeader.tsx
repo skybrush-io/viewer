@@ -67,9 +67,7 @@ const ValidationHeader = ({
           />
         );
       })}
-      <Box sx={{
-        flex: '1'
-      }} />
+      <Box sx={{ flex: 1 }} />
       {config.buttons.reload && (
         <Button
           color='inherit'

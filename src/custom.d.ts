@@ -15,3 +15,9 @@ declare module '*.obj' {
   const value: string;
   export default value;
 }
+
+// Make .glb imports work nicely with Typescript
+declare module '*.glb' {
+  const value: string;
+  export default value;
+}

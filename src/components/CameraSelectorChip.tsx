@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
@@ -46,7 +46,7 @@ const CameraSelectorChip = ({
 }: CameraSelectorChipProps) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const anchorRef = React.useRef<any>(undefined);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const cameraArray = Array.isArray(cameras) ? cameras : [];
   const selectedCamera =
@@ -71,7 +71,6 @@ const CameraSelectorChip = ({
   return (
     <div>
       <Chip
-        ref={anchorRef}
         id='camera-selector-button'
         aria-controls='camera-selector-menu'
         aria-haspopup='true'
@@ -90,12 +89,19 @@ const CameraSelectorChip = ({
               }
             : undefined
         }
-        onDelete={needsMenu ? toggleOpen : undefined}
+        onDelete={
+          needsMenu
+            ? (event: React.MouseEvent<HTMLDivElement>) => {
+                setAnchorEl(event.currentTarget.parentElement);
+                toggleOpen();
+              }
+            : undefined
+        }
         {...rest}
       />
       <Menu
         aria-labelledby='camera-selector-button'
-        anchorEl={anchorRef.current}
+        anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
       >
@@ -113,8 +119,9 @@ const CameraSelectorChip = ({
                 variant='body1'
                 sx={{
                   color: 'text.secondary',
-                  ml: 2
-                }}>
+                  ml: 2,
+                }}
+              >
                 {
                   // eslint-disable-next-line @typescript-eslint/no-base-to-string
                   String(hotkeys[index])

@@ -82,7 +82,7 @@ const OverlayVisibilityController = ({
   areaRef,
   onHide,
   onShow,
-  timeout = 3000,
+  timeout = 6_000,
 }: OverlayVisibilityControllerProps) => {
   useMouseMovingState(areaRef, {
     onStarted: onShow,

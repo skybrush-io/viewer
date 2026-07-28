@@ -1,6 +1,7 @@
 import http from 'node:http';
 import process from 'node:process';
 
+import log from 'electron-log';
 import express from 'express';
 import { Server as SSDPServer } from 'node-ssdp';
 
@@ -46,7 +47,7 @@ export const setupHttpServer = async ({ port = 0 } = {}) => {
   /* eslint-disable @typescript-eslint/no-unsafe-call */
   /* eslint-disable @typescript-eslint/no-unsafe-return */
   app.use((error, _req, res, next) => {
-    console.log(error);
+    log.error(error);
 
     if (res.headersSent) {
       return next(error);
@@ -58,7 +59,7 @@ export const setupHttpServer = async ({ port = 0 } = {}) => {
   /* eslint-enable @typescript-eslint/no-unsafe-return */
   /* eslint-enable @typescript-eslint/no-unsafe-call */
 
-  console.log(`Skybrush Viewer HTTP server listening on port ${port}`);
+  log.info(`Skybrush Viewer HTTP server listening on port ${port}`);
 };
 
 export default setupHttpServer;

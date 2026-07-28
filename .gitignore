@@ -60,3 +60,6 @@ assets/shows/
 assets/icons/*512.png
 assets/icons/*1024.png
 
+# Electron updater dev config
+dev-app-update.yml
+

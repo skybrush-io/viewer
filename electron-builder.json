@@ -14,6 +14,12 @@
     }
   ],
 
+  "publish": {
+    "provider": "github",
+    "owner": "skybrush-io",
+    "repo": "viewer"
+  },
+
   "linux": {
     "category": "Utility",
     "target": {

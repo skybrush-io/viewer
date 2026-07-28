@@ -8,6 +8,7 @@ import tmp from 'tmp-promise';
 import { setupApp, setupCli } from '@skybrush/electron-app-framework';
 
 import createAppMenu from './app-menu.mjs';
+import checkForUpdates from './auto-update.mjs';
 import setupFileOpener from './file-opener.mjs';
 import setupIpc from './ipc.mjs';
 import registerMediaProtocol from './media-protocol.mjs';
@@ -37,6 +38,9 @@ async function run(filenames, options) {
 
   // Allow the Electron state store to be created in the renderer process
   ElectronStore.initRenderer();
+
+  // Check for updates
+  void checkForUpdates({ silent: true });
 
   // Start an HTTP server in the background for processing incoming JSON show
   // data from the Blender plugin

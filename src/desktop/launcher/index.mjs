@@ -8,7 +8,6 @@ import tmp from 'tmp-promise';
 import { setupApp, setupCli } from '@skybrush/electron-app-framework';
 
 import createAppMenu from './app-menu.mjs';
-import checkForUpdates from './auto-update.mjs';
 import setupFileOpener from './file-opener.mjs';
 import setupIpc from './ipc.mjs';
 import registerMediaProtocol from './media-protocol.mjs';
@@ -33,6 +32,12 @@ const ENABLE_HTTP_SERVER = true;
  * @param  {Object}    options   the parsed command line arguments
  */
 async function run(filenames, options) {
+  // auto-update.mjs needs to be imported lazily to ensure that we have time to
+  // populate global.__runtime_process_env. Otherwise the app would not work when
+  // packaged because auto-update.mjs would be imported before we have a chance to
+  // patch global.__runtime_process_env
+  const { checkForUpdates } = await import('./auto-update.mjs');
+
   // Clean up temporary files even when an uncaught exception occurs
   tmp.setGracefulCleanup();
 

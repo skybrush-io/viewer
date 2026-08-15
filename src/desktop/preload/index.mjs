@@ -34,12 +34,17 @@ const bridge = {
   createStateStore,
   isElectron: true,
 
+  checkForUpdates: (options) => ipc.callMain('checkForUpdates', options),
+
   provideActions: (actions) => {
     receiveActionsFromRenderer(actions);
 
     // Let the main process know that we are now ready to open show files
     void ipc.callMain('readyForFileOpening');
   },
+
+  quitAndInstallUpdate: (options) =>
+    ipc.callMain('quitAndInstallUpdate', options),
 
   readFile: (filename) => fs.readFile(filename),
 

@@ -32,20 +32,11 @@ const ENABLE_HTTP_SERVER = true;
  * @param  {Object}    options   the parsed command line arguments
  */
 async function run(filenames, options) {
-  // auto-update.mjs needs to be imported lazily to ensure that we have time to
-  // populate global.__runtime_process_env. Otherwise the app would not work when
-  // packaged because auto-update.mjs would be imported before we have a chance to
-  // patch global.__runtime_process_env
-  const { checkForUpdates } = await import('./auto-update.mjs');
-
   // Clean up temporary files even when an uncaught exception occurs
   tmp.setGracefulCleanup();
 
   // Allow the Electron state store to be created in the renderer process
   ElectronStore.initRenderer();
-
-  // Check for updates
-  void checkForUpdates({ silent: true });
 
   // Start an HTTP server in the background for processing incoming JSON show
   // data from the Blender plugin
@@ -79,7 +70,7 @@ async function run(filenames, options) {
   });
 
   // Set up IPC handlers
-  setupIpc();
+  await setupIpc();
 
   // Set up file opener handlers
   setupFileOpener(filenames);

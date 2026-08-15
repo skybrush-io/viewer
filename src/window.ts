@@ -1,6 +1,12 @@
 import type { AudioData } from '@skybrush/show-format';
 import type { ActionCreator } from 'redux';
 
+import type { UpdateInfo } from './features/auto-update/types';
+
+type CheckUpdateOptions = {
+  silent?: boolean;
+};
+
 /**
  * Type specification for the bridge that we inject into the window object
  * when running in Electron.
@@ -8,9 +14,11 @@ import type { ActionCreator } from 'redux';
 export type ElectronBridge = {
   isElectron: boolean;
 
+  checkForUpdates: (options?: CheckUpdateOptions) => Promise<UpdateInfo>;
   provideActions: (
     actionCreators: Record<string, ActionCreator<unknown>>
   ) => void;
+  quitAndInstallUpdate: (options?: CheckUpdateOptions) => Promise<void>;
   readFile: (filename: string) => Promise<Buffer>;
   selectLocalShowFileForOpening: () => Promise<string>;
   setAudioBuffer: (index: number, options: AudioData) => Promise<string | null>;

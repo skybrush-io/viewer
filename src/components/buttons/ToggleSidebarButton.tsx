@@ -5,6 +5,7 @@ import MenuOpen from '@mui/icons-material/MenuOpen';
 import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 import { Tooltip } from '@skybrush/mui-components';
 
+import UpdateAvailableBadge from '~/features/auto-update/UpdateAvailableBadge';
 import { isSidebarOpen, toggleSidebar } from '~/features/sidebar/slice';
 import { useAppSelector } from '~/hooks/store';
 
@@ -18,16 +19,13 @@ const ToggleSidebarButton = (props: IconButtonProps) => {
   const { t } = useTranslation();
   return (
     <Tooltip content={t('buttons.toggleSidebar')}>
-      <IconButton
-        disableRipple
-        size='large'
-        {...props}
-        onClick={handleClick}
-        sx={{
-          transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
-        }}
-      >
-        <MenuOpen />
+      <IconButton disableRipple size='large' {...props} onClick={handleClick}>
+        <MenuOpen
+          sx={{
+            transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
+          }}
+        />
+        <UpdateAvailableBadge />
       </IconButton>
     </Tooltip>
   );

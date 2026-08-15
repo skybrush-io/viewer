@@ -12,6 +12,7 @@ import { isSidebarOpen } from '~/features/sidebar/slice';
 import { SidebarTab } from '~/features/sidebar/types';
 import { useAppSelector } from '~/hooks/store';
 
+import CheckForUpdatesButton from '~/features/auto-update/CheckForUpdatesButton';
 import InspectorTab from './InspectorTab';
 import PlayerSidebarTabs from './PlayerSidebarTabs';
 import SettingsTab from './SettingsTab';
@@ -85,6 +86,9 @@ const PlayerSidebar = () => {
             <Typography align='center' variant='caption' component='footer'>
               {VERSION}
             </Typography>
+          </Box>
+          <Box sx={{ px: 2, py: 1 }}>
+            <CheckForUpdatesButton fullWidth color='primary' />
           </Box>
         </Box>
       </Box>

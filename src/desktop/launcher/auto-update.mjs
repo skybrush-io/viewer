@@ -68,7 +68,7 @@ export async function checkForUpdates(options = {}) {
 
   try {
     const result = await getAutoUpdater().checkForUpdates();
-    return result.isUpdateAvailable
+    return result?.isUpdateAvailable
       ? Object.freeze({
           available: true,
           downloaded: result?.updateInfo?.version ? true : false,
@@ -80,6 +80,8 @@ export async function checkForUpdates(options = {}) {
       throw err;
     }
   }
+
+  return NO_UPDATES;
 }
 
 /**

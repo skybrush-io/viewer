@@ -34,6 +34,7 @@ export const { store, persistor } = configureStoreAndPersistence({
     // do not store the following slices of the state in the storage
     blacklist: [
       'audio',
+      'autoUpdate',
       'charts',
       'hotkeys',
       'playback',

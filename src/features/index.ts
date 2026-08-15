@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 
 import audioReducer from './audio/slice';
+import autoUpdateReducer from './auto-update/slice';
 import chartReducer from './charts/slice';
 import hotkeysReducer from './hotkeys/slice';
 import playbackReducer from './playback/slice';
@@ -14,6 +15,7 @@ import validationReducer from './validation/slice';
 
 export default combineReducers({
   audio: audioReducer,
+  autoUpdate: autoUpdateReducer,
   charts: chartReducer,
   hotkeys: hotkeysReducer,
   playback: playbackReducer,

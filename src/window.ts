@@ -1,7 +1,7 @@
 import type { AudioData } from '@skybrush/show-format';
 import type { ActionCreator } from 'redux';
 
-import type { UpdateInfo } from './features/auto-update/types';
+import type { UpdateInfo } from './desktop/launcher/auto-update';
 
 type CheckUpdateOptions = {
   silent?: boolean;

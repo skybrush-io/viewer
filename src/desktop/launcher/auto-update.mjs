@@ -9,6 +9,7 @@ let _autoUpdater = null;
  *
  * @member {boolean} available  Whether an update is available.
  * @member {boolean} downloaded  Whether the update has been downloaded.
+ * @member {boolean} downloading  Whether the update is being downloaded.
  * @member {string|null} version  The version of the available update, or null if no update is available.
  */
 
@@ -16,6 +17,7 @@ let _autoUpdater = null;
 const NO_UPDATES = Object.freeze({
   available: false,
   downloaded: false,
+  downloading: false,
   version: null,
 });
 
@@ -37,7 +39,7 @@ function configureAutoUpdater() {
   // Uncomment the following line to test the auto-updater in dev mode.
   // In this case you will also need to provide a file named dev-app-update.yml
   // in the root of your project
-  // autoUpdater.forceDevUpdateConfig = true;
+  autoUpdater.forceDevUpdateConfig = true;
 
   return autoUpdater;
 }
@@ -45,6 +47,11 @@ function configureAutoUpdater() {
 export function getAutoUpdater() {
   if (!_autoUpdater) {
     _autoUpdater = configureAutoUpdater();
+    // TODO: set up event handlers to inform renderers when an update was downloaded
+    // and other events
+    registerUpdateListener((info) => {
+      log.info('Update info:', info);
+    });
   }
 
   return _autoUpdater;
@@ -100,4 +107,68 @@ export function quitAndInstallUpdate(options = {}) {
       throw err;
     }
   }
+}
+
+/**
+ * Registers a function to be called when the status of the auto-update service changes.
+ *
+ * @param {function(UpdateInfo): void} callback  The function to call when the status changes
+ * @returns {function(): void}  A function that can be called to unregister the callback
+ */
+export function registerUpdateListener(callback) {
+  const autoUpdater = getAutoUpdater();
+
+  /** @type {import('electron-updater').UpdateInfo | null} */
+  let lastUpdateInfo = null;
+
+  /** @param {import('electron-updater').UpdateInfo} info */
+  const handleUpdateAvailable = (info) => {
+    lastUpdateInfo = info;
+    callback({
+      available: true,
+      downloaded: false,
+      downloading: false,
+      version: info?.version ?? null,
+    });
+  };
+
+  /** @param {import('electron-updater').UpdateInfo} info */
+  const handleUpdateDownloaded = (info) => {
+    lastUpdateInfo = info;
+    callback({
+      available: true,
+      downloaded: true,
+      downloading: false,
+      version: info?.version ?? null,
+    });
+  };
+
+  const handleUpdateNotAvailable = () => {
+    lastUpdateInfo = null;
+    callback(NO_UPDATES);
+  };
+
+  /** @param {import('electron-updater').ProgressInfo} _info */
+  const handleDownloadProgress = (_info) => {
+    if (lastUpdateInfo) {
+      callback({
+        available: true,
+        downloaded: false,
+        downloading: true,
+        version: lastUpdateInfo?.version ?? null,
+      });
+    }
+  };
+
+  autoUpdater.on('update-available', handleUpdateAvailable);
+  autoUpdater.on('update-downloaded', handleUpdateDownloaded);
+  autoUpdater.on('update-not-available', handleUpdateNotAvailable);
+  autoUpdater.on('download-progress', handleDownloadProgress);
+
+  return () => {
+    autoUpdater.off('update-available', handleUpdateAvailable);
+    autoUpdater.off('update-downloaded', handleUpdateDownloaded);
+    autoUpdater.off('update-not-available', handleUpdateNotAvailable);
+    autoUpdater.off('download-progress', handleDownloadProgress);
+  };
 }

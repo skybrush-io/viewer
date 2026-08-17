@@ -5,7 +5,7 @@
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import type { UpdateInfo } from './types';
+import type { UpdateInfo } from '~/desktop/launcher/auto-update';
 
 type AutoUpdateSliceState = {
   /** Whether the application is currently checking for updates. */
@@ -22,6 +22,7 @@ const initialState: AutoUpdateSliceState = {
   updateInfo: {
     available: false,
     downloaded: false,
+    downloading: false,
     version: null,
   },
 };

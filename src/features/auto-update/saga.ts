@@ -1,4 +1,5 @@
 import { delay, put, race, take } from 'redux-saga/effects';
+import type { UpdateInfo } from '~/desktop/launcher/auto-update';
 import { getElectronBridge } from '~/window';
 import {
   checkForUpdates as checkForUpdatesAction,
@@ -7,7 +8,6 @@ import {
   setUpdateInfo,
   setUpdateSupported,
 } from './slice';
-import { UpdateInfo } from './types';
 
 /** Number of seconds to wait before the first update check. */
 const INITIAL_UPDATE_CHECK_DELAY_SEC = 5;
@@ -41,7 +41,12 @@ function* autoUpdaterSaga(): Generator<any, void, any> {
     });
 
     if (result.install) {
-      yield quitAndInstallUpdate();
+      try {
+        yield quitAndInstallUpdate();
+      } catch (error) {
+        console.error('Error while installing update:', error);
+        alert('Error while installing update.');
+      }
     } else {
       const invokedByUser = !!result.check;
       const startedAt = Date.now();

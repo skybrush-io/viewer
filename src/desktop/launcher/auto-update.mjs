@@ -4,22 +4,22 @@ import electronUpdater from 'electron-updater';
 
 import { getFirstMainWindow } from '@skybrush/electron-app-framework';
 
-/** @type {import('electron-updater').autoUpdater} */
+/** @type {import('electron-updater').autoUpdater | null} */
 let _autoUpdater = null;
 
 /**
  * @typedef {Object} UpdaterConfiguration
  *
- * @member [import('electron-updater').Logger] log  The logger to use for the auto-updater
+ * @property {import('electron-updater').Logger} [log]  The logger to use for the auto-updater
  */
 
 /**
  * @typedef {Object} UpdateInfo
  *
- * @member {boolean} available  Whether an update is available.
- * @member {boolean} downloaded  Whether the update has been downloaded.
- * @member {number|null} downloadProgress  The progress of the download, or null if no download is in progress.
- * @member {string|null} version  The version of the available update, or null if no update is available.
+ * @property {boolean} available  Whether an update is available.
+ * @property {boolean} downloaded  Whether the update has been downloaded.
+ * @property {number|null} downloadProgress  The progress of the download, or null if no download is in progress.
+ * @property {string|null} version  The version of the available update, or null if no update is available.
  */
 
 /** @type {UpdateInfo} */
@@ -31,23 +31,23 @@ const NO_UPDATES = Object.freeze({
 });
 
 /**
+ * Initializes the auto-updater integration with the Electron application. This function
+ * should be called once during the app's startup.
  *
- * @param [UpdaterConfiguration] options
- * @param {import('electron-updater').Logger} options.log  The logger to use for the auto-updater
- * @returns
+ * @param {UpdaterConfiguration} [options]  Options for configuring the auto-updater
+ * @param {import('electron-updater').Logger} [options.log]  The logger to use for the auto-updater
  */
-export function configureAutoUpdater(options = {}) {
+export function initialize(options = {}) {
   if (_autoUpdater) {
     throw new Error('Auto-updater is already configured');
   }
 
-  const { log } = options;
-
   // Using destructuring to access autoUpdater due to the CommonJS module of 'electron-updater'.
   // It is a workaround for ESM compatibility issues, see https://github.com/electron-userland/electron-builder/issues/7976.
   const { autoUpdater } = electronUpdater;
+  const { log } = options;
 
-  // Configure logger
+  // Integrate with logger
   if (log) {
     autoUpdater.logger = log;
   }
@@ -66,26 +66,34 @@ export function configureAutoUpdater(options = {}) {
     autoUpdater.forceDevUpdateConfig = true;
   }
 
-  return autoUpdater;
+  // Set up IPC handlers for requests coming from the renderer process
+  ipc.answerRenderer('__autoUpdater_checkForUpdates', checkForUpdates);
+  ipc.answerRenderer(
+    '__autoUpdater_quitAndInstallUpdate',
+    quitAndInstallUpdate
+  );
+
+  // Register a function to be called every time the status of the auto-updater changes.
+  registerUpdateListener(autoUpdater, (info) => {
+    const mainWindow = getFirstMainWindow();
+    if (mainWindow) {
+      ipc.callRenderer(mainWindow, 'setUpdateInfo', info).catch((err) => {
+        _autoUpdater.logger?.error(
+          'Failed to notify renderer about update status:',
+          err
+        );
+      });
+    }
+  });
+
+  _autoUpdater = autoUpdater;
 }
 
 export function getAutoUpdater() {
   if (!_autoUpdater) {
-    _autoUpdater = configureAutoUpdater();
-
-    // This cannot be done in configureAutoUpdater() because it would lead to
-    // infinite recursion
-    registerUpdateListener((info) => {
-      const mainWindow = getFirstMainWindow();
-      if (mainWindow) {
-        ipc.callRenderer(mainWindow, 'setUpdateInfo', info).catch((err) => {
-          _autoUpdater.logger?.error(
-            'Failed to notify renderer about update status:',
-            err
-          );
-        });
-      }
-    });
+    throw new Error(
+      'Auto-updater is not initialized. Call initialize() first.'
+    );
   }
 
   return _autoUpdater;
@@ -94,7 +102,7 @@ export function getAutoUpdater() {
 /**
  * @typedef {Object} CheckForUpdateOptions
  *
- * @member {boolean} [silent=false]  If true, errors will be ignored silently. Assumes
+ * @property {boolean} [silent=false]  If true, errors will be ignored silently. Assumes
  *         that the auto-updater has already logged any errors to the console.
  */
 
@@ -104,7 +112,7 @@ export function getAutoUpdater() {
  * @param {CheckForUpdateOptions} [options={}]  Options for checking for updates
  * @returns {Promise<UpdateInfo>}  A promise that resolves when the update check is complete
  */
-export async function checkForUpdates(options = {}) {
+async function checkForUpdates(options = {}) {
   const { silent } = options;
 
   try {
@@ -130,7 +138,7 @@ export async function checkForUpdates(options = {}) {
  *
  * @param {CheckForUpdateOptions} [options={}]  Options for installing the update
  */
-export function quitAndInstallUpdate(options = {}) {
+function quitAndInstallUpdate(options = {}) {
   const { silent } = options;
   const autoUpdater = getAutoUpdater();
 
@@ -147,12 +155,11 @@ export function quitAndInstallUpdate(options = {}) {
 /**
  * Registers a function to be called when the status of the auto-update service changes.
  *
+ * @param {import('electron-updater').autoUpdater} autoUpdater  The auto-updater instance to listen to
  * @param {function(UpdateInfo): void} callback  The function to call when the status changes
  * @returns {function(): void}  A function that can be called to unregister the callback
  */
-export function registerUpdateListener(callback) {
-  const autoUpdater = getAutoUpdater();
-
+function registerUpdateListener(autoUpdater, callback) {
   /** @type {import('electron-updater').UpdateInfo | null} */
   let lastUpdateInfo = null;
 

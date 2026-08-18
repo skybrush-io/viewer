@@ -17,12 +17,8 @@ export type CheckForUpdateOptions = {
 
 type Disposer = () => void;
 
-export function configureAutoUpdater(options?: UpdaterConfiguration): void;
-export function getAutoUpdater(): AppUpdater;
+export function initialize(options?: UpdaterConfiguration): void;
 export function checkForUpdates(
   options?: CheckForUpdateOptions
 ): Promise<UpdateInfo>;
-export function registerUpdateListener(
-  listener: (info: UpdateInfo) => void
-): Disposer;
 export function quitAndInstallUpdate(options?: CheckForUpdateOptions): void;

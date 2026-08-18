@@ -34,7 +34,8 @@ const bridge = {
   createStateStore,
   isElectron: true,
 
-  checkForUpdates: (options) => ipc.callMain('checkForUpdates', options),
+  checkForUpdates: (options) =>
+    ipc.callMain('__autoUpdater_checkForUpdates', options),
 
   provideActions: (actions) => {
     receiveActionsFromRenderer(actions);
@@ -44,7 +45,7 @@ const bridge = {
   },
 
   quitAndInstallUpdate: (options) =>
-    ipc.callMain('quitAndInstallUpdate', options),
+    ipc.callMain('__autoUpdater_quitAndInstallUpdate', options),
 
   readFile: (filename) => fs.readFile(filename),
 

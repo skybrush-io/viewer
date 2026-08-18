@@ -8,7 +8,7 @@ import tmp from 'tmp-promise';
 import { setupApp, setupCli } from '@skybrush/electron-app-framework';
 
 import createAppMenu from './app-menu.mjs';
-import { configureAutoUpdater } from './auto-update.mjs';
+import * as autoUpdater from './auto-update.mjs';
 import setupFileOpener from './file-opener.mjs';
 import setupIpc from './ipc.mjs';
 import registerMediaProtocol from './media-protocol.mjs';
@@ -36,6 +36,7 @@ async function run(filenames, options) {
   // Deferred import of electron-log required because we need to patch
   // global.__runtime_process_env before electron-log is imported
   const { default: log } = await import('electron-log');
+  log.transports.file.level = 'debug';
 
   // Clean up temporary files even when an uncaught exception occurs
   tmp.setGracefulCleanup();
@@ -44,8 +45,7 @@ async function run(filenames, options) {
   ElectronStore.initRenderer();
 
   // Configure the auto-updater
-  log.transports.file.level = 'debug';
-  configureAutoUpdater({ log });
+  autoUpdater.initialize({ log });
 
   // Start an HTTP server in the background for processing incoming JSON show
   // data from the Blender plugin

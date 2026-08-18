@@ -1,14 +1,10 @@
 import { ipcMain as ipc } from 'electron-better-ipc';
 
-import { checkForUpdates, quitAndInstallUpdate } from './auto-update.mjs';
 import { selectLocalShowFileForOpening } from './dialogs.mjs';
 import { setAudioBuffer } from './media-buffers.mjs';
 import { setTitle } from './window-title.mjs';
 
 const setupIpc = () => {
-  ipc.answerRenderer('checkForUpdates', checkForUpdates);
-  ipc.answerRenderer('quitAndInstallUpdate', quitAndInstallUpdate);
-
   ipc.answerRenderer(
     'selectLocalShowFileForOpening',
     selectLocalShowFileForOpening

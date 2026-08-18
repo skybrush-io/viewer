@@ -1,17 +1,11 @@
 import { ipcMain as ipc } from 'electron-better-ipc';
 
+import { checkForUpdates, quitAndInstallUpdate } from './auto-update.mjs';
 import { selectLocalShowFileForOpening } from './dialogs.mjs';
 import { setAudioBuffer } from './media-buffers.mjs';
 import { setTitle } from './window-title.mjs';
 
-const setupIpc = async () => {
-  // auto-update.mjs needs to be imported lazily to ensure that we have time to
-  // populate global.__runtime_process_env. Otherwise the app would not work when
-  // packaged because auto-update.mjs would be imported before we have a chance to
-  // patch global.__runtime_process_env
-  const { checkForUpdates, quitAndInstallUpdate } =
-    await import('./auto-update.mjs');
-
+const setupIpc = () => {
   ipc.answerRenderer('checkForUpdates', checkForUpdates);
   ipc.answerRenderer('quitAndInstallUpdate', quitAndInstallUpdate);
 

@@ -11,8 +11,11 @@ export const useAutoUpdate = () => {
     installUpdate: () => {
       dispatch(installUpdate());
     },
+    error: updateState.error,
     isCheckingForUpdates: updateState.checking,
-    isDownloadingUpdate: updateState.updateInfo.downloading,
+    isDownloadingUpdate:
+      typeof updateState.updateInfo.downloadProgress === 'number',
+    downloadProgress: updateState.updateInfo.downloadProgress,
     updateAvailable: updateState.updateInfo.available,
     updateDownloaded: updateState.updateInfo.downloaded,
     updateSupported: updateState.supported,

@@ -6,10 +6,13 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 import type { UpdateInfo } from '~/desktop/launcher/auto-update';
+import type { UpdateError } from './types';
 
 type AutoUpdateSliceState = {
   /** Whether the application is currently checking for updates. */
   checking: boolean;
+  /** Error during the last check or installation attempt, if any. */
+  error: UpdateError | null;
   /** Whether auto-updates are supported in the current application. */
   supported: boolean;
   /** Information about the available update, if any. */
@@ -18,11 +21,12 @@ type AutoUpdateSliceState = {
 
 const initialState: AutoUpdateSliceState = {
   checking: false,
+  error: null,
   supported: false,
   updateInfo: {
     available: false,
     downloaded: false,
-    downloading: false,
+    downloadProgress: null,
     version: null,
   },
 };
@@ -44,6 +48,11 @@ const { actions, reducer } = createSlice({
       state.checking = payload;
     },
 
+    setUpdateError(state, action: PayloadAction<UpdateError | null>) {
+      const { payload } = action;
+      state.error = payload;
+    },
+
     setUpdateInfo(state, action: PayloadAction<UpdateInfo>) {
       const { payload } = action;
       state.updateInfo = payload;
@@ -60,6 +69,7 @@ export const {
   checkForUpdates,
   installUpdate,
   setCheckInProgress,
+  setUpdateError,
   setUpdateInfo,
   setUpdateSupported,
 } = actions;

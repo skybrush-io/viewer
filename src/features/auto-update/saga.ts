@@ -1,13 +1,13 @@
 import { delay, put, race, take } from 'redux-saga/effects';
-import type { UpdateInfo } from '~/desktop/launcher/auto-update';
 import { getElectronBridge } from '~/window';
 import {
   checkForUpdates as checkForUpdatesAction,
   installUpdate,
   setCheckInProgress,
-  setUpdateInfo,
+  setUpdateError,
   setUpdateSupported,
 } from './slice';
+import type { UpdateError } from './types';
 
 /** Number of seconds to wait before the first update check. */
 const INITIAL_UPDATE_CHECK_DELAY_SEC = 5;
@@ -39,45 +39,42 @@ function* autoUpdaterSaga(): Generator<any, void, any> {
       check: take(checkForUpdatesAction),
       install: take(installUpdate),
     });
+    let updateError: UpdateError | null = null;
 
     if (result.install) {
       try {
         yield quitAndInstallUpdate();
       } catch (error) {
         console.error('Error while installing update:', error);
-        alert('Error while installing update.');
+        updateError = 'installFailed';
       }
+
+      yield put(setUpdateError(updateError));
     } else {
       const invokedByUser = !!result.check;
-      const startedAt = Date.now();
-      let successful = false;
 
       yield put(setCheckInProgress(true));
       try {
-        const info: UpdateInfo = yield checkForUpdates({
-          silent: !invokedByUser,
-        });
-        if (info) {
-          yield put(setUpdateInfo(info));
-        }
-        successful = true;
+        yield checkForUpdates({ silent: !invokedByUser });
+        // setUpdateInfo() will be called by the main process via RPC
       } catch (error) {
         if (invokedByUser) {
           console.error('Error while checking for updates:', error);
-          alert('Error while checking for updates. Please try again later.');
+          updateError = 'checkFailed';
         }
       } finally {
-        const endedAt = Date.now();
-        if (successful) {
-          // If the update check was successful and took less than 1 second, wait a bit
-          // before allowing the next check. This also looks nicer on the UI because
-          // the progress bar will be visible for at least 1 second.
-          const remainder = 1000 - (endedAt - startedAt);
-          if (remainder > 0) {
-            yield delay(remainder);
-          }
-        }
+        // We tried to use a minimum delay of 1 second here to make the UI look nicer
+        // (no quick flash of the progress bar). However, this causes confusing user
+        // feedback when the download is already downloaded as we will briefly display
+        // 'Installing update' before falling back to a non-loading state.
         yield put(setCheckInProgress(false));
+      }
+
+      if (invokedByUser) {
+        // Do not update the error in the state if the check was automatic; we do not
+        // want to show an error message if an automatic check fails due to the
+        // system being offline.
+        yield put(setUpdateError(updateError));
       }
     }
   }

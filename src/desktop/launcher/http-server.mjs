@@ -1,7 +1,6 @@
 import http from 'node:http';
 import process from 'node:process';
 
-import log from 'electron-log';
 import express from 'express';
 import { Server as SSDPServer } from 'node-ssdp';
 
@@ -29,14 +28,25 @@ const setupSSDPDiscovery = async (port) => {
   }
 };
 
-export const setupHttpServer = async ({ port = 0 } = {}) => {
+/**
+ *
+ * @param {Object} cmdArgs - command line arguments
+ * @param {number} [cmdArgs.port=0] - the port on which the HTTP server will listen; if 0, a random available port will be used
+ * @param {Object} options - options for setting up the HTTP server
+ * @param {import('electron-log').Logger} [options.log] - optional logger for logging errors and info messages
+ * @returns {Promise<void>} - a promise that resolves when the HTTP server is set up
+ */
+export const setupHttpServer = async (cmdArgs = {}, options = {}) => {
+  const { port = 0 } = cmdArgs;
+  const { log } = options;
   const app = express();
   const server = http.createServer(app).listen({ port });
 
-  port = server.address().port;
-  await setupSSDPDiscovery(port);
+  /** @type {number} */
+  const resolvedPort = server.address().port;
+  await setupSSDPDiscovery(resolvedPort);
 
-  app.set('port', port);
+  app.set('port', resolvedPort);
 
   app.use(
     express.raw({ type: 'application/skybrush-compiled', limit: '128mb' })
@@ -47,7 +57,9 @@ export const setupHttpServer = async ({ port = 0 } = {}) => {
   /* eslint-disable @typescript-eslint/no-unsafe-call */
   /* eslint-disable @typescript-eslint/no-unsafe-return */
   app.use((error, _req, res, next) => {
-    log.error(error);
+    if (log) {
+      log.error(error);
+    }
 
     if (res.headersSent) {
       return next(error);
@@ -59,7 +71,9 @@ export const setupHttpServer = async ({ port = 0 } = {}) => {
   /* eslint-enable @typescript-eslint/no-unsafe-return */
   /* eslint-enable @typescript-eslint/no-unsafe-call */
 
-  log.info(`Skybrush Viewer HTTP server listening on port ${port}`);
+  if (log) {
+    log.info(`Skybrush Viewer HTTP server listening on port ${resolvedPort}`);
+  }
 };
 
 export default setupHttpServer;

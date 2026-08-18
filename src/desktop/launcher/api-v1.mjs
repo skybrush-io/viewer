@@ -1,9 +1,12 @@
 import { setTimeout } from 'node:timers/promises';
 
+import {
+  getFirstMainWindow,
+  getFirstMainWindowOrThrow,
+} from '@skybrush/electron-app-framework';
 import { ipcMain as ipc } from 'electron-better-ipc';
 import express from 'express';
 
-import { getFirstMainWindow } from './utils.mjs';
 import { setTitle } from './window-title.mjs';
 
 const router = express.Router();
@@ -28,7 +31,7 @@ router.post('/load', (req, res, next) => {
 
   try {
     const proposedTitle = req.header('x-skybrush-viewer-title');
-    const targetWindow = getFirstMainWindow({ required: true });
+    const targetWindow = getFirstMainWindowOrThrow();
 
     Promise.race([
       (async () => {

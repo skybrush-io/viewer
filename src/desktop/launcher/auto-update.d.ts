@@ -1,11 +1,13 @@
-import { type AppUpdater } from 'electron-updater';
+import type { AppUpdater } from 'electron-updater';
 
-declare const _autoUpdater: AppUpdater;
+export type UpdaterConfiguration = {
+  log?: AppUpdater['logger'] | null | undefined;
+};
 
 export type UpdateInfo = {
   available: boolean;
   downloaded: boolean;
-  downloading: boolean;
+  downloadProgress: number | null;
   version: string | null;
 };
 
@@ -15,8 +17,7 @@ export type CheckForUpdateOptions = {
 
 type Disposer = () => void;
 
-declare const NO_UPDATES: UpdateInfo;
-
+export function configureAutoUpdater(options?: UpdaterConfiguration): void;
 export function getAutoUpdater(): AppUpdater;
 export function checkForUpdates(
   options?: CheckForUpdateOptions

@@ -1,7 +1,7 @@
 import { app } from 'electron';
 import { ipcMain as ipc } from 'electron-better-ipc';
 
-import { getFirstMainWindow } from './utils.mjs';
+import { getFirstMainWindow } from '@skybrush/electron-app-framework';
 
 /**
  * @param {(filename: string) => void | Promise<void>} function_

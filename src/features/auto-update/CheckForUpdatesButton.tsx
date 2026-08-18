@@ -1,11 +1,15 @@
 import DownloadIcon from '@mui/icons-material/Download';
 import UpgradeIcon from '@mui/icons-material/SystemUpdateAlt';
 import UpdateIcon from '@mui/icons-material/Update';
-import Button, { type ButtonProps } from '@mui/material/Button';
+import {
+  ProgressButton,
+  type ProgressButtonProps,
+} from '@skybrush/mui-components';
 
 import { useAutoUpdate } from './hooks';
+import type { UpdateError } from './types';
 
-type Props = ButtonProps;
+type Props = ProgressButtonProps;
 
 type UpdateAction = 'check' | 'download' | 'install';
 
@@ -21,9 +25,23 @@ const labelForAction: Record<UpdateAction, string> = {
   install: 'Install update',
 };
 
+const labelForActionInProgress: Record<UpdateAction, string> = {
+  check: 'Checking for updates',
+  download: 'Downloading update',
+  install: 'Installing update',
+};
+
+const labelForError: Record<UpdateError, string> = {
+  checkFailed: 'Update check failed',
+  downloadFailed: 'Download failed',
+  installFailed: 'Installation failed',
+};
+
 const CheckForUpdatesButton = (props: Props) => {
   const {
     checkForUpdates,
+    downloadProgress,
+    error,
     installUpdate,
     isCheckingForUpdates,
     isDownloadingUpdate,
@@ -31,24 +49,33 @@ const CheckForUpdatesButton = (props: Props) => {
     updateDownloaded,
     updateSupported,
   } = useAutoUpdate();
+  const loading = isCheckingForUpdates || isDownloadingUpdate;
   const chosenAction = updateDownloaded
     ? 'install'
-    : updateAvailable && !isDownloadingUpdate
+    : updateAvailable
       ? 'download'
       : 'check';
 
+  // TODO(ntamas): localize error and label!
+  const label = loading
+    ? labelForActionInProgress[chosenAction]
+    : error
+      ? labelForError[error]
+      : labelForAction[chosenAction];
+
   return (
     updateSupported && (
-      <Button
+      <ProgressButton
         variant='contained'
+        loadingPosition='start'
         {...props}
         startIcon={iconForAction[chosenAction]}
-        loading={isCheckingForUpdates || isDownloadingUpdate}
-        loadingPosition='start'
+        loading={loading}
         onClick={chosenAction === 'install' ? installUpdate : checkForUpdates}
+        progress={downloadProgress}
       >
-        {labelForAction[chosenAction]}
-      </Button>
+        {label}
+      </ProgressButton>
     )
   );
 };

@@ -1,15 +1,24 @@
-import log from 'electron-log';
+import { app } from 'electron';
+import { ipcMain as ipc } from 'electron-better-ipc';
 import electronUpdater from 'electron-updater';
+
+import { getFirstMainWindow } from '@skybrush/electron-app-framework';
 
 /** @type {import('electron-updater').autoUpdater} */
 let _autoUpdater = null;
+
+/**
+ * @typedef {Object} UpdaterConfiguration
+ *
+ * @member [import('electron-updater').Logger] log  The logger to use for the auto-updater
+ */
 
 /**
  * @typedef {Object} UpdateInfo
  *
  * @member {boolean} available  Whether an update is available.
  * @member {boolean} downloaded  Whether the update has been downloaded.
- * @member {boolean} downloading  Whether the update is being downloaded.
+ * @member {number|null} downloadProgress  The progress of the download, or null if no download is in progress.
  * @member {string|null} version  The version of the available update, or null if no update is available.
  */
 
@@ -17,17 +26,31 @@ let _autoUpdater = null;
 const NO_UPDATES = Object.freeze({
   available: false,
   downloaded: false,
-  downloading: false,
+  downloadProgress: null,
   version: null,
 });
 
-function configureAutoUpdater() {
+/**
+ *
+ * @param [UpdaterConfiguration] options
+ * @param {import('electron-updater').Logger} options.log  The logger to use for the auto-updater
+ * @returns
+ */
+export function configureAutoUpdater(options = {}) {
+  if (_autoUpdater) {
+    throw new Error('Auto-updater is already configured');
+  }
+
+  const { log } = options;
+
   // Using destructuring to access autoUpdater due to the CommonJS module of 'electron-updater'.
   // It is a workaround for ESM compatibility issues, see https://github.com/electron-userland/electron-builder/issues/7976.
   const { autoUpdater } = electronUpdater;
 
-  log.transports.file.level = 'debug';
-  autoUpdater.logger = log;
+  // Configure logger
+  if (log) {
+    autoUpdater.logger = log;
+  }
 
   // Do not install updates on app quit because that could potentially leave the app
   // in a broken state if the app quits due to the system shutting down.
@@ -39,7 +62,9 @@ function configureAutoUpdater() {
   // Uncomment the following line to test the auto-updater in dev mode.
   // In this case you will also need to provide a file named dev-app-update.yml
   // in the root of your project
-  autoUpdater.forceDevUpdateConfig = true;
+  if (!app.isPackaged) {
+    autoUpdater.forceDevUpdateConfig = true;
+  }
 
   return autoUpdater;
 }
@@ -47,10 +72,19 @@ function configureAutoUpdater() {
 export function getAutoUpdater() {
   if (!_autoUpdater) {
     _autoUpdater = configureAutoUpdater();
-    // TODO: set up event handlers to inform renderers when an update was downloaded
-    // and other events
+
+    // This cannot be done in configureAutoUpdater() because it would lead to
+    // infinite recursion
     registerUpdateListener((info) => {
-      log.info('Update info:', info);
+      const mainWindow = getFirstMainWindow();
+      if (mainWindow) {
+        ipc.callRenderer(mainWindow, 'setUpdateInfo', info).catch((err) => {
+          _autoUpdater.logger?.error(
+            'Failed to notify renderer about update status:',
+            err
+          );
+        });
+      }
     });
   }
 
@@ -98,11 +132,12 @@ export async function checkForUpdates(options = {}) {
  */
 export function quitAndInstallUpdate(options = {}) {
   const { silent } = options;
+  const autoUpdater = getAutoUpdater();
 
   try {
-    getAutoUpdater().quitAndInstall();
+    autoUpdater.quitAndInstall();
   } catch (err) {
-    log.error('Failed to quit and install update:', err);
+    autoUpdater.logger?.error('Failed to quit and install update:', err);
     if (!silent) {
       throw err;
     }
@@ -127,7 +162,7 @@ export function registerUpdateListener(callback) {
     callback({
       available: true,
       downloaded: false,
-      downloading: false,
+      downloadProgress: autoUpdater.autoDownload ? 0 : null,
       version: info?.version ?? null,
     });
   };
@@ -138,7 +173,7 @@ export function registerUpdateListener(callback) {
     callback({
       available: true,
       downloaded: true,
-      downloading: false,
+      downloadProgress: null,
       version: info?.version ?? null,
     });
   };
@@ -148,13 +183,13 @@ export function registerUpdateListener(callback) {
     callback(NO_UPDATES);
   };
 
-  /** @param {import('electron-updater').ProgressInfo} _info */
-  const handleDownloadProgress = (_info) => {
+  /** @param {import('electron-updater').ProgressInfo} info */
+  const handleDownloadProgress = (info) => {
     if (lastUpdateInfo) {
       callback({
         available: true,
         downloaded: false,
-        downloading: true,
+        downloadProgress: Math.round(info.percent * 100) / 100,
         version: lastUpdateInfo?.version ?? null,
       });
     }

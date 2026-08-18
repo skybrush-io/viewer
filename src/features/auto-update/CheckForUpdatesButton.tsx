@@ -40,7 +40,7 @@ const CheckForUpdatesButton = ({ t = defaultTranslation, ...props }: Props) => {
     loading
       ? `${chosenAction}InProgress`
       : error
-        ? `${chosenAction}Error`
+        ? `${chosenAction}Failed`
         : chosenAction
   );
   return (

@@ -31,9 +31,10 @@ const initialState: AutoUpdateSliceState = {
   },
 };
 
-const { actions, reducer } = createSlice({
+const { actions, reducer, selectors } = createSlice({
   name: 'autoUpdate',
   initialState,
+
   reducers: {
     checkForUpdates() {
       /* nothing to do, the saga will handle it */
@@ -63,6 +64,19 @@ const { actions, reducer } = createSlice({
       state.supported = payload;
     },
   },
+
+  selectors: {
+    selectAutoUpdateState: (state) => ({
+      error: state.error,
+      isCheckingForUpdates: state.checking,
+      isDownloadingUpdate:
+        typeof state.updateInfo.downloadProgress === 'number',
+      downloadProgress: state.updateInfo.downloadProgress,
+      updateAvailable: state.updateInfo.available,
+      updateDownloaded: state.updateInfo.downloaded,
+      updateSupported: state.supported,
+    }),
+  },
 });
 
 export const {
@@ -73,5 +87,7 @@ export const {
   setUpdateInfo,
   setUpdateSupported,
 } = actions;
+
+export const { selectAutoUpdateState } = selectors;
 
 export default reducer;

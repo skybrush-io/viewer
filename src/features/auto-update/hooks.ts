@@ -1,9 +1,9 @@
-import { useAppDispatch, useAppSelector } from '~/hooks/store';
-import { checkForUpdates, installUpdate } from './slice';
+import { useDispatch, useSelector } from 'react-redux';
+import { checkForUpdates, installUpdate, selectAutoUpdateState } from './slice';
 
 export const useAutoUpdate = () => {
-  const updateState = useAppSelector((state) => state.autoUpdate);
-  const dispatch = useAppDispatch();
+  const updateState = useSelector(selectAutoUpdateState);
+  const dispatch = useDispatch();
   return {
     checkForUpdates: () => {
       dispatch(checkForUpdates());
@@ -11,13 +11,6 @@ export const useAutoUpdate = () => {
     installUpdate: () => {
       dispatch(installUpdate());
     },
-    error: updateState.error,
-    isCheckingForUpdates: updateState.checking,
-    isDownloadingUpdate:
-      typeof updateState.updateInfo.downloadProgress === 'number',
-    downloadProgress: updateState.updateInfo.downloadProgress,
-    updateAvailable: updateState.updateInfo.available,
-    updateDownloaded: updateState.updateInfo.downloaded,
-    updateSupported: updateState.supported,
+    ...updateState,
   };
 };

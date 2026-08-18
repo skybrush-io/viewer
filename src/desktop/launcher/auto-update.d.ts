@@ -15,6 +15,11 @@ export type CheckForUpdateOptions = {
   silent?: boolean;
 };
 
+export type UpdaterApi = {
+  checkForUpdates: (options?: CheckForUpdateOptions) => Promise<UpdateInfo>;
+  quitAndInstallUpdate: (options?: CheckForUpdateOptions) => Promise<void>;
+};
+
 type Disposer = () => void;
 
 export function initialize(options?: UpdaterConfiguration): void;

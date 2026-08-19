@@ -87,7 +87,7 @@ const PlayerSidebar = () => {
               {VERSION}
             </Typography>
           </Box>
-          <Box sx={{ px: 2, py: 1 }}>
+          <Box sx={{ px: 2, my: 1 }}>
             <CheckForUpdatesButton fullWidth color='primary' />
           </Box>
         </Box>

@@ -12,7 +12,7 @@ import { isSidebarOpen } from '~/features/sidebar/slice';
 import { SidebarTab } from '~/features/sidebar/types';
 import { useAppSelector } from '~/hooks/store';
 
-import CheckForUpdatesButton from '~/features/auto-update/CheckForUpdatesButton';
+import { CheckForUpdatesButton } from '@skybrush/electron-app-updater-integration';
 import InspectorTab from './InspectorTab';
 import PlayerSidebarTabs from './PlayerSidebarTabs';
 import SettingsTab from './SettingsTab';

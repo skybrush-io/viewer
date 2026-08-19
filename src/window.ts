@@ -1,13 +1,11 @@
 import type { AudioData } from '@skybrush/show-format';
 import type { ActionCreator } from 'redux';
 
-import type { UpdaterApi } from './desktop/launcher/auto-update';
-
 /**
  * Type specification for the bridge that we inject into the window object
  * when running in Electron.
  */
-export type ElectronBridge = UpdaterApi & {
+export type ElectronBridge = {
   isElectron: boolean;
 
   provideActions: (

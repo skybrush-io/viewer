@@ -6,9 +6,9 @@ import ElectronStore from 'electron-store';
 import tmp from 'tmp-promise';
 
 import { setupApp, setupCli } from '@skybrush/electron-app-framework';
+import * as autoUpdater from '@skybrush/electron-app-updater-integration/main';
 
 import createAppMenu from './app-menu.mjs';
-import * as autoUpdater from './auto-update.mjs';
 import setupFileOpener from './file-opener.mjs';
 import setupIpc from './ipc.mjs';
 import registerMediaProtocol from './media-protocol.mjs';

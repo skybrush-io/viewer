@@ -11,7 +11,6 @@ import {
 import { configureStoreAndPersistence } from '@skybrush/redux-toolkit';
 
 import reducer from './features';
-import { setUpdateInfo } from './features/auto-update/slice';
 import {
   loadShowFromBuffer,
   loadShowFromLocalFile,
@@ -67,7 +66,6 @@ if (isElectronWindow(window)) {
         loadShowFromBuffer,
         loadShowFromLocalFile,
         loadShowFromObject,
-        setUpdateInfo,
         setUIMode,
       },
       store.dispatch

@@ -54,6 +54,5 @@ export const setupIpc = () => {
   );
   ipc.answerMain('loadShowFromBuffer', createActionProxy('loadShowFromBuffer'));
   ipc.answerMain('loadShowFromObject', createActionProxy('loadShowFromObject'));
-  ipc.answerMain('setUpdateInfo', createActionProxy('setUpdateInfo'));
   ipc.answerMain('setUIMode', createActionProxy('setUIMode'));
 };

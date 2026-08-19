@@ -1,3 +1,4 @@
+import * as autoUpdater from '@skybrush/electron-app-updater-integration/preload';
 import { contextBridge } from 'electron';
 import { ipcRenderer as ipc } from 'electron-better-ipc';
 import ElectronStore from 'electron-store';
@@ -21,6 +22,8 @@ function createStateStore() {
   return createStorageEngine({ electronStore });
 }
 
+const updater = autoUpdater.initialize();
+
 /**
  * The bridge functions between the main and the renderer processes.
  *
@@ -32,10 +35,9 @@ function createStateStore() {
  */
 const bridge = {
   createStateStore,
-  isElectron: true,
+  updater,
 
-  checkForUpdates: (options) =>
-    ipc.callMain('__autoUpdater_checkForUpdates', options),
+  isElectron: true,
 
   provideActions: (actions) => {
     receiveActionsFromRenderer(actions);
@@ -43,9 +45,6 @@ const bridge = {
     // Let the main process know that we are now ready to open show files
     void ipc.callMain('readyForFileOpening');
   },
-
-  quitAndInstallUpdate: (options) =>
-    ipc.callMain('__autoUpdater_quitAndInstallUpdate', options),
 
   readFile: (filename) => fs.readFile(filename),
 

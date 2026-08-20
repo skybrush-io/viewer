@@ -5,7 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.7] - 2026-08-20
+
+### Fixed
+
+- Auto-updater logic finalized.
+
+- Recent files list now checks for the existence of each file before showing it in the
+  list. If a file is missing, it is removed from the list.
+
 ## [2.10.6] - 2026-08-20
+
+### Fixed
 
 - Auto-updater logic refactored. No user-facing changes.
 

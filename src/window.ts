@@ -11,6 +11,7 @@ export type ElectronBridge = {
   provideActions: (
     actionCreators: Record<string, ActionCreator<unknown>>
   ) => void;
+  fileExists: (filename: string) => Promise<boolean>;
   readFile: (filename: string) => Promise<Buffer>;
   selectLocalShowFileForOpening: () => Promise<string>;
   setAudioBuffer: (index: number, options: AudioData) => Promise<string | null>;

@@ -39,6 +39,12 @@ const bridge = {
 
   isElectron: true,
 
+  fileExists: (filename) =>
+    fs
+      .access(filename)
+      .then(() => true)
+      .catch(() => false),
+
   provideActions: (actions) => {
     receiveActionsFromRenderer(actions);
 

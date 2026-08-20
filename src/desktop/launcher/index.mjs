@@ -2,6 +2,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { app, protocol } from 'electron';
+import log from 'electron-log';
 import ElectronStore from 'electron-store';
 import tmp from 'tmp-promise';
 
@@ -10,6 +11,7 @@ import * as autoUpdater from '@skybrush/electron-app-updater-integration/main';
 
 import createAppMenu from './app-menu.mjs';
 import setupFileOpener from './file-opener.mjs';
+import { setupHttpServer } from './http-server.mjs';
 import setupIpc from './ipc.mjs';
 import registerMediaProtocol from './media-protocol.mjs';
 
@@ -17,12 +19,6 @@ const rootDir =
   typeof __dirname !== 'undefined'
     ? __dirname
     : path.dirname(fileURLToPath(import.meta.url));
-
-// See webpack/launcher.config.js and https://github.com/visionmedia/debug/issues/467
-// for more information about why this is needed
-global.__runtime_process_env = {
-  DEBUG: false,
-};
 
 const ENABLE_HTTP_SERVER = true;
 
@@ -33,9 +29,6 @@ const ENABLE_HTTP_SERVER = true;
  * @param  {Object}    options   the parsed command line arguments
  */
 async function run(filenames, options) {
-  // Deferred import of electron-log required because we need to patch
-  // global.__runtime_process_env before electron-log is imported
-  const { default: log } = await import('electron-log');
   log.transports.file.level = 'debug';
 
   // Clean up temporary files even when an uncaught exception occurs
@@ -45,12 +38,11 @@ async function run(filenames, options) {
   ElectronStore.initRenderer();
 
   // Configure the auto-updater
-  await autoUpdater.initialize({ log });
+  autoUpdater.initialize({ log });
 
   // Start an HTTP server in the background for processing incoming JSON show
   // data from the Blender plugin
   if (ENABLE_HTTP_SERVER) {
-    const { setupHttpServer } = await import('./http-server.mjs');
     await setupHttpServer(options, { log });
   }
 

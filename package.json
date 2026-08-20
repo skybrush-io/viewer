@@ -36,7 +36,7 @@
     "@skybrush/aframe-components": "^3.0.4",
     "@skybrush/app-theme-mui": "^5.1.0",
     "@skybrush/electron-app-framework": "^5.2.1",
-    "@skybrush/electron-app-updater-integration": "^1.0.4",
+    "@skybrush/electron-app-updater-integration": "^1.0.5",
     "@skybrush/math": "^1.0.1",
     "@skybrush/mui-components": "^6.7.0",
     "@skybrush/redux-toolkit": "^5.1.0",

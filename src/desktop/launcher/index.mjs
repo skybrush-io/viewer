@@ -45,7 +45,7 @@ async function run(filenames, options) {
   ElectronStore.initRenderer();
 
   // Configure the auto-updater
-  autoUpdater.initialize({ log });
+  await autoUpdater.initialize({ log });
 
   // Start an HTTP server in the background for processing incoming JSON show
   // data from the Blender plugin

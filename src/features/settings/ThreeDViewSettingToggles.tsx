@@ -27,9 +27,6 @@ type ThreeDViewSettingTogglesProps = {
   readonly showYaw: boolean;
 };
 
-/**
- * Sidebar drawer component for the application.
- */
 const ThreeDViewSettingToggles = ({
   onToggleAxes,
   onToggleGrid,

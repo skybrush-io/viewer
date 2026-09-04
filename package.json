@@ -40,7 +40,7 @@
     "@skybrush/math": "^1.0.1",
     "@skybrush/mui-components": "^6.9.0",
     "@skybrush/redux-toolkit": "^5.1.0",
-    "@skybrush/show-format": "^5.5.1",
+    "@skybrush/show-format": "^5.6.0",
     "@tippyjs/react": "^4.2.6",
     "aframe": "^1.7.1",
     "aframe-environment-component": "^1.5.0",

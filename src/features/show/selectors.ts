@@ -1,6 +1,4 @@
 import config from 'config';
-import get from 'lodash-es/get';
-import maxBy from 'lodash-es/maxBy';
 
 import { createSelector } from '@reduxjs/toolkit';
 
@@ -9,24 +7,26 @@ import {
   type Pose,
 } from '@skybrush/aframe-components/spatial';
 import {
-  CameraType,
   createLightProgramPlayer,
   createTrajectoryPlayer,
   createYawControlPlayer,
   getCamerasFromShowSpecification,
-  validatePyroProgram,
-  validateTrajectory,
-  validateYawControl,
+  getDefaultCamera,
+  getEnvironmentTypeFromSpecification,
+  getLightProgramsFromSpecification,
+  getPyroProgramsFromSpecification,
+  getShowDurationFromSpecification,
+  getTrajectoriesFromSpecification,
+  getYawControlsFromSpecification,
+  isProbablyPerspectiveCamera,
   type Camera,
   type Cue,
   type DroneSpecification,
-  type PyroProgram,
   type ShowMetadata,
   type ShowSettings,
   type ShowSpecification,
   type Trajectory,
   type TrajectoryPlayer,
-  type YawControl,
 } from '@skybrush/show-format';
 
 import {
@@ -134,59 +134,6 @@ export const getTimestampFormatter = createSelector(
 );
 
 /**
- * Returns whether an object "looks like" a valid trajectory.
- */
-export const isValidTrajectory = (
-  trajectory: unknown
-): trajectory is Trajectory => {
-  try {
-    validateTrajectory(trajectory);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
-/**
- * Returns whether an object "looks like" a valid light program.
- */
-export const isValidLightProgram = (program: unknown): boolean =>
-  typeof program === 'object' &&
-  program !== null &&
-  'version' in program &&
-  program.version === 1 &&
-  'data' in program &&
-  typeof program.data === 'string';
-
-/**
- * Returns whether an object "looks like" a valid pyro program.
- */
-export const isValidPyroProgram = (
-  program: unknown
-): program is PyroProgram => {
-  try {
-    validatePyroProgram(program);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
-/**
- * Returns whether an object "looks like" valid yaw control data.
- */
-export const isValidYawControl = (
-  yawControl: unknown
-): yawControl is YawControl => {
-  try {
-    validateYawControl(yawControl);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
-/**
  * Returns the common show settings that apply to all drones in the currently
  * loaded show.
  */
@@ -202,7 +149,7 @@ export const getCommonShowSettings = createSelector(
 export const getDroneSwarmSpecification = (
   state: RootState
 ): readonly DroneSpecification[] => {
-  const result = state.show?.data?.swarm?.drones;
+  const result = getShowSpecification(state)?.swarm?.drones;
   return Array.isArray(result) ? result : (EMPTY_ARRAY as DroneSpecification[]);
 };
 
@@ -216,7 +163,7 @@ export const getLoadedShowId = (state: RootState): number => state.show.id;
  * Selector that returns the type of the show (indoor or outdoor).
  */
 export const getShowEnvironmentType = (state: RootState): string =>
-  state.show?.data?.environment?.type ?? 'outdoor';
+  getEnvironmentTypeFromSpecification(getShowSpecification(state));
 
 /**
  * Selector that returns whether the show is indoor.
@@ -241,14 +188,6 @@ export const getCameras = createSelector(
 );
 
 /**
- * Returns true if the camera is likely to be a perspective camera. Cameras
- * without a type are considered to be perspective cameras for sake of backward
- * compatibility.
- */
-const isProbablyPerspectiveCamera = (camera: Camera | undefined): boolean =>
-  camera ? !camera.type || camera.type === CameraType.PERSPECTIVE : false;
-
-/**
  * Snaps the camera position to be above ground at a minimum height.
  */
 const ensureHeightAboveGround = (camera: Camera, minHeight = 1): Camera =>
@@ -258,20 +197,6 @@ const ensureHeightAboveGround = (camera: Camera, minHeight = 1): Camera =>
         position: [camera.position[0], camera.position[1], minHeight],
       }
     : camera;
-
-/**
- * Picks a default camera from an array of cameras, or undefined if there is
- * no default camera candidate in the array.
- */
-const getDefaultCamera = (cameras: Camera[]): Camera | undefined => {
-  for (const camera of cameras) {
-    if (camera.default) {
-      return camera;
-    }
-  }
-
-  return undefined;
-};
 
 /**
  * Returns an array containing all the perspective cameras from the show file,
@@ -335,12 +260,9 @@ export const getCues = createSelector(
  * undefined for all the drones that have no light programs in the mission.
  */
 const getLightPrograms = createSelector(
-  getDroneSwarmSpecification,
-  (swarm: readonly DroneSpecification[]) =>
-    swarm.map((drone: DroneSpecification) => {
-      const program = drone.settings?.lights;
-      return isValidLightProgram(program) ? program : undefined;
-    })
+  getShowSpecification,
+  (spec?: ShowSpecification) =>
+    spec ? getLightProgramsFromSpecification(spec) : []
 );
 
 /**
@@ -357,12 +279,9 @@ export const getLightProgramPlayers = createSelector(
  * undefined for all the drones that have no pyro control data in the mission.
  */
 export const getPyroPrograms = createSelector(
-  getDroneSwarmSpecification,
-  (swarm: readonly DroneSpecification[]) =>
-    swarm.map((drone: DroneSpecification) => {
-      const program = drone.settings?.pyro;
-      return isValidPyroProgram(program) ? program : undefined;
-    })
+  getShowSpecification,
+  (spec?: ShowSpecification) =>
+    spec ? getPyroProgramsFromSpecification(spec) : []
 );
 
 /**
@@ -508,32 +427,11 @@ export const getNumberOfDronesInShow = createSelector(
  * Returns an array containing all the trajectories. The array will contain
  * undefined for all the drones that have no fixed trajectories in the mission.
  */
-const getTrajectories = createSelector(getDroneSwarmSpecification, (swarm) =>
-  swarm.map((drone: DroneSpecification): Trajectory | undefined => {
-    const trajectory = get(drone, 'settings.trajectory');
-    return isValidTrajectory(trajectory) ? trajectory : undefined;
-  })
+const getTrajectories = createSelector(
+  getShowSpecification,
+  (spec?: ShowSpecification) =>
+    spec ? getTrajectoriesFromSpecification(spec) : []
 );
-
-/**
- * Returns the duration of a single drone trajectory.
- */
-const getTrajectoryDuration = (trajectory: unknown): number => {
-  if (!isValidTrajectory(trajectory)) {
-    return 0;
-  }
-
-  const { points, takeoffTime } = trajectory;
-
-  if (points.length > 0) {
-    const lastPoint = points.at(-1);
-    if (Array.isArray(lastPoint) && lastPoint.length > 1) {
-      return lastPoint[0] + (takeoffTime ?? 0);
-    }
-  }
-
-  return 0;
-};
 
 // TODO: The empty trajectory is no longer valid according to the schema.
 const EMPTY_TRAJECTORY: Readonly<Trajectory> = Object.freeze({
@@ -555,11 +453,10 @@ export const getTrajectoryPlayers = createSelector(
  * Returns an array containing all the yaw controls. The array will contain
  * undefined for all the drones that have no yaw control data in the mission.
  */
-const getYawControls = createSelector(getDroneSwarmSpecification, (swarm) =>
-  swarm.map((drone: DroneSpecification): YawControl | undefined => {
-    const yawControl = get(drone, 'settings.yawControl');
-    return isValidYawControl(yawControl) ? yawControl : undefined;
-  })
+const getYawControls = createSelector(
+  getShowSpecification,
+  (spec?: ShowSpecification) =>
+    spec ? getYawControlsFromSpecification(spec) : []
 );
 
 /**
@@ -591,11 +488,9 @@ export const getYawControlPlayers = createSelector(
  * Returns the total duration of the show, in seconds.
  */
 export const getShowDuration = createSelector(
-  getTrajectories,
-  (trajectories): number => {
-    const longest = maxBy(trajectories, getTrajectoryDuration);
-    return longest ? getTrajectoryDuration(longest) : 0;
-  }
+  getShowSpecification,
+  (spec?: ShowSpecification): number =>
+    spec ? getShowDurationFromSpecification(spec) : 0
 );
 
 /**
@@ -610,7 +505,8 @@ export const getShowDurationAsString = createSelector(
 /**
  * Returns whether there is a show file currently loaded.
  */
-export const hasLoadedShowFile = (state: RootState) => Boolean(state.show.data);
+export const hasLoadedShowFile = (state: RootState) =>
+  Boolean(getShowSpecification(state));
 
 /**
  * Returns a suitable title string for the current show file.

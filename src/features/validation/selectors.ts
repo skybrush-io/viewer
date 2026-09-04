@@ -1,9 +1,9 @@
 import { createSelector } from '@reduxjs/toolkit';
-import get from 'lodash-es/get';
 
 import {
   getShowDuration,
   getShowEnvironmentType,
+  getShowSpecification,
   getTimestampFormatter,
   getTrajectoryPlayers,
   getYawControlPlayers,
@@ -26,8 +26,8 @@ import { type ValidationSettings } from './types';
  * Selector that returns the validation settings of the current show (if any).
  */
 export const getValidationSettings = createSelector(
-  (state: RootState): Record<string, number> =>
-    get(state, 'show.data.settings.validation') as Record<string, number>,
+  (state: RootState): Record<string, number> | undefined =>
+    getShowSpecification(state)?.settings?.validation,
   getShowEnvironmentType,
   (validation, type): ValidationSettings => {
     const settings = {

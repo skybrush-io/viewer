@@ -1,6 +1,9 @@
-import { Vector3Array, type Vector3 } from '@skybrush/show-format';
+import {
+  areVector3sAlmostEqual,
+  Vector3Array,
+  type Vector3,
+} from '@skybrush/math';
 import { workerEmit } from 'workerpool';
-import { areVectorsAlmostEqual } from '~/features/validation/calculations';
 import getClosestPair from '~/features/validation/closest-pair';
 
 export type DistancesAndIndices = [
@@ -82,8 +85,8 @@ export default function getClosestPairsAndDistances(
       const landingPos = landingPositions[droneIndex];
 
       if (
-        !areVectorsAlmostEqual(pos, takeoffPos) &&
-        !areVectorsAlmostEqual(pos, landingPos)
+        !areVector3sAlmostEqual(pos, takeoffPos, 0.05) &&
+        !areVector3sAlmostEqual(pos, landingPos, 0.05)
       ) {
         indexMap.push(droneIndex);
         selectedPositionsInCurrentFrame.push(pos);

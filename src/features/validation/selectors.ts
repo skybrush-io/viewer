@@ -1,4 +1,10 @@
 import { createSelector } from '@reduxjs/toolkit';
+import {
+  sampleDurationEvenly as sampleDurationEvenly_,
+  samplePositionAt,
+  sampleVelocityAt,
+  sampleYawAt,
+} from '@skybrush/show-metrics';
 
 import {
   getShowDuration,
@@ -14,13 +20,12 @@ import {
   calculateScalarDerivative,
   projectVector3ArrayToXY,
   projectVector3ArrayToZ,
-  sampleDurationEvenly,
-  samplePositionAt,
-  sampleVelocityAt,
-  sampleYawAt,
 } from './calculations';
 import { DEFAULT_VALIDATION_SETTINGS, SAMPLES_PER_SECOND } from './constants';
 import { type ValidationSettings } from './types';
+
+const sampleDurationEvenly = (duration: number) =>
+  sampleDurationEvenly_(duration, SAMPLES_PER_SECOND);
 
 /**
  * Selector that returns the validation settings of the current show (if any).

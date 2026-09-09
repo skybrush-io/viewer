@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   default position and size after updating to this version, but any newly set window
   size or position will be remembered properly when exiting and re-opening the app.
 
+### Fixed
+
+- Fixed a double-increment bug in the chart aggregation code that meant that only
+  every second drone was included in aggregate charts.
+
 ## [2.10.7] - 2026-08-20
 
 ### Fixed

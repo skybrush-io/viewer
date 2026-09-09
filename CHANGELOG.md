@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a double-increment bug in the chart aggregation code that meant that only
   every second drone was included in aggregate charts.
 
+- Fixed a crash that happened when trajectory validation was invoked from Blender
+  when the proximity chart was already visible in the chart window. This is due to
+  an underlying bug in `react-chartjs-2`, which we currently work around until
+  upstream fixes the issue.
+
 ## [2.10.7] - 2026-08-20
 
 ### Fixed

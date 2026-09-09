@@ -346,8 +346,9 @@ const ChartPanel = ({
             // mounted. Currently the only way to trigger it is to validate trajectories
             // from Blender.
             //
-            // The unfreezing can be removed if react-chartjs-2 fixes the underlying
-            // bug. Last checked on 2026-09-09.
+            // The bug is probably long resolved in react-chartjs-2, I tested and could
+            // not reproduce it with v5.0.0, but we are stuck on v2 here. The workaround
+            // can probably be removed after an update, but we should re-test it first.
             data: Object.isFrozen(dataset.values)
               ? [...dataset.values]
               : dataset.values,

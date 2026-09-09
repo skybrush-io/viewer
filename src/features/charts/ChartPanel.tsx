@@ -349,9 +349,10 @@ const ChartPanel = ({
             // The bug is probably long resolved in react-chartjs-2, I tested and could
             // not reproduce it with v5.0.0, but we are stuck on v2 here. The workaround
             // can probably be removed after an update, but we should re-test it first.
-            data: Object.isFrozen(dataset.values)
-              ? [...dataset.values]
-              : dataset.values,
+            data:
+              Array.isArray(dataset.values) && Object.isFrozen(dataset.values)
+                ? [...dataset.values]
+                : dataset.values,
             fill: dataset.role === 'maximum' ? '+1' : false,
             showLine: true,
             interpolate: true,

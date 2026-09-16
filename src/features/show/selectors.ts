@@ -524,13 +524,20 @@ export const getShowTitle = createSelector(
 );
 
 /**
- * Returns the blob URL of the embedded terrain model, if any.
+ * Returns the blob URL of the embedded terrain model and its transform, if any
  */
-export const getTerrainModelUrl = (state: RootState): string | undefined => {
-  const model = getShowSpecification(state)?.environment?.terrain?.model as
-    | { url?: string }
-    | undefined;
-  return model?.url;
+export const getTerrainModel = (state: RootState) => {
+  const terrain = getShowSpecification(state)?.environment?.terrain;
+  const model = terrain?.model as { url?: string } | undefined;
+  if (!model?.url) return undefined;
+
+  const t = terrain?.transform;
+  return {
+    url: model.url,
+    position: t?.position ?? ([0, 0, 0] as const),
+    rotation: t?.rotation ?? ([1, 0, 0, 0] as const), // WXYZ
+    scale: t?.scale ?? ([1, 1, 1] as const),
+  };
 };
 
 /**

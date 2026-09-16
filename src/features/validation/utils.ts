@@ -68,8 +68,6 @@ function aggregateDataSeries(
       );
       frameCount = series.length;
     }
-
-    seriesIndex++;
   }
 
   return [

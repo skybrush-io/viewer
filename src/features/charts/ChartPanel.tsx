@@ -339,7 +339,20 @@ const ChartPanel = ({
 
           series.push({
             label: dataset.label ?? `Series ${index + 1}`,
-            data: dataset.values,
+            // Copy the values object if they are frozen (by immer or @reduxjs/toolkit).
+            // This is because react-chartjs-2 keeps a reference to the data object
+            // around internally and mutates it later when the data changes, which
+            // would cause a crash if the chart data changes while the chart is
+            // mounted. Currently the only way to trigger it is to validate trajectories
+            // from Blender.
+            //
+            // The bug is probably long resolved in react-chartjs-2, I tested and could
+            // not reproduce it with v5.0.0, but we are stuck on v2 here. The workaround
+            // can probably be removed after an update, but we should re-test it first.
+            data:
+              Array.isArray(dataset.values) && Object.isFrozen(dataset.values)
+                ? [...dataset.values]
+                : dataset.values,
             fill: dataset.role === 'maximum' ? '+1' : false,
             showLine: true,
             interpolate: true,

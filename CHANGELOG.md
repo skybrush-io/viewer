@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.9] - 2026-09-10
+
+### Changed
+
+- Switched storing the state of the main window to the window state persistence API
+  provided natively by Electron. This means that Skybrush Viewer will start with its
+  default position and size after updating to this version, but any newly set window
+  size or position will be remembered properly when exiting and re-opening the app.
+
+### Fixed
+
+- Fixed a double-increment bug in the chart aggregation code that meant that only
+  every second drone was included in aggregate charts.
+
+- Fixed a crash that happened when trajectory validation was invoked from Blender
+  when the proximity chart was already visible in the chart window.
+
 ## [2.10.7] - 2026-08-20
 
 ### Fixed

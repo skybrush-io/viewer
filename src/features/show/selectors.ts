@@ -524,7 +524,7 @@ export const getShowTitle = createSelector(
 );
 
 /**
- * Returns the media:// URL of the embedded terrain model, if any.
+ * Returns the blob URL of the embedded terrain model, if any.
  */
 export const getTerrainModelUrl = (state: RootState): string | undefined => {
   const model = getShowSpecification(state)?.environment?.terrain?.model as

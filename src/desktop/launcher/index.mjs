@@ -49,16 +49,7 @@ async function run(filenames, options) {
   // Register our soon-to-be-used media:// protocol as privileged so the
   // fetch() API can work with it
   protocol.registerSchemesAsPrivileged([
-    {
-      scheme: 'media', privileges: {
-        standard: true,
-        secure: true,
-        supportFetchAPI: true,
-        bypassCSP: true,
-        corsEnabled: true,
-        stream: true,
-      },
-    },
+    { scheme: 'media', privileges: { bypassCSP: true } },
   ]);
 
   setupApp({

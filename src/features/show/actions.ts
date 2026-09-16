@@ -23,7 +23,7 @@ type TerrainModelWithUrl = Omit<TerrainModelData, 'data'> & {
 };
 
 const loadShowFromBufferInner = async (buffer: Buffer) => {
-  const { setAudioBuffer, setTerrainBuffer } = getElectronBridge() ?? {};
+  const { setAudioBuffer } = getElectronBridge() ?? {};
   const showSpec = await loadCompiledShow(buffer, { assets: true });
 
   const audioSpec = showSpec?.media?.audio;
@@ -59,20 +59,19 @@ const loadShowFromBufferInner = async (buffer: Buffer) => {
 
   if (terrainData && terrainModel) {
     if (terrainData instanceof Uint8Array || Buffer.isBuffer(terrainData)) {
-      if (setTerrainBuffer) {
-        const url = await setTerrainBuffer(0, {
-          data: terrainData,
-          mediaType: terrainModel.mediaType ?? 'model/gltf-binary',
-        });
+      const bytes =
+        terrainData instanceof Uint8Array
+          ? terrainData
+          : new Uint8Array(terrainData);
   
-        const terrainModelWithUrl = terrainModel as TerrainModelWithUrl;
-        delete terrainModelWithUrl.data;
-        terrainModelWithUrl.url = url + '?ts=' + Date.now();
-      } else {
-        console.warn(
-          'Embedded terrain models are not supported in this environment'
-        );
-      }
+      const blob = new Blob([bytes as BlobPart], {
+        type: 'model/gltf-binary',
+      });
+      const url = URL.createObjectURL(blob);
+  
+      const terrainModelWithUrl = terrainModel as TerrainModelWithUrl;
+      delete terrainModelWithUrl.data;
+      terrainModelWithUrl.url = url;
     } else {
       console.warn('Terrain model is not loaded as binary data');
     }

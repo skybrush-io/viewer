@@ -1,7 +1,7 @@
 import { URL } from 'node:url';
 import { protocol } from 'electron';
 
-import { getAudioBuffer, getTerrainBuffer } from './media-buffers.mjs';
+import { getAudioBuffer } from './media-buffers.mjs';
 
 /**
  * Registers an Electron protocol handler for the media:// URI scheme that is
@@ -17,8 +17,6 @@ const registerMediaProtocol = () => {
       if (Number.isFinite(index) && index >= 0) {
         if (parsedUrl.host === 'audio') {
           buffer = getAudioBuffer(index);
-        } else if (parsedUrl.host === 'terrain') {
-          buffer = getTerrainBuffer(index);
         }
       }
 

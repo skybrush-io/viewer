@@ -22,6 +22,9 @@ type TerrainModelWithUrl = Omit<TerrainModelData, 'data'> & {
   url: string;
 };
 
+/** Last terrain blob URL; revoked when a new show is loaded. */
+let terrainObjectUrl: string | undefined;
+
 const loadShowFromBufferInner = async (buffer: Buffer) => {
   const { setAudioBuffer } = getElectronBridge() ?? {};
   const showSpec = await loadCompiledShow(buffer, { assets: true });
@@ -57,18 +60,24 @@ const loadShowFromBufferInner = async (buffer: Buffer) => {
   const terrainModel = terrainSpec?.model;
   const terrainData = terrainModel?.data;
 
+  if (terrainObjectUrl) {
+    URL.revokeObjectURL(terrainObjectUrl);
+    terrainObjectUrl = undefined;
+  }
+
   if (terrainData && terrainModel) {
     if (terrainData instanceof Uint8Array || Buffer.isBuffer(terrainData)) {
       const bytes =
         terrainData instanceof Uint8Array
           ? terrainData
           : new Uint8Array(terrainData);
-  
+
       const blob = new Blob([bytes as BlobPart], {
         type: 'model/gltf-binary',
       });
       const url = URL.createObjectURL(blob);
-  
+      terrainObjectUrl = url;
+
       const terrainModelWithUrl = terrainModel as TerrainModelWithUrl;
       delete terrainModelWithUrl.data;
       terrainModelWithUrl.url = url;

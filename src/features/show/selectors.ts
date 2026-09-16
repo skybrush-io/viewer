@@ -193,9 +193,9 @@ export const getCameras = createSelector(
 const ensureHeightAboveGround = (camera: Camera, minHeight = 1): Camera =>
   Array.isArray(camera.position) && camera.position[2] < minHeight
     ? {
-        ...camera,
-        position: [camera.position[0], camera.position[1], minHeight],
-      }
+      ...camera,
+      position: [camera.position[0], camera.position[1], minHeight],
+    }
     : camera;
 
 /**
@@ -312,11 +312,11 @@ export const getPyroCues = createSelector(
       .flatMap((program, droneIndex) =>
         program
           ? program.events.map(([time, channel, payloadId]) => ({
-              time,
-              droneIndex,
-              payloadName: program.payloads[payloadId]?.name,
-              channel,
-            }))
+            time,
+            droneIndex,
+            payloadName: program.payloads[payloadId]?.name,
+            channel,
+          }))
           : []
       )
       .toSorted((a, b) => a.time - b.time);
@@ -522,6 +522,16 @@ export const getShowTitle = createSelector(
         : `Show with ${droneCount} drones`
       : 'No show loaded'
 );
+
+/**
+ * Returns the media:// URL of the embedded terrain model, if any.
+ */
+export const getTerrainModelUrl = (state: RootState): string | undefined => {
+  const model = getShowSpecification(state)?.environment?.terrain?.model as
+    | { url?: string }
+    | undefined;
+  return model?.url;
+};
 
 /**
  * Returns whether we are currently loading a show file.

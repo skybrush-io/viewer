@@ -1,7 +1,7 @@
 import { ipcMain as ipc } from 'electron-better-ipc';
 
 import { selectLocalShowFileForOpening } from './dialogs.mjs';
-import { setAudioBuffer } from './media-buffers.mjs';
+import { setAudioBuffer, setTerrainBuffer } from './media-buffers.mjs';
 import { setTitle } from './window-title.mjs';
 
 const setupIpc = () => {
@@ -29,6 +29,17 @@ const setupIpc = () => {
     (args, window) => {
       const { appName, representedFile } = args;
       setTitle(window, { appName, representedFile });
+    }
+  );
+
+  ipc.answerRenderer(
+    'setTerrainBuffer',
+    /**
+     * @param {{ index: number; options: { data: Uint8Array; mediaType: string }}} args
+     */
+    (args) => {
+      const { index, options } = args;
+      return setTerrainBuffer(index, options);
     }
   );
 };

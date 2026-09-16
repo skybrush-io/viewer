@@ -1,4 +1,4 @@
-import type { AudioData } from '@skybrush/show-format';
+import type { AudioData, TerrainModelData } from '@skybrush/show-format';
 import type { ActionCreator } from 'redux';
 
 /**
@@ -15,6 +15,7 @@ export type ElectronBridge = {
   readFile: (filename: string) => Promise<Buffer>;
   selectLocalShowFileForOpening: () => Promise<string>;
   setAudioBuffer: (index: number, options: AudioData) => Promise<string | null>;
+  setTerrainBuffer: (index: number, options: TerrainModelData) => Promise<string | null>;
   setTitle: (options: {
     appName?: string;
     representedFile?: string;

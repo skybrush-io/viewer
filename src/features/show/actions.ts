@@ -1,6 +1,7 @@
 import {
   loadCompiledShow,
   type AudioData,
+  type TerrainModelData,
   type ShowSpecification,
 } from '@skybrush/show-format';
 
@@ -16,8 +17,13 @@ type AudioSpecWithUrl = Omit<AudioData, 'data'> & {
   url: string;
 };
 
+type TerrainModelWithUrl = Omit<TerrainModelData, 'data'> & {
+  data?: TerrainModelData['data'];
+  url: string;
+};
+
 const loadShowFromBufferInner = async (buffer: Buffer) => {
-  const { setAudioBuffer } = getElectronBridge() ?? {};
+  const { setAudioBuffer, setTerrainBuffer } = getElectronBridge() ?? {};
   const showSpec = await loadCompiledShow(buffer, { assets: true });
 
   const audioSpec = showSpec?.media?.audio;
@@ -44,6 +50,31 @@ const loadShowFromBufferInner = async (buffer: Buffer) => {
       console.warn(
         'Embedded audio files are not supported in this environment'
       );
+    }
+  }
+
+  const terrainSpec = showSpec?.environment?.terrain;
+  const terrainModel = terrainSpec?.model;
+  const terrainData = terrainModel?.data;
+
+  if (terrainData && terrainModel) {
+    if (terrainData instanceof Uint8Array || Buffer.isBuffer(terrainData)) {
+      if (setTerrainBuffer) {
+        const url = await setTerrainBuffer(0, {
+          data: terrainData,
+          mediaType: terrainModel.mediaType ?? 'model/gltf-binary',
+        });
+  
+        const terrainModelWithUrl = terrainModel as TerrainModelWithUrl;
+        delete terrainModelWithUrl.data;
+        terrainModelWithUrl.url = url + '?ts=' + Date.now();
+      } else {
+        console.warn(
+          'Embedded terrain models are not supported in this environment'
+        );
+      }
+    } else {
+      console.warn('Terrain model is not loaded as binary data');
     }
   }
 

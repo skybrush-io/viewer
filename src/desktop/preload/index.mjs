@@ -60,6 +60,9 @@ const bridge = {
   setAudioBuffer: (index, options) =>
     ipc.callMain('setAudioBuffer', { index, options }),
 
+  setTerrainBuffer: (index, options) =>
+    ipc.callMain('setTerrainBuffer', { index, options }),
+
   setTitle: async ({ appName, representedFile }) => {
     await ipc.callMain('setTitle', { appName, representedFile });
   },

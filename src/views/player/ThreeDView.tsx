@@ -22,6 +22,7 @@ import type { DroneModelType } from '~/features/settings/types';
 import {
   getLoadedShowId,
   getNumberOfDronesInShow,
+  getTerrainModelUrl,
 } from '~/features/show/selectors';
 import {
   getEffectiveDroneRadius,
@@ -60,6 +61,7 @@ type ThreeDViewProps = {
   readonly showLabels: boolean;
   readonly showStatistics: boolean;
   readonly showYaw: boolean;
+  readonly terrainModelUrl?: string;
   readonly vrEnabled?: boolean;
 };
 
@@ -85,6 +87,7 @@ const ThreeDView = (props: ThreeDViewProps) => {
     showLabels,
     showStatistics,
     showYaw,
+    terrainModelUrl,
     vrEnabled,
   } = props;
 
@@ -183,7 +186,10 @@ const ThreeDView = (props: ThreeDViewProps) => {
         {/* <VelocityArrows /> */}
       </a-entity>
 
-      <Scenery type={scenery} grid={grid} />
+      <Scenery type={scenery} grid={grid} showTerrainModel={Boolean(terrainModelUrl)} />
+      {terrainModelUrl ? (
+        <a-entity gltf-model={terrainModelUrl} position='0 0 0' />
+      ) : null}
     </a-scene>
   );
 };
@@ -199,6 +205,7 @@ export default connect(
     droneModel: getDroneModel(state),
     droneRadius: getEffectiveDroneRadius(state),
     scenery: getEffectiveScenery(state),
+    terrainModelUrl: getTerrainModelUrl(state),
   }),
   // mapDispatchToProps
   {},

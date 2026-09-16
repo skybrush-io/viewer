@@ -1,6 +1,7 @@
 import {
   loadCompiledShow,
   type AudioData,
+  type TerrainModelData,
   type ShowSpecification,
 } from '@skybrush/show-format';
 
@@ -15,6 +16,14 @@ type AudioSpecWithUrl = Omit<AudioData, 'data'> & {
   data?: AudioData['data'];
   url: string;
 };
+
+type TerrainModelWithUrl = Omit<TerrainModelData, 'data'> & {
+  data?: TerrainModelData['data'];
+  url: string;
+};
+
+/** Last terrain blob URL; revoked when a new show is loaded. */
+let terrainObjectUrl: string | undefined;
 
 const loadShowFromBufferInner = async (buffer: Buffer) => {
   const { setAudioBuffer } = getElectronBridge() ?? {};
@@ -44,6 +53,36 @@ const loadShowFromBufferInner = async (buffer: Buffer) => {
       console.warn(
         'Embedded audio files are not supported in this environment'
       );
+    }
+  }
+
+  const terrainSpec = showSpec?.environment?.terrain;
+  const terrainModel = terrainSpec?.model;
+  const terrainData = terrainModel?.data;
+
+  if (terrainObjectUrl) {
+    URL.revokeObjectURL(terrainObjectUrl);
+    terrainObjectUrl = undefined;
+  }
+
+  if (terrainData && terrainModel) {
+    if (terrainData instanceof Uint8Array || Buffer.isBuffer(terrainData)) {
+      const bytes =
+        terrainData instanceof Uint8Array
+          ? terrainData
+          : new Uint8Array(terrainData);
+
+      const blob = new Blob([bytes as BlobPart], {
+        type: 'model/gltf-binary',
+      });
+      const url = URL.createObjectURL(blob);
+      terrainObjectUrl = url;
+
+      const terrainModelWithUrl = terrainModel as TerrainModelWithUrl;
+      delete terrainModelWithUrl.data;
+      terrainModelWithUrl.url = url;
+    } else {
+      console.warn('Terrain model is not loaded as binary data');
     }
   }
 

@@ -60,7 +60,7 @@ async function run(filenames, options) {
       },
     },
   });
-  
+
   // Register our soon-to-be-used media:// protocol as privileged so the
   // fetch() API can work with it
   protocol.registerSchemesAsPrivileged([

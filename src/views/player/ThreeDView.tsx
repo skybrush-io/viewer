@@ -39,7 +39,7 @@ import SelectionMarkers from './SelectionMarkers';
 
 import flapperDroneModel from '~/../assets/models/flapper-drone.obj';
 import quadcopterModel from '~/../assets/models/quadcopter.obj';
-import { QuaternionWXYZTuple } from '@skybrush/math';
+import type { QuaternionWXYZTuple } from '@skybrush/math';
 import { skybrushQuaternionToEulerDegrees } from '~/features/show/utils';
 
 type ThreeDViewProps = {

@@ -55,7 +55,7 @@ export const setupHttpServer = async (cmdArgs = {}, options = {}) => {
   app.use('/api/v1', apiV1);
 
   /* eslint-disable @typescript-eslint/no-unsafe-call */
-  /* eslint-disable @typescript-eslint/no-unsafe-return */
+   
   app.use((error, _req, res, next) => {
     if (log) {
       log.error(error);
@@ -68,7 +68,7 @@ export const setupHttpServer = async (cmdArgs = {}, options = {}) => {
     res.status(500);
     res.json({ error: String(error) || 'Unexpected error' });
   });
-  /* eslint-enable @typescript-eslint/no-unsafe-return */
+   
   /* eslint-enable @typescript-eslint/no-unsafe-call */
 
   if (log) {

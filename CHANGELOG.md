@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.10.10] - 2026-09-26
 
+### Changed
+
+- The selection of drones in the validation view is not persisted to the saved state of
+  the application any more.
+
 ### Fixed
 
 - Fixed a crash that happened when opening the validation view in a smaller show after

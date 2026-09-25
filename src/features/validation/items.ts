@@ -1,10 +1,9 @@
-import isNil from 'lodash-es/isNil';
-import { orderBy } from 'natural-orderby';
 import { createSelector } from '@reduxjs/toolkit';
+import { orderBy } from 'natural-orderby';
 
 import { getNamesOfDronesInShow } from '~/features/show/selectors';
 
-import type { RootState } from '~/store';
+import { getSelection } from './selectors';
 
 /**
  * Creates a validation chart item ID that represents a single drone with the
@@ -44,9 +43,9 @@ export const getSidebarItemsForSingleDrones = createSelector(
 );
 
 export const getIndicesOfSelectedDrones = createSelector(
-  (state: RootState) => state.validation.selection,
+  getSelection,
   (itemIds: string[]): number[] =>
     (itemIds || [])
       .map(getDroneIndexFromItemId)
-      .filter((item): item is number => !isNil(item))
+      .filter((item): item is number => typeof item === 'number')
 );

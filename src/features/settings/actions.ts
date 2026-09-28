@@ -3,6 +3,7 @@ import { isSupportedFrameRate } from '~/features/playback/types';
 import type { AppThunk } from '~/store';
 import type { SceneryType } from '~/views/player/Scenery';
 
+import { shouldSynchronizeValidationCharts } from './selectors';
 import { updateAppSettings } from './slice';
 import type { DroneModelType } from './types';
 
@@ -62,7 +63,7 @@ export const toggleScaleLabels = (): AppThunk => (dispatch, getState) => {
 
 export const toggleSyncCharts = (): AppThunk => (dispatch, getState) => {
   const state = getState();
-  const { syncCharts } = state.settings.validation;
+  const syncCharts = shouldSynchronizeValidationCharts(state);
 
   dispatch(updateAppSettings('validation', { syncCharts: !syncCharts }));
 };

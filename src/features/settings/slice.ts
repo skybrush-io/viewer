@@ -90,23 +90,25 @@ const { actions, reducer } = createSlice({
   initialState,
   reducers: {
     updateAppSettings: {
-      prepare: (category: string, updates: Record<string, any>) => ({
+      prepare: (
+        category: keyof SettingsSliceState,
+        updates: Record<string, any>
+      ) => ({
         payload: { category, updates },
       }),
 
       reducer(
         state,
         action: PayloadAction<{
-          category: string;
+          category: keyof SettingsSliceState;
           updates: Record<string, any>;
         }>
       ) {
         const { category, updates } = action.payload;
         const state_ = state as any;
 
-        if (state_[category] !== undefined) {
-          state_[category] = { ...state_[category], ...updates };
-        }
+        state_[category] ??= {};
+        Object.assign(state_[category], updates);
       },
     },
   },

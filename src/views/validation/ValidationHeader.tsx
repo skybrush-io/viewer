@@ -5,8 +5,7 @@ import { connect } from 'react-redux';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import Box, { type BoxProps } from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import ToggleButton from '@mui/material/ToggleButton';
 
 import { toggleSyncCharts } from '~/features/settings/actions';
 import { shouldSynchronizeValidationCharts } from '~/features/settings/selectors';
@@ -76,12 +75,14 @@ const ValidationHeader = ({
         );
       })}
       <Box sx={{ flex: 1 }} />
-      <FormControlLabel
-        control={
-          <Checkbox checked={syncCharts} onChange={onToggleSyncCharts} />
-        }
-        label={t('validation.syncCharts')}
-      />
+      <ToggleButton
+        value='syncCharts'
+        selected={syncCharts}
+        onChange={onToggleSyncCharts}
+        sx={{ border: 'none' }} // `ToggleButton` doesn't seem to have variants
+      >
+        {t('validation.syncCharts')}
+      </ToggleButton>
       {config.buttons.reload && (
         <Button
           color='inherit'

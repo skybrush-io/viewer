@@ -125,12 +125,14 @@ type ChartOptionsWithAnnotation = Chart.ChartOptions & {
 };
 
 const createOptions = ({
+  enableSync,
   formatPlaybackTimestamp,
   range,
   threshold,
   thresholdLabel,
   verticalUnit,
 }: {
+  enableSync?: boolean;
   formatPlaybackTimestamp?: (value: number) => string;
   range?: [number, number];
   threshold?: number | undefined | Array<number | undefined>;
@@ -173,7 +175,7 @@ const createOptions = ({
         },
         sync: {
           // Performance is not good yet if sync is enabled
-          enabled: false,
+          enabled: enableSync,
           group: 1,
           suppressTooltips: false,
         },
@@ -272,6 +274,9 @@ export type ChartPanelProps = {
    */
   calculation?: ChartCalculationState;
 
+  /** Whether to enable synchronized hover and zoom states for the charts */
+  enableSync?: boolean;
+
   /** Formatter for timestamps on the X axis of the chart */
   formatPlaybackTimestamp?: (value: number) => string;
 
@@ -305,6 +310,7 @@ const MemoScatter = memo(Scatter);
 const ChartPanel = ({
   calculation,
   chart,
+  enableSync,
   formatPlaybackTimestamp,
   height,
   range,
@@ -381,13 +387,21 @@ const ChartPanel = ({
   const options = useMemo(
     () =>
       createOptions({
+        enableSync,
         formatPlaybackTimestamp,
         range,
         threshold,
         thresholdLabel,
         verticalUnit,
       }),
-    [formatPlaybackTimestamp, range, threshold, thresholdLabel, verticalUnit]
+    [
+      enableSync,
+      formatPlaybackTimestamp,
+      range,
+      threshold,
+      thresholdLabel,
+      verticalUnit,
+    ]
   );
 
   const showHeaderBox = !isNil(title) || !isNil(error) || calculating;

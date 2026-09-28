@@ -5,7 +5,10 @@ import { connect } from 'react-redux';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import Box, { type BoxProps } from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import ToggleButton from '@mui/material/ToggleButton';
 
+import { toggleSyncCharts } from '~/features/settings/actions';
+import { shouldSynchronizeValidationCharts } from '~/features/settings/selectors';
 import { setMode } from '~/features/ui/actions';
 import { UIMode } from '~/features/ui/modes';
 import { togglePanelVisibility } from '~/features/validation/actions';
@@ -39,6 +42,8 @@ type ValidationHeaderProps = BoxProps & {
   readonly onReloadShow: () => void;
   readonly onReturnToViewer: () => void;
   readonly onTogglePanel: (id: ValidationPanel) => void;
+  readonly onToggleSyncCharts: () => void;
+  readonly syncCharts: boolean;
   readonly visiblePanels: ValidationPanel[];
 };
 
@@ -48,6 +53,8 @@ const ValidationHeader = ({
   onReloadShow,
   onReturnToViewer,
   onTogglePanel,
+  onToggleSyncCharts,
+  syncCharts,
   visiblePanels,
   ...rest
 }: ValidationHeaderProps) => {
@@ -68,6 +75,14 @@ const ValidationHeader = ({
         );
       })}
       <Box sx={{ flex: 1 }} />
+      <ToggleButton
+        value='syncCharts'
+        selected={syncCharts}
+        onChange={onToggleSyncCharts}
+        sx={{ border: 'none' }} // `ToggleButton` doesn't seem to have variants
+      >
+        {t('validation.syncCharts')}
+      </ToggleButton>
       {config.buttons.reload && (
         <Button
           color='inherit'
@@ -93,6 +108,7 @@ export default connect(
   (state: RootState) => ({
     canReloadShow: canReloadShow(state),
     isLoadingShow: isLoadingShowFile(state),
+    syncCharts: shouldSynchronizeValidationCharts(state),
     visiblePanels: getVisiblePanels(state),
   }),
   // mapDispatchToProps
@@ -106,5 +122,6 @@ export default connect(
     onReloadShow: reloadShow,
     onReturnToViewer: () => setMode(UIMode.PLAYER),
     onTogglePanel: (id: ValidationPanel) => togglePanelVisibility(id),
+    onToggleSyncCharts: toggleSyncCharts,
   }
 )(ValidationHeader);

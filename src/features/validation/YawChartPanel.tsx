@@ -2,6 +2,7 @@ import { t } from 'i18next';
 import { connect } from 'react-redux';
 
 import ChartPanel from '~/features/charts/ChartPanel';
+import { shouldSynchronizeValidationCharts } from '~/features/settings/selectors';
 import { getTimestampFormatter } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 
@@ -21,6 +22,7 @@ export default connect(
   // mapStateToProps
   (state: RootState) => ({
     chart: getYawChart(state),
+    enableSync: shouldSynchronizeValidationCharts(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
     range: Y_RANGE,
     title: t('validation.yaw'),

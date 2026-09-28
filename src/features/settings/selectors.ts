@@ -26,3 +26,6 @@ export const getSimulatedPlaybackFrameRate = (state: RootState) => {
 
 export const getPlaybackSliderStepSize = (state: RootState) =>
   1 / getSimulatedPlaybackFrameRate(state);
+
+export const shouldSynchronizeValidationCharts = (state: RootState) =>
+  state.settings.validation?.syncCharts ?? false;

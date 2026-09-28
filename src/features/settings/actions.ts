@@ -59,3 +59,10 @@ export const toggleScaleLabels = (): AppThunk => (dispatch, getState) => {
 
   dispatch(updateAppSettings('threeD', { scaleLabels: !scaleLabels }));
 };
+
+export const toggleSyncCharts = (): AppThunk => (dispatch, getState) => {
+  const state = getState();
+  const { syncCharts } = state.settings.validation;
+
+  dispatch(updateAppSettings('validation', { syncCharts: !syncCharts }));
+};

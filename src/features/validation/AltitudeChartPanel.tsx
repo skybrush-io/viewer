@@ -2,6 +2,7 @@ import { t } from 'i18next';
 import { connect } from 'react-redux';
 
 import ChartPanel from '~/features/charts/ChartPanel';
+import { shouldSynchronizeValidationCharts } from '~/features/settings/selectors';
 import { getTimestampFormatter, isShowIndoor } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 
@@ -25,6 +26,7 @@ export default connect(
   // mapStateToProps
   (state: RootState) => ({
     chart: getAltitudeChart(state),
+    enableSync: shouldSynchronizeValidationCharts(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
     range: isShowIndoor(state) ? Y_RANGE_INDOOR : Y_RANGE_OUTDOOR,
     threshold: getAltitudeWarningThreshold(state),

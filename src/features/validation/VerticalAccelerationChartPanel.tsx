@@ -1,6 +1,7 @@
 import { t } from 'i18next';
 import { connect } from 'react-redux';
 
+import { shouldSynchronizeValidationCharts } from '~/features/settings/selectors';
 import { getTimestampFormatter } from '~/features/show/selectors';
 import type { RootState } from '~/store';
 
@@ -28,6 +29,7 @@ export default connect(
   // mapStateToProps
   (state: RootState) => ({
     chart: getVerticalAccelerationChart(state),
+    enableSync: shouldSynchronizeValidationCharts(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
     range: Y_RANGE,
     threshold: [

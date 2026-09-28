@@ -28,6 +28,9 @@ type SettingsSliceState = {
     droneRadius?: number;
     droneModel?: DroneModelType;
   };
+  validation: {
+    syncCharts: boolean;
+  };
 };
 
 const initialState: SettingsSliceState = {
@@ -74,6 +77,11 @@ const initialState: SettingsSliceState = {
 
     // Drone model to use in the 3D view
     droneModel: DEFAULT_DRONE_MODEL,
+  },
+
+  validation: {
+    // Whether to synchronize the hover and zoom states of the charts
+    syncCharts: false,
   },
 };
 

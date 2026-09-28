@@ -126,6 +126,7 @@
     "horizontalVelocity": "Horizontal velocities",
     "horizontalVelocityThreshold": "XY velocity threshold",
     "proximity": "Proximity",
+    "syncCharts": "Synchronize charts",
     "verticalAcceleration": "Vertical accelerations",
     "verticalAccelerationThreshold": "Z acceleration threshold",
     "verticalVelocity": "Vertical velocities",

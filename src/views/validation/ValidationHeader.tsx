@@ -25,7 +25,7 @@ import PanelToggleChip from './PanelToggleChip';
 const styles = {
   root: {
     display: 'flex',
-    alignItems: 'baseline',
+    alignItems: 'center',
     py: 1,
     '& > div': {
       m: 0.5,
@@ -61,19 +61,21 @@ const ValidationHeader = ({
   const { t } = useTranslation();
   return (
     <Box sx={styles.root} {...rest}>
-      {PANELS.map(({ component, id, ...rest }) => {
-        return (
-          <PanelToggleChip
-            key={id}
-            label={t(`validation.${id}`)}
-            selected={visiblePanels.includes(id)}
-            onClick={() => {
-              onTogglePanel(id);
-            }}
-            {...rest}
-          />
-        );
-      })}
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+        {PANELS.map(({ component, id, ...rest }) => {
+          return (
+            <PanelToggleChip
+              key={id}
+              label={t(`validation.${id}`)}
+              selected={visiblePanels.includes(id)}
+              onClick={() => {
+                onTogglePanel(id);
+              }}
+              {...rest}
+            />
+          );
+        })}
+      </Box>
       <Box sx={{ flex: 1 }} />
       <ToggleButton
         value='syncCharts'

@@ -5,6 +5,7 @@ import { objectToString } from '@skybrush/aframe-components';
 const grounds = {
   /* Minecraft-style ground texture (green) */
   default: {
+    ground: 'hills',
     groundColor: '#8eb971',
     groundColor2: '#507a32',
     groundTexture: 'walkernoise',
@@ -139,11 +140,13 @@ const Scenery = ({
     stageSize,
   };
 
-  if (showTerrainModel && type !== 'indoor') {
+  if (type === 'indoor') {
+    environment.ground = 'flat';
+  } else if (showTerrainModel) {
     environment.ground = 'none';
+  } else {
+    environment.ground = 'hills';
   }
-
-  console.log(JSON.stringify(environment));
 
   return enabled ? (
     <a-entity position='0 -0.001 0' scale={`${scale} ${scale} ${scale}`}>

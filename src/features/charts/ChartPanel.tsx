@@ -407,12 +407,12 @@ const ChartPanel = ({
   const showHeaderBox = !isNil(title) || !isNil(error) || calculating;
 
   return (
-    <StyledCard square height={height}>
-      <MemoScatter
-        key={enableSync ? 'sync-enabled' : 'sync-disabled'}
-        data={rawScatterData}
-        options={options}
-      />
+    <StyledCard
+      key={enableSync ? 'sync-enabled' : 'sync-disabled'}
+      square
+      height={height}
+    >
+      <MemoScatter data={rawScatterData} options={options} />
       {showHeaderBox ? (
         <Box
           sx={{

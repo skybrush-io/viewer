@@ -1,7 +1,7 @@
 import isNil from 'lodash-es/isNil';
 import omit from 'lodash-es/omit';
 import sumBy from 'lodash-es/sumBy';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
@@ -11,6 +11,7 @@ import ChartIcon from '@mui/icons-material/InsertChartOutlined';
 import Box, { type BoxProps } from '@mui/material/Box';
 import { BackgroundHint } from '@skybrush/mui-components';
 
+import { shouldSynchronizeValidationCharts } from '~/features/settings/selectors';
 import {
   findPanelById,
   type PanelSpecification,
@@ -32,10 +33,48 @@ const isPanelHeightValid = (panel: PanelSpecification): boolean =>
   panel.height > 0;
 
 type ChartGridProps = BoxProps & {
+  readonly syncCharts: boolean;
   readonly visiblePanels: ValidationPanel[];
 };
 
-const ChartGrid = ({ visiblePanels, sx, ...rest }: ChartGridProps) => {
+const SyncEventManager = ({
+  panelCount,
+  syncCharts,
+}: {
+  panelCount: number;
+  syncCharts: boolean;
+}) => {
+  const [lastZoomEvent, setLastZoomEvent] = useState<Event | undefined>();
+
+  useEffect(() => {
+    window.addEventListener('zoom-event', setLastZoomEvent);
+    return () => {
+      window.removeEventListener('zoom-event', setLastZoomEvent);
+    };
+  }, [setLastZoomEvent]);
+
+  useEffect(() => {
+    if (
+      // The charts should be synchronized
+      syncCharts &&
+      // We have already captured at least one zoom event
+      lastZoomEvent &&
+      // The charts are currently zoomed
+      document.querySelector('.reset-zoom')
+    ) {
+      window.dispatchEvent(lastZoomEvent);
+    }
+  }, [panelCount]);
+
+  return null;
+};
+
+const ChartGrid = ({
+  syncCharts,
+  visiblePanels,
+  sx,
+  ...rest
+}: ChartGridProps) => {
   const [ref, { height = 0 }] = useResizeObserver();
   const { t } = useTranslation();
 
@@ -81,23 +120,27 @@ const ChartGrid = ({ visiblePanels, sx, ...rest }: ChartGridProps) => {
       : [];
 
   return (
-    <Box ref={ref} sx={{ ...style, ...sx }} {...omit(rest, 'ref')}>
-      {children.length > 0 ? (
-        children
-      ) : (
-        <BackgroundHint
-          header={t('chartGrid.noChartsHint.header')}
-          text={t('chartGrid.noChartsHint.text')}
-          icon={<ChartIcon />}
-        />
-      )}
-    </Box>
+    <>
+      <SyncEventManager panelCount={panels.length} syncCharts={syncCharts} />
+      <Box ref={ref} sx={{ ...style, ...sx }} {...omit(rest, 'ref')}>
+        {children.length > 0 ? (
+          children
+        ) : (
+          <BackgroundHint
+            header={t('chartGrid.noChartsHint.header')}
+            text={t('chartGrid.noChartsHint.text')}
+            icon={<ChartIcon />}
+          />
+        )}
+      </Box>
+    </>
   );
 };
 
 export default connect(
   // mapStateToProps
   (state: RootState) => ({
+    syncCharts: shouldSynchronizeValidationCharts(state),
     visiblePanels: getVisiblePanels(state),
   }),
   // mapDispatchToProps

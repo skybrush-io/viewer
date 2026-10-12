@@ -2,7 +2,7 @@ import config from 'config';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import ChevronLeft from '@mui/icons-material/ChevronLeft';
+import ChevronRight from '@mui/icons-material/ChevronRight';
 import Link from '@mui/icons-material/Link';
 import Refresh from '@mui/icons-material/Refresh';
 import Box, { type BoxProps } from '@mui/material/Box';
@@ -128,7 +128,7 @@ const ValidationHeader = ({
       <Tooltip content={t('buttons.returnToViewer')}>
         <Button
           color='inherit'
-          startIcon={<ChevronLeft />}
+          endIcon={<ChevronRight />}
           onClick={onReturnToViewer}
         >
           {t('buttons.back')}

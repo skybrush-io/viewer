@@ -11,11 +11,16 @@ export function bindHotkeyHandlers<D extends Dispatch<UnknownAction>>(
     (event?: KeyboardEvent) => Parameters<D>[0] | null
   >,
   nonReduxHandlers: Record<string, HotkeyHandler>,
-  dispatch: D
+  dispatch: D,
+  repeatableHandlers: string[] = []
 ) {
   return {
     ...nonReduxHandlers,
-    ...mapValues(reduxHandlers, (handler) => (event?: KeyboardEvent) => {
+    ...mapValues(reduxHandlers, (handler, name) => (event?: KeyboardEvent) => {
+      if (event?.repeat && !repeatableHandlers.includes(name)) {
+        return;
+      }
+
       if (event?.defaultPrevented) {
         return;
       }

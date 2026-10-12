@@ -27,6 +27,10 @@ configureHotkeys({
   // advance.
   allowCombinationSubmatches: true,
 
+  // Cue controls are useful to repeat while held down. Other actions should
+  // remain single-shot, which is enforced in bindHotkeyHandlers below.
+  ignoreRepeatedEventsWhenKeyHeldDown: false,
+
   // Uncomment the next line for debugging problems with hotkeys
   // logLevel: 'debug',
 });
@@ -81,7 +85,8 @@ export default connect(
         TOGGLE_PLAYBACK: onlyWhenNoButtonIsFocused<AppDispatch>(togglePlayback),
       },
       {},
-      dispatch
+      dispatch,
+      ['CUE_BACKWARD', 'CUE_FORWARD']
     ),
   })
 )(AppHotkeys);

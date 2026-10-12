@@ -1,6 +1,7 @@
 import {
   loadCompiledShow,
   type AudioData,
+  type TerrainModelData,
   type ShowSpecification,
 } from '@skybrush/show-format';
 
@@ -15,6 +16,14 @@ type AudioSpecWithUrl = Omit<AudioData, 'data'> & {
   data?: AudioData['data'];
   url: string;
 };
+
+type TerrainModelWithUrl = Omit<TerrainModelData, 'data'> & {
+  data?: TerrainModelData['data'];
+  url: string;
+};
+
+/** Last terrain blob URL; revoked after a replacement show is committed. */
+let terrainObjectUrl: string | undefined;
 
 const loadShowFromBufferInner = async (buffer: Buffer) => {
   const { setAudioBuffer } = getElectronBridge() ?? {};
@@ -47,7 +56,36 @@ const loadShowFromBufferInner = async (buffer: Buffer) => {
     }
   }
 
-  return showSpec;
+  const terrainSpec = showSpec?.environment?.terrain;
+  const terrainModel = terrainSpec?.model;
+  const terrainData = terrainModel?.data;
+
+  // Keep the previous URL alive until the new show is committed to state.
+  const urlToRevoke = terrainObjectUrl;
+  terrainObjectUrl = undefined;
+
+  if (terrainData && terrainModel) {
+    if (terrainData instanceof Uint8Array || Buffer.isBuffer(terrainData)) {
+      const bytes =
+        terrainData instanceof Uint8Array
+          ? terrainData
+          : new Uint8Array(terrainData);
+
+      const blob = new Blob([bytes as BlobPart], {
+        type: 'model/gltf-binary',
+      });
+      const url = URL.createObjectURL(blob);
+      terrainObjectUrl = url;
+
+      const terrainModelWithUrl = terrainModel as TerrainModelWithUrl;
+      delete terrainModelWithUrl.data;
+      terrainModelWithUrl.url = url;
+    } else {
+      console.warn('Terrain model is not loaded as binary data');
+    }
+  }
+
+  return { show: showSpec, urlToRevoke };
 };
 
 export const loadShowFromBuffer =
@@ -56,8 +94,14 @@ export const loadShowFromBuffer =
     const loadAction = await dispatch(
       withProgressIndicator(() => loadShowFromBufferInner(buffer))
     );
-    const show: ShowSpecification = loadAction.payload as ShowSpecification;
+    const { show, urlToRevoke } = loadAction.payload as {
+      show: ShowSpecification;
+      urlToRevoke?: string;
+    };
     dispatch(loadShowFromRequest({ show, source: { type: 'buffer' } }));
+    if (urlToRevoke) {
+      URL.revokeObjectURL(urlToRevoke);
+    }
   };
 
 export const loadShowFromLocalFile =
@@ -81,8 +125,14 @@ export const loadShowFromLocalFile =
         return result;
       })
     );
-    const show: ShowSpecification = loadAction.payload as ShowSpecification;
+    const { show, urlToRevoke } = loadAction.payload as {
+      show: ShowSpecification;
+      urlToRevoke?: string;
+    };
     dispatch(loadShowFromRequest({ show, source: { type: 'file', filename } }));
+    if (urlToRevoke) {
+      URL.revokeObjectURL(urlToRevoke);
+    }
 
     dispatch(addRecentFile(filename));
   };

@@ -12,9 +12,10 @@ import { connect } from 'react-redux';
 import '~/aframe';
 
 import { objectToString } from '@skybrush/aframe-components';
-import type {
-  ThreeJsPositionTuple,
-  ThreeJsRotationTuple,
+import {
+  skybrushToThreeJsPosition,
+  type ThreeJsPositionTuple,
+  type ThreeJsRotationTuple,
 } from '@skybrush/aframe-components/spatial';
 
 import { getDroneModel } from '~/features/settings/selectors';
@@ -22,6 +23,7 @@ import type { DroneModelType } from '~/features/settings/types';
 import {
   getLoadedShowId,
   getNumberOfDronesInShow,
+  getTerrainModel,
 } from '~/features/show/selectors';
 import {
   getEffectiveDroneRadius,
@@ -37,6 +39,8 @@ import SelectionMarkers from './SelectionMarkers';
 
 import flapperDroneModel from '~/../assets/models/flapper-drone.obj';
 import quadcopterModel from '~/../assets/models/quadcopter.obj';
+import type { QuaternionWXYZTuple } from '@skybrush/math';
+import { skybrushQuaternionToEulerDegrees } from '~/features/show/utils';
 
 type ThreeDViewProps = {
   readonly axes: boolean;
@@ -60,6 +64,12 @@ type ThreeDViewProps = {
   readonly showLabels: boolean;
   readonly showStatistics: boolean;
   readonly showYaw: boolean;
+  readonly terrainModel?: {
+    url: string;
+    position: readonly [number, number, number];
+    rotation: QuaternionWXYZTuple;
+    scale: readonly [number, number, number];
+  };
   readonly vrEnabled?: boolean;
 };
 
@@ -85,6 +95,7 @@ const ThreeDView = (props: ThreeDViewProps) => {
     showLabels,
     showStatistics,
     showYaw,
+    terrainModel,
     vrEnabled,
   } = props;
 
@@ -183,7 +194,15 @@ const ThreeDView = (props: ThreeDViewProps) => {
         {/* <VelocityArrows /> */}
       </a-entity>
 
-      <Scenery type={scenery} grid={grid} />
+      <Scenery type={scenery} grid={grid} showTerrainModel={Boolean(terrainModel)} />
+      {terrainModel ? (
+        <a-entity
+          gltf-model={terrainModel.url}
+          position={skybrushToThreeJsPosition([...terrainModel.position]).join(' ')}
+          rotation={skybrushQuaternionToEulerDegrees(terrainModel.rotation).join(' ')}
+          scale={terrainModel.scale.join(' ')}
+        />
+      ) : null}
     </a-scene>
   );
 };
@@ -199,6 +218,7 @@ export default connect(
     droneModel: getDroneModel(state),
     droneRadius: getEffectiveDroneRadius(state),
     scenery: getEffectiveScenery(state),
+    terrainModel: getTerrainModel(state),
   }),
   // mapDispatchToProps
   {},

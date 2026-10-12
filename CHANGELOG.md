@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Time axes on the validation panel can now be sychronized.
+- Time axes on the validation panel can now be synchronized.
 
 ### Changed
 

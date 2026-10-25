@@ -524,21 +524,28 @@ export const getShowTitle = createSelector(
 );
 
 /**
- * Returns the blob URL of the embedded terrain model and its transform, if any
+ * Returns the binary data of the embedded terrain model and its transform, if
+ * the show has a terrain model and its data was loaded.
  */
 export const getTerrainModel = createSelector(getShowSpecification, (show) => {
   const terrain = show?.environment?.terrain;
-  const model = terrain?.model as { url?: string } | undefined;
-  if (!model?.url) return undefined;
+  const data = terrain?.model.data;
+  if (!(data instanceof Uint8Array)) return undefined;
 
   const t = terrain?.transform;
   return {
-    url: model.url,
+    data,
     position: t?.position ?? ([0, 0, 0] as const),
     rotation: t?.rotation ?? ([1, 0, 0, 0] as const), // WXYZ
     scale: t?.scale ?? ([1, 1, 1] as const),
   };
 });
+
+/**
+ * Returns whether the show has a terrain model that can be displayed.
+ */
+export const hasTerrainModel = (state: RootState): boolean =>
+  getTerrainModel(state) !== undefined;
 
 /**
  * Returns whether we are currently loading a show file.

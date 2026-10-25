@@ -22,7 +22,7 @@ import type { DroneModelType } from '~/features/settings/types';
 import {
   getLoadedShowId,
   getNumberOfDronesInShow,
-  getTerrainModel,
+  hasTerrainModel,
 } from '~/features/show/selectors';
 import {
   getEffectiveDroneRadius,
@@ -35,11 +35,10 @@ import { SCENE_CAMERA_ID, SELECTABLE_OBJECT_CLASS } from './constants';
 import CoordinateSystemAxes from './CoordinateSystemAxes';
 import Scenery, { type SceneryType } from './Scenery';
 import SelectionMarkers from './SelectionMarkers';
+import TerrainModel from './TerrainModel';
 
 import flapperDroneModel from '~/../assets/models/flapper-drone.obj';
 import quadcopterModel from '~/../assets/models/quadcopter.obj';
-import type { QuaternionWXYZTuple } from '@skybrush/math';
-import { skybrushQuaternionToEulerDegrees } from '~/features/show/utils';
 
 type ThreeDViewProps = {
   readonly axes: boolean;
@@ -51,6 +50,7 @@ type ThreeDViewProps = {
   readonly droneModel: DroneModelType;
   readonly droneRadius: number;
   readonly grid: boolean | string;
+  readonly hasTerrainModel: boolean;
   readonly navigation: {
     mode: 'walk' | 'fly';
     parameters: any;
@@ -63,12 +63,6 @@ type ThreeDViewProps = {
   readonly showLabels: boolean;
   readonly showStatistics: boolean;
   readonly showYaw: boolean;
-  readonly terrainModel?: {
-    url: string;
-    position: readonly [number, number, number];
-    rotation: QuaternionWXYZTuple;
-    scale: readonly [number, number, number];
-  };
   readonly vrEnabled?: boolean;
 };
 
@@ -85,6 +79,7 @@ const ThreeDView = (props: ThreeDViewProps) => {
     droneModel,
     droneRadius,
     grid,
+    hasTerrainModel,
     navigation,
     numDrones,
     ref,
@@ -94,7 +89,6 @@ const ThreeDView = (props: ThreeDViewProps) => {
     showLabels,
     showStatistics,
     showYaw,
-    terrainModel,
     vrEnabled,
   } = props;
 
@@ -192,20 +186,12 @@ const ThreeDView = (props: ThreeDViewProps) => {
         {/* <FlightVolume /> */}
         {/* <VelocityArrows /> */}
         {/* The terrain transform is given in show coordinates, so it lives
-         * in this group. The inner entity turns the Y-up glTF model into
-         * the Z-up show coordinate system. */}
-        {terrainModel ? (
-          <a-entity
-            position={terrainModel.position.join(' ')}
-            rotation={skybrushQuaternionToEulerDegrees(terrainModel.rotation).join(' ')}
-            scale={terrainModel.scale.join(' ')}
-          >
-            <a-entity rotation='90 0 0' gltf-model={terrainModel.url} />
-          </a-entity>
-        ) : null}
+         * in this group. The show ID as the key ensures that the blob URL
+         * of the model is created and revoked once per loaded show. */}
+        {hasTerrainModel ? <TerrainModel key={`terrain-${showId}`} /> : null}
       </a-entity>
 
-      <Scenery type={scenery} grid={grid} showTerrainModel={Boolean(terrainModel)} />
+      <Scenery type={scenery} grid={grid} showTerrainModel={hasTerrainModel} />
     </a-scene>
   );
 };
@@ -221,7 +207,7 @@ export default connect(
     droneModel: getDroneModel(state),
     droneRadius: getEffectiveDroneRadius(state),
     scenery: getEffectiveScenery(state),
-    terrainModel: getTerrainModel(state),
+    hasTerrainModel: hasTerrainModel(state),
   }),
   // mapDispatchToProps
   {},

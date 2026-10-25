@@ -526,8 +526,8 @@ export const getShowTitle = createSelector(
 /**
  * Returns the blob URL of the embedded terrain model and its transform, if any
  */
-export const getTerrainModel = (state: RootState) => {
-  const terrain = getShowSpecification(state)?.environment?.terrain;
+export const getTerrainModel = createSelector(getShowSpecification, (show) => {
+  const terrain = show?.environment?.terrain;
   const model = terrain?.model as { url?: string } | undefined;
   if (!model?.url) return undefined;
 
@@ -538,7 +538,7 @@ export const getTerrainModel = (state: RootState) => {
     rotation: t?.rotation ?? ([1, 0, 0, 0] as const), // WXYZ
     scale: t?.scale ?? ([1, 1, 1] as const),
   };
-};
+});
 
 /**
  * Returns whether we are currently loading a show file.

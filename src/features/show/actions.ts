@@ -65,13 +65,10 @@ const loadShowFromBufferInner = async (buffer: Buffer) => {
   terrainObjectUrl = undefined;
 
   if (terrainData && terrainModel) {
-    if (terrainData instanceof Uint8Array || Buffer.isBuffer(terrainData)) {
-      const bytes =
-        terrainData instanceof Uint8Array
-          ? terrainData
-          : new Uint8Array(terrainData);
-
-      const blob = new Blob([bytes as BlobPart], {
+    if (terrainData instanceof Uint8Array) {
+      // The show parser returns a Uint8Array<ArrayBufferLike>, but Blob does
+      // not accept views of a SharedArrayBuffer, so the type needs narrowing
+      const blob = new Blob([terrainData as Uint8Array<ArrayBuffer>], {
         type: 'model/gltf-binary',
       });
       const url = URL.createObjectURL(blob);

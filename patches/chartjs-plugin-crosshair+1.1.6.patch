@@ -1,0 +1,51 @@
+diff --git a/node_modules/chartjs-plugin-crosshair/dist/chartjs-plugin-crosshair.js b/node_modules/chartjs-plugin-crosshair/dist/chartjs-plugin-crosshair.js
+index 74f2aaf..c5000c7 100644
+--- a/node_modules/chartjs-plugin-crosshair/dist/chartjs-plugin-crosshair.js
++++ b/node_modules/chartjs-plugin-crosshair/dist/chartjs-plugin-crosshair.js
+@@ -198,6 +198,15 @@ function TracePlugin(Chart) {
+ 					this.handleSyncEvent(chart, e);
+ 				}.bind(this);
+ 
++				chart.crosshair.zoomEventHandler = function(e) {
++
++					var syncGroup = this.getOption(chart, 'sync', 'group');
++
++					if (e.chartId !== chart.id && e.syncGroup === syncGroup) {
++						this.doZoom(chart, e.start, e.end);
++					}
++				}.bind(this);
++
+ 				chart.crosshair.resetZoomEventHandler = function(e) {
+ 
+ 					var syncGroup = this.getOption(chart, 'sync', 'group');
+@@ -208,6 +217,7 @@ function TracePlugin(Chart) {
+ 				}.bind(this);
+ 
+ 				window.addEventListener('sync-event', chart.crosshair.syncEventHandler);
++				window.addEventListener('zoom-event', chart.crosshair.zoomEventHandler);
+ 				window.addEventListener('reset-zoom-event', chart.crosshair.resetZoomEventHandler);
+ 			}
+ 
+@@ -218,6 +228,7 @@ function TracePlugin(Chart) {
+ 			var syncEnabled = this.getOption(chart, 'sync', 'enabled');
+ 			if (syncEnabled) {
+ 				window.removeEventListener('sync-event', chart.crosshair.syncEventHandler);
++				window.removeEventListener('zoom-event', chart.crosshair.zoomEventHandler);
+ 				window.removeEventListener('reset-zoom-event', chart.crosshair.resetZoomEventHandler);
+ 			}
+ 		},
+@@ -361,6 +372,14 @@ function TracePlugin(Chart) {
+ 
+ 				if (Math.abs(chart.crosshair.dragStartX - chart.crosshair.x) > 1) {
+ 					this.doZoom(chart, start, end);
++					setTimeout(() => {
++						window.dispatchEvent(Object.assign(new CustomEvent('zoom-event'), {
++							chartId: chart.id,
++							syncGroup: this.getOption(chart, 'sync', 'group'),
++							start,
++							end
++						}));
++					})
+ 				}
+ 				chart.update();
+ 			}

@@ -4,7 +4,10 @@ import { connect } from 'react-redux';
 
 import AsyncChartPanel from '~/features/charts/AsyncChartPanel';
 import { createChartPointsWithTips } from '~/features/charts/utils';
-import { getLanguage } from '~/features/settings/selectors';
+import {
+  getLanguage,
+  shouldSynchronizeValidationCharts,
+} from '~/features/settings/selectors';
 import {
   getNamesOfDronesInShow,
   getTimestampFormatter,
@@ -55,6 +58,7 @@ const Y_RANGE: [number, number] = [0, 1];
 export default connect(
   // mapStateToProps
   (state: RootState) => ({
+    enableSync: shouldSynchronizeValidationCharts(state),
     formatPlaybackTimestamp: getTimestampFormatter(state),
     fn: selectProximityChartGetter(state),
     range: Y_RANGE,

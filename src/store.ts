@@ -43,6 +43,7 @@ export const { store, persistor } = configureStoreAndPersistence({
       'threeD.camera',
       'threeD.overlays',
       'ui.mode',
+      'validation.selection',
     ],
   },
 

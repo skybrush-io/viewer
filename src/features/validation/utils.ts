@@ -10,8 +10,8 @@ import { getSampledTimeInstants, isSelectionEmpty } from './selectors';
 
 type NamedDataProvider<T> = {
   getItemCount: () => number;
-  getItemAt: (itemIndex: number) => T;
-  getNameOfItemAt: (itemIndex: number) => string;
+  getItemAt: (itemIndex: number) => T | undefined; // undefined if itemIndex is out of bounds
+  getNameOfItemAt: (itemIndex: number) => string | undefined; // undefined if itemIndex is out of bounds
 };
 
 type ValidationDataProvider = NamedDataProvider<number[]>;
@@ -27,8 +27,8 @@ function aggregateDataSeries(
   let frameCount = 0;
 
   for (let seriesIndex = 0; seriesIndex < seriesCount; seriesIndex++) {
-    const series = getItemAt(seriesIndex);
-    const name = getNameOfItemAt(seriesIndex);
+    const series = getItemAt(seriesIndex) ?? [];
+    const name = getNameOfItemAt(seriesIndex) ?? `Untitled ${seriesIndex + 1}`;
     const numCommonItems = Math.min(series.length, frameCount);
 
     for (let itemIndex = 0; itemIndex < numCommonItems; itemIndex++) {
@@ -96,8 +96,8 @@ const createChartSelectorFromDataProvider = (
     const { getItemAt, getNameOfItemAt } = getDataProvider(state);
     const times = getSampledTimeInstants(state);
     return getIndicesOfSelectedDrones(state).map((index) => ({
-      label: getNameOfItemAt(index),
-      values: createChartPoints(times, getItemAt(index)),
+      label: getNameOfItemAt(index) ?? `Untitled ${index + 1}`,
+      values: createChartPoints(times, getItemAt(index) ?? []),
     }));
   };
 

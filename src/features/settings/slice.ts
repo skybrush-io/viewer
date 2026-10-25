@@ -28,6 +28,9 @@ type SettingsSliceState = {
     droneRadius?: number;
     droneModel?: DroneModelType;
   };
+  validation: {
+    syncCharts: boolean;
+  };
 };
 
 const initialState: SettingsSliceState = {
@@ -75,6 +78,11 @@ const initialState: SettingsSliceState = {
     // Drone model to use in the 3D view
     droneModel: DEFAULT_DRONE_MODEL,
   },
+
+  validation: {
+    // Whether to synchronize the hover and zoom states of the charts
+    syncCharts: false,
+  },
 };
 
 const { actions, reducer } = createSlice({
@@ -82,23 +90,25 @@ const { actions, reducer } = createSlice({
   initialState,
   reducers: {
     updateAppSettings: {
-      prepare: (category: string, updates: Record<string, any>) => ({
+      prepare: (
+        category: keyof SettingsSliceState,
+        updates: Record<string, any>
+      ) => ({
         payload: { category, updates },
       }),
 
       reducer(
         state,
         action: PayloadAction<{
-          category: string;
+          category: keyof SettingsSliceState;
           updates: Record<string, any>;
         }>
       ) {
         const { category, updates } = action.payload;
         const state_ = state as any;
 
-        if (state_[category] !== undefined) {
-          state_[category] = { ...state_[category], ...updates };
-        }
+        state_[category] ??= {};
+        Object.assign(state_[category], updates);
       },
     },
   },

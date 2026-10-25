@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.0] - 2026-10-12
+
+### Added
+
+- Time axes on the validation panel can now be synchronized.
+
+### Changed
+
+- Hotkeys `J` and `K` (used for rewinding and fast-forwarding) now handle key repeats,
+  thanks to [@laukik-target](https://github.com/laukik-target) in
+  [#26](https://github.com/skybrush-io/viewer/pull/26).
+
+## [2.10.10] - 2026-09-26
+
+### Changed
+
+- The selection of drones in the validation view is not persisted to the saved state of
+  the application any more.
+
+### Fixed
+
+- Fixed a crash that happened when opening the validation view in a smaller show after
+  having selected drones with indices larger than the size of the show (from an earlier
+  validation of a larger show).
+
 ## [2.10.9] - 2026-09-10
 
 ### Changed

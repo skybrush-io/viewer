@@ -11,17 +11,22 @@ export function bindHotkeyHandlers<D extends Dispatch<UnknownAction>>(
     (event?: KeyboardEvent) => Parameters<D>[0] | null
   >,
   nonReduxHandlers: Record<string, HotkeyHandler>,
-  dispatch: D
+  dispatch: D,
+  repeatableHandlers: string[] = []
 ) {
   return {
     ...nonReduxHandlers,
-    ...mapValues(reduxHandlers, (handler) => (event?: KeyboardEvent) => {
+    ...mapValues(reduxHandlers, (handler, name) => (event?: KeyboardEvent) => {
       if (event?.defaultPrevented) {
         return;
       }
 
       // Prevent the default action of the event (e.g. scrolling the page)
       event?.preventDefault();
+
+      if (event?.repeat && !repeatableHandlers.includes(name)) {
+        return;
+      }
 
       const maybeAction = handler(event);
       if (maybeAction) {

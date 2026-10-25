@@ -4,6 +4,7 @@
     "rightText": "Skybrush © 2020-{{ year }} CollMot Kft."
   },
   "buttons": {
+    "back": "Vissza",
     "close": "Bezárás",
     "closeShow": "Show bezárása",
     "inspector": "Vizsgálat",

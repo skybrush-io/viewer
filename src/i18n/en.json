@@ -4,6 +4,7 @@
     "rightText": "Skybrush © 2020-{{ year }} CollMot Robotics Ltd."
   },
   "buttons": {
+    "back": "Back",
     "close": "Close",
     "closeShow": "Close show",
     "inspector": "Inspector",
@@ -126,6 +127,7 @@
     "horizontalVelocity": "Horizontal velocities",
     "horizontalVelocityThreshold": "XY velocity threshold",
     "proximity": "Proximity",
+    "syncCharts": "Synchronize charts",
     "verticalAcceleration": "Vertical accelerations",
     "verticalAccelerationThreshold": "Z acceleration threshold",
     "verticalVelocity": "Vertical velocities",

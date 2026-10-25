@@ -1,4 +1,5 @@
 import type { Vector3, Vector3Array } from '@skybrush/show-format';
+import type { Nullable } from '~/utils/types';
 
 /**
  * Calculates the derivative of a vector of scalars where the derivative at
@@ -68,8 +69,17 @@ export function calculateVectorDerivative(
 /**
  * Projects multiple 3D vectors in a Vector3Array to the XY plane and returns the lengths
  * of the projected vectors.
+ *
+ * @param vectors - The Vector3Array containing the 3D vectors to project. We also
+ *        accept null and undefined because we are calling this function after indexing
+ *        into an array and the result may be null or undefined if the index is out of
+ *        bounds.
  */
-export const projectVector3ArrayToXY = (vectors: Vector3Array) => {
+export const projectVector3ArrayToXY = (vectors?: Nullable<Vector3Array>) => {
+  if (!vectors) {
+    return [];
+  }
+
   const xs = vectors.getX();
   const ys = vectors.getY();
   const result: number[] = Array.from({ length: vectors.length });
@@ -82,6 +92,11 @@ export const projectVector3ArrayToXY = (vectors: Vector3Array) => {
 /**
  * Projects multiple 3D vectors in a Vector3Array to the Z axis and returns the lengths
  * of the projected vectors.
+ *
+ * @param vectors - The Vector3Array containing the 3D vectors to project. We also
+ *        accept null and undefined because we are calling this function after indexing
+ *        into an array and the result may be null or undefined if the index is out of
+ *        bounds.
  */
-export const projectVector3ArrayToZ = (vectors: Vector3Array) =>
-  Array.from(vectors.getZ());
+export const projectVector3ArrayToZ = (vectors?: Nullable<Vector3Array>) =>
+  vectors ? Array.from(vectors.getZ()) : [];

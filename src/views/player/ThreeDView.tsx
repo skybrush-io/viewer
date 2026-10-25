@@ -12,10 +12,9 @@ import { connect } from 'react-redux';
 import '~/aframe';
 
 import { objectToString } from '@skybrush/aframe-components';
-import {
-  skybrushToThreeJsPosition,
-  type ThreeJsPositionTuple,
-  type ThreeJsRotationTuple,
+import type {
+  ThreeJsPositionTuple,
+  ThreeJsRotationTuple,
 } from '@skybrush/aframe-components/spatial';
 
 import { getDroneModel } from '~/features/settings/selectors';
@@ -192,17 +191,21 @@ const ThreeDView = (props: ThreeDViewProps) => {
         <SelectionMarkers />
         {/* <FlightVolume /> */}
         {/* <VelocityArrows /> */}
+        {/* The terrain transform is given in show coordinates, so it lives
+         * in this group. The inner entity turns the Y-up glTF model into
+         * the Z-up show coordinate system. */}
+        {terrainModel ? (
+          <a-entity
+            position={terrainModel.position.join(' ')}
+            rotation={skybrushQuaternionToEulerDegrees(terrainModel.rotation).join(' ')}
+            scale={terrainModel.scale.join(' ')}
+          >
+            <a-entity rotation='90 0 0' gltf-model={terrainModel.url} />
+          </a-entity>
+        ) : null}
       </a-entity>
 
       <Scenery type={scenery} grid={grid} showTerrainModel={Boolean(terrainModel)} />
-      {terrainModel ? (
-        <a-entity
-          gltf-model={terrainModel.url}
-          position={skybrushToThreeJsPosition([...terrainModel.position]).join(' ')}
-          rotation={skybrushQuaternionToEulerDegrees(terrainModel.rotation).join(' ')}
-          scale={terrainModel.scale.join(' ')}
-        />
-      ) : null}
     </a-scene>
   );
 };

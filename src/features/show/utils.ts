@@ -35,6 +35,8 @@ export function isShowDataSourceReloadable(
 /**
  * Converts a Skybrush (show-space) quaternion WXYZ to A-Frame Euler
  * degrees in YXZ order, without remapping axes to Three.js world space.
+ * The result is only valid for entities inside the show-space group of the
+ * 3D view, where the axes already follow Skybrush conventions.
  */
 export function skybrushQuaternionToEulerDegrees(
   wxyz: QuaternionWXYZTuple

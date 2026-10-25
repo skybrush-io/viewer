@@ -11,18 +11,19 @@ const registerMediaProtocol = () => {
   protocol.registerFileProtocol('media', (request, callback) => {
     try {
       const parsedUrl = new URL(request.url);
-      const index = Number.parseInt(parsedUrl.pathname.slice(1), 10);
+      const index =
+        parsedUrl.host === 'audio'
+          ? Number.parseInt(parsedUrl.pathname.slice(1), 10)
+          : -1;
 
-      let buffer = null;
-      if (Number.isFinite(index) && index >= 0) {
-        if (parsedUrl.host === 'audio') {
-          buffer = getAudioBuffer(index);
-        }
-      }
+      const audioBuffer = index >= 0 ? getAudioBuffer(index) : null;
 
       /* Error -6 = file not found in net_error_list.h in Chromium */
-      callback(buffer?.path ? { path: buffer.path } : { error: -6 });
-
+      callback(
+        audioBuffer && audioBuffer.path
+          ? { path: audioBuffer.path }
+          : { error: -6 }
+      );
     } catch (error) {
       console.error('Unexpected error in media:// protocol handler');
       console.error(error);

@@ -47,6 +47,13 @@ const loadShowFromBufferInner = async (buffer: Buffer) => {
     }
   }
 
+  // The terrain model stays in the show specification as binary data; the 3D
+  // view creates a URL for it when it is shown
+  const terrainData = showSpec?.environment?.terrain?.model.data;
+  if (terrainData && !(terrainData instanceof Uint8Array)) {
+    console.warn('Terrain model is not loaded as binary data');
+  }
+
   return showSpec;
 };
 

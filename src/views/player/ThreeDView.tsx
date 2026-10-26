@@ -22,6 +22,7 @@ import type { DroneModelType } from '~/features/settings/types';
 import {
   getLoadedShowId,
   getNumberOfDronesInShow,
+  hasTerrainModel,
 } from '~/features/show/selectors';
 import {
   getEffectiveDroneRadius,
@@ -34,6 +35,7 @@ import { SCENE_CAMERA_ID, SELECTABLE_OBJECT_CLASS } from './constants';
 import CoordinateSystemAxes from './CoordinateSystemAxes';
 import Scenery, { type SceneryType } from './Scenery';
 import SelectionMarkers from './SelectionMarkers';
+import TerrainModel from './TerrainModel';
 
 import flapperDroneModel from '~/../assets/models/flapper-drone.obj';
 import quadcopterModel from '~/../assets/models/quadcopter.obj';
@@ -48,6 +50,7 @@ type ThreeDViewProps = {
   readonly droneModel: DroneModelType;
   readonly droneRadius: number;
   readonly grid: boolean | string;
+  readonly hasTerrainModel: boolean;
   readonly navigation: {
     mode: 'walk' | 'fly';
     parameters: any;
@@ -76,6 +79,7 @@ const ThreeDView = (props: ThreeDViewProps) => {
     droneModel,
     droneRadius,
     grid,
+    hasTerrainModel,
     navigation,
     numDrones,
     ref,
@@ -181,9 +185,13 @@ const ThreeDView = (props: ThreeDViewProps) => {
         <SelectionMarkers />
         {/* <FlightVolume /> */}
         {/* <VelocityArrows /> */}
+        {/* The terrain transform is given in show coordinates, so it lives
+         * in this group. The show ID as the key ensures that the blob URL
+         * of the model is created and revoked once per loaded show. */}
+        {hasTerrainModel ? <TerrainModel key={`terrain-${showId}`} /> : null}
       </a-entity>
 
-      <Scenery type={scenery} grid={grid} />
+      <Scenery type={scenery} grid={grid} showTerrainModel={hasTerrainModel} />
     </a-scene>
   );
 };
@@ -199,6 +207,7 @@ export default connect(
     droneModel: getDroneModel(state),
     droneRadius: getEffectiveDroneRadius(state),
     scenery: getEffectiveScenery(state),
+    hasTerrainModel: hasTerrainModel(state),
   }),
   // mapDispatchToProps
   {},

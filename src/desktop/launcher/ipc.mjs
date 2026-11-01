@@ -7,7 +7,10 @@ import { setTitle } from './window-title.mjs';
 const setupIpc = () => {
   ipc.answerRenderer(
     'selectLocalShowFileForOpening',
-    selectLocalShowFileForOpening
+    /**
+     * @param {{ lastFile?: string } | undefined} args
+     */
+    (args) => selectLocalShowFileForOpening(args?.lastFile)
   );
 
   ipc.answerRenderer(

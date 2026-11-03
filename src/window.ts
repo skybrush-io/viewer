@@ -13,7 +13,9 @@ export type ElectronBridge = {
   ) => void;
   fileExists: (filename: string) => Promise<boolean>;
   readFile: (filename: string) => Promise<Buffer>;
-  selectLocalShowFileForOpening: () => Promise<string>;
+  selectLocalShowFileForOpening: (options?: {
+    lastFile?: string;
+  }) => Promise<string | undefined>;
   setAudioBuffer: (index: number, options: AudioData) => Promise<string | null>;
   setTitle: (options: {
     appName?: string;

@@ -54,8 +54,10 @@ const bridge = {
 
   readFile: (filename) => fs.readFile(filename),
 
-  selectLocalShowFileForOpening: () =>
-    ipc.callMain('selectLocalShowFileForOpening'),
+  selectLocalShowFileForOpening: (options) =>
+    ipc.callMain('selectLocalShowFileForOpening', {
+      lastFile: options?.lastFile,
+    }),
 
   setAudioBuffer: (index, options) =>
     ipc.callMain('setAudioBuffer', { index, options }),

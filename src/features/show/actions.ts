@@ -4,6 +4,7 @@ import {
   type ShowSpecification,
 } from '@skybrush/show-format';
 
+import { getRecentFiles } from '~/features/ui/selectors';
 import { addRecentFile } from '~/features/ui/slice';
 import type { AppThunk } from '~/store';
 import { getElectronBridge } from '~/window';
@@ -100,16 +101,19 @@ export const loadShowFromObject =
     dispatch(loadShowFromRequest({ show, source: { type: 'object' } }));
   };
 
-export const pickLocalFileAndLoadShow = (): AppThunk => async (dispatch) => {
-  const { readFile, selectLocalShowFileForOpening } = getElectronBridge() ?? {};
+export const pickLocalFileAndLoadShow =
+  (): AppThunk => async (dispatch, getState) => {
+    const { readFile, selectLocalShowFileForOpening } =
+      getElectronBridge() ?? {};
 
-  if (selectLocalShowFileForOpening && readFile) {
-    const filename = await selectLocalShowFileForOpening();
-    if (filename) {
-      dispatch(loadShowFromLocalFile(filename));
+    if (selectLocalShowFileForOpening && readFile) {
+      const [lastFile] = getRecentFiles(getState());
+      const filename = await selectLocalShowFileForOpening({ lastFile });
+      if (filename) {
+        dispatch(loadShowFromLocalFile(filename));
+      }
     }
-  }
-};
+  };
 
 export const reloadShow = (): AppThunk => (dispatch, getState) => {
   const state = getState();

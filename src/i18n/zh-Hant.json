@@ -1,1 +1,138 @@
-{}
+{
+    "inspector": {
+        "metadata": {
+            "yawControl": "偏航控制",
+            "pyroControl": "煙火控制",
+            "pyroCuesCount_one": "{{count}} 個提示",
+            "summary": "中繼資料",
+            "environment": {
+                "indoor": "室內",
+                "outdoor": "戶外",
+                "label": "環境"
+            },
+            "droneCount": "無人機數量",
+            "duration": "時長",
+            "pyroCuesCount_other": "{{count}} 個提示",
+            "audio": "音訊軌"
+        },
+        "pyroCues": {
+            "itemWithNumber": "頻道 {{channel}}：{{payloadName}}（{{count}}）",
+            "itemWithNumberNoPayload": "頻道 {{channel}}（{{count}}）",
+            "summary": "煙火提示"
+        },
+        "selectedDrones": {
+            "unnamed": "無人機 {{ index }}",
+            "hintMultiple": {
+                "other": "按住 Ctrl 鍵以選取多台無人機。",
+                "mac": "按住 Cmd 鍵以選取多台無人機。"
+            },
+            "hint": "在主檢視中點擊無人機以檢視它們。"
+        },
+        "cueSheet": {
+            "summary": "提示清單"
+        }
+    },
+    "settings": {
+        "droneRadius": "UAV 尺寸",
+        "droneModel": {
+            "label": "UAV 模型",
+            "quad": "四軸飛行器",
+            "flapper": "擋板",
+            "sphere": "球體"
+        },
+        "scenery": {
+            "auto": "自動",
+            "indoor": "室內",
+            "disabled": "已停用",
+            "day": "日間",
+            "night": "夜間",
+            "label": "場景"
+        },
+        "showAxes": "顯示座標軸",
+        "language": "語言",
+        "showGrid": "顯示網格",
+        "scaleLabels": "對齊標籤大小",
+        "playbackFrameRate": "每秒影格數",
+        "showLabels": "顯示標籤",
+        "showYaw": "顯示偏航指示器",
+        "playbackSpeed": "播放速度"
+    },
+    "chartGrid": {
+        "noChartsHint": {
+            "header": "未選取圖表",
+            "text": "使用標題列中的按鈕選取圖表類型之一"
+        }
+    },
+    "validation": {
+        "yawRate": "偏航角速度",
+        "horizontalAcceleration": "水平加速度",
+        "yaw": "偏航角",
+        "altitudeThreshold": "高度閾值",
+        "verticalAccelerationThreshold": "Z 加速度閾值",
+        "horizontalVelocityThreshold": "XY 速度閾值",
+        "allDrones": "所有無人機",
+        "syncCharts": "同步圖表",
+        "altitude": "高度",
+        "verticalVelocityThreshold": "Z 速度閾值",
+        "distanceThreshold": "距離閾值",
+        "verticalAcceleration": "垂直加速度",
+        "proximity": "接近度",
+        "verticalVelocity": "垂直速度",
+        "yawRateThreshold": "偏航角速度閾值",
+        "horizontalAccelerationThreshold": "XY 加速度閾值",
+        "horizontalVelocity": "水平速度",
+        "distanceOfClosestDronePair": "最近無人機配對的距離"
+    },
+    "hotkeys": {
+        "selectFourthCamera": "選取第四個相機",
+        "rewind": "倒回開頭",
+        "selectFirstCamera": "選取第一個相機",
+        "togglePlayback": "開始或停止播放",
+        "cueBackward": "向後提示（Shift = 10倍，Alt = 按影格）",
+        "dialogTitle": "快速鍵",
+        "selectSecondCamera": "選取第二個相機",
+        "selectFifthCamera": "選取第五個相機",
+        "selectThirdCamera": "選取第三個相機",
+        "cueForward": "向前提示（Shift = 10倍，Alt = 按影格）",
+        "selectDefaultCamera": "選取預設相機",
+        "toggleMuted": "靜音或取消靜音"
+    },
+    "buttons": {
+        "resetZoom": "重設縮放",
+        "settings": "設定",
+        "toggleSidebar": "切換側邊欄",
+        "trackDrones": "旋轉相機朝向無人機",
+        "inspector": "檢查器",
+        "reloadShow": "重新載入演出檔案",
+        "showHotkeysDialog": "顯示快速鍵",
+        "returnToViewer": "返回檢視器",
+        "shareLink": "分享演出連結",
+        "close": "關閉",
+        "closeShow": "關閉演出",
+        "validateTrajectories": "驗證軌跡",
+        "openShowFile": "開啟演出檔案"
+    },
+    "sharing": {
+        "copyLinkToClipboard": {
+            "loading": "正在複製連結到剪貼簿…",
+            "success": "連結已複製到剪貼簿",
+            "error": "複製連結到剪貼簿失敗"
+        }
+    },
+    "cameras": {
+        "noCamera": "無相機",
+        "default": "預設檢視",
+        "shared": "共享檢視",
+        "indexedLabel": "相機 {{ index }}"
+    },
+    "generic": {
+        "no": "否",
+        "yes": "是",
+        "recentFiles": "最近檔案",
+        "pleaseWait": "請稍候…"
+    },
+    "bottomOverlay": {
+        "rightText": "Skybrush © 2020-{{ year }} CollMot Robotics Ltd.",
+        "leftText": "使用方向鍵移動（Shift 鍵加速），E/C 鍵改變高度。拖曳場景以環顧四周。滾輪或 +/- 鍵縮放。"
+    }
+}
